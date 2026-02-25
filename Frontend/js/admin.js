@@ -1,4 +1,8 @@
-const API_URL = 'http://localhost:5253/api';
+// Use relative path for production flexibility, or a configurable base
+// const API_URL = 'http://localhost:5253/api';
+const API_URL = window.location.hostname === 'localhost' 
+    ? 'http://localhost:5253/api' 
+    : '/api'; // fallback for production
 
 let coursesCache = [];
 let consultationsCache = [];

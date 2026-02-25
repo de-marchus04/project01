@@ -164,7 +164,13 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeAutoHideNavbar();
 });
 
-const API_URL = 'http://localhost:5253/api';
+// Use relative path for production flexibility, or a configurable base
+// const API_URL = 'http://localhost:5253/api';
+// Assuming the backend is running on the same host but different port during dev
+// For deployment, this should likely be just '/api' if served from same origin
+const API_URL = window.location.hostname === 'localhost' 
+    ? 'http://localhost:5253/api' 
+    : '/api'; // fallback for production
 
 const PAGINATION_SIZE = 6;
 
