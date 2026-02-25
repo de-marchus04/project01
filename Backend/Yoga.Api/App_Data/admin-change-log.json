@@ -1,5 +1,334 @@
 [
   {
+    "timestampUtc": "2026-02-25T20:32:33.1235802Z",
+    "username": "admin",
+    "method": "POST",
+    "path": "/api/consultations",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-25T20:32:33.112571Z",
+    "username": "admin",
+    "method": "POST",
+    "path": "/api/consultations",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-25T20:32:33.1015334Z",
+    "username": "admin",
+    "method": "POST",
+    "path": "/api/consultations",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-25T20:32:33.090062Z",
+    "username": "admin",
+    "method": "POST",
+    "path": "/api/tours",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-25T20:32:33.0798112Z",
+    "username": "admin",
+    "method": "POST",
+    "path": "/api/tours",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-25T20:32:33.0690114Z",
+    "username": "admin",
+    "method": "POST",
+    "path": "/api/tours",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-25T20:32:33.0583461Z",
+    "username": "admin",
+    "method": "POST",
+    "path": "/api/courses",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-25T20:32:33.0488016Z",
+    "username": "admin",
+    "method": "POST",
+    "path": "/api/courses",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-25T20:32:33.0384342Z",
+    "username": "admin",
+    "method": "POST",
+    "path": "/api/courses",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-25T20:32:33.0269872Z",
+    "username": "admin",
+    "method": "POST",
+    "path": "/api/articles",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-25T20:32:33.0156966Z",
+    "username": "admin",
+    "method": "POST",
+    "path": "/api/articles",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-25T20:32:33.0053708Z",
+    "username": "admin",
+    "method": "POST",
+    "path": "/api/articles",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-25T20:31:56.4560443Z",
+    "username": "admin",
+    "method": "POST",
+    "path": "/api/consultations",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-25T20:31:56.4454638Z",
+    "username": "admin",
+    "method": "POST",
+    "path": "/api/consultations",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-25T20:31:56.4349238Z",
+    "username": "admin",
+    "method": "POST",
+    "path": "/api/consultations",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-25T20:31:56.37956Z",
+    "username": "admin",
+    "method": "POST",
+    "path": "/api/tours",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-25T20:31:56.368525Z",
+    "username": "admin",
+    "method": "POST",
+    "path": "/api/tours",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-25T20:31:56.3587171Z",
+    "username": "admin",
+    "method": "POST",
+    "path": "/api/tours",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-25T20:31:56.3122563Z",
+    "username": "admin",
+    "method": "POST",
+    "path": "/api/courses",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-25T20:31:56.3021885Z",
+    "username": "admin",
+    "method": "POST",
+    "path": "/api/courses",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-25T20:31:56.2910398Z",
+    "username": "admin",
+    "method": "POST",
+    "path": "/api/courses",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-25T20:31:56.257232Z",
+    "username": "admin",
+    "method": "POST",
+    "path": "/api/articles",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-25T20:31:56.2450757Z",
+    "username": "admin",
+    "method": "POST",
+    "path": "/api/articles",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-25T20:31:56.2036841Z",
+    "username": "admin",
+    "method": "POST",
+    "path": "/api/articles",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-25T11:18:09.6354404Z",
+    "username": "admin",
+    "method": "PUT",
+    "path": "/api/orders/10/approve",
+    "statusCode": 200
+  },
+  {
+    "timestampUtc": "2026-02-25T11:15:41.1407723Z",
+    "username": "admin",
+    "method": "PUT",
+    "path": "/api/orders/9/cancel",
+    "statusCode": 200
+  },
+  {
+    "timestampUtc": "2026-02-25T11:13:19.4278212Z",
+    "username": "admin",
+    "method": "DELETE",
+    "path": "/api/articles/5",
+    "statusCode": 204
+  },
+  {
+    "timestampUtc": "2026-02-25T11:00:45.5747672Z",
+    "username": "admin",
+    "method": "DELETE",
+    "path": "/api/articles/11",
+    "statusCode": 204
+  },
+  {
+    "timestampUtc": "2026-02-25T11:00:34.7837703Z",
+    "username": "admin",
+    "method": "DELETE",
+    "path": "/api/articles/12",
+    "statusCode": 204
+  },
+  {
+    "timestampUtc": "2026-02-25T11:00:31.6499255Z",
+    "username": "admin",
+    "method": "DELETE",
+    "path": "/api/articles/13",
+    "statusCode": 204
+  },
+  {
+    "timestampUtc": "2026-02-25T11:00:25.3170449Z",
+    "username": "admin",
+    "method": "DELETE",
+    "path": "/api/articles/15",
+    "statusCode": 204
+  },
+  {
+    "timestampUtc": "2026-02-25T11:00:16.6376025Z",
+    "username": "admin",
+    "method": "DELETE",
+    "path": "/api/articles/9",
+    "statusCode": 204
+  },
+  {
+    "timestampUtc": "2026-02-25T10:58:54.553976Z",
+    "username": "admin",
+    "method": "POST",
+    "path": "/api/tours",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-25T10:45:51.4865125Z",
+    "username": "admin",
+    "method": "DELETE",
+    "path": "/api/consultations/1",
+    "statusCode": 204
+  },
+  {
+    "timestampUtc": "2026-02-25T10:45:49.2238895Z",
+    "username": "admin",
+    "method": "DELETE",
+    "path": "/api/consultations/11",
+    "statusCode": 204
+  },
+  {
+    "timestampUtc": "2026-02-25T10:45:37.1784485Z",
+    "username": "admin",
+    "method": "DELETE",
+    "path": "/api/consultations/6",
+    "statusCode": 204
+  },
+  {
+    "timestampUtc": "2026-02-25T10:45:34.5764264Z",
+    "username": "admin",
+    "method": "DELETE",
+    "path": "/api/consultations/8",
+    "statusCode": 204
+  },
+  {
+    "timestampUtc": "2026-02-25T10:45:29.7843357Z",
+    "username": "admin",
+    "method": "DELETE",
+    "path": "/api/consultations/3",
+    "statusCode": 204
+  },
+  {
+    "timestampUtc": "2026-02-25T10:45:20.3297115Z",
+    "username": "admin",
+    "method": "DELETE",
+    "path": "/api/consultations/10",
+    "statusCode": 204
+  },
+  {
+    "timestampUtc": "2026-02-25T10:44:40.7580204Z",
+    "username": "admin",
+    "method": "DELETE",
+    "path": "/api/courses/49",
+    "statusCode": 204
+  },
+  {
+    "timestampUtc": "2026-02-25T10:44:26.1940539Z",
+    "username": "admin",
+    "method": "DELETE",
+    "path": "/api/courses/48",
+    "statusCode": 204
+  },
+  {
+    "timestampUtc": "2026-02-25T10:43:50.7398336Z",
+    "username": "admin",
+    "method": "DELETE",
+    "path": "/api/courses/50",
+    "statusCode": 204
+  },
+  {
+    "timestampUtc": "2026-02-25T10:43:38.0074639Z",
+    "username": "admin",
+    "method": "DELETE",
+    "path": "/api/courses/51",
+    "statusCode": 204
+  },
+  {
+    "timestampUtc": "2026-02-25T10:43:33.847848Z",
+    "username": "admin",
+    "method": "DELETE",
+    "path": "/api/courses/52",
+    "statusCode": 204
+  },
+  {
+    "timestampUtc": "2026-02-25T10:43:20.8930481Z",
+    "username": "admin",
+    "method": "DELETE",
+    "path": "/api/courses/53",
+    "statusCode": 204
+  },
+  {
+    "timestampUtc": "2026-02-25T10:17:16.8718689Z",
+    "username": "admin",
+    "method": "POST",
+    "path": "/api/consultations",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-25T10:14:00.3199068Z",
+    "username": "admin",
+    "method": "POST",
+    "path": "/api/courses",
+    "statusCode": 201
+  },
+  {
     "timestampUtc": "2026-02-24T23:21:32.4219146Z",
     "username": "admin",
     "method": "POST",

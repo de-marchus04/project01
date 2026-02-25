@@ -14,6 +14,22 @@ services:
     volumes:
       - yoga_postgres_data:/var/lib/postgresql/data
 
+  pgbackups:
+    image: prodrigestivill/postgres-backup-local
+    container_name: yoga_pgbackups
+    restart: unless-stopped
+    environment:
+      - POSTGRES_HOST=postgres
+      - POSTGRES_DB=YogaPlatformDb
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - SCHEDULE=@daily
+      - BACKUP_KEEP_DAYS=7
+    depends_on:
+      - postgres
+    volumes:
+      - ./backups:/backups
+
   redis:
     image: redis:7-alpine
     container_name: yoga_redis

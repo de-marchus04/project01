@@ -20,10 +20,13 @@ public sealed class CourseCatalogRepository : ICourseCatalogRepository
 
     public async Task<IReadOnlyList<CourseCatalogSourceItem>> GetAllAsync(CancellationToken cancellationToken)
     {
+        // Disable cache for now to ensure instant updates
+        /*
         if (_memoryCache.TryGetValue<IReadOnlyList<CourseCatalogSourceItem>>(CatalogCacheKey, out var cached) && cached is not null)
         {
             return cached;
         }
+        */
 
         var items = await _context.Courses
             .AsNoTracking()
@@ -39,7 +42,7 @@ public sealed class CourseCatalogRepository : ICourseCatalogRepository
             })
             .ToListAsync(cancellationToken);
 
-        _memoryCache.Set(CatalogCacheKey, items, TimeSpan.FromMinutes(10));
+        // _memoryCache.Set(CatalogCacheKey, items, TimeSpan.FromMinutes(10));
         return items;
     }
 }

@@ -91,6 +91,7 @@
                 <button class="btn btn-outline-dark rounded-pill px-4" data-target="coursesPane">Курсы</button>
                 <button class="btn btn-outline-dark rounded-pill px-4" data-target="consultationsPane">Консультации</button>
                 <button class="btn btn-outline-dark rounded-pill px-4" data-target="articlesPane">Блог</button>
+                <button class="btn btn-outline-dark rounded-pill px-4" data-target="toursPane">Туры</button>
             </div>
         </section>
 
@@ -337,6 +338,83 @@
                             </tr>
                         </thead>
                         <tbody id="articlesTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section id="toursPane" class="section-pane">
+            <div class="card admin-card p-4 mb-4">
+                <h2 class="h4 mb-3" style="font-weight:800;letter-spacing:-0.5px;">Туры: добавить/редактировать</h2>
+                <form id="tourForm" class="row g-3">
+                    <input type="hidden" id="tourId">
+                    <div class="col-md-6">
+                        <label class="form-label" for="tourTitle">Название</label>
+                        <input id="tourTitle" class="form-control" required>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label" for="tourPrice">Цена</label>
+                        <input id="tourPrice" type="number" min="0" step="0.01" class="form-control" required>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label" for="tourSpots">Мест доступно</label>
+                        <input id="tourSpots" type="number" min="0" step="1" class="form-control" value="10">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="tourLocation">Локация</label>
+                        <input id="tourLocation" class="form-control" required>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label" for="tourStartDate">Дата начала</label>
+                        <input id="tourStartDate" type="date" class="form-control" required>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label" for="tourDifficulty">Сложность (1-5)</label>
+                        <input id="tourDifficulty" type="number" min="1" max="5" class="form-control" value="1">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label" for="tourImageFile">Файл картинки</label>
+                        <input id="tourImageFile" type="file" class="form-control" accept="image/*">
+                    </div>
+                    <div class="col-md-8">
+                        <label class="form-label" for="tourImageUrl">URL картинки</label>
+                        <div class="input-group">
+                            <input id="tourImageUrl" class="form-control" placeholder="https://..." required>
+                            <button id="uploadTourImageBtn" class="btn btn-outline-dark" type="button">Загрузить</button>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="form-check form-switch mt-2">
+                            <input class="form-check-input" type="checkbox" role="switch" id="tourIsHit">
+                            <label class="form-check-label" for="tourIsHit">Пометить как "Хит"</label>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label" for="tourDescription">Описание</label>
+                        <textarea id="tourDescription" class="form-control" rows="4" required></textarea>
+                    </div>
+                    <div class="col-12 d-flex gap-2">
+                        <button class="btn btn-dark" type="submit" id="saveTourBtn">Сохранить тур</button>
+                        <button class="btn btn-outline-secondary" type="button" id="resetTourBtn">Сбросить</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="card admin-card p-4">
+                <h3 class="h5 mb-3">Список туров</h3>
+                <div class="table-wrap">
+                    <table class="table align-middle">
+                        <thead>
+                            <tr>
+                                <th>Фото</th>
+                                <th>Название</th>
+                                <th>Дата</th>
+                                <th>Места</th>
+                                <th>Цена</th>
+                                <th class="text-end">Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody id="toursTableBody"></tbody>
                     </table>
                 </div>
             </div>

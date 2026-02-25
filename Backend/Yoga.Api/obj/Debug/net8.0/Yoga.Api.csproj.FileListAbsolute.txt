@@ -161,3 +161,4 @@
 /home/dmitrij/Freelance_Projects/YogaPlatform/Backend/Yoga.Api/bin/Debug/net8.0/OpenTelemetry.Extensions.Hosting.dll
 /home/dmitrij/Freelance_Projects/YogaPlatform/Backend/Yoga.Api/bin/Debug/net8.0/OpenTelemetry.Instrumentation.AspNetCore.dll
 /home/dmitrij/Freelance_Projects/YogaPlatform/Backend/Yoga.Api/bin/Debug/net8.0/OpenTelemetry.Instrumentation.Http.dll
+/home/dmitrij/Freelance_Projects/YogaPlatform/Backend/Yoga.Api/bin/Debug/net8.0/SixLabors.ImageSharp.dll

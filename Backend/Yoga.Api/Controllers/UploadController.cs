@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.Authorization;
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
+using SixLabors.ImageSharp.Formats.Webp;
 
 namespace Yoga.Api.Controllers
 {
@@ -32,18 +35,31 @@ namespace Yoga.Api.Controllers
                 Directory.CreateDirectory(uploadsFolder);
             }
 
-            // 2. Генерируем уникальное имя файла
-            string uniqueFileName = Guid.NewGuid().ToString() + "_" + file.FileName;
+            // 2. Генерируем уникальное имя файла (с расширением .webp)
+            string uniqueFileName = Guid.NewGuid().ToString() + ".webp";
             string filePath = Path.Combine(uploadsFolder, uniqueFileName);
 
-            // 3. Сохраняем
-            using (var fileStream = new FileStream(filePath, FileMode.Create))
+            // 3. Сжимаем и сохраняем в WebP
+            try
             {
-                await file.CopyToAsync(fileStream);
+                using var image = await Image.LoadAsync(file.OpenReadStream());
+                
+                // Изменяем размер, если картинка больше 1920px по ширине или высоте
+                image.Mutate(x => x.Resize(new ResizeOptions
+                {
+                    Mode = ResizeMode.Max,
+                    Size = new Size(1920, 1920)
+                }));
+
+                // Сохраняем с качеством 80%
+                await image.SaveAsWebpAsync(filePath, new WebpEncoder { Quality = 80 });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error processing image: {ex.Message}");
             }
 
             // 4. Возвращаем URL
-            // Предполагаем, что статика раздается с корня
             string fileUrl = $"{Request.Scheme}://{Request.Host}/uploads/{uniqueFileName}";
 
             return Ok(new { url = fileUrl });

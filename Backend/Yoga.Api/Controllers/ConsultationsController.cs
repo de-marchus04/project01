@@ -28,9 +28,18 @@ namespace Yoga.Infrastructure.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Consultation>>> GetConsultations()
+        public async Task<ActionResult<IEnumerable<Consultation>>> GetConsultations([FromQuery] int limit = 100, [FromQuery] int offset = 0)
         {
-            return await _context.Consultations.ToListAsync();
+            var query = _context.Consultations.AsQueryable();
+            
+            var totalCount = await query.CountAsync();
+            Response.Headers.Append("X-Total-Count", totalCount.ToString());
+
+            return await query
+                .OrderByDescending(c => c.Id)
+                .Skip(offset)
+                .Take(limit)
+                .ToListAsync();
         }
 
         [HttpGet("{id}")]

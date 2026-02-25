@@ -7,6 +7,7 @@ const API_URL = window.location.hostname === 'localhost'
 let coursesCache = [];
 let consultationsCache = [];
 let articlesCache = [];
+let toursCache = [];
 
 // Helper to prevent XSS
 function escapeHtml(value) {
@@ -59,7 +60,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         loadOrders().catch(e => console.error('Orders failed:', e)),
         loadCourses().catch(e => console.error('Courses failed:', e)),
         loadConsultations().catch(e => console.error('Consultations failed:', e)),
-        loadArticles().catch(e => console.error('Articles failed:', e))
+        loadArticles().catch(e => console.error('Articles failed:', e)),
+        loadTours().catch(e => console.error('Tours failed:', e))
     ]);
 });
 
@@ -340,7 +342,8 @@ function bindUploadButtons() {
     const pairs = [
         ['uploadCourseImageBtn', 'courseImageFile', 'courseImageUrl'],
         ['uploadConsultationImageBtn', 'consultationImageFile', 'consultationImageUrl'],
-        ['uploadArticleImageBtn', 'articleImageFile', 'articleImageUrl']
+        ['uploadArticleImageBtn', 'articleImageFile', 'articleImageUrl'],
+        ['uploadTourImageBtn', 'tourImageFile', 'tourImageUrl']
     ];
 
     pairs.forEach(([buttonId, fileId, targetId]) => {
@@ -399,6 +402,9 @@ function bindForms() {
     const articleForm = document.getElementById('articleForm');
     if (articleForm) articleForm.addEventListener('submit', handleArticleSubmit);
 
+    const tourForm = document.getElementById('tourForm');
+    if (tourForm) tourForm.addEventListener('submit', handleTourSubmit);
+
     const resetCourseBtn = document.getElementById('resetCourseBtn');
     if (resetCourseBtn) resetCourseBtn.addEventListener('click', resetCourseForm);
 
@@ -407,6 +413,9 @@ function bindForms() {
 
     const resetArticleBtn = document.getElementById('resetArticleBtn');
     if (resetArticleBtn) resetArticleBtn.addEventListener('click', resetArticleForm);
+
+    const resetTourBtn = document.getElementById('resetTourBtn');
+    if (resetTourBtn) resetTourBtn.addEventListener('click', resetTourForm);
 }
 
 
@@ -762,6 +771,154 @@ window.deleteArticle = async function (id) {
         if (!response.ok) throw new Error(await response.text());
         showAlert('Материал удален.', 'success');
         await loadArticles();
+    } catch (error) {
+        showAlert(`Ошибка: ${error.message}`, 'danger');
+    }
+};
+
+/* --- TOURS LOGIC --- */
+async function loadTours() {
+    const tbody = document.getElementById('toursTableBody');
+    if (!tbody) return;
+
+    tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted py-4">Загрузка...</td></tr>';
+
+    try {
+        const response = await fetch(`${API_URL}/tours`);
+        if (!response.ok) throw new Error('Не удалось загрузить туры');
+
+        const items = await response.json();
+        toursCache = Array.isArray(items) 
+            ? [...items].sort((a, b) => new Date(b.startDate || 0) - new Date(a.startDate || 0))
+            : [];
+
+        if (toursCache.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted py-4">Туры не найдены</td></tr>';
+            return;
+        }
+
+        tbody.innerHTML = toursCache.map(item => `
+            <tr>
+                <td><img class="thumb" src="${escapeHtml(item.imageUrl || '')}" alt="${escapeHtml(item.title || '')}"></td>
+                <td>
+                    <div class="fw-bold">${escapeHtml(item.title || '')}</div>
+                    <div class="small text-muted">${escapeHtml(item.location || '')}</div>
+                </td>
+                <td>${item.startDate ? new Date(item.startDate).toLocaleDateString() : '-'}</td>
+                <td>${item.spotsAvailable || 0}</td>
+                <td>${Number(item.price || 0).toLocaleString('ru-RU')} ₽</td>
+                <td class="text-end">
+                    <button class="btn btn-sm btn-outline-primary me-1" onclick="editTour(${item.id})">
+                        <i class="bi bi-pencil"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-danger" onclick="deleteTour(${item.id})">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </td>
+            </tr>
+        `).join('');
+    } catch (error) {
+        console.error('Tours error:', error);
+        tbody.innerHTML = '<tr><td colspan="6" class="text-center text-danger py-4">Ошибка загрузки</td></tr>';
+    }
+}
+
+async function handleTourSubmit(e) {
+    if (e) e.preventDefault();
+
+    const id = document.getElementById('tourId').value;
+    const isEdit = !!id;
+
+    const data = {
+        title: document.getElementById('tourTitle').value,
+        price: Number(document.getElementById('tourPrice').value),
+        spotsAvailable: Number(document.getElementById('tourSpots').value),
+        location: document.getElementById('tourLocation').value,
+        startDate: (document.getElementById('tourStartDate').value ? new Date(document.getElementById('tourStartDate').value).toISOString() : new Date().toISOString()),
+        difficulty: Number(document.getElementById('tourDifficulty').value),
+        imageUrl: document.getElementById('tourImageUrl').value,
+        isHit: document.getElementById('tourIsHit').checked,
+        description: document.getElementById('tourDescription').value
+    };
+
+    if (isEdit) data.id = Number(id);
+
+    try {
+        const url = isEdit ? `${API_URL}/tours/${id}` : `${API_URL}/tours`;
+        const method = isEdit ? 'PUT' : 'POST';
+
+        const response = await fetch(url, {
+            method: method,
+            headers: {
+                'Content-Type': 'application/json',
+                ...authHeaders(false)
+            },
+            body: JSON.stringify(data)
+        });
+
+        if (!response.ok) {
+            const errText = await response.text();
+            throw new Error(errText || 'Ошибка сохранения');
+        }
+
+        showAlert(isEdit ? 'Тур обновлен!' : 'Тур создан!', 'success');
+        resetTourForm();
+        await loadTours();
+    } catch (error) {
+        console.error('Save tour error:', error);
+        showAlert(`Ошибка: ${error.message}`, 'danger');
+    }
+}
+
+function resetTourForm() {
+    document.getElementById('tourForm').reset();
+    document.getElementById('tourId').value = '';
+    document.getElementById('saveTourBtn').textContent = 'Сохранить тур';
+    document.getElementById('uploadTourImageBtn').textContent = 'Загрузить';
+}
+
+window.editTour = function(id) {
+    const item = toursCache.find(x => x.id === id);
+    if (!item) return;
+
+    document.getElementById('tourId').value = item.id;
+    document.getElementById('tourTitle').value = item.title || '';
+    document.getElementById('tourPrice').value = item.price || 0;
+    document.getElementById('tourSpots').value = item.spotsAvailable || 0;
+    document.getElementById('tourLocation').value = item.location || '';
+    
+    // Convert date for input type=date
+    if (item.startDate) {
+        const d = new Date(item.startDate);
+        // Format to YYYY-MM-DD
+        const iso = d.toISOString().split('T')[0];
+        document.getElementById('tourStartDate').value = iso;
+    }
+
+    document.getElementById('tourDifficulty').value = item.difficulty || 1;
+    document.getElementById('tourImageUrl').value = item.imageUrl || '';
+    document.getElementById('tourIsHit').checked = !!item.isHit;
+    document.getElementById('tourDescription').value = item.description || '';
+
+    document.getElementById('saveTourBtn').textContent = 'Обновить тур';
+    
+    // Switch tab
+    const tabBtn = document.querySelector('[data-target="toursPane"]');
+    if (tabBtn) tabBtn.click();
+    
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+};
+
+window.deleteTour = async function(id) {
+    if (!confirm('Удалить этот тур?')) return;
+    try {
+        const response = await fetch(`${API_URL}/tours/${id}`, {
+            method: 'DELETE',
+            headers: authHeaders(false)
+        });
+        if (!response.ok) throw new Error(await response.text());
+        showAlert('Тур удален.', 'success');
+        await loadTours();
     } catch (error) {
         showAlert(`Ошибка: ${error.message}`, 'danger');
     }

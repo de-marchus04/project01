@@ -25,9 +25,18 @@ namespace Yoga.Infrastructure.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Course>>> GetCourses()
+        public async Task<ActionResult<IEnumerable<Course>>> GetCourses([FromQuery] int limit = 100, [FromQuery] int offset = 0)
         {
-            return await _context.Courses.ToListAsync();
+            var query = _context.Courses.AsQueryable();
+            
+            var totalCount = await query.CountAsync();
+            Response.Headers.Append("X-Total-Count", totalCount.ToString());
+
+            return await query
+                .OrderByDescending(c => c.Id)
+                .Skip(offset)
+                .Take(limit)
+                .ToListAsync();
         }
 
         [HttpGet("catalog")]

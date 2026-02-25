@@ -66,13 +66,23 @@ namespace Yoga.Api.Controllers
         // GET: api/orders (Для админа - все покупки + сумма)
         [HttpGet]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> GetOrders()
+        public async Task<IActionResult> GetOrders([FromQuery] int limit = 100, [FromQuery] int offset = 0)
         {
-            var orders = await _context.Orders.OrderByDescending(o => o.Date).ToListAsync();
+            var query = _context.Orders.AsQueryable();
+            
+            var totalCount = await query.CountAsync();
+            Response.Headers.Append("X-Total-Count", totalCount.ToString());
+
+            var orders = await query
+                .OrderByDescending(o => o.Date)
+                .Skip(offset)
+                .Take(limit)
+                .ToListAsync();
+
             return Ok(new 
             { 
                 Orders = orders, 
-                TotalIncome = orders.Sum(o => o.Price) 
+                TotalIncome = await query.SumAsync(o => o.Price) 
             });
         }
 

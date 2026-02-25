@@ -19,9 +19,18 @@ namespace Yoga.Api.Controllers
 
         // 1. GET: api/tours
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Tour>>> GetTours()
+        public async Task<ActionResult<IEnumerable<Tour>>> GetTours([FromQuery] int limit = 100, [FromQuery] int offset = 0)
         {
-            return await _context.Tours.ToListAsync();
+            var query = _context.Tours.AsQueryable();
+            
+            var totalCount = await query.CountAsync();
+            Response.Headers.Append("X-Total-Count", totalCount.ToString());
+
+            return await query
+                .OrderByDescending(t => t.Id)
+                .Skip(offset)
+                .Take(limit)
+                .ToListAsync();
         }
 
         // 2. GET: api/tours/{id}

@@ -18,9 +18,19 @@ namespace Yoga.Infrastructure.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Article>>> GetArticles()
+        public async Task<ActionResult<IEnumerable<Article>>> GetArticles([FromQuery] int limit = 100, [FromQuery] int offset = 0)
         {
-            return await _context.Articles.ToListAsync();
+            var query = _context.Articles.AsQueryable();
+            
+            // Add total count to headers for frontend if needed
+            var totalCount = await query.CountAsync();
+            Response.Headers.Append("X-Total-Count", totalCount.ToString());
+
+            return await query
+                .OrderByDescending(a => a.Id)
+                .Skip(offset)
+                .Take(limit)
+                .ToListAsync();
         }
 
         [HttpGet("{id}")]

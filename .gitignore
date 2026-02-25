@@ -37,3 +37,6 @@ next-env.d.ts
 *.db-journal
 *.sqlite
 data_dump.sql
+
+# infrastructure
+Infra/backups/*.sql.gz

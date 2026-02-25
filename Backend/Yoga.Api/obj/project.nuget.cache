@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "IcqYJcj17yXFp3v4Q0W36fL1jdaBoLw0q6BNEFUvqmmsa5yBwu161JNoIb4RtH/aAGBC8HwD58ki4K88GaCzIA==",
+  "dgSpecHash": "Gq+zik2vwV69bk1W+TxiqJsa1s2fS7F4PtU8MBmlpb6agK3iVVMpBpnzRHnpsIUnP6n8lQ08zHt1p47qT7nVAQ==",
   "success": true,
   "projectFilePath": "/home/dmitrij/Freelance_Projects/YogaPlatform/Backend/Yoga.Api/Yoga.Api.csproj",
   "expectedPackageFiles": [
@@ -66,6 +66,7 @@
     "/home/dmitrij/.nuget/packages/serilog.sinks.console/6.1.1/serilog.sinks.console.6.1.1.nupkg.sha512",
     "/home/dmitrij/.nuget/packages/serilog.sinks.debug/3.0.0/serilog.sinks.debug.3.0.0.nupkg.sha512",
     "/home/dmitrij/.nuget/packages/serilog.sinks.file/7.0.0/serilog.sinks.file.7.0.0.nupkg.sha512",
+    "/home/dmitrij/.nuget/packages/sixlabors.imagesharp/3.1.12/sixlabors.imagesharp.3.1.12.nupkg.sha512",
     "/home/dmitrij/.nuget/packages/stackexchange.redis/2.7.27/stackexchange.redis.2.7.27.nupkg.sha512",
     "/home/dmitrij/.nuget/packages/swashbuckle.aspnetcore/6.6.2/swashbuckle.aspnetcore.6.6.2.nupkg.sha512",
     "/home/dmitrij/.nuget/packages/swashbuckle.aspnetcore.swagger/6.6.2/swashbuckle.aspnetcore.swagger.6.6.2.nupkg.sha512",

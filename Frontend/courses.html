@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Курсы | YOGA.LIFE</title>
+    
+    <!-- 1. Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- 2. Наши стили -->
+    <link rel="stylesheet" href="css/style.css">
+    
+    <!-- 3. Шрифты (Атмосфера) -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Иконки -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    
+    <!-- Кастомный стиль для Hero изображения этой страницы -->
+    <style>
+        .page-hero {
+            height: 50vh; 
+            min-height: 400px;
+            background: url('https://images.unsplash.com/photo-1599447421405-0753f5d1a5ca?q=80&w=2070&auto=format&fit=crop') no-repeat center center/cover;
+        }
+        .filter-pill {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .filter-pill.active {
+            background-color: var(--bs-warning) !important;
+            color: white !important;
+            border-color: var(--bs-warning) !important;
+        }
+        .search-wrapper {
+            position: relative;
+        }
+        .search-wrapper i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6c757d;
+        }
+        .search-input {
+            padding-left: 40px;
+            border-radius: 50px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 🟢 HEADER (Меню) -->
+    <nav class="navbar fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">YOGA.LIFE</a>
+            
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Переключить навигацию">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto w-100 justify-content-lg-end align-items-lg-center gap-lg-4 mt-3 mt-lg-0 pe-lg-1"> 
+                    <li class="nav-item"><a class="nav-link" href="tours.html">Туры</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="courses.html">Курсы</a></li>
+                    <li class="nav-item"><a class="nav-link" href="consultations-private.html">Консультации</a></li>
+                    <li class="nav-item"><a class="nav-link" href="blog.html">Блог</a></li>
+                    <li class="nav-item"><a class="nav-link" href="about.html">О нас</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 🟢 HERO SECTION -->
+    <section class="hero-section page-hero d-flex align-items-center text-center text-white position-relative">
+        <div class="overlay"></div> 
+        <div class="container position-relative z-2">
+            <span class="text-uppercase ls-2 mb-3 d-block text-warning small fw-bold">Онлайн-Практика</span>
+            <h1 class="display-3 font-playfair mb-4">Курсы Йоги</h1>
+            <p class="lead mb-5 col-lg-8 mx-auto fw-light">
+                Программы для любого уровня подготовки: от первых шагов до глубокой медитации.
+            </p>
+        </div>
+    </section>
+
+    <!-- 🟢 FILTERS & SEARCH SECTION -->
+    <section class="py-4 bg-white border-bottom sticky-top shadow-sm" style="top: 76px; z-index: 1010;">
+        <div class="container">
+            <div class="row g-3 align-items-center justify-content-between">
+                <!-- Search -->
+                <div class="col-md-4 order-md-2">
+                    <div class="search-wrapper">
+                        <i class="bi bi-search"></i>
+                        <input type="text" id="coursesSearchInput" class="form-control search-input" placeholder="Поиск курса...">
+                    </div>
+                </div>
+
+                <!-- Filters -->
+                <div class="col-md-8 order-md-1">
+                    <div class="d-flex flex-wrap gap-2" id="coursesCategoryFilters">
+                        <button class="btn btn-outline-dark rounded-pill filter-pill active" data-category="all">Все</button>
+                        <button class="btn btn-outline-dark rounded-pill filter-pill" data-category="beginners">Для начинающих</button>
+                        <button class="btn btn-outline-dark rounded-pill filter-pill" data-category="back">Здоровая спина</button>
+                        <button class="btn btn-outline-dark rounded-pill filter-pill" data-category="women">Женское здоровье</button>
+                        <button class="btn btn-outline-dark rounded-pill filter-pill" data-category="meditation">Медитация</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Tags Cloud -->
+            <div class="row mt-3">
+                <div class="col-12">
+                     <div class="d-flex flex-wrap gap-2 align-items-center text-muted small">
+                        <span class="fw-bold me-2"><i class="bi bi-tags"></i> Популярное:</span>
+                        <a href="javascript:void(0)" class="text-decoration-none text-secondary tag-link" data-tag="утро">#утро</a>
+                        <a href="javascript:void(0)" class="text-decoration-none text-secondary tag-link" data-tag="релакс">#релакс</a>
+                        <a href="javascript:void(0)" class="text-decoration-none text-secondary tag-link" data-tag="сила">#сила</a>
+                        <a href="javascript:void(0)" class="text-decoration-none text-secondary tag-link" data-tag="гибкость">#гибкость</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 🟢 CONTENT SECTION -->
+    <section class="py-5 bg-light details-section">
+        <div class="container py-3">
+            <!-- Контейнер для курсов -->
+            <div id="courses-catalog-container" class="row g-4">
+                 <div class="text-center py-5 w-100">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Загрузка...</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Пагинация -->
+            <div id="catalogPagination" class="d-flex justify-content-center mt-5"></div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-4 text-center">
+        <div class="container">
+            <div class="mb-2">
+                <a href="user-agreement.html" class="text-white-50 text-decoration-none me-3">Пользовательское соглашение</a>
+                <a href="privacy-policy.html" class="text-white-50 text-decoration-none">Политика конфиденциальности</a>
+            </div>
+            <div class="mb-2"><a href="admin.html" class="text-white-50 text-decoration-none">Админка</a></div>
+            <small class="text-white-50">&copy; 2026 - YOGA.LIFE</small>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/main.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const filters = document.querySelectorAll('.filter-pill');
+            filters.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    filters.forEach(b => b.classList.remove('active'));
+                    e.target.classList.add('active');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
