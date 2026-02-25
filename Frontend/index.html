@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YOGA.LIFE | Платформа для йоги</title>
+    <meta name="description" content="YOGA.LIFE — йога-туры, курсы, консультации и блог. Запись через удобную заявку.">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="css/style.css">
+
+    <style>
+        :root {
+            --primary-bg: #f8f9fa;
+            --brand-color: #d4a373;
+            --brand-dark: #a9805b;
+            --text-dark: #2c3e50;
+            --unified-media-height: 50vh;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: var(--primary-bg);
+            color: var(--text-dark);
+            padding-top: 76px;
+        }
+
+        .hero-section {
+            background: linear-gradient(rgba(44, 62, 80, 0.7), rgba(44, 62, 80, 0.7)), url('https://images.unsplash.com/photo-1545205597-3d9d02c29597?auto=format&fit=crop&q=80');
+            background-size: cover;
+            background-position: center;
+            height: 80vh;
+            display: flex;
+            align-items: center;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            margin-top: -76px;
+            padding-top: 76px;
+        }
+
+        .hero-content h1 {
+            font-weight: 800;
+            font-size: 4rem;
+            letter-spacing: -1px;
+            margin-bottom: 1.5rem;
+        }
+
+        .btn-brand {
+            background-color: var(--brand-color);
+            color: white;
+            padding: 15px 40px;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            transition: all 0.3s;
+            border: none;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: bold;
+        }
+
+        .btn-brand:hover {
+            background-color: var(--brand-dark);
+            transform: translateY(-3px);
+            color: white;
+        }
+
+        .navbar {
+            background: transparent !important;
+            padding: 1rem 0;
+            box-shadow: none;
+            transition: transform .28s ease, background-color .28s ease, box-shadow .28s ease;
+            will-change: transform;
+        }
+
+        .navbar.app-scrolled {
+            background: transparent !important;
+            box-shadow: none !important;
+        }
+
+        .navbar.nav-hidden {
+            transform: translateY(-100%);
+        }
+
+        .navbar-brand {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 300; /* Thin font as requested */
+            font-size: 2.28rem;
+            color: var(--text-dark);
+            letter-spacing: 1px;
+            font-style: italic; /* Match internal pages style if they use style.css .navbar-brand which has italic */
+        }
+
+        .nav-link {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 400; /* Regular instead of bold */
+            font-size: 1.1rem;
+            letter-spacing: .02em;
+            /* Remove inline color to allow CSS or main.js to control it, or set default dark */
+            color: var(--text-dark); 
+        }
+
+        .interactive-card {
+            border: none;
+            border-radius: 16px;
+            overflow: hidden;
+            transition: transform .25s ease, box-shadow .25s ease;
+            box-shadow: 0 8px 18px rgba(0,0,0,.08);
+            background: #fff;
+            height: 100%;
+        }
+
+        .interactive-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 26px rgba(0,0,0,.12);
+        }
+
+        .interactive-media {
+            height: var(--unified-media-height);
+            object-fit: cover;
+            width: 100%;
+        }
+
+        .interactive-card--overlay {
+            position: relative;
+            min-height: var(--unified-media-height);
+            background: #000;
+        }
+
+        .interactive-card--overlay .interactive-media {
+            height: var(--unified-media-height);
+        }
+
+        #tours-container .card-img-top {
+            height: var(--unified-media-height) !important;
+            object-fit: cover;
+        }
+
+        .split-media-section .interactive-media,
+        .split-media-section .interactive-card--overlay,
+        .split-media-section .interactive-card--overlay .interactive-media {
+            height: 50vh;
+            min-height: 50vh;
+        }
+
+        .split-media-section .col-md-6 {
+            flex: 0 0 50%;
+            max-width: 50%;
+        }
+
+        @media (max-width: 991.98px) {
+            .navbar-brand {
+                font-size: 1.9rem;
+            }
+
+            :root {
+                --unified-media-height: 42vh;
+            }
+
+            .split-media-section .interactive-media,
+            .split-media-section .interactive-card--overlay,
+            .split-media-section .interactive-card--overlay .interactive-media {
+                height: 42vh;
+                min-height: 42vh;
+            }
+        }
+
+        .interactive-card--overlay .interactive-info {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            padding: 12px 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            gap: 2px;
+            background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,.72) 62%, rgba(0,0,0,.86) 100%);
+        }
+
+        .interactive-card--overlay .interactive-info h5,
+        .interactive-card--overlay .interactive-info p {
+            color: #fff;
+            margin-bottom: 0;
+            text-shadow: 0 1px 2px rgba(0,0,0,.35);
+        }
+
+        .interactive-card--overlay .interactive-info p {
+            opacity: .95;
+            font-size: .9rem;
+            line-height: 1.2;
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="index.html">YOGA.LIFE</a>
+        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#globalNavbarMenu" aria-controls="globalNavbarMenu" aria-expanded="false" aria-label="Переключить навигацию">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="globalNavbarMenu">
+            <ul class="navbar-nav ms-auto w-100 justify-content-lg-end align-items-lg-center gap-lg-4 mt-3 mt-lg-0 pe-lg-1">
+                <li class="nav-item"><a class="nav-link" href="tours.html">Туры</a></li>
+                <li class="nav-item"><a class="nav-link" href="courses-beginners.html">Курсы</a></li>
+                <li class="nav-item"><a class="nav-link" href="consultations-private.html">Консультации</a></li>
+                <li class="nav-item"><a class="nav-link" href="blog-articles.html">Блог</a></li>
+                <li class="nav-item"><a class="nav-link" href="about.html">О нас</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<header class="hero-section">
+    <div class="container text-center hero-content">
+        <h1>Йога в реальной жизни</h1>
+        <p class="lead mb-5 fs-4">Туры, курсы, консультации и блог в единой платформе.</p>
+        <a href="#about-anchor" class="btn btn-brand">О нас</a>
+    </div>
+</header>
+
+    <section id="sections-menu" class="py-5 bg-white">
+    <div class="container py-4">
+        <div class="text-center mb-5">
+            <h6 class="text-warning fw-bold text-uppercase">Навигация по платформе</h6>
+            <h2 class="fw-bold display-6">Интерактивные разделы</h2>
+            <p class="text-muted">Нажмите на карточку и перейдите в нужный подраздел.</p>
+        </div>
+        <div id="sections-cards-container" class="row g-4">
+            <div class="col-md-6 col-lg-3">
+                <a href="tours.html" class="text-decoration-none text-dark">
+                    <div class="interactive-card interactive-card--overlay">
+                        <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&q=80" class="interactive-media" alt="Туры">
+                        <div class="interactive-info">
+                            <h5 class="mb-1">Йога-туры</h5>
+                            <p>Актуальные и прошедшие маршруты</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <a href="courses-beginners.html" class="text-decoration-none text-dark">
+                    <div class="interactive-card interactive-card--overlay">
+                        <img src="https://images.unsplash.com/photo-1599447421405-0753f5d1a5ca?auto=format&fit=crop&q=80" class="interactive-media" alt="Курсы">
+                        <div class="interactive-info">
+                            <h5 class="mb-1">Наши курсы</h5>
+                            <p>Йога и медитации</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <a href="consultations-private.html" class="text-decoration-none text-dark">
+                    <div class="interactive-card interactive-card--overlay">
+                        <img src="https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&q=80" class="interactive-media" alt="Консультации">
+                        <div class="interactive-info">
+                            <h5 class="mb-1">Консультации</h5>
+                            <p>Индивидуальные и групповые</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <a href="blog-articles.html" class="text-decoration-none text-dark">
+                    <div class="interactive-card interactive-card--overlay">
+                        <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&q=80" class="interactive-media" alt="Блог">
+                        <div class="interactive-info">
+                            <h5 class="mb-1">Блог</h5>
+                            <p>Статьи, фото и видео</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="tours-anchor" class="py-5" style="background-color: #f1f4f7;">
+    <div class="container py-5">
+        <div class="text-center mb-5">
+            <h6 class="text-warning fw-bold text-uppercase">Йога-туры</h6>
+            <h2 class="fw-bold display-5">Предстоящие программы</h2>
+            <p class="text-muted">Нажмите на тур для подробностей и записи.</p>
+            <a href="tours.html" class="btn btn-outline-dark rounded-pill px-4 mt-2">Все туры</a>
+        </div>
+
+        <div id="tours-container" class="row g-4">
+            <div class="text-center py-5 w-100">
+                <div class="spinner-border text-warning" role="status">
+                    <span class="visually-hidden">Загрузка...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="courses-anchor" class="py-5 bg-light split-media-section">
+    <div class="container py-5">
+        <div class="text-center mb-4">
+            <h6 class="text-warning fw-bold text-uppercase">Наши курсы</h6>
+            <h2 class="fw-bold">Йога (Аюрведа) и Медитации (Пранаяма)</h2>
+        </div>
+        <div id="courses-cards-container" class="row g-4">
+            <div class="col-md-6">
+                <a href="courses-beginners.html" class="text-decoration-none text-dark">
+                    <div class="interactive-card interactive-card--overlay">
+                        <img src="https://images.unsplash.com/photo-1510894347713-fc3ed6fdf539?auto=format&fit=crop&q=80" class="interactive-media" alt="Йога аюрведа">
+                        <div class="interactive-info">
+                            <h5 class="mb-1">Йога (Аюрведа)</h5>
+                            <p>Базовые и углубленные практики с философией.</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-6">
+                <a href="courses-meditation.html" class="text-decoration-none text-dark">
+                    <div class="interactive-card interactive-card--overlay">
+                        <img src="https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&q=80" class="interactive-media" alt="Медитации пранаяма">
+                        <div class="interactive-info">
+                            <h5 class="mb-1">Медитации (Пранаяма)</h5>
+                            <p>Дыхание, концентрация и восстановление баланса.</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="consultations-anchor" class="py-5 bg-white split-media-section">
+    <div class="container py-5">
+        <div class="text-center mb-4">
+            <h6 class="text-warning fw-bold text-uppercase">Консультации</h6>
+            <h2 class="fw-bold">Индивидуальные и групповые форматы</h2>
+        </div>
+        <div id="consultations-cards-container" class="row g-4">
+            <div class="col-md-6">
+                <a href="consultations-private.html" class="text-decoration-none text-dark">
+                    <div class="interactive-card interactive-card--overlay">
+                        <img src="https://images.unsplash.com/photo-1593810450967-f9c42742e326?auto=format&fit=crop&q=80" class="interactive-media" alt="Индивидуальные консультации">
+                        <div class="interactive-info">
+                            <h5 class="mb-1">Индивидуальные консультации</h5>
+                            <p>Персональный план и сопровождение.</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-6">
+                <a href="consultations-group.html" class="text-decoration-none text-dark">
+                    <div class="interactive-card interactive-card--overlay">
+                        <img src="https://images.unsplash.com/photo-1575052814086-f385e2e2ad1b?auto=format&fit=crop&q=80" class="interactive-media" alt="Групповые консультации">
+                        <div class="interactive-info">
+                            <h5 class="mb-1">Групповые консультации</h5>
+                            <p>Практика и разбор в мини-группах.</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="blog-anchor" class="py-5 bg-light split-media-section">
+    <div class="container py-5">
+        <div class="text-center mb-4">
+            <h6 class="text-warning fw-bold text-uppercase">Блог</h6>
+            <h2 class="fw-bold">Статьи, фото и видео</h2>
+        </div>
+        <div id="blog-cards-container" class="row g-4">
+            <div class="col-md-6">
+                <a href="blog-articles.html" class="text-decoration-none text-dark">
+                    <div class="interactive-card interactive-card--overlay">
+                        <img src="https://images.unsplash.com/photo-1456324504439-367cee3b3c32?auto=format&fit=crop&q=80" class="interactive-media" alt="Статьи">
+                        <div class="interactive-info">
+                            <h5 class="mb-1">Статьи</h5>
+                            <p>Техники, здоровый образ жизни, интересное.</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-6">
+                <a href="blog-videos.html" class="text-decoration-none text-dark">
+                    <div class="interactive-card interactive-card--overlay">
+                        <img src="https://images.unsplash.com/photo-1529699211952-734e80c4d42b?auto=format&fit=crop&q=80" class="interactive-media" alt="Видео фото">
+                        <div class="interactive-info">
+                            <h5 class="mb-1">Видео + фото</h5>
+                            <p>Занятия, туры и полезные материалы.</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="gallery-latest-section" class="py-5 bg-light">
+    <div class="container py-5">
+        <div class="text-center mb-5">
+            <h6 class="text-warning fw-bold text-uppercase">Галерея</h6>
+            <h2 class="fw-bold display-5 mb-3 font-playfair">Свежие фото из наших туров и занятий</h2>
+            <p class="text-muted col-lg-8 mx-auto">Каждый момент — это история. Следите за нашей жизнью в реальном времени.</p>
+        </div>
+        <div id="latest-photos-gallery" class="row g-4 mobile-horizontal-scroll">
+             <!-- JS injects photos here -->
+             <div class="text-center py-5 w-100">
+                <div class="spinner-border text-warning" role="status">
+                    <span class="visually-hidden">Загрузка...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="about-anchor" class="py-5 bg-white">
+    <div class="container py-5">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-6">
+                <h6 class="text-warning fw-bold text-uppercase">О нас</h6>
+                <h2 class="fw-bold display-6 mb-4">Йога как понятная система для жизни</h2>
+                <p class="text-muted mb-3">Мы объединяем практику, теорию и сопровождение, чтобы вы занимались регулярно и безопасно.</p>
+                <a href="about.html" class="btn btn-brand">Подробнее</a>
+            </div>
+            <div class="col-lg-6">
+                <a href="about.html" class="text-decoration-none text-dark">
+                    <div class="interactive-card">
+                        <img src="https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&q=80" class="interactive-media" alt="О нас">
+                        <div class="p-3">
+                            <h5 class="mb-1">Команда и методика</h5>
+                            <p class="small text-muted mb-0">Подход, ценности и история платформы.</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer class="bg-dark text-white py-5">
+    <div class="container text-center">
+        <h3 class="fw-bold mb-3">YOGA.LIFE</h3>
+        <p class="text-muted mb-4">Практикуйте йогу где угодно и когда угодно.</p>
+        <div class="d-flex justify-content-center gap-3 mb-4 fs-4">
+            <a href="about-contacts.html#instagram" class="text-white" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
+            <a href="about-contacts.html#telegram" class="text-white" aria-label="Telegram"><i class="bi bi-telegram"></i></a>
+            <a href="about-contacts.html#facebook" class="text-white" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
+            <a href="about-contacts.html#whatsapp" class="text-white" aria-label="WhatsApp"><i class="bi bi-whatsapp"></i></a>
+        </div>
+        <div class="mb-2">
+            <a href="user-agreement.html" class="text-white-50 text-decoration-none me-3">Пользовательское соглашение</a>
+            <a href="privacy-policy.html" class="text-white-50 text-decoration-none">Политика конфиденциальности</a>
+        </div>
+        <div class="mb-2">
+            <a href="admin.html" class="text-white-50 text-decoration-none">Админка</a>
+        </div>
+        <p class="small text-muted mb-0">&copy; 2026 - YOGA.LIFE</p>
+    </div>
+</footer>
+
+<script>
+    function buyCourse(courseTitle) {
+        if (typeof window.openBookingModal === 'function') {
+            window.openBookingModal('', courseTitle, 'general');
+            return;
+        }
+
+        alert('Форма записи временно недоступна. Обновите страницу и попробуйте снова.');
+    }
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

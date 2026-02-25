@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Менторство | YOGA.LIFE</title>
+    
+    <!-- 1. Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- 2. Наши стили -->
+    <link rel="stylesheet" href="css/style.css">
+    
+    <!-- 3. Шрифты (Атмосфера) -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Иконки -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    
+    <!-- Кастомный стиль для Hero изображения этой страницы -->
+    <style>
+        .page-hero {
+            height: 60vh; 
+            min-height: 500px;
+            background: url('https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=2070&auto=format&fit=crop') no-repeat center center/cover;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 🟢 HEADER (Меню) -->
+    <nav class="navbar navbar-expand-lg fixed-top navbar-dark">
+        <div class="container">
+            <a class="navbar-brand font-playfair fs-3" href="index.html">YOGA.LIFE</a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav mx-auto align-items-center gap-4"> 
+                    <li class="nav-item"><a class="nav-link fs-5 fw-light" href="tours.html">Туры</a></li>
+                    
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle fs-5 fw-light" href="#" id="navbarDropdownCourses" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Курсы
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownCourses">
+                            <li><a class="dropdown-item" href="courses-beginners.html">Йога-занятия</a></li>
+                            <li><a class="dropdown-item" href="courses-meditation.html">Медитации и Пранаяма</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="courses-women.html">Женское здоровье</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle fs-5 fw-light" href="#" id="navbarDropdownConsultations" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Консультации
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownConsultations">
+                            <li><a class="dropdown-item" href="consultations-private.html">Индивидуальная тренировка</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle fs-5 fw-light" href="#" id="navbarDropdownBlog" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Блог
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownBlog">
+                            <li><a class="dropdown-item" href="blog-articles.html">Полезные статьи</a></li>
+                            <li><a class="dropdown-item" href="blog-videos.html">Видео-уроки</a></li>
+                            <li><a class="dropdown-item" href="blog-classes.html">Занятия</a></li>
+                            <li><a class="dropdown-item" href="blog-recipes.html">Рецепты</a></li>
+                            <li><a class="dropdown-item" href="blog-podcasts.html">Подкасты</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="nav-item"><a class="nav-link fs-5 fw-light" href="about.html">О нас</a></li>
+                </ul>
+
+                <a href="index.html#booking" class="btn btn-outline-light rounded-pill px-4 btn-sm ms-lg-3 d-none d-lg-block">Личный Кабинет</a>
+                 <!-- Кнопка для мобилки -->
+                 <a href="index.html#booking" class="btn btn-outline-light rounded-pill px-4 btn-sm mt-3 d-lg-none text-center d-block">Личный Кабинет</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 🟢 HERO SECTION -->
+    <section class="hero-section page-hero d-flex align-items-center text-center text-white position-relative">
+        <div class="overlay"></div> 
+        <div class="container position-relative z-2">
+            <span class="text-uppercase ls-2 mb-3 d-block text-warning small fw-bold">Личное Наставничество</span>
+            <h1 class="display-3 font-playfair mb-4">Менторство</h1>
+            <p class="lead mb-5 col-lg-8 mx-auto fw-light">
+                Глубокая работа над личностным ростом, дисциплиной и достижением целей через йогу и коучинг.
+            </p>
+        </div>
+    </section>
+
+    <!-- 🟢 CONTENT SECTION -->
+    <section class="py-5 bg-light details-section">
+        <div class="container py-5">
+            <h2 class="font-playfair mb-5 text-dark text-center">Программы менторства</h2>
+            <div id="products-container" class="row g-4 justify-content-center">
+                <div class="text-center">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-4 text-center">
+        <div class="container">
+            <small class="text-white-50">&copy; 2026 Yoga Platform. Все права защищены.</small>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

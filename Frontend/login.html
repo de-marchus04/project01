@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вход в админ-панель - YOGA.LIFE</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    
+    <style>
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: block;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding-top: 110px;
+            padding-bottom: 40px;
+        }
+        
+        .login-card {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08); /* Мягкая тень */
+            width: 100%;
+            max-width: 400px;
+            transition: transform 0.3s ease;
+            margin: 0 auto;
+        }
+
+        .login-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .brand-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .brand-header h2 {
+            font-weight: 800;
+            color: #2c3e50;
+            letter-spacing: -1px;
+        }
+
+        .brand-header p {
+            color: #95a5a6;
+            font-size: 0.9rem;
+        }
+        
+        .form-control {
+            border-radius: 10px;
+            padding: 0.75rem 1rem;
+            border: 1px solid #e0e0e0;
+            background-color: #f8f9fa;
+        }
+
+        .form-control:focus {
+            box-shadow: 0 0 0 3px rgba(212, 163, 115, 0.2); /* Цвет бренда */
+            border-color: #d4a373; 
+            background-color: #fff;
+        }
+
+        .btn-primary {
+            background-color: #d4a373;
+            border: none;
+            border-radius: 10px;
+            padding: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: all 0.3s;
+        }
+
+        .btn-primary:hover {
+            background-color: #c49262;
+            transform: scale(1.02);
+        }
+
+        .helper-links {
+            margin-top: 1.5rem;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        .helper-links a {
+            color: #2c3e50;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .helper-links a:hover {
+            text-decoration: underline;
+        }
+
+        #errorMessage {
+            display: none;
+            font-size: 0.85rem;
+            margin-top: 1rem;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg fixed-top" style="background:#fff;padding:1rem 0;box-shadow:0 2px 15px rgba(0,0,0,0.05)">
+        <div class="container">
+            <a class="navbar-brand" href="index.html" style="font-family:'Segoe UI',sans-serif;font-weight:800;font-size:2.28rem;color:#2c3e50!important;text-decoration:none;letter-spacing:-0.5px;">YOGA.LIFE</a>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#authNavbarMenu" aria-controls="authNavbarMenu" aria-expanded="false" aria-label="Переключить навигацию">
+                <span class="navbar-toggler-icon" style="background-image:url(&quot;data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(212,163,115,1)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e&quot;)"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="authNavbarMenu">
+                <ul class="navbar-nav ms-auto w-100 justify-content-lg-end align-items-lg-center gap-lg-4 mt-3 mt-lg-0 pe-lg-1">
+                    <li class="nav-item"><a class="nav-link" href="tours.html" style="font-family:'Segoe UI',sans-serif;font-weight:800;font-size:1.1rem;letter-spacing:.02em;color:#2c3e50!important;">Туры</a></li>
+                    <li class="nav-item"><a class="nav-link" href="courses-beginners.html" style="font-family:'Segoe UI',sans-serif;font-weight:800;font-size:1.1rem;letter-spacing:.02em;color:#2c3e50!important;">Курсы</a></li>
+                    <li class="nav-item"><a class="nav-link" href="consultations-private.html" style="font-family:'Segoe UI',sans-serif;font-weight:800;font-size:1.1rem;letter-spacing:.02em;color:#2c3e50!important;">Консультации</a></li>
+                    <li class="nav-item"><a class="nav-link" href="blog-articles.html" style="font-family:'Segoe UI',sans-serif;font-weight:800;font-size:1.1rem;letter-spacing:.02em;color:#2c3e50!important;">Блог</a></li>
+                    <li class="nav-item"><a class="nav-link" href="about.html" style="font-family:'Segoe UI',sans-serif;font-weight:800;font-size:1.1rem;letter-spacing:.02em;color:#2c3e50!important;">О нас</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="login-card">
+        <div class="brand-header">
+            <a href="index.html" class="text-decoration-none">
+                <h2>YOGA.LIFE</h2>
+            </a>
+            <p>Вход администратора</p>
+        </div>
+
+        <form id="loginForm">
+            <div class="mb-3">
+                <label for="username" class="form-label text-muted small fw-bold">ЛОГИН АДМИНИСТРАТОРА</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-person"></i></span>
+                    <input type="text" class="form-control border-start-0 ps-0" id="username" placeholder="admin" required>
+                </div>
+                <div class="form-text text-muted small">Используйте логин, а не email (например: admin)</div>
+            </div>
+            
+            <div class="mb-4">
+                <label for="password" class="form-label text-muted small fw-bold">ПАРОЛЬ</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-lock"></i></span>
+                    <input type="password" class="form-control border-start-0 ps-0" id="password" placeholder="••••••••" required>
+                </div>
+            </div>
+
+            <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-primary" id="loginBtn">
+                    Войти в админ-панель
+                </button>
+            </div>
+
+            <!-- Error Alert -->
+            <div class="alert alert-danger d-flex align-items-center" role="alert" id="errorMessage">
+                <i class="bi bi-exclamation-triangle-fill flex-shrink-0 me-2"></i>
+                <div id="errorText">
+                    Неверный логин или пароль
+                </div>
+            </div>
+
+        </form>
+    </div>
+
+    <section class="container py-4">
+        <div class="row g-4 align-items-center">
+            <div class="col-lg-6">
+                <h2 style="font-family:'Segoe UI',sans-serif;font-weight:800;letter-spacing:-0.5px;">Материалы для старта</h2>
+                <p class="text-muted mb-0">После входа вы получите доступ к программам, записям практик и дополнительным текстовым материалам, которые помогут выстроить устойчивый режим занятий.</p>
+            </div>
+            <div class="col-lg-6">
+                <img src="https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&q=80" alt="Материалы после входа" class="img-fluid rounded-4 shadow-sm" style="width:100%;height:250px;object-fit:cover;">
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-dark text-white py-5 mt-5">
+        <div class="container text-center">
+            <div class="mb-2">
+                <a href="user-agreement.html" class="text-white-50 text-decoration-none me-3">Пользовательское соглашение</a>
+                <a href="privacy-policy.html" class="text-white-50 text-decoration-none">Политика конфиденциальности</a>
+            </div>
+            <div class="mb-2"><a href="admin.html" class="text-white-50 text-decoration-none">Админка</a></div>
+            <p class="small text-muted mb-0">&copy; 2026 - YOGA.LIFE</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const usernameInput = document.getElementById('username');
+            const passwordInput = document.getElementById('password');
+            const errorBox = document.getElementById('errorMessage');
+            const errorText = document.getElementById('errorText');
+            const btn = document.getElementById('loginBtn');
+
+            // Reset state
+            errorBox.style.display = 'none';
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Вход...';
+            btn.disabled = true;
+
+            const userData = {
+                username: usernameInput.value,
+                password: passwordInput.value
+            };
+
+            try {
+                // Use relative path for robustness
+                const response = await fetch(`${API_URL}/users/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(userData)
+                });
+
+                if (response.ok) {
+                    const authPayload = await response.json();
+                    const user = authPayload.user || authPayload;
+                    
+                    // 1. Сохраняем пользователя в LocalStorage
+                    localStorage.setItem('yoga_user', JSON.stringify(authPayload));
+                    
+                    // 2. Успешный вход UI
+                    btn.classList.add('btn-success');
+                    btn.classList.remove('btn-primary');
+                    btn.innerHTML = '<i class="bi bi-check-circle"></i> Успешно!';
+                    
+                    // 3. Вход только для админа
+                    const role = user.role || user.Role || 'User';
+                    if (role !== 'Admin') {
+                        localStorage.removeItem('yoga_user');
+                        throw new Error('forbidden');
+                    }
+
+                    setTimeout(() => {
+                        window.location.href = 'admin.html';
+                    }, 800);
+
+                } else {
+                    throw new Error('Неверные данные');
+                }
+            } catch (error) {
+                console.error(error);
+                errorBox.style.display = 'flex';
+                errorText.innerText = 'Доступ только для администратора. Проверьте логин и пароль.';
+                btn.innerHTML = 'Войти в админ-панель';
+                btn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>

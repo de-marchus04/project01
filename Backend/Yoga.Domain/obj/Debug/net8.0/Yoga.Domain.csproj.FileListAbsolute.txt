@@ -1,0 +1,11 @@
+/home/dmitrij/Freelance_Projects/YogaPlatform/Backend/Yoga.Domain/bin/Debug/net8.0/Yoga.Domain.deps.json
+/home/dmitrij/Freelance_Projects/YogaPlatform/Backend/Yoga.Domain/bin/Debug/net8.0/Yoga.Domain.dll
+/home/dmitrij/Freelance_Projects/YogaPlatform/Backend/Yoga.Domain/bin/Debug/net8.0/Yoga.Domain.pdb
+/home/dmitrij/Freelance_Projects/YogaPlatform/Backend/Yoga.Domain/obj/Debug/net8.0/Yoga.Domain.GeneratedMSBuildEditorConfig.editorconfig
+/home/dmitrij/Freelance_Projects/YogaPlatform/Backend/Yoga.Domain/obj/Debug/net8.0/Yoga.Domain.AssemblyInfoInputs.cache
+/home/dmitrij/Freelance_Projects/YogaPlatform/Backend/Yoga.Domain/obj/Debug/net8.0/Yoga.Domain.AssemblyInfo.cs
+/home/dmitrij/Freelance_Projects/YogaPlatform/Backend/Yoga.Domain/obj/Debug/net8.0/Yoga.Domain.csproj.CoreCompileInputs.cache
+/home/dmitrij/Freelance_Projects/YogaPlatform/Backend/Yoga.Domain/obj/Debug/net8.0/Yoga.Domain.dll
+/home/dmitrij/Freelance_Projects/YogaPlatform/Backend/Yoga.Domain/obj/Debug/net8.0/refint/Yoga.Domain.dll
+/home/dmitrij/Freelance_Projects/YogaPlatform/Backend/Yoga.Domain/obj/Debug/net8.0/Yoga.Domain.pdb
+/home/dmitrij/Freelance_Projects/YogaPlatform/Backend/Yoga.Domain/obj/Debug/net8.0/ref/Yoga.Domain.dll

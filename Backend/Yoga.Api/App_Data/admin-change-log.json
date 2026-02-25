@@ -1,0 +1,884 @@
+[
+  {
+    "timestampUtc": "2026-02-24T23:21:32.4219146Z",
+    "username": "admin",
+    "method": "POST",
+    "path": "/api/articles",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-24T23:21:32.4091419Z",
+    "username": "admin",
+    "method": "POST",
+    "path": "/api/articles",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-24T23:21:32.3988623Z",
+    "username": "admin",
+    "method": "POST",
+    "path": "/api/articles",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-24T23:21:32.3844558Z",
+    "username": "admin",
+    "method": "POST",
+    "path": "/api/articles",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-24T23:21:32.3739813Z",
+    "username": "admin",
+    "method": "POST",
+    "path": "/api/articles",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-24T23:21:32.3598873Z",
+    "username": "admin",
+    "method": "POST",
+    "path": "/api/consultations",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-24T23:21:32.3445626Z",
+    "username": "admin",
+    "method": "POST",
+    "path": "/api/consultations",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-24T23:21:32.3307556Z",
+    "username": "admin",
+    "method": "POST",
+    "path": "/api/consultations",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-24T23:21:32.3180254Z",
+    "username": "admin",
+    "method": "POST",
+    "path": "/api/consultations",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-24T23:21:32.3057024Z",
+    "username": "admin",
+    "method": "POST",
+    "path": "/api/courses",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-24T23:21:32.285781Z",
+    "username": "admin",
+    "method": "POST",
+    "path": "/api/courses",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-24T23:21:32.2734369Z",
+    "username": "admin",
+    "method": "POST",
+    "path": "/api/courses",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-24T23:21:32.2617968Z",
+    "username": "admin",
+    "method": "POST",
+    "path": "/api/courses",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-24T23:21:32.2470915Z",
+    "username": "admin",
+    "method": "POST",
+    "path": "/api/courses",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-24T23:21:32.2359306Z",
+    "username": "admin",
+    "method": "POST",
+    "path": "/api/courses",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-24T23:21:30.0997649Z",
+    "username": "admin",
+    "method": "POST",
+    "path": "/api/articles",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-24T23:21:30.0894482Z",
+    "username": "admin",
+    "method": "POST",
+    "path": "/api/articles",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-24T23:21:30.0794977Z",
+    "username": "admin",
+    "method": "POST",
+    "path": "/api/articles",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-24T23:21:30.0660424Z",
+    "username": "admin",
+    "method": "POST",
+    "path": "/api/articles",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-24T23:21:30.0560146Z",
+    "username": "admin",
+    "method": "POST",
+    "path": "/api/articles",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-24T23:21:30.0172431Z",
+    "username": "admin",
+    "method": "POST",
+    "path": "/api/consultations",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-24T23:21:30.0057322Z",
+    "username": "admin",
+    "method": "POST",
+    "path": "/api/consultations",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-24T23:21:29.9944535Z",
+    "username": "admin",
+    "method": "POST",
+    "path": "/api/consultations",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-24T23:21:29.9832056Z",
+    "username": "admin",
+    "method": "POST",
+    "path": "/api/consultations",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-24T23:21:29.9605201Z",
+    "username": "admin",
+    "method": "POST",
+    "path": "/api/courses",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-24T23:21:29.9508614Z",
+    "username": "admin",
+    "method": "POST",
+    "path": "/api/courses",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-24T23:21:29.9374097Z",
+    "username": "admin",
+    "method": "POST",
+    "path": "/api/courses",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-24T23:21:29.9252481Z",
+    "username": "admin",
+    "method": "POST",
+    "path": "/api/courses",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-24T23:21:29.9151971Z",
+    "username": "admin",
+    "method": "POST",
+    "path": "/api/courses",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-24T23:21:29.8854856Z",
+    "username": "admin",
+    "method": "POST",
+    "path": "/api/courses",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-24T13:45:25.0778442Z",
+    "username": "admin",
+    "method": "PUT",
+    "path": "/api/courses/45",
+    "statusCode": 204
+  },
+  {
+    "timestampUtc": "2026-02-24T13:42:44.8730401Z",
+    "username": "admin",
+    "method": "DELETE",
+    "path": "/api/courses/47",
+    "statusCode": 204
+  },
+  {
+    "timestampUtc": "2026-02-24T13:36:22.0755723Z",
+    "username": "admin",
+    "method": "POST",
+    "path": "/api/upload",
+    "statusCode": 200
+  },
+  {
+    "timestampUtc": "2026-02-24T13:36:21.6812311Z",
+    "username": "admin",
+    "method": "POST",
+    "path": "/api/upload",
+    "statusCode": 200
+  },
+  {
+    "timestampUtc": "2026-02-24T13:35:45.9877195Z",
+    "username": "admin",
+    "method": "POST",
+    "path": "/api/upload",
+    "statusCode": 200
+  },
+  {
+    "timestampUtc": "2026-02-24T12:46:49.5475334Z",
+    "username": "admin",
+    "method": "DELETE",
+    "path": "/api/courses/1",
+    "statusCode": 204
+  },
+  {
+    "timestampUtc": "2026-02-24T12:46:01.6935059Z",
+    "username": "admin",
+    "method": "DELETE",
+    "path": "/api/courses/2",
+    "statusCode": 204
+  },
+  {
+    "timestampUtc": "2026-02-24T12:20:56.1107288Z",
+    "username": "admin",
+    "method": "POST",
+    "path": "/api/articles",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-24T12:20:56.0659799Z",
+    "username": "admin",
+    "method": "POST",
+    "path": "/api/articles",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-24T12:20:55.9767877Z",
+    "username": "admin",
+    "method": "POST",
+    "path": "/api/consultations",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-24T12:20:55.9327822Z",
+    "username": "admin",
+    "method": "POST",
+    "path": "/api/consultations",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-24T12:20:55.8494767Z",
+    "username": "admin",
+    "method": "POST",
+    "path": "/api/courses",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-24T12:20:55.8018387Z",
+    "username": "admin",
+    "method": "POST",
+    "path": "/api/courses",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-24T12:20:55.7499405Z",
+    "username": "admin",
+    "method": "POST",
+    "path": "/api/courses",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-24T12:17:56.8802609Z",
+    "username": "admin",
+    "method": "DELETE",
+    "path": "/api/courses/44",
+    "statusCode": 204
+  },
+  {
+    "timestampUtc": "2026-02-24T12:17:56.7633589Z",
+    "username": "admin",
+    "method": "POST",
+    "path": "/api/courses",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-24T12:10:39.0196949Z",
+    "username": "admin",
+    "method": "DELETE",
+    "path": "/api/courses/5",
+    "statusCode": 204
+  },
+  {
+    "timestampUtc": "2026-02-24T12:03:15.6228043Z",
+    "username": "dmitrij_admin",
+    "method": "DELETE",
+    "path": "/api/courses/43",
+    "statusCode": 204
+  },
+  {
+    "timestampUtc": "2026-02-24T12:03:15.5610002Z",
+    "username": "dmitrij_admin",
+    "method": "POST",
+    "path": "/api/courses",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-24T12:00:03.273743Z",
+    "username": "dmitrij_admin",
+    "method": "DELETE",
+    "path": "/api/courses/42",
+    "statusCode": 204
+  },
+  {
+    "timestampUtc": "2026-02-24T12:00:03.2285093Z",
+    "username": "dmitrij_admin",
+    "method": "POST",
+    "path": "/api/courses",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-24T11:49:03.9251878Z",
+    "username": "dmitrij_admin",
+    "method": "DELETE",
+    "path": "/api/courses/41",
+    "statusCode": 204
+  },
+  {
+    "timestampUtc": "2026-02-24T11:49:03.9021013Z",
+    "username": "dmitrij_admin",
+    "method": "POST",
+    "path": "/api/courses",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-24T11:37:43.3055435Z",
+    "username": "dmitrij_admin",
+    "method": "DELETE",
+    "path": "/api/courses/40",
+    "statusCode": 204
+  },
+  {
+    "timestampUtc": "2026-02-24T11:37:43.2743151Z",
+    "username": "dmitrij_admin",
+    "method": "POST",
+    "path": "/api/courses",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-24T11:02:47.8099601Z",
+    "username": "dmitrij_admin",
+    "method": "DELETE",
+    "path": "/api/courses/39",
+    "statusCode": 204
+  },
+  {
+    "timestampUtc": "2026-02-24T11:02:47.7866649Z",
+    "username": "dmitrij_admin",
+    "method": "POST",
+    "path": "/api/courses",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-24T10:57:13.2674064Z",
+    "username": "dmitrij_admin",
+    "method": "DELETE",
+    "path": "/api/courses/38",
+    "statusCode": 204
+  },
+  {
+    "timestampUtc": "2026-02-24T10:57:13.2444124Z",
+    "username": "dmitrij_admin",
+    "method": "POST",
+    "path": "/api/courses",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-24T10:48:08.4367563Z",
+    "username": "dmitrij_admin",
+    "method": "DELETE",
+    "path": "/api/courses/37",
+    "statusCode": 204
+  },
+  {
+    "timestampUtc": "2026-02-24T10:48:08.4094444Z",
+    "username": "dmitrij_admin",
+    "method": "POST",
+    "path": "/api/courses",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-24T10:40:33.5977979Z",
+    "username": "dmitrij_admin",
+    "method": "DELETE",
+    "path": "/api/courses/36",
+    "statusCode": 204
+  },
+  {
+    "timestampUtc": "2026-02-24T10:40:33.5711676Z",
+    "username": "dmitrij_admin",
+    "method": "POST",
+    "path": "/api/courses",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-24T10:26:50.4226331Z",
+    "username": "dmitrij_admin",
+    "method": "DELETE",
+    "path": "/api/courses/35",
+    "statusCode": 204
+  },
+  {
+    "timestampUtc": "2026-02-24T10:26:50.3715444Z",
+    "username": "dmitrij_admin",
+    "method": "POST",
+    "path": "/api/courses",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-23T19:00:33.6722213Z",
+    "username": "dmitrij_admin",
+    "method": "DELETE",
+    "path": "/api/courses/34",
+    "statusCode": 204
+  },
+  {
+    "timestampUtc": "2026-02-23T19:00:33.6488876Z",
+    "username": "dmitrij_admin",
+    "method": "POST",
+    "path": "/api/courses",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-23T18:50:45.4387063Z",
+    "username": "dmitrij_admin",
+    "method": "DELETE",
+    "path": "/api/courses/33",
+    "statusCode": 204
+  },
+  {
+    "timestampUtc": "2026-02-23T18:50:45.3952689Z",
+    "username": "dmitrij_admin",
+    "method": "POST",
+    "path": "/api/courses",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-23T18:37:49.0192391Z",
+    "username": "dmitrij_admin",
+    "method": "DELETE",
+    "path": "/api/courses/32",
+    "statusCode": 204
+  },
+  {
+    "timestampUtc": "2026-02-23T18:37:48.974103Z",
+    "username": "dmitrij_admin",
+    "method": "POST",
+    "path": "/api/courses",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-23T18:25:45.5291173Z",
+    "username": "dmitrij_admin",
+    "method": "DELETE",
+    "path": "/api/courses/31",
+    "statusCode": 204
+  },
+  {
+    "timestampUtc": "2026-02-23T18:25:45.4574506Z",
+    "username": "dmitrij_admin",
+    "method": "POST",
+    "path": "/api/courses",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-23T18:18:13.8361532Z",
+    "username": "dmitrij_admin",
+    "method": "DELETE",
+    "path": "/api/courses/30",
+    "statusCode": 204
+  },
+  {
+    "timestampUtc": "2026-02-23T18:18:13.7651313Z",
+    "username": "dmitrij_admin",
+    "method": "POST",
+    "path": "/api/courses",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-23T16:48:41.4701145Z",
+    "username": "dmitrij_admin",
+    "method": "DELETE",
+    "path": "/api/courses/29",
+    "statusCode": 204
+  },
+  {
+    "timestampUtc": "2026-02-23T16:48:41.4041517Z",
+    "username": "dmitrij_admin",
+    "method": "POST",
+    "path": "/api/courses",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-23T16:42:57.373943Z",
+    "username": "dmitrij_admin",
+    "method": "DELETE",
+    "path": "/api/courses/28",
+    "statusCode": 204
+  },
+  {
+    "timestampUtc": "2026-02-23T16:42:57.3041259Z",
+    "username": "dmitrij_admin",
+    "method": "POST",
+    "path": "/api/courses",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-23T16:38:53.8648Z",
+    "username": "dmitrij_admin",
+    "method": "DELETE",
+    "path": "/api/courses/27",
+    "statusCode": 204
+  },
+  {
+    "timestampUtc": "2026-02-23T16:38:53.8025814Z",
+    "username": "dmitrij_admin",
+    "method": "POST",
+    "path": "/api/courses",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-23T16:31:14.6949423Z",
+    "username": "dmitrij_admin",
+    "method": "DELETE",
+    "path": "/api/courses/26",
+    "statusCode": 204
+  },
+  {
+    "timestampUtc": "2026-02-23T16:31:14.6244422Z",
+    "username": "dmitrij_admin",
+    "method": "POST",
+    "path": "/api/courses",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-23T16:23:05.1864356Z",
+    "username": "dmitrij_admin",
+    "method": "DELETE",
+    "path": "/api/courses/25",
+    "statusCode": 204
+  },
+  {
+    "timestampUtc": "2026-02-23T16:23:05.1190133Z",
+    "username": "dmitrij_admin",
+    "method": "POST",
+    "path": "/api/courses",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-23T16:17:26.7785977Z",
+    "username": "dmitrij_admin",
+    "method": "DELETE",
+    "path": "/api/courses/24",
+    "statusCode": 204
+  },
+  {
+    "timestampUtc": "2026-02-23T16:17:26.7153228Z",
+    "username": "dmitrij_admin",
+    "method": "POST",
+    "path": "/api/courses",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-23T16:10:26.7520438Z",
+    "username": "dmitrij_admin",
+    "method": "DELETE",
+    "path": "/api/courses/23",
+    "statusCode": 204
+  },
+  {
+    "timestampUtc": "2026-02-23T16:10:26.6889777Z",
+    "username": "dmitrij_admin",
+    "method": "POST",
+    "path": "/api/courses",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-23T15:58:59.2495444Z",
+    "username": "dmitrij_admin",
+    "method": "DELETE",
+    "path": "/api/courses/22",
+    "statusCode": 204
+  },
+  {
+    "timestampUtc": "2026-02-23T15:58:59.1866616Z",
+    "username": "dmitrij_admin",
+    "method": "POST",
+    "path": "/api/courses",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-23T15:30:15.519137Z",
+    "username": "dmitrij_admin",
+    "method": "DELETE",
+    "path": "/api/courses/21",
+    "statusCode": 204
+  },
+  {
+    "timestampUtc": "2026-02-23T15:30:15.3463803Z",
+    "username": "dmitrij_admin",
+    "method": "POST",
+    "path": "/api/courses",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-23T15:29:22.528736Z",
+    "username": "dmitrij_admin",
+    "method": "DELETE",
+    "path": "/api/courses/20",
+    "statusCode": 204
+  },
+  {
+    "timestampUtc": "2026-02-23T15:29:22.4584546Z",
+    "username": "dmitrij_admin",
+    "method": "POST",
+    "path": "/api/courses",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-23T15:17:30.7705184Z",
+    "username": "dmitrij_admin",
+    "method": "DELETE",
+    "path": "/api/courses/19",
+    "statusCode": 204
+  },
+  {
+    "timestampUtc": "2026-02-23T15:17:30.7074108Z",
+    "username": "dmitrij_admin",
+    "method": "POST",
+    "path": "/api/courses",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-23T15:09:52.7780207Z",
+    "username": "dmitrij_admin",
+    "method": "DELETE",
+    "path": "/api/courses/18",
+    "statusCode": 204
+  },
+  {
+    "timestampUtc": "2026-02-23T15:09:52.7140249Z",
+    "username": "dmitrij_admin",
+    "method": "POST",
+    "path": "/api/courses",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-23T14:58:16.5277361Z",
+    "username": "dmitrij_admin",
+    "method": "DELETE",
+    "path": "/api/courses/17",
+    "statusCode": 204
+  },
+  {
+    "timestampUtc": "2026-02-23T14:58:16.4608817Z",
+    "username": "dmitrij_admin",
+    "method": "POST",
+    "path": "/api/courses",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-23T14:48:29.2473787Z",
+    "username": "dmitrij_admin",
+    "method": "DELETE",
+    "path": "/api/courses/16",
+    "statusCode": 204
+  },
+  {
+    "timestampUtc": "2026-02-23T14:48:29.1792673Z",
+    "username": "dmitrij_admin",
+    "method": "POST",
+    "path": "/api/courses",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-23T14:47:34.5334534Z",
+    "username": "dmitrij_admin",
+    "method": "DELETE",
+    "path": "/api/courses/15",
+    "statusCode": 204
+  },
+  {
+    "timestampUtc": "2026-02-23T14:47:34.4682311Z",
+    "username": "dmitrij_admin",
+    "method": "POST",
+    "path": "/api/courses",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-23T14:24:33.5673647Z",
+    "username": "dmitrij_admin",
+    "method": "DELETE",
+    "path": "/api/courses/14",
+    "statusCode": 204
+  },
+  {
+    "timestampUtc": "2026-02-23T14:24:33.501521Z",
+    "username": "dmitrij_admin",
+    "method": "POST",
+    "path": "/api/courses",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-23T14:23:41.9221722Z",
+    "username": "dmitrij_admin",
+    "method": "DELETE",
+    "path": "/api/courses/13",
+    "statusCode": 204
+  },
+  {
+    "timestampUtc": "2026-02-23T14:23:41.8550256Z",
+    "username": "dmitrij_admin",
+    "method": "POST",
+    "path": "/api/courses",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-23T13:49:47.4523998Z",
+    "username": "dmitrij_admin",
+    "method": "DELETE",
+    "path": "/api/courses/12",
+    "statusCode": 204
+  },
+  {
+    "timestampUtc": "2026-02-23T13:49:47.3856018Z",
+    "username": "dmitrij_admin",
+    "method": "POST",
+    "path": "/api/courses",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-23T13:48:52.7099746Z",
+    "username": "dmitrij_admin",
+    "method": "DELETE",
+    "path": "/api/courses/11",
+    "statusCode": 204
+  },
+  {
+    "timestampUtc": "2026-02-23T13:48:52.6357426Z",
+    "username": "dmitrij_admin",
+    "method": "POST",
+    "path": "/api/courses",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-23T13:47:55.4372498Z",
+    "username": "dmitrij_admin",
+    "method": "DELETE",
+    "path": "/api/courses/10",
+    "statusCode": 204
+  },
+  {
+    "timestampUtc": "2026-02-23T13:47:55.3732648Z",
+    "username": "dmitrij_admin",
+    "method": "POST",
+    "path": "/api/courses",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-23T12:58:37.2754747Z",
+    "username": "dmitrij_admin",
+    "method": "DELETE",
+    "path": "/api/orders/2",
+    "statusCode": 200
+  },
+  {
+    "timestampUtc": "2026-02-23T12:58:32.9223176Z",
+    "username": "dmitrij_admin",
+    "method": "DELETE",
+    "path": "/api/orders/1",
+    "statusCode": 200
+  },
+  {
+    "timestampUtc": "2026-02-23T12:58:26.8234087Z",
+    "username": "dmitrij_admin",
+    "method": "DELETE",
+    "path": "/api/users/9",
+    "statusCode": 200
+  },
+  {
+    "timestampUtc": "2026-02-23T12:45:26.3778015Z",
+    "username": "dmitrij_admin",
+    "method": "DELETE",
+    "path": "/api/courses/9",
+    "statusCode": 204
+  },
+  {
+    "timestampUtc": "2026-02-23T12:45:26.3105198Z",
+    "username": "dmitrij_admin",
+    "method": "POST",
+    "path": "/api/courses",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-23T12:34:50.948291Z",
+    "username": "dmitrij_admin",
+    "method": "DELETE",
+    "path": "/api/courses/8",
+    "statusCode": 204
+  },
+  {
+    "timestampUtc": "2026-02-23T12:34:50.8683771Z",
+    "username": "dmitrij_admin",
+    "method": "POST",
+    "path": "/api/courses",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-23T12:33:45.8364175Z",
+    "username": "dmitrij_admin",
+    "method": "DELETE",
+    "path": "/api/courses/7",
+    "statusCode": 204
+  },
+  {
+    "timestampUtc": "2026-02-23T12:33:45.7631499Z",
+    "username": "dmitrij_admin",
+    "method": "POST",
+    "path": "/api/courses",
+    "statusCode": 201
+  },
+  {
+    "timestampUtc": "2026-02-23T12:33:03.3930731Z",
+    "username": "dmitrij_admin",
+    "method": "DELETE",
+    "path": "/api/courses/6",
+    "statusCode": 204
+  },
+  {
+    "timestampUtc": "2026-02-23T12:33:03.311406Z",
+    "username": "dmitrij_admin",
+    "method": "POST",
+    "path": "/api/courses",
+    "statusCode": 201
+  }
+]

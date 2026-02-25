@@ -1,0 +1,52 @@
+﻿<Project>
+  <ItemGroup>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\uploads\03305b3c-71f7-4345-9298-1f5df3a4023d_IMG-e001f2d81a719ed6f67b282916199fd4-V.jpg))">
+      <SourceType>Package</SourceType>
+      <SourceId>Yoga.Api</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/Yoga.Api</BasePath>
+      <RelativePath>uploads/03305b3c-71f7-4345-9298-1f5df3a4023d_IMG-e001f2d81a719ed6f67b282916199fd4-V.jpg</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\uploads\03305b3c-71f7-4345-9298-1f5df3a4023d_IMG-e001f2d81a719ed6f67b282916199fd4-V.jpg))</OriginalItemSpec>
+    </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\uploads\a336e866-00db-4f5a-b84d-36df41d30c25_IMG-e001f2d81a719ed6f67b282916199fd4-V.jpg))">
+      <SourceType>Package</SourceType>
+      <SourceId>Yoga.Api</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/Yoga.Api</BasePath>
+      <RelativePath>uploads/a336e866-00db-4f5a-b84d-36df41d30c25_IMG-e001f2d81a719ed6f67b282916199fd4-V.jpg</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\uploads\a336e866-00db-4f5a-b84d-36df41d30c25_IMG-e001f2d81a719ed6f67b282916199fd4-V.jpg))</OriginalItemSpec>
+    </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\uploads\f37f3398-2d5e-4c04-bd06-fd2a015091e8_IMG-e001f2d81a719ed6f67b282916199fd4-V.jpg))">
+      <SourceType>Package</SourceType>
+      <SourceId>Yoga.Api</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/Yoga.Api</BasePath>
+      <RelativePath>uploads/f37f3398-2d5e-4c04-bd06-fd2a015091e8_IMG-e001f2d81a719ed6f67b282916199fd4-V.jpg</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\uploads\f37f3398-2d5e-4c04-bd06-fd2a015091e8_IMG-e001f2d81a719ed6f67b282916199fd4-V.jpg))</OriginalItemSpec>
+    </StaticWebAsset>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,33 @@
+{
+  "Files": [
+    {
+      "Id": "/home/dmitrij/Freelance_Projects/YogaPlatform/Backend/Yoga.Api/wwwroot/uploads/03305b3c-71f7-4345-9298-1f5df3a4023d_IMG-e001f2d81a719ed6f67b282916199fd4-V.jpg",
+      "PackagePath": "staticwebassets/uploads/03305b3c-71f7-4345-9298-1f5df3a4023d_IMG-e001f2d81a719ed6f67b282916199fd4-V.jpg"
+    },
+    {
+      "Id": "/home/dmitrij/Freelance_Projects/YogaPlatform/Backend/Yoga.Api/wwwroot/uploads/a336e866-00db-4f5a-b84d-36df41d30c25_IMG-e001f2d81a719ed6f67b282916199fd4-V.jpg",
+      "PackagePath": "staticwebassets/uploads/a336e866-00db-4f5a-b84d-36df41d30c25_IMG-e001f2d81a719ed6f67b282916199fd4-V.jpg"
+    },
+    {
+      "Id": "/home/dmitrij/Freelance_Projects/YogaPlatform/Backend/Yoga.Api/wwwroot/uploads/f37f3398-2d5e-4c04-bd06-fd2a015091e8_IMG-e001f2d81a719ed6f67b282916199fd4-V.jpg",
+      "PackagePath": "staticwebassets/uploads/f37f3398-2d5e-4c04-bd06-fd2a015091e8_IMG-e001f2d81a719ed6f67b282916199fd4-V.jpg"
+    },
+    {
+      "Id": "obj/Debug/net8.0/staticwebassets/msbuild.Yoga.Api.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj/Debug/net8.0/staticwebassets/msbuild.build.Yoga.Api.props",
+      "PackagePath": "build\\Yoga.Api.props"
+    },
+    {
+      "Id": "obj/Debug/net8.0/staticwebassets/msbuild.buildMultiTargeting.Yoga.Api.props",
+      "PackagePath": "buildMultiTargeting\\Yoga.Api.props"
+    },
+    {
+      "Id": "obj/Debug/net8.0/staticwebassets/msbuild.buildTransitive.Yoga.Api.props",
+      "PackagePath": "buildTransitive\\Yoga.Api.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

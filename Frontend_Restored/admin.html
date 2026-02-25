@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Контент-админка | YOGA.LIFE</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    
+    <!-- Unified Styles -->
+    <link rel="stylesheet" href="css/style.css"> 
+
+    <style>
+        body {
+            background: #f6f7f9;
+            font-family: 'Segoe UI', sans-serif;
+            padding-top: 96px;
+        }
+
+        .admin-card {
+            border: 0;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .table-wrap {
+            max-height: 440px;
+            overflow: auto;
+        }
+
+        .thumb {
+            width: 72px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 8px;
+            background: #e9ecef;
+        }
+
+        .section-pane {
+            display: none;
+        }
+
+        .section-pane.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg fixed-top" style="background:#fff;padding:0.5rem 0;box-shadow:0 2px 15px rgba(0,0,0,0.05)">
+        <div class="container">
+            <a class="navbar-brand" href="index.html" style="font-family:'Segoe UI',sans-serif;font-weight:800;font-size:1.6rem;color:#2c3e50!important;text-decoration:none;letter-spacing:-0.5px;">YOGA.LIFE</a>
+            <div class="d-flex align-items-center gap-2 ms-auto">
+                <a href="index.html" class="btn btn-outline-dark btn-sm">На сайт</a>
+                <button id="logoutBtn" class="btn btn-outline-danger btn-sm">Выйти</button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container pb-5">
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+            <div>
+                <h1 class="mb-1" style="font-weight:800;letter-spacing:-0.5px;">Контент-админка YOGA.LIFE</h1>
+                <p class="text-muted mb-0">Управление курсами, консультациями, блогом и файлами.</p>
+            </div>
+            <div class="badge text-bg-dark fs-6" id="adminUserBadge">Admin</div>
+        </div>
+
+        <div id="adminAlert" class="alert d-none" role="alert"></div>
+
+        <section class="card admin-card p-4 mb-4">
+            <h2 class="h4 mb-3" style="font-weight:800;letter-spacing:-0.5px;">Загрузка файла</h2>
+            <div class="row g-3 align-items-end">
+                <div class="col-lg-5">
+                    <label for="mediaFile" class="form-label">Файл</label>
+                    <input id="mediaFile" type="file" class="form-control" accept="image/*,video/*,.pdf,.doc,.docx,.txt">
+                </div>
+                <div class="col-lg-2">
+                    <button id="uploadMediaBtn" class="btn btn-dark w-100">Загрузить</button>
+                </div>
+                <div class="col-lg-5">
+                    <label for="uploadedUrl" class="form-label">URL файла</label>
+                    <input id="uploadedUrl" type="text" class="form-control" readonly>
+                </div>
+            </div>
+        </section>
+
+        <section class="card admin-card p-4 mb-4">
+            <h2 class="h4 mb-3" style="font-weight:800;letter-spacing:-0.5px;">Панель управления</h2>
+            <div class="d-flex flex-wrap gap-2" id="adminTabs">
+                <button class="btn btn-dark active rounded-pill px-4" data-target="ordersPane">Заявки</button>
+                <button class="btn btn-outline-dark rounded-pill px-4" data-target="coursesPane">Курсы</button>
+                <button class="btn btn-outline-dark rounded-pill px-4" data-target="consultationsPane">Консультации</button>
+                <button class="btn btn-outline-dark rounded-pill px-4" data-target="articlesPane">Блог</button>
+            </div>
+        </section>
+
+        <section id="ordersPane" class="section-pane active">
+            <div class="card admin-card p-4">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                     <h3 class="h5 fw-bold mb-0">Входящие заявки</h3>
+                     <button id="refreshOrdersBtn" class="btn btn-sm btn-outline-secondary"><i class="bi bi-arrow-clockwise"></i> Обновить</button>
+                </div>
+                <div class="table-wrap">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Дата</th>
+                                <th>Клиент</th>
+                                <th>Контакты</th>
+                                <th>Продукт</th>
+                                <th>Статус</th>
+                                <th class="text-end">Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ordersTableBody">
+                            <!-- JS filled -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section id="coursesPane" class="section-pane">
+            <div class="card admin-card p-4 mb-4">
+                <h2 class="h4 mb-3" style="font-weight:800;letter-spacing:-0.5px;">Курсы: добавить/редактировать</h2>
+                <form id="courseForm" class="row g-3">
+                    <input type="hidden" id="courseId">
+                    <div class="col-md-6">
+                        <label class="form-label" for="courseTitle">Название</label>
+                        <input id="courseTitle" class="form-control" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="courseSubtitle">Подзаголовок</label>
+                        <input id="courseSubtitle" class="form-control">
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label" for="courseDescription">Краткое описание</label>
+                        <textarea id="courseDescription" class="form-control" rows="2" required></textarea>
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label" for="courseContent">Текст программы</label>
+                        <textarea id="courseContent" class="form-control" rows="4"></textarea>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label" for="coursePrice">Цена</label>
+                        <input id="coursePrice" type="number" min="0" step="0.01" class="form-control" required>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label" for="courseCategory">Категория</label>
+                        <select id="courseCategory" class="form-select">
+                            <option value="beginners">Для начинающих</option>
+                            <option value="back">Здоровая спина</option>
+                            <option value="meditation">Медитация</option>
+                            <option value="women">Женское здоровье</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label" for="courseLevel">Уровень</label>
+
+                        <select id="courseLevel" class="form-select">
+                            <option value="Beginner">Beginner</option>
+                            <option value="Intermediate">Intermediate</option>
+                            <option value="Advanced">Advanced</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label" for="courseDuration">Длительность (недели)</label>
+                        <input id="courseDuration" type="number" min="1" step="1" class="form-control" value="4" required>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label" for="courseImageFile">Файл картинки</label>
+                        <input id="courseImageFile" type="file" class="form-control" accept="image/*">
+                    </div>
+                    <div class="col-md-9">
+                        <label class="form-label" for="courseImageUrl">URL картинки</label>
+                        <input id="courseImageUrl" class="form-control" placeholder="https://..." required>
+                    </div>
+                    <div class="col-md-3 d-grid">
+                        <button id="uploadCourseImageBtn" class="btn btn-outline-dark mt-md-4" type="button">Загрузить картинку</button>
+                    </div>
+                    <div class="col-12 d-flex gap-2">
+                        <button class="btn btn-dark" type="submit" id="saveCourseBtn">Сохранить курс</button>
+                        <button class="btn btn-outline-secondary" type="button" id="resetCourseBtn">Сбросить</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="card admin-card p-4">
+                <h3 class="h5 mb-3">Список курсов</h3>
+                <div class="table-wrap">
+                    <table class="table align-middle">
+                        <thead>
+                            <tr>
+                                <th>Фото</th>
+                                <th>Название</th>
+                                <th>Цена</th>
+                                <th>Категория</th>
+                                <th class="text-end">Действия</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="coursesTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section id="consultationsPane" class="section-pane">
+            <div class="card admin-card p-4 mb-4">
+                <h2 class="h4 mb-3" style="font-weight:800;letter-spacing:-0.5px;">Консультации: добавить/редактировать</h2>
+                <form id="consultationForm" class="row g-3">
+                    <input type="hidden" id="consultationId">
+                    <div class="col-md-6">
+                        <label class="form-label" for="consultationTitle">Название</label>
+                        <input id="consultationTitle" class="form-control" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="consultationExpert">Эксперт</label>
+                        <input id="consultationExpert" class="form-control">
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label" for="consultationDescription">Описание</label>
+                        <textarea id="consultationDescription" class="form-control" rows="3" required></textarea>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label" for="consultationPrice">Цена</label>
+                        <input id="consultationPrice" type="number" min="0" step="0.01" class="form-control" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label" for="consultationDuration">Длительность (мин.)</label>
+                        <input id="consultationDuration" type="number" min="15" step="5" class="form-control" value="60" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label" for="consultationImageFile">Файл картинки</label>
+                        <input id="consultationImageFile" type="file" class="form-control" accept="image/*">
+                    </div>
+                    <div class="col-md-9">
+                        <label class="form-label" for="consultationImageUrl">URL картинки</label>
+                        <input id="consultationImageUrl" class="form-control" placeholder="https://..." required>
+                    </div>
+                    <div class="col-md-3 d-grid">
+                        <button id="uploadConsultationImageBtn" class="btn btn-outline-dark mt-md-4" type="button">Загрузить картинку</button>
+                    </div>
+                    <div class="col-12 d-flex gap-2">
+                        <button class="btn btn-dark" type="submit" id="saveConsultationBtn">Сохранить консультацию</button>
+                        <button class="btn btn-outline-secondary" type="button" id="resetConsultationBtn">Сбросить</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="card admin-card p-4">
+                <h3 class="h5 mb-3">Список консультаций</h3>
+                <div class="table-wrap">
+                    <table class="table align-middle">
+                        <thead>
+                            <tr>
+                                <th>Фото</th>
+                                <th>Название</th>
+                                <th>Цена</th>
+                                <th>Длительность</th>
+                                <th class="text-end">Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody id="consultationsTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section id="articlesPane" class="section-pane">
+            <div class="card admin-card p-4 mb-4">
+                <h2 class="h4 mb-3" style="font-weight:800;letter-spacing:-0.5px;">Блог: добавить/редактировать</h2>
+                <form id="articleForm" class="row g-3">
+                    <input type="hidden" id="articleId">
+                    <input type="hidden" id="articleCreatedAt">
+                    <div class="col-md-6">
+                        <label class="form-label" for="articleTitle">Название</label>
+                        <input id="articleTitle" class="form-control" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="articleSubtitle">Подзаголовок</label>
+                        <input id="articleSubtitle" class="form-control">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label" for="articleCategory">Категория</label>
+                        <select id="articleCategory" class="form-select">
+                            <option value="Article">Article</option>
+                            <option value="Video">Video</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label" for="articleAuthor">Автор</label>
+                        <input id="articleAuthor" class="form-control" placeholder="Admin" value="Admin">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label" for="articleImageFile">Файл картинки</label>
+                        <input id="articleImageFile" type="file" class="form-control" accept="image/*">
+                    </div>
+                    <div class="col-md-9">
+                        <label class="form-label" for="articleImageUrl">URL картинки</label>
+                        <input id="articleImageUrl" class="form-control" placeholder="https://..." required>
+                    </div>
+                    <div class="col-md-3 d-grid">
+                        <button id="uploadArticleImageBtn" class="btn btn-outline-dark mt-md-4" type="button">Загрузить картинку</button>
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label" for="articleContent">Текст статьи</label>
+                        <textarea id="articleContent" class="form-control" rows="7" required></textarea>
+                    </div>
+                    <div class="col-12 d-flex gap-2">
+                        <button class="btn btn-dark" type="submit" id="saveArticleBtn">Сохранить материал</button>
+                        <button class="btn btn-outline-secondary" type="button" id="resetArticleBtn">Сбросить</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="card admin-card p-4">
+                <h3 class="h5 mb-3">Список материалов блога</h3>
+                <div class="table-wrap">
+                    <table class="table align-middle">
+                        <thead>
+                            <tr>
+                                <th>Фото</th>
+                                <th>Название</th>
+                                <th>Категория</th>
+                                <th>Автор</th>
+                                <th class="text-end">Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody id="articlesTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/admin.js"></script>
+</body>
+</html>
