@@ -1,0 +1,192 @@
+// Это ваш основной файл схемы Prisma.
+// Здесь мы описываем структуру нашей будущей базы данных (PostgreSQL)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  url = env("DATABASE_URL")
+  provider = "postgresql"
+}
+
+// -----------------------------------------------------------------------------
+// Пользователи и безопасность
+// -----------------------------------------------------------------------------
+model User {
+  id           String   @id @default(cuid())
+  username     String   @unique
+  email        String?  @unique
+  passwordHash String // Хешированный пароль (нельзя хранить в открытом виде!)
+  role         Role     @default(USER)
+  avatar       String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  orders Order[] // Связь с заказами этого пользователя
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+// -----------------------------------------------------------------------------
+// Продукты (Товары, которые можно купить)
+// -----------------------------------------------------------------------------
+model Course {
+  id              String   @id @default(cuid())
+  category        String   @default("beginners") // beginners, intermediate, advanced 
+  title           String
+  description     String
+  fullDescription String?  @db.Text
+  features        String[] // Массив фичей
+  price           Float
+  imageUrl        String?
+  author          String?
+  authorPhoto     String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model Consultation {
+  id              String   @id @default(cuid())
+  category        String   @default("private")
+  title           String
+  description     String
+  fullDescription String?  @db.Text
+  features        String[]
+  price           Float
+  imageUrl        String?
+  author          String?
+  authorPhoto     String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model Tour {
+  id              String   @id @default(cuid())
+  title           String
+  description     String
+  fullDescription String?  @db.Text
+  features        String[]
+  price           Float
+  imageUrl        String?
+  date            String?
+  location        String?
+  author          String?
+  authorPhoto     String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+// -----------------------------------------------------------------------------
+// Контентая часть (Блог, Медиа, FAQ, Отзывы)
+// -----------------------------------------------------------------------------
+model Article {
+  id          String   @id @default(cuid())
+  title       String
+  subtitle    String?
+  content     String   @db.Text
+  imageUrl    String?
+  author      String?
+  authorPhoto String?
+  tag         String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Video {
+  id           String   @id @default(cuid())
+  title        String
+  description  String?  @db.Text
+  videoUrl     String
+  thumbnailUrl String?
+  tag          String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Podcast {
+  id          String   @id @default(cuid())
+  title       String
+  description String?  @db.Text
+  audioUrl    String
+  duration    String?
+  tag         String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Recipe {
+  id              String   @id @default(cuid())
+  title           String
+  description     String?  @db.Text
+  fullDescription String?  @db.Text
+  imageUrl        String?
+  time            String?
+  tag             String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model FAQ {
+  id        String   @id @default(cuid())
+  question  String
+  answer    String   @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Testimonial {
+  id        String   @id @default(cuid())
+  name      String
+  course    String
+  text      String   @db.Text
+  createdAt DateTime @default(now())
+}
+
+// -----------------------------------------------------------------------------
+// Система покупок и заказов (Замена моковых покупок в LocalStorage)
+// -----------------------------------------------------------------------------
+model Order {
+  id        String      @id @default(cuid())
+  userId    String
+  user      User        @relation(fields: [userId], references: [id])
+  itemId    String // ID купленного товара (Курс, Тур, Консультация)
+  itemType  ItemType // COURSE, TOUR, CONSULTATION
+  amount    Float
+  status    OrderStatus @default(COMPLETED)
+  createdAt DateTime    @default(now())
+}
+
+enum ItemType {
+  COURSE
+  TOUR
+  CONSULTATION
+}
+
+enum OrderStatus {
+  PENDING
+  COMPLETED
+  CANCELLED
+}
+
+// -----------------------------------------------------------------------------
+// Служба поддержки
+// -----------------------------------------------------------------------------
+model SupportTicket {
+  id        String       @id @default(cuid())
+  name      String
+  email     String
+  subject   String
+  message   String       @db.Text
+  status    TicketStatus @default(NEW)
+  createdAt DateTime     @default(now())
+}
+
+enum TicketStatus {
+  NEW
+  IN_PROGRESS
+  CLOSED
+}

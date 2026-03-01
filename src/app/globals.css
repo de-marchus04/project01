@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+/* Navigation Grid Hover Effects */
+.group-hover:hover .hover-scale-img {
+  transform: scale(1.05);
+}
+.transition-transform {
+  transition-property: transform;
+}
+.duration-500 {
+  transition-duration: 500ms;
+}
