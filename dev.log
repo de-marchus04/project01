@@ -150,3 +150,6 @@ thread 'tokio-runtime-worker' (159353) panicked at /build/turbopack/cra GET /api
   Reload env: .env
 ✓ Compiled in 132ms
  GET /blog-videos 200 in 239ms (compile: 161ms, render: 78ms)
+✓ Compiled in 834ms
+✓ Compiled in 251ms
+✓ Compiled in 125ms
