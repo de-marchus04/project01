@@ -77,28 +77,17 @@ export const LanguageProvider = ({ children }: { children: React.ReactNode }) =>
 
   
   const setLang = (newLang: Language) => {
-    // Create full-screen overlay to mask language swap
-    const overlay = document.createElement('div');
-    overlay.style.cssText = [
-      'position:fixed', 'inset:0', 'z-index:99999',
-      'background:var(--color-bg, #FAF7F2)',
-      'opacity:0', 'pointer-events:none',
-      'transition:opacity 0.35s ease',
-    ].join(';');
-    document.body.appendChild(overlay);
-
-    // Fade in overlay
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => { overlay.style.opacity = '0.92'; });
-    });
-
-    // Swap language at peak opacity, then fade out
+    const html = document.documentElement;
+    html.style.transition = 'opacity 0.45s ease-in-out';
+    html.style.opacity = '0.55';
     setTimeout(() => {
       setLangState(newLang);
       localStorage.setItem('yoga_lang', newLang);
-      overlay.style.opacity = '0';
-      overlay.addEventListener('transitionend', () => overlay.remove(), { once: true });
-    }, 380);
+      html.style.opacity = '1';
+      html.addEventListener('transitionend', () => {
+        html.style.transition = '';
+      }, { once: true });
+    }, 450);
   };
 
   return (
