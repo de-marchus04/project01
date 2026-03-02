@@ -34,6 +34,7 @@ export const Header = () => {
   useEffect(() => {
     const mainContent = document.getElementById('main-content');
     if (mainContent) {
+      // CSS handles the transition via #main-content rule in style.css
       if (isMenuOpen) {
         mainContent.style.transform = 'translateX(320px)';
         document.body.style.overflow = 'hidden';
@@ -41,7 +42,7 @@ export const Header = () => {
         mainContent.style.transform = 'translateX(0)';
         setTimeout(() => {
           if (!isMenuOpen) document.body.style.overflow = 'auto';
-        }, 400);
+        }, 450);
       }
     }
   }, [isMenuOpen]);
@@ -206,7 +207,7 @@ export const Header = () => {
           {/* Left Side: Hamburger + Door + Logo */}
           <div className="d-flex align-items-center gap-3">
             <button 
-              className="btn btn-link p-0 border-0 me-2" 
+              className="btn btn-link p-0 border-0 me-2 menu-toggle-btn" 
               onClick={toggleMenu}
               style={{ outline: 'none', color: 'var(--color-text)' }}
             >

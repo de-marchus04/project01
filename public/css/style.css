@@ -28,6 +28,21 @@ button, a, .btn, .nav-link, .card {
 /* Sidebar slide transition must not be overridden by the * rule */
 .custom-sidebar {
     transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    overflow: hidden !important;
+}
+
+/* Main content push — synced with sidebar */
+#main-content {
+    transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+/* Hamburger / close button hover glow */
+.menu-toggle-btn {
+    transition: opacity 0.3s ease, filter 0.3s ease !important;
+}
+.menu-toggle-btn:hover {
+    opacity: 0.6;
+    filter: drop-shadow(0 0 6px var(--color-primary));
 }
 
 
