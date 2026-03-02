@@ -54,7 +54,13 @@ export const Header = () => {
     signOut({ callbackUrl: '/login' });
   };
 
-  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+  const toggleMenu = () => {
+    const overlay = document.createElement('div');
+    overlay.className = 'lang-switch-overlay';
+    document.body.appendChild(overlay);
+    setTimeout(() => setIsMenuOpen(prev => !prev), 410);
+    overlay.addEventListener('animationend', () => overlay.remove(), { once: true });
+  };
 
   const sidebar = mounted ? createPortal(
     <div 
