@@ -25,6 +25,11 @@ button, a, .btn, .nav-link, .card {
                 transform 0.3s ease, box-shadow 0.3s ease !important;
 }
 
+/* Sidebar slide transition must not be overridden by the * rule */
+.custom-sidebar {
+    transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
 
 [data-theme="dark"] {
     --color-primary: #a0b090;
