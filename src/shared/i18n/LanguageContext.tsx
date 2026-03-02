@@ -78,16 +78,17 @@ export const LanguageProvider = ({ children }: { children: React.ReactNode }) =>
   
   const setLang = (newLang: Language) => {
     const html = document.documentElement;
-    html.style.transition = 'opacity 0.45s ease-in-out';
-    html.style.opacity = '0.55';
-    setTimeout(() => {
-      setLangState(newLang);
-      localStorage.setItem('yoga_lang', newLang);
-      html.style.opacity = '1';
-      html.addEventListener('transitionend', () => {
-        html.style.transition = '';
-      }, { once: true });
-    }, 450);
+    html.style.transition = 'opacity 0.4s ease-in-out';
+    // rAF ensures browser registers the transition before opacity changes
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      html.style.opacity = '0.45';
+      setTimeout(() => {
+        setLangState(newLang);
+        localStorage.setItem('yoga_lang', newLang);
+        html.style.opacity = '1';
+        html.addEventListener('transitionend', () => { html.style.transition = ''; }, { once: true });
+      }, 420);
+    }));
   };
 
   return (
