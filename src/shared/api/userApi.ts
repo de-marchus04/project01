@@ -31,7 +31,7 @@ export async function getOrders(): Promise<Order[]> {
     
     return {
       id: i.id,
-      productName: `Товар (${i.itemType})`, // A real app would inner join but we just map for now to not break types
+      productName: i.productName || `Товар (${i.itemType})`,
       price: i.amount,
       status: mappedStatus,
       date: new Date(i.createdAt).toISOString().split('T')[0],
@@ -55,6 +55,7 @@ export async function addOrder(productName: string, price: number, customerName:
     data: {
       ...(resolvedUserId ? { userId: resolvedUserId } : {}),
       guestName: resolvedUserId ? null : customerName,
+      productName,
       itemId: serviceId || 'unknown',
       itemType: 'COURSE',
       amount: price,
@@ -90,7 +91,7 @@ export async function updateOrderStatus(id: string, status: string): Promise<Ord
   
   return JSON.parse(JSON.stringify({
     id: updated.id,
-    productName: `Товар (${updated.itemType})`,
+    productName: (updated as any).productName || `Товар (${updated.itemType})`,
     price: updated.amount,
     status,
     date: new Date(updated.createdAt).toISOString().split('T')[0],

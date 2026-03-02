@@ -152,15 +152,16 @@ model Testimonial {
 // Система покупок и заказов (Замена моковых покупок в LocalStorage)
 // -----------------------------------------------------------------------------
 model Order {
-  id        String      @id @default(cuid())
-  userId    String?
-  user      User?       @relation(fields: [userId], references: [id])
-  guestName String?     // Имя гостя (если userId = null)
-  itemId    String
-  itemType  ItemType
-  amount    Float
-  status    OrderStatus @default(PENDING)
-  createdAt DateTime    @default(now())
+  id          String      @id @default(cuid())
+  userId      String?
+  user        User?       @relation(fields: [userId], references: [id])
+  guestName   String?
+  productName String?     // Название товара (курс, тур, консультация)
+  itemId      String
+  itemType    ItemType
+  amount      Float
+  status      OrderStatus @default(PENDING)
+  createdAt   DateTime    @default(now())
 }
 
 enum ItemType {
@@ -179,14 +180,15 @@ enum OrderStatus {
 // Служба поддержки
 // -----------------------------------------------------------------------------
 model SupportTicket {
-  id        String       @id @default(cuid())
-  name      String
-  email     String
-  subject   String
-  message   String       @db.Text
-  reply     String?      @db.Text
-  status    TicketStatus @default(NEW)
-  createdAt DateTime     @default(now())
+  id          String       @id @default(cuid())
+  name        String
+  email       String
+  subject     String
+  message     String       @db.Text
+  reply       String?      @db.Text
+  readByUser  Boolean      @default(false)
+  status      TicketStatus @default(NEW)
+  createdAt   DateTime     @default(now())
 }
 
 // -----------------------------------------------------------------------------

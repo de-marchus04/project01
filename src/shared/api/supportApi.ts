@@ -28,7 +28,7 @@ export async function getMessages(): Promise<SupportMessage[]> {
     message: i.message,
     status: i.status === 'NEW' ? 'new' : i.status === 'CLOSED' ? 'replied' : 'new',
     createdAt: i.createdAt,
-    readByUser: false // Mock for now or add to Prisma properly if needed later
+    readByUser: i.readByUser ?? false
   }))));
 }
 
@@ -46,7 +46,7 @@ export async function getUserMessages(email: string): Promise<SupportMessage[]> 
     message: i.message,
     status: i.status === 'NEW' ? 'new' : i.status === 'CLOSED' ? 'replied' : 'new',
     createdAt: i.createdAt,
-    readByUser: false
+    readByUser: i.readByUser ?? false
   }))));
 }
 
@@ -91,7 +91,12 @@ export async function replyToMessage(id: string, replyText: string): Promise<voi
 }
 
 export async function markAsRead(id: string): Promise<void> {
-  // Noop for now unless added to DB
+  try {
+    await prisma.supportTicket.update({
+      where: { id },
+      data: { readByUser: true }
+    });
+  } catch {}
 }
 
 export async function deleteMessage(id: string): Promise<void> {

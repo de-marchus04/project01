@@ -15,7 +15,32 @@ const playfair = Playfair_Display({ subsets: ["cyrillic", "latin"], variable: "-
 
 export const metadata: Metadata = {
   title: "YOGA.LIFE | Платформа для йоги",
-  description: "Онлайн-платформа для практики йоги с лучшими инструкторами мира.",
+  description: "Онлайн-платформа для практики йоги с лучшими инструкторами мира. Курсы, туры, консультации.",
+  openGraph: {
+    title: "YOGA.LIFE | Платформа для йоги",
+    description: "Онлайн-платформа для практики йоги с лучшими инструкторами мира. Курсы, туры, консультации.",
+    url: "https://yoga.life",
+    siteName: "YOGA.LIFE",
+    images: [
+      {
+        url: "https://images.unsplash.com/photo-1545205597-3d9d02c29597?q=80&w=1200&auto=format&fit=crop",
+        width: 1200,
+        height: 630,
+        alt: "YOGA.LIFE",
+      },
+    ],
+    locale: "ru_RU",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "YOGA.LIFE | Платформа для йоги",
+    description: "Онлайн-платформа для практики йоги с лучшими инструкторами мира.",
+    images: ["https://images.unsplash.com/photo-1545205597-3d9d02c29597?q=80&w=1200&auto=format&fit=crop"],
+  },
+  icons: {
+    icon: "/favicon.svg",
+  },
 };
 
 export default function RootLayout({

@@ -257,12 +257,7 @@ export default function Login() {
                     >
                       {isForgotPasswordMode ? 'Вернуться ко входу' : (isRegisterMode ? ((t as any).auth ? (t as any).auth.linkToLogin : 'Уже есть аккаунт? Войти') : ((t as any).auth ? (t as any).auth.linkToRegister : 'Нет аккаунта? Зарегистрироваться'))}
                     </button>
-                    {!isRegisterMode && (
-                        <div className="mt-2 text-muted small">
-                            <span className="me-1">Демо-админ:</span>
-                            <span className="badge bg-light text-dark shadow-sm">admin</span> / <span className="badge bg-light text-dark shadow-sm">любой пароль (если еще не зарегистрирован)</span>
-                        </div>
-                    )}
+
                   </div>
                 </div>
               </div>
