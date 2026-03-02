@@ -1,40 +1,32 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { useSession } from "next-auth/react";
 import { getUserMessages, sendMessage, markAsRead, SupportMessage } from "@/shared/api/supportApi";
 
 export const SupportWidget = () => {
+  const { data: session } = useSession();
+  const sessionUser = session?.user as any;
+  const userEmail = sessionUser?.email || null;
+
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<SupportMessage[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
-  const [userEmail, setUserEmail] = useState<string | null>(null);
   const originalTitle = useRef(typeof document !== 'undefined' ? document.title : 'YOGA.LIFE');
 
   const loadMessages = async () => {
-    let email = userEmail;
-    if (!email) {
-      const userJson = localStorage.getItem('yoga_user');
-      if (userJson) {
-        try {
-          const user = JSON.parse(userJson);
-          email = user.email;
-          setUserEmail(user.email);
-        } catch (e) {}
-      }
-    }
+    if (!userEmail) return;
 
-    if (email) {
-      const userMsgs = await getUserMessages(email);
-      setMessages(userMsgs);
-      
-      const unread = userMsgs.filter(m => (m.status === 'replied' || m.status === 'bot_answered') && !m.readByUser).length;
-      setUnreadCount(unread);
+    const userMsgs = await getUserMessages(userEmail);
+    setMessages(userMsgs);
+    
+    const unread = userMsgs.filter(m => (m.status === 'replied' || m.status === 'bot_answered') && !m.readByUser).length;
+    setUnreadCount(unread);
 
-      if (unread > 0) {
-        document.title = `(${unread}) ${originalTitle.current}`;
-      } else {
-        document.title = originalTitle.current;
-      }
+    if (unread > 0) {
+      document.title = `(${unread}) ${originalTitle.current}`;
+    } else {
+      document.title = originalTitle.current;
     }
   };
 
@@ -42,24 +34,15 @@ export const SupportWidget = () => {
     originalTitle.current = document.title;
     loadMessages();
 
-    const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === 'yoga_support_messages' || e.key === 'yoga_user') {
-        loadMessages();
-      }
-    };
-
     const handleCustomUpdate = () => {
       loadMessages();
     };
 
-    window.addEventListener('storage', handleStorageChange);
     window.addEventListener('yoga_support_updated', handleCustomUpdate);
     
-    // Polling fallback for reliability
     const interval = setInterval(loadMessages, 3000);
 
     return () => {
-      window.removeEventListener('storage', handleStorageChange);
       window.removeEventListener('yoga_support_updated', handleCustomUpdate);
       clearInterval(interval);
       document.title = originalTitle.current;

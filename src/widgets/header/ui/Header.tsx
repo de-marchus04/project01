@@ -3,16 +3,20 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
+import { useSession, signOut } from "next-auth/react";
 import { getNavigationConfig } from "@/shared/config/navigation";
 import { useReminders } from "@/shared/hooks/useReminders";
 import { createPortal } from "react-dom";
 import { useLanguage } from "@/shared/i18n/LanguageContext";
 
 export const Header = () => {
-  const [isAuth, setIsAuth] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [username, setUsername] = useState("");
-  const [userPhoto, setUserPhoto] = useState("");
+  const { data: session, status } = useSession();
+  const isAuth = status === "authenticated";
+  const sessionUser = session?.user as any;
+  const isAdmin = sessionUser?.role === "ADMIN";
+  const username = sessionUser?.name || sessionUser?.username || "";
+  const userPhoto = sessionUser?.avatar || "";
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
@@ -23,45 +27,7 @@ export const Header = () => {
 
   useEffect(() => {
     setMounted(true);
-    if (!localStorage.getItem('yoga_db_version_6')) {
-      localStorage.clear();
-      localStorage.setItem('yoga_db_version_6', 'true');
-    }
-
-    const loadUserData = () => {
-      const userJson = localStorage.getItem('yoga_user');
-      if (userJson) {
-        setIsAuth(true);
-        try {
-          const user = JSON.parse(userJson);
-          
-          // Проверяем, есть ли сохраненный профиль с именем
-          const profileJson = localStorage.getItem(`profile_${user.username}`);
-          if (profileJson) {
-            const profile = JSON.parse(profileJson);
-            setUsername(profile.name || user.username || "User");
-            setUserPhoto(profile.photoUrl || "");
-          } else {
-            setUsername(user.username || "User");
-            setUserPhoto("");
-          }
-          
-          setIsAdmin(user.role === 'admin' || user.username === 'admin');
-        } catch (e) {}
-      } else {
-        setIsAuth(false);
-        setIsAdmin(false);
-        setUsername("");
-        setUserPhoto("");
-      }
-    };
-
-    loadUserData();
-
-    // Слушаем событие storage для обновления данных при изменении профиля
-    window.addEventListener('storage', loadUserData);
-    return () => window.removeEventListener('storage', loadUserData);
-  }, [pathname]);
+  }, []);
 
   useEffect(() => {
     const mainContent = document.getElementById('main-content');
@@ -78,14 +44,12 @@ export const Header = () => {
     }
   }, [isMenuOpen]);
 
-  // Close menu on route change
   useEffect(() => {
     setIsMenuOpen(false);
   }, [pathname]);
 
   const handleLogout = () => {
-    localStorage.removeItem('yoga_user');
-    window.location.href = '/login';
+    signOut({ callbackUrl: '/login' });
   };
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);

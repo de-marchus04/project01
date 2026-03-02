@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { subscribeEmail } from "@/shared/api/subscriberApi";
 import { emailService } from "@/shared/api/emailService";
 import { modalService } from "@/shared/ui/Modal/modalService";
 import { useLanguage } from "@/shared/i18n/LanguageContext";
@@ -19,15 +20,23 @@ export const Footer = () => {
       return;
     }
 
+    if (!emailService.isValidFormat(email)) {
+      await modalService.alert("Внимание", "Неверный формат email адреса.");
+      return;
+    }
+
     setIsLoading(true);
     try {
-      const result = await emailService.subscribe(email);
-      
-      if (result.success) {
-        await modalService.alert("Внимание", result.message);
-        setEmail(""); // Очищаем форму после успешной подписки
+      const result = await subscribeEmail(email);
+
+      if (result.alreadySubscribed) {
+        await modalService.alert("Внимание", "Этот email уже подписан на рассылку.");
+      } else if (result.success) {
+        await emailService.sendWelcomeGuide(email);
+        await modalService.alert("Успешно!", "Вы успешно подписались на обновления!");
+        setEmail("");
       } else {
-        await modalService.alert("Внимание", result.message);
+        await modalService.alert("Ошибка", "Не удалось подписаться. Попробуйте позже.");
       }
     } catch (error) {
       modalService.alert("Внимание", "Произошла ошибка при подписке. Попробуйте позже.");

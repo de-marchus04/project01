@@ -1,6 +1,6 @@
 "use client";
 import { useLanguage } from "../i18n/LanguageContext";
-
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { addOrder } from "../api/userApi";
 import { modalService } from "../ui/Modal/modalService";
@@ -8,12 +8,14 @@ import { modalService } from "../ui/Modal/modalService";
 export const usePurchase = () => {
   const router = useRouter();
   const { tStr } = useLanguage() as any;
+  const { data: session } = useSession();
+  const sessionUser = session?.user as any;
 
   const buyProduct = async (title: string, price: number) => {
-    const userJson = localStorage.getItem('yoga_user');
     let customerName = tStr("Гость");
+    let userId: string | undefined;
 
-    if (!userJson) {
+    if (!session) {
       const wantToLogin = await modalService.confirm(
         tStr("Требуется авторизация"),
         tStr("Хотите войти в личный кабинет, чтобы сохранить историю записей?\n\nНажмите 'ОК' для входа/регистрации.\nНажмите 'Отмена' для быстрой записи без регистрации."),
@@ -32,7 +34,6 @@ export const usePurchase = () => {
         );
         
         if (contactInfo === null) {
-          // Пользователь отменил ввод, просто выходим без уведомлений об ошибке (QA: Улучшение UX)
           return;
         }
         
@@ -43,26 +44,14 @@ export const usePurchase = () => {
         customerName = contactInfo;
       }
     } else {
-      try {
-        const user = JSON.parse(userJson);
-        customerName = user.username || tStr("Пользователь");
-      } catch (e) {}
+      customerName = sessionUser?.name || sessionUser?.username || tStr("Пользователь");
+      userId = sessionUser?.username;
     }
 
     try {
-      // Добавляем заказ
-      let userId = undefined;
-      if (userJson) {
-        try {
-          const user = JSON.parse(userJson);
-          userId = user.username;
-        } catch (e) {}
-      }
-      
       await addOrder(title, price, customerName, undefined, userId);
       
-      if (userJson) {
-        // Спрашиваем пользователя, хочет ли он перейти в профиль
+      if (session) {
         const goToProfile = await modalService.confirm(
           tStr("Заявка отправлена"),
           tStr("Ваша заявка на \"") + title + tStr("\" отправлена и находится в обработке!\nМенеджер свяжется с вами после подтверждения.\nПерейти в Личный кабинет для отслеживания статуса?"),
@@ -80,7 +69,6 @@ export const usePurchase = () => {
         );
       }
     } catch (error) {
-      console.error("Ошибка при покупке:", error);
       await modalService.alert("Ошибка", tStr("Произошла ошибка при оформлении заказа. Попробуйте позже."));
     }
   };

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
 import { sendMessage } from "@/shared/api/supportApi";
 import { modalService } from "@/shared/ui/Modal/modalService";
 import { useLanguage } from "@/shared/i18n/LanguageContext";
@@ -9,6 +10,8 @@ import { useLanguage } from "@/shared/i18n/LanguageContext";
 
 export default function ContactPage() {
   const { t } = useLanguage();
+  const { data: session } = useSession();
+  const sessionUser = session?.user as any;
 
   const PREDEFINED_QUESTIONS = [
     t.contact.q1,
@@ -26,15 +29,13 @@ export default function ContactPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
-    const userJson = localStorage.getItem('yoga_user');
-    if (userJson) {
-      try {
-        const user = JSON.parse(userJson);
-        if (user.username) setName(user.username);
-        if (user.email) setEmail(user.email);
-      } catch (e) {}
+    if (sessionUser?.name || sessionUser?.username) {
+      setName(sessionUser.name || sessionUser.username);
     }
-  }, []);
+    if (sessionUser?.email) {
+      setEmail(sessionUser.email);
+    }
+  }, [sessionUser]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

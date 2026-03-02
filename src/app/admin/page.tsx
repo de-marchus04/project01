@@ -18,11 +18,13 @@ import { getFAQs, addFAQ, updateFAQ, deleteFAQ, FAQ } from "@/shared/api/faqApi"
 import { useLanguage } from "@/shared/i18n/LanguageContext";
 import { formatPrice } from "@/shared/lib/formatPrice";
 import { bulkUpdateAuthor } from "@/shared/api/adminApi";
-import { changePassword } from "@/shared/api/authActions";
+import { changePassword, getMyProfile, updateMyProfile } from "@/shared/api/authActions";
 import { modalService } from "@/shared/ui/Modal/modalService";
+import { useSession, signOut } from "next-auth/react";
 
 export default function Admin() {
   const { lang, t } = useLanguage();
+  const { data: session, status } = useSession();
   const [activeTab, setActiveTab] = useState("coursesPane");
   const [courses, setCourses] = useState<Course[]>([]);
   const [consultations, setConsultations] = useState<Course[]>([]);
@@ -126,42 +128,39 @@ export default function Admin() {
   };
 
   useEffect(() => {
-    const userJson = localStorage.getItem('yoga_user');
-    if (!userJson) {
+    if (status === 'loading') return;
+    if (status === 'unauthenticated') {
       router.push('/login');
       return;
     }
-    try {
-      const userData = JSON.parse(userJson);
-      if (userData.role !== 'admin' && userData.username !== 'admin') {
-          router.push('/profile');
-          return;
-      }
-      
-      const savedProfile = localStorage.getItem(`profile_${userData.username}`);
-      if (savedProfile) {
-        setAdminProfile(JSON.parse(savedProfile));
-      } else {
-        setAdminProfile(prev => ({ ...prev, name: userData.username }));
-      }
-    } catch (e) {
-      router.push('/login');
+    const role = (session?.user as any)?.role;
+    const username = (session?.user as any)?.username;
+    if (role !== 'ADMIN') {
+      router.push('/profile');
       return;
     }
+    getMyProfile(username).then(profile => {
+      if (profile) {
+        setAdminProfile({
+          name: profile.name || profile.username,
+          email: profile.email || '',
+          phone: profile.phone || '',
+          photoUrl: profile.avatar || ''
+        });
+      }
+    });
     loadData();
-  }, [router]);
+  }, [status, session, router]);
 
   const handleLogout = () => {
-    localStorage.removeItem('yoga_user');
-    window.location.href = '/';
+    signOut({ callbackUrl: '/' });
   };
 
   const handlePasswordChange = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!oldPassword || !newPassword) return;
     
-    const userJson = localStorage.getItem('yoga_user');
-    const username = userJson ? JSON.parse(userJson).username : 'admin';
+    const username = (session?.user as any)?.username || 'admin';
     
     const res = await changePassword(username, oldPassword, newPassword);
     if (res.success) {
@@ -185,19 +184,20 @@ export default function Admin() {
     }
 
     try {
-      const userJson = localStorage.getItem('yoga_user');
-      const username = userJson ? JSON.parse(userJson).username : 'admin';
+      const username = (session?.user as any)?.username || 'admin';
       
-      const oldProfileJson = localStorage.getItem(`profile_${username}`);
+      const oldProfile = await getMyProfile(username);
       let oldAuthorName = 'Админ сайта';
-      if (oldProfileJson) {
-        const oldProfile = JSON.parse(oldProfileJson);
-        if (oldProfile.name) {
-          oldAuthorName = `${oldProfile.name} (Админ сайта)`;
-        }
+      if (oldProfile?.name) {
+        oldAuthorName = `${oldProfile.name} (Админ сайта)`;
       }
       
-      localStorage.setItem(`profile_${username}`, JSON.stringify(adminProfile));
+      await updateMyProfile(username, {
+        name: adminProfile.name,
+        email: adminProfile.email,
+        phone: adminProfile.phone,
+        avatar: adminProfile.photoUrl
+      });
       
       const authorName = `${adminProfile.name} (Админ сайта)`;
       
@@ -414,24 +414,8 @@ export default function Admin() {
     const data = Object.fromEntries(formData.entries()) as any;
     
     try {
-      const userJson = localStorage.getItem('yoga_user');
-      let authorName = 'Админ сайта';
-      let authorPhoto = '';
-      if (userJson) {
-        const userData = JSON.parse(userJson);
-        const adminProfileJson = localStorage.getItem(`profile_${userData.username}`);
-        if (adminProfileJson) {
-          const adminProfile = JSON.parse(adminProfileJson);
-          if (adminProfile.name) {
-            authorName = `${adminProfile.name} (Админ сайта)`;
-          }
-          if (adminProfile.photoUrl) {
-            authorPhoto = adminProfile.photoUrl;
-          }
-        } else {
-          authorName = `${userData.username} (Админ сайта)`;
-        }
-      }
+      let authorName = adminProfile.name ? `${adminProfile.name} (Админ сайта)` : ((session?.user as any)?.username ? `${(session?.user as any).username} (Админ сайта)` : 'Админ сайта');
+      let authorPhoto = adminProfile.photoUrl || '';
 
       if (activeTab === 'coursesPane') {
         const courseData = await translateObjectFields({ title: data.title, description: data.description, fullDescription: data.fullDescription, features: data.features, price: Number(data.price), imageUrl: data.imageUrl, author: authorName, authorPhoto });
@@ -449,20 +433,6 @@ export default function Admin() {
           await updateArticle(editingItem.id, articleData);
         } else {
           await addArticle(articleData);
-          
-          // Симуляция автоматической рассылки подписчикам
-          const subscribersJson = localStorage.getItem('yoga_subscribers');
-          if (subscribersJson) {
-            const subscribers = JSON.parse(subscribersJson);
-            subscribers.forEach((email: string) => {
-              emailService.sendEmail(
-                email,
-                `Новая статья в блоге YOGA.LIFE: ${articleData.title}`,
-                `Здравствуйте! Мы опубликовали новую статью: "${articleData.title}".\n\n${articleData.subtitle}\n\nЧитайте на нашем сайте!`
-              );
-            });
-            await modalService.alert('', t.admin.newsSent.replace('{count}', String(subscribers.length)));
-          }
         }
       }
       else if (activeTab === 'toursPane') {

@@ -2,25 +2,63 @@ export const dynamic = "force-dynamic";
 import { NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
 import { PrismaClient } from '@prisma/client';
+import { z } from 'zod';
 
 const prisma = new PrismaClient();
 
+// Simple in-memory rate limiter: max 5 registrations per IP per 10 minutes
+const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
+const RATE_LIMIT_MAX = 5;
+const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;
+
+function checkRateLimit(ip: string): boolean {
+  const now = Date.now();
+  const entry = rateLimitMap.get(ip);
+
+  if (!entry || now > entry.resetAt) {
+    rateLimitMap.set(ip, { count: 1, resetAt: now + RATE_LIMIT_WINDOW_MS });
+    return true;
+  }
+
+  if (entry.count >= RATE_LIMIT_MAX) return false;
+
+  entry.count += 1;
+  return true;
+}
+
+const registerSchema = z.object({
+  username: z
+    .string()
+    .min(3, "Логин должен содержать минимум 3 символа")
+    .max(32, "Логин не должен превышать 32 символа")
+    .regex(/^[a-zA-Z0-9_]+$/, "Логин может содержать только буквы, цифры и _"),
+  password: z
+    .string()
+    .min(6, "Пароль должен содержать минимум 6 символов")
+    .max(72, "Пароль не должен превышать 72 символа"),
+});
+
 export async function POST(req: Request) {
   try {
-    const body = await req.json();
-    const { username, password } = body;
-
-    if (!username || !password) {
-      return NextResponse.json({ error: 'Missing logic fields' }, { status: 400 });
+    const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
+    if (!checkRateLimit(ip)) {
+      return NextResponse.json(
+        { error: 'Слишком много попыток регистрации. Попробуйте позже.' },
+        { status: 429 }
+      );
     }
 
-    const un = username.trim();
-    const pw = password.trim();
+    const body = await req.json();
 
-    // Check existing
-    const existingUser = await prisma.user.findUnique({
-      where: { username: un }
-    });
+    const parsed = registerSchema.safeParse(body);
+    if (!parsed.success) {
+      const message = parsed.error.issues[0]?.message || 'Неверные данные';
+      return NextResponse.json({ error: message }, { status: 400 });
+    }
+
+    const { username: un, password: pw } = parsed.data;
+
+    const existingUser = await prisma.user.findUnique({ where: { username: un } });
 
     if (existingUser) {
       return NextResponse.json({ error: 'Пользователь уже существует' }, { status: 400 });
@@ -30,11 +68,7 @@ export async function POST(req: Request) {
     const role = un.toLowerCase() === 'admin' ? 'ADMIN' : 'USER';
 
     const user = await prisma.user.create({
-      data: {
-        username: un,
-        passwordHash,
-        role
-      }
+      data: { username: un, passwordHash, role }
     });
 
     return NextResponse.json({ 
@@ -42,7 +76,6 @@ export async function POST(req: Request) {
       user: { username: user.username, role: user.role } 
     }, { status: 201 });
   } catch (error) {
-    console.error('Registration error:', error);
     return NextResponse.json({ error: 'Внутренняя ошибка сервера' }, { status: 500 });
   }
 }

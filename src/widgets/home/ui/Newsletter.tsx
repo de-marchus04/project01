@@ -1,40 +1,26 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
 import { useLanguage } from "@/shared/i18n/LanguageContext";
 import { emailService } from "@/shared/api/emailService";
+import { subscribeEmail, checkSubscription } from "@/shared/api/subscriberApi";
 import { modalService } from "@/shared/ui/Modal/modalService";
 
 export const Newsletter = () => {
   const { t } = useLanguage();
+  const { data: session } = useSession();
+  const sessionUser = session?.user as any;
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isSubscribed, setIsSubscribed] = useState(false);
 
   useEffect(() => {
-    const checkSubscription = () => {
-      const userJson = localStorage.getItem('yoga_user');
-      let userEmail = '';
-      if (userJson) {
-        const userData = JSON.parse(userJson);
-        const profileJson = localStorage.getItem(`profile_${userData.username}`);
-        userEmail = profileJson ? JSON.parse(profileJson).email : `${userData.username}@example.com`;
-      }
-
-      const subscribersJson = localStorage.getItem('yoga_subscribers');
-      const subscribers = subscribersJson ? JSON.parse(subscribersJson) : [];
-      
-      if (userEmail && subscribers.includes(userEmail)) {
-        setIsSubscribed(true);
-      } else {
-        setIsSubscribed(false);
-      }
-    };
-
-    checkSubscription();
-    window.addEventListener('yoga_subscription_updated', checkSubscription);
-    return () => window.removeEventListener('yoga_subscription_updated', checkSubscription);
-  }, []);
+    const userEmail = sessionUser?.email;
+    if (userEmail) {
+      checkSubscription(userEmail).then(setIsSubscribed);
+    }
+  }, [sessionUser?.email]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -44,47 +30,22 @@ export const Newsletter = () => {
       return;
     }
 
+    if (!emailService.isValidFormat(email)) {
+      await modalService.alert("Внимание", "Неверный формат email адреса.");
+      return;
+    }
+
     setIsLoading(true);
     try {
-      // 1. Валидация формата
-      if (!emailService.isValidFormat(email)) {
-        await modalService.alert("Внимание", "Неверный формат email адреса.");
-        setIsLoading(false);
-        return;
-      }
+      const result = await subscribeEmail(email);
 
-      // 2. Проверка существования домена
-      const exists = await emailService.verifyEmailExists(email);
-      if (!exists) {
-        await modalService.alert("Внимание", "Указанный домен почты не существует или не принимает письма.");
-        setIsLoading(false);
-        return;
-      }
+      await emailService.sendWelcomeGuide(email);
 
-      // 3. Проверка на дублирование в базе подписчиков (как в футере)
-      const subscribersJson = localStorage.getItem('yoga_subscribers');
-      const subscribers = subscribersJson ? JSON.parse(subscribersJson) : [];
-      
-      let isNewSubscriber = false;
-      if (!subscribers.includes(email)) {
-        subscribers.push(email);
-        localStorage.setItem('yoga_subscribers', JSON.stringify(subscribers));
-        isNewSubscriber = true;
-        window.dispatchEvent(new Event('yoga_subscription_updated'));
-      }
-
-      // 4. Отправка обещанного гайда
-      emailService.sendEmail(
-        email,
-        "Ваш бесплатный гайд по медитации от YOGA.LIFE",
-        "Здравствуйте!\n\nСпасибо за интерес к нашей платформе. Вот ваш бесплатный гайд по медитации для начинающих: [Ссылка на скачивание PDF]\n\n{t.home.newsletterTitle} уже сегодня!"
-      );
-      
-      // 5. Уведомление пользователя
-      if (isNewSubscriber) {
-        await modalService.alert("Успешно!", "Гайд отправлен на вашу почту! Вы также успешно подписаны на наши обновления и анонсы ретритов.");
+      if (result.alreadySubscribed) {
+        await modalService.alert("Успешно!", "Гайд отправлен на вашу почту! (Вы уже являетесь нашим подписчиком).");
       } else {
-        await modalService.alert("Успешно!", "Гайд отправлен на вашу почту! (Вы уже являетесь нашим подписчиком, дублирования рассылки не будет).");
+        await modalService.alert("Успешно!", "Гайд отправлен на вашу почту! Вы также успешно подписаны на наши обновления и анонсы ретритов.");
+        setIsSubscribed(true);
       }
       
       setEmail("");
@@ -95,7 +56,7 @@ export const Newsletter = () => {
     }
   };
 
-  if (isSubscribed) {
+  if (isSubscribed && sessionUser?.email) {
     return null;
   }
 

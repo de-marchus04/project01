@@ -3,14 +3,17 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useSession, signOut } from "next-auth/react";
 import { getOrders, markOrderAsNotified, Order } from "@/shared/api/userApi";
 import { getUserMessages, SupportMessage } from "@/shared/api/supportApi";
 import Image from "next/image";
-import { changePassword } from "@/shared/api/authActions";
+import { changePassword, getMyProfile, updateMyProfile } from "@/shared/api/authActions";
+import { checkSubscription, subscribeEmail, unsubscribeEmail } from "@/shared/api/subscriberApi";
 import { useLanguage } from "@/shared/i18n/LanguageContext";
 
 export default function Profile() {
   const { t, tStr } = useLanguage();
+  const { data: session, status } = useSession();
   const [user, setUser] = useState<{ username: string, email?: string, phone?: string, photo?: string, name?: string } | null>(null);
   const [orders, setOrders] = useState<Order[]>([]);
   const [messages, setMessages] = useState<SupportMessage[]>([]);
@@ -27,80 +30,64 @@ export default function Profile() {
   const router = useRouter();
 
   useEffect(() => {
-    // Проверка авторизации
-    const userJson = localStorage.getItem('yoga_user');
-    if (!userJson) {
+    if (status === 'loading') return;
+    if (status === 'unauthenticated') {
       router.push('/login');
       return;
     }
 
-    try {
-      const userData = JSON.parse(userJson);
-      if (userData.role === 'admin' || userData.username === 'admin') {
-        router.push('/admin');
-        return;
-      }
-      
-      // Загружаем расширенные данные профиля, если есть
-      const profileJson = localStorage.getItem(`profile_${userData.username}`);
-      if (profileJson) {
-        const profile = JSON.parse(profileJson);
-        setUser({ 
-          ...userData, 
-          name: profile.name || '',
-          email: profile.email || '',
-          phone: profile.phone || '',
-          photo: profile.photoUrl || profile.photo || ''
-        });
-      } else {
-        setUser({ ...userData, name: '', email: `${userData.username}@example.com`, phone: '', photo: '' });
-      }
+    const username = (session?.user as any)?.username as string;
+    const role = (session?.user as any)?.role as string;
 
-      // Проверка подписки
-      const subscribersJson = localStorage.getItem('yoga_subscribers');
-      const subscribers = subscribersJson ? JSON.parse(subscribersJson) : [];
-      const userEmail = profileJson ? JSON.parse(profileJson).email : `${userData.username}@example.com`;
-      setIsSubscribed(subscribers.includes(userEmail));
-
-    } catch (e) {
-      router.push('/login');
+    if (role === 'ADMIN' || username === 'admin') {
+      router.push('/admin');
       return;
     }
 
     // Загрузка данных пользователя
     async function loadData() {
       try {
-        const data = await getOrders();
-        
-        const userJson = localStorage.getItem('yoga_user');
-        if (userJson) {
-          const userData = JSON.parse(userJson);
-          
-          // Фильтруем заказы только для текущего пользователя
-          const userOrders = data.filter(order => 
-            order.userId === userData.username || 
-            order.customerName === userData.username ||
-            (userData.name && order.customerName === userData.name)
-          );
-          setOrders(userOrders);
-          
-          // Проверяем уведомления о статусе
-          userOrders.forEach(order => {
-            if ((order.status === 'Принята' || order.status === 'Отклонена') && !order.notified) {
-              if (order.status === 'Принята') {
-                alert(t.profile.alertAccepted.replace("{product}", `"${order.productName}"`));
-              } else {
-                alert(t.profile.alertRejected.replace("{product}", `"${order.productName}"`));
-              }
-              markOrderAsNotified(order.id);
-            }
-          });
+        // Загружаем профиль из БД
+        const profile = await getMyProfile(username);
+        const email = profile?.email || session?.user?.email || '';
+        setUser({
+          username,
+          name: profile?.name || '',
+          email,
+          phone: profile?.phone || '',
+          photo: profile?.avatar || (session?.user as any)?.avatar || '',
+        });
 
-          const profileJson = localStorage.getItem(`profile_${userData.username}`);
-          const userEmail = profileJson ? JSON.parse(profileJson).email : `${userData.username}@example.com`;
-          getUserMessages(userEmail).then(setMessages);
-        } else {
-          setOrders([]);
+        // Проверка подписки
+        if (email) {
+          const subscribed = await checkSubscription(email);
+          setIsSubscribed(subscribed);
+        }
+
+        // Загружаем заказы
+        const data = await getOrders();
+        const userOrders = data.filter(order =>
+          order.userId === username ||
+          order.customerName === username ||
+          (profile?.name && order.customerName === profile.name)
+        );
+        setOrders(userOrders);
+
+        // Проверяем уведомления о статусе
+        userOrders.forEach(order => {
+          if ((order.status === 'Принята' || order.status === 'Отклонена') && !order.notified) {
+            if (order.status === 'Принята') {
+              alert(t.profile.alertAccepted.replace("{product}", `"${order.productName}"`));
+            } else {
+              alert(t.profile.alertRejected.replace("{product}", `"${order.productName}"`));
+            }
+            markOrderAsNotified(order.id);
+          }
+        });
+
+        // Загружаем сообщения
+        if (email) {
+          getUserMessages(email).then(setMessages);
         }
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -112,22 +99,18 @@ export default function Profile() {
     loadData();
 
     const handleSupportUpdate = () => {
-      const userJson = localStorage.getItem('yoga_user');
-      if (userJson) {
-        const userData = JSON.parse(userJson);
-        const profileJson = localStorage.getItem(`profile_${userData.username}`);
-        const userEmail = profileJson ? JSON.parse(profileJson).email : `${userData.username}@example.com`;
-        getUserMessages(userEmail).then(setMessages);
+      const email = session?.user?.email;
+      if (email) {
+        getUserMessages(email).then(setMessages);
       }
     };
 
     window.addEventListener('yoga_support_updated', handleSupportUpdate);
     return () => window.removeEventListener('yoga_support_updated', handleSupportUpdate);
-  }, [router]);
+  }, [router, session, status]);
 
   const handleLogout = () => {
-    localStorage.removeItem('yoga_user');
-    window.location.href = '/';
+    signOut({ callbackUrl: '/' });
   };
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -174,12 +157,10 @@ export default function Profile() {
     e.preventDefault();
     if (!oldPassword || !newPassword) return;
     
-    // We assume the user's login is stored in user.username
-    const userJson = localStorage.getItem('yoga_user');
-    if (!userJson) return;
-    const userData = JSON.parse(userJson);
+    const username = (session?.user as any)?.username as string;
+    if (!username) return;
     
-    const res = await changePassword(userData.username, oldPassword, newPassword);
+    const res = await changePassword(username, oldPassword, newPassword);
     if (res.success) {
       setIsPasswordChanged(true);
       setPasswordError(null);
@@ -191,7 +172,7 @@ export default function Profile() {
     }
   };
 
-  const handleProfileSave = (e: React.FormEvent | React.MouseEvent) => {
+  const handleProfileSave = async (e: React.FormEvent | React.MouseEvent) => {
     e.preventDefault();
     
     if (!user?.name || !user?.photo || user.name.trim() === '' || user.photo.trim() === '') {
@@ -200,18 +181,13 @@ export default function Profile() {
       return;
     }
 
-    const updatedProfile = {
-      username: user.username,
+    const username = (session?.user as any)?.username as string;
+    await updateMyProfile(username, {
       name: user.name,
-      email: user.email || '',
-      phone: user.phone || '',
-      photoUrl: user.photo,
-    };
-    
-    localStorage.setItem(`profile_${user?.username}`, JSON.stringify(updatedProfile));
-    
-    // Принудительно обновляем Header, вызывая событие storage
-    window.dispatchEvent(new Event('storage'));
+      email: user.email,
+      phone: user.phone,
+      avatar: user.photo,
+    });
     
     setIsProfileEdited(false);
     setIsProfileSaved(true);
@@ -259,21 +235,16 @@ export default function Profile() {
     }
   };
 
-  const handleSubscriptionToggle = () => {
+  const handleSubscriptionToggle = async () => {
     if (!user?.email) return;
     
-    const subscribersJson = localStorage.getItem('yoga_subscribers');
-    let subscribers = subscribersJson ? JSON.parse(subscribersJson) : [];
-    
     if (isSubscribed) {
-      subscribers = subscribers.filter((e: string) => e !== user.email);
+      await unsubscribeEmail(user.email);
     } else {
-      subscribers.push(user.email);
+      await subscribeEmail(user.email);
     }
     
-    localStorage.setItem('yoga_subscribers', JSON.stringify(subscribers));
     setIsSubscribed(!isSubscribed);
-    window.dispatchEvent(new Event('yoga_subscription_updated'));
   };
 
   if (!user) return null;

@@ -17,13 +17,15 @@ model User {
   id           String   @id @default(cuid())
   username     String   @unique
   email        String?  @unique
-  passwordHash String // Хешированный пароль (нельзя хранить в открытом виде!)
+  passwordHash String
   role         Role     @default(USER)
   avatar       String?
+  name         String?  // Отображаемое имя
+  phone        String?  // Номер телефона
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
-  orders Order[] // Связь с заказами этого пользователя
+  orders Order[]
 }
 
 enum Role {
@@ -151,12 +153,13 @@ model Testimonial {
 // -----------------------------------------------------------------------------
 model Order {
   id        String      @id @default(cuid())
-  userId    String
-  user      User        @relation(fields: [userId], references: [id])
-  itemId    String // ID купленного товара (Курс, Тур, Консультация)
-  itemType  ItemType // COURSE, TOUR, CONSULTATION
+  userId    String?
+  user      User?       @relation(fields: [userId], references: [id])
+  guestName String?     // Имя гостя (если userId = null)
+  itemId    String
+  itemType  ItemType
   amount    Float
-  status    OrderStatus @default(COMPLETED)
+  status    OrderStatus @default(PENDING)
   createdAt DateTime    @default(now())
 }
 
@@ -181,8 +184,18 @@ model SupportTicket {
   email     String
   subject   String
   message   String       @db.Text
+  reply     String?      @db.Text
   status    TicketStatus @default(NEW)
   createdAt DateTime     @default(now())
+}
+
+// -----------------------------------------------------------------------------
+// Подписчики рассылки
+// -----------------------------------------------------------------------------
+model Subscriber {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  createdAt DateTime @default(now())
 }
 
 enum TicketStatus {

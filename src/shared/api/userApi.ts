@@ -35,38 +35,28 @@ export async function getOrders(): Promise<Order[]> {
       price: i.amount,
       status: mappedStatus,
       date: new Date(i.createdAt).toISOString().split('T')[0],
-      customerName: i.user ? i.user.username : 'Гость',
+      customerName: i.user ? i.user.username : (i.guestName || 'Гость'),
       serviceId: i.itemId,
-      userId: i.userId,
+      userId: i.userId || undefined,
       notified: false
     };
   })));
 }
 
 export async function addOrder(productName: string, price: number, customerName: string = "Гость", serviceId?: string, userId?: string): Promise<Order> {
-  const actualUserId = userId || "mock-user-id";
-  
-  // Ensure a dummy user exists for now if taking unauth orders, or just create it.
-  try {
-    const defaultUser = await prisma.user.upsert({
-      where: { id: actualUserId },
-      update: {},
-      create: {
-        id: actualUserId,
-        username: customerName,
-        email: `${customerName}@example.com`,
-        passwordHash: 'dummy'
-      }
-    });
-  } catch (e) {
-    // ignore
+  // Resolve real user id from username if provided
+  let resolvedUserId: string | null = null;
+  if (userId) {
+    const user = await prisma.user.findFirst({ where: { username: userId } });
+    resolvedUserId = user?.id ?? null;
   }
 
   const newItem = await prisma.order.create({
     data: {
-      userId: actualUserId,
+      ...(resolvedUserId ? { userId: resolvedUserId } : {}),
+      guestName: resolvedUserId ? null : customerName,
       itemId: serviceId || 'unknown',
-      itemType: 'COURSE', // hardcoded fallback
+      itemType: 'COURSE',
       amount: price,
       status: 'PENDING'
     }

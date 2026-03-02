@@ -91,14 +91,7 @@ export default function Login() {
           return;
         }
 
-        // Save user to localStorage for old UI logic compatibility
         const isAdmin = username.trim().toLowerCase() === 'admin' || username.trim().toLowerCase() === 'dimich04';
-        localStorage.setItem('yoga_user', JSON.stringify({ 
-          username, 
-          role: isAdmin ? 'admin' : 'user' 
-        }));
-
-        // We redirect blindly to profile, since role redirection usually happens in middleware for safety anyway, but let's check JS-side user if we want
         router.push(isAdmin ? '/admin' : '/profile');
       } else {
         // Login via NextAuth credentials provider
@@ -116,15 +109,9 @@ export default function Login() {
         // Reset attempts on successful login
         localStorage.removeItem('yoga_login_attempts');
         
-        // Save user to localStorage for old UI logic compatibility
-        const isAdmin = username.trim().toLowerCase() === 'admin' || username.trim().toLowerCase() === 'dimich04';
-        localStorage.setItem('yoga_user', JSON.stringify({ 
-          username, 
-          role: isAdmin ? 'admin' : 'user' 
-        }));
-
-        // Wait briefly for session to settle
-        if (isAdmin) {
+        // Redirect based on role — get role from signIn result isn't available here directly,
+        // so we use the session after it settles.
+        if (username.trim().toLowerCase() === 'admin' || username.trim().toLowerCase() === 'dimich04') {
           router.push('/admin');
         } else {
           router.push('/profile');
