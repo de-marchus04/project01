@@ -1,7 +1,13 @@
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
 const FROM = process.env.EMAIL_FROM || "YOGA.LIFE <noreply@yoga.life>";
+
+function getResend(): Resend {
+  if (!process.env.RESEND_API_KEY) {
+    throw new Error("RESEND_API_KEY is not set");
+  }
+  return new Resend(process.env.RESEND_API_KEY);
+}
 
 export const emailService = {
   isValidFormat: (email: string): boolean => {
@@ -14,7 +20,7 @@ export const emailService = {
       console.warn("[emailService] RESEND_API_KEY не задан — письмо не отправлено.");
       return;
     }
-    await resend.emails.send({
+    await getResend().emails.send({
       from: FROM,
       to,
       subject,
