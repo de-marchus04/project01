@@ -77,7 +77,9 @@ export const Header = () => {
         padding: '2rem',
         display: 'flex',
         flexDirection: 'column',
-        overflowY: 'auto'
+        overflowY: 'auto',
+        transform: isMenuOpen ? 'translateX(0)' : 'translateX(-100%)',
+        transition: 'transform 0.45s cubic-bezier(0.4, 0, 0.2, 1)',
       }}
     >
       <div className="mb-5 mt-3 text-center">
