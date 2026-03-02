@@ -27,8 +27,9 @@ button, a, .btn, .nav-link, .card {
 
 /* Sidebar slide transition must not be overridden by the * rule */
 .custom-sidebar {
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
     transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1) !important;
-    overflow: hidden !important;
 }
 
 /* Main content push — synced with sidebar */
@@ -43,6 +44,48 @@ button, a, .btn, .nav-link, .card {
 .menu-toggle-btn:hover {
     opacity: 0.6;
     filter: drop-shadow(0 0 6px var(--color-primary));
+}
+
+/* Sidebar nav item hover highlight */
+.custom-sidebar .nav-item a,
+.custom-sidebar .nav-item div {
+    border-radius: 8px;
+    padding: 4px 8px;
+    margin: -4px -8px;
+    transition: background-color 0.2s ease !important;
+}
+.custom-sidebar .nav-item a:hover {
+    background-color: rgba(140, 154, 129, 0.15);
+}
+[data-theme="dark"] .custom-sidebar .nav-item a:hover {
+    background-color: rgba(40, 70, 40, 0.35);
+}
+
+/* Hero page titles — warm cream instead of pure white */
+.page-hero h1,
+.hero-section h1 {
+    color: #EFEBE1 !important;
+    text-shadow: 0 2px 20px rgba(0,0,0,0.35);
+}
+
+/* Smooth image load — fade in when browser paints them */
+@keyframes imgFadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+img:not([src=""]):not([src*="data:"]) {
+    animation: imgFadeIn 0.6s ease forwards;
+}
+/* Card image placeholder bg while loading */
+.card-img-top,
+.card img {
+    background-color: var(--color-secondary);
+    min-height: 180px;
+}
+
+/* Footer email placeholder */
+footer input::placeholder {
+    color: rgba(245, 240, 235, 0.5);
 }
 
 

@@ -79,6 +79,7 @@ export const Footer = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 disabled={isLoading}
+                style={{ backgroundColor: 'rgba(255,255,255,0.12)', color: '#f5f0eb', borderColor: 'rgba(255,255,255,0.25)' }}
               />
               <button 
                 type="submit" 
