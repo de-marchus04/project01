@@ -241,3 +241,20 @@ h1, h2, h3, h4, h5, h6, .font-playfair {
     height: 100vh;
     overflow-y: auto;
 }
+
+/* Language switch overlay */
+@keyframes langDim {
+    0%   { opacity: 0; }
+    45%  { opacity: 0.35; }
+    55%  { opacity: 0.35; }
+    100% { opacity: 0; }
+}
+.lang-switch-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    background: #000;
+    opacity: 0;
+    pointer-events: none;
+    animation: langDim 0.9s ease-in-out forwards;
+}
