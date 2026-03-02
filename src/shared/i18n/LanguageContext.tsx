@@ -77,8 +77,14 @@ export const LanguageProvider = ({ children }: { children: React.ReactNode }) =>
 
   
   const setLang = (newLang: Language) => {
-    setLangState(newLang);
-    localStorage.setItem('yoga_lang', newLang);
+    const main = document.getElementById('main-content') ?? document.body;
+    main.style.transition = 'opacity 0.3s ease';
+    main.style.opacity = '0';
+    setTimeout(() => {
+      setLangState(newLang);
+      localStorage.setItem('yoga_lang', newLang);
+      main.style.opacity = '1';
+    }, 300);
   };
 
   return (
