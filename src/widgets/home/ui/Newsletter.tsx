@@ -71,6 +71,7 @@ export const Newsletter = () => {
             </p>
             <form className="d-flex flex-column flex-sm-row gap-3 justify-content-center max-w-md mx-auto" style={{ maxWidth: '500px' }} onSubmit={handleSubmit}>
               <input 
+                id="newsletter-email"
                 type="email" 
                 className="form-control form-control-lg rounded-pill border-0 px-4" 
                 placeholder={t.home.newsletterPlaceholder} 
@@ -78,6 +79,7 @@ export const Newsletter = () => {
                 onChange={(e) => setEmail(e.target.value)}
                 disabled={isLoading}
                 required 
+                style={{ backgroundColor: '#7a6a5e', color: '#f5f0eb', caretColor: '#f5f0eb' }}
               />
               <button 
                 type="submit" 
