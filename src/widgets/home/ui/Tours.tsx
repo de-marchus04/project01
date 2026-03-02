@@ -6,7 +6,7 @@ import { useLanguage } from "@/shared/i18n/LanguageContext";
 export const Tours = () => {
   const { t } = useLanguage();
   return (
-    <section id="tours" className="py-5" style={{ backgroundColor: '#fff' }}>
+    <section id="tours" className="py-5" style={{ backgroundColor: 'var(--color-surface)' }}>
       <div className="container py-5">
         <div className="text-center mb-5">
           <span className="text-uppercase fw-bold" style={{ color: 'var(--color-primary)', letterSpacing: '2px', fontSize: '0.85rem' }}>{t.home.toursBadge}</span>

@@ -140,7 +140,7 @@ export const Header = () => {
               {userPhoto && (userPhoto.startsWith('http') || userPhoto.startsWith('data:image')) ? (
                 <img src={userPhoto} alt={username} className="rounded-circle object-fit-cover shadow-sm" style={{ width: '50px', height: '50px' }} onError={(e) => { e.currentTarget.style.display = 'none'; }} />
               ) : (
-                <div className="bg-white rounded-circle d-flex align-items-center justify-content-center shadow-sm border" style={{ width: '50px', height: '50px', flexShrink: 0 }}>
+                <div className="rounded-circle d-flex align-items-center justify-content-center shadow-sm border" style={{ width: '50px', height: '50px', flexShrink: 0, backgroundColor: 'var(--color-surface)' }}>
                   <i className="bi bi-person fs-4" style={{ color: 'var(--color-primary)' }}></i>
                 </div>
               )}
@@ -248,7 +248,7 @@ export const Header = () => {
             >
               <i className={`bi ${theme === 'dark' ? 'bi-sun' : 'bi-moon'} fs-4`}></i>
             </button>
-            <div className="d-flex align-items-center bg-white rounded-pill px-2 py-1 shadow-sm border" style={{ borderColor: 'var(--color-primary)' }}>
+            <div className="d-flex align-items-center rounded-pill px-2 py-1 shadow-sm border" style={{ borderColor: 'var(--color-primary)', backgroundColor: 'var(--color-surface)' }}>
               <button 
                 className={`btn btn-sm border-0 fw-bold px-2 py-0 ${lang === 'ru' ? 'text-dark' : 'text-muted'}`} 
                 onClick={() => setLang('ru')}

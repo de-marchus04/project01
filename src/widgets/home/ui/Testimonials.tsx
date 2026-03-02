@@ -33,7 +33,7 @@ export const Testimonials = () => {
         <div className="row g-4 justify-content-center">
           {testimonials.slice(0, 3).map((item) => (
             <div key={item.id} className="col-md-4">
-              <div className="card border-0 h-100 p-4" style={{ backgroundColor: '#fff', borderRadius: '20px' }}>
+              <div className="card border-0 h-100 p-4" style={{ backgroundColor: 'var(--color-surface)', borderRadius: '20px' }}>
                 <div className="d-flex mb-3" style={{ color: 'var(--color-accent)' }}>
                   {[...Array(5)].map((_, i) => <i key={i} className="bi bi-star-fill"></i>)}
                 </div>

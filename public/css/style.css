@@ -56,9 +56,24 @@
     color: var(--color-text) !important;
 }
 
-[data-theme="dark"] .border {
-    border-color: var(--color-border) !important;
+[data-theme="dark"] .navbar {
+    background-color: rgba(36, 34, 32, 0.95) !important;
 }
+
+[data-theme="dark"] .text-dark,
+[data-theme="dark"] .text-muted {
+    color: var(--color-text) !important;
+}
+
+[data-theme="dark"] .bg-light {
+    background-color: var(--color-surface) !important;
+}
+
+[data-theme="dark"] section {
+    background-color: var(--color-bg);
+    color: var(--color-text);
+}
+
 
 [data-theme="dark"] input,
 [data-theme="dark"] textarea,
@@ -147,7 +162,6 @@ h1, h2, h3, h4, h5, h6, .font-playfair {
 .navbar {
     transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
     background-color: rgba(250, 247, 242, 0.95) !important;
-    backdrop-filter: blur(10px);
     box-shadow: 0 2px 15px rgba(0,0,0,0.02);
 }
 .navbar-brand {
