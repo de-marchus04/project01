@@ -49,7 +49,7 @@ export default function TourDetail() {
   }
 
   return (
-    <main className="bg-light min-vh-100 pt-5">
+    <main style={{ backgroundColor: 'var(--color-bg)' }} className="min-vh-100 pt-5">
       <div className="container py-5 mt-4">
           <Link 
             href="/tours" 
@@ -88,7 +88,7 @@ export default function TourDetail() {
                 </>
               )}
             </div>
-            <div className="mt-4 p-3 bg-white rounded-3 shadow-sm d-inline-block">
+            <div className="mt-4 p-3 rounded-3 shadow-sm d-inline-block" style={{ backgroundColor: "var(--color-surface)" }}>
               <div className="d-flex align-items-center gap-3">
                 {loc_tour.authorPhoto ? (
                   <img src={loc_tour.authorPhoto} alt={loc_tour.author || tStr("Организатор")} className="rounded-circle object-fit-cover" style={{ width: '40px', height: '40px' }} />

@@ -45,7 +45,7 @@ export default function ToursPageClient({ initialData }: { initialData: any }) {
           </div>
       </section>
 
-      <section className="py-5 bg-light">
+      <section className="py-5" style={{ backgroundColor: "var(--color-bg)" }}>
           <div className="container py-5">
               <div className="row g-4">
                   {loading && (
@@ -58,8 +58,8 @@ export default function ToursPageClient({ initialData }: { initialData: any }) {
                       <div key={loc_tour.id} className="col-md-6">
                           <div className="card h-100 border-0 shadow-sm overflow-hidden" style={{ borderRadius: '16px' }}>
                               <div style={{ height: '250px', overflow: 'hidden', position: 'relative' }}>
-                                  <img src={loc_tour.imageUrl} alt={loc_tour.title} className="w-100 h-100" style={{ objectFit: 'cover' }} />
-                                  <div className="position-absolute top-0 end-0 m-3 bg-white px-3 py-1 rounded-pill shadow-sm fw-bold text-primary">
+                                  <img src={loc_tour.imageUrl} alt={loc_tour.title} className="w-100 h-100" style={{ objectFit: "cover" }} onError={(e) => { (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1552196563-55cd4e45efb3?q=80&w=800&auto=format&fit=crop"; }} />
+                              <div className="position-absolute top-0 end-0 m-3 px-3 py-1 rounded-pill shadow-sm fw-bold" style={{ backgroundColor: 'var(--color-surface)', color: 'var(--color-primary)' }}>
                                       {formatPrice(loc_tour.price, lang)}
                                   </div>
                               </div>

@@ -48,24 +48,32 @@ export const GlobalModal = () => {
 
   return (
     <>
-      <div className="modal-backdrop fade show" style={{ zIndex: 1050, backgroundColor: 'rgba(62, 66, 58, 0.6)', backdropFilter: 'blur(8px)' }}></div>
-      <div className="modal fade show d-block" tabIndex={-1} style={{ zIndex: 1055 }} onClick={handleCancel}>
-        <div className="modal-dialog modal-dialog-centered" onClick={(e) => e.stopPropagation()}>
-          <div className="modal-content border-0 shadow" style={{ borderRadius: '24px', backgroundColor: '#fff', overflow: 'hidden' }}>
+      <div 
+        className="modal-backdrop fade show" 
+        style={{ zIndex: 1050, backgroundColor: 'rgba(62, 66, 58, 0.5)', backdropFilter: 'blur(6px)', animation: 'modalFadeIn 0.25s ease' }}
+      ></div>
+      <div 
+        className="modal fade show d-block" 
+        tabIndex={-1} 
+        style={{ zIndex: 1055, animation: 'modalSlideIn 0.25s ease' }} 
+        onClick={handleCancel}
+      >
+        <div className="modal-dialog modal-dialog-centered modal-sm" onClick={(e) => e.stopPropagation()}>
+          <div className="modal-content border-0 shadow-lg" style={{ borderRadius: '20px', backgroundColor: 'var(--color-surface)', overflow: 'hidden' }}>
             <div className="modal-header border-0 pb-0 pt-4 px-4 d-flex justify-content-center position-relative">
-              <h5 className="modal-title font-playfair fw-bold fs-4 text-center w-100" style={{ color: 'var(--color-primary)' }}>
+              <h5 className="modal-title font-playfair fw-bold text-center w-100" style={{ color: 'var(--color-primary)', fontSize: '1.1rem' }}>
                 {options.title || (options.type === 'alert' ? 'Внимание' : 'Подтверждение')}
               </h5>
-              <button type="button" className="btn-close position-absolute end-0 me-4" style={{ top: '1.5rem', opacity: 0.5 }} onClick={handleCancel}></button>
+              <button type="button" className="btn-close position-absolute end-0 me-3" style={{ top: '1.2rem', opacity: 0.4, filter: 'var(--bs-btn-close-white-filter, none)' }} onClick={handleCancel}></button>
             </div>
-            <div className="modal-body py-4 px-4 text-center">
-              <p className="mb-0 fs-5" style={{ whiteSpace: 'pre-wrap', color: 'var(--color-text)', lineHeight: '1.6' }}>{options.message}</p>
+            <div className="modal-body py-3 px-4 text-center">
+              <p className="mb-0" style={{ whiteSpace: 'pre-wrap', color: 'var(--color-text-muted)', lineHeight: '1.5', fontSize: '0.9rem' }}>{options.message}</p>
               
               {options.type === 'prompt' && (
-                <div className="mt-4">
+                <div className="mt-3">
                   <input 
                     type="text" 
-                    className="form-control rounded-pill px-4 py-3 shadow-sm text-center fs-5" 
+                    className="form-control rounded-pill px-4 py-2 shadow-sm text-center" 
                     value={inputValue}
                     onChange={(e) => setInputValue(e.target.value)}
                     placeholder={options.placeholder}
@@ -73,18 +81,18 @@ export const GlobalModal = () => {
                     onKeyDown={(e) => {
                       if (e.key === 'Enter') handleConfirm();
                     }}
-                    style={{ borderColor: 'var(--color-secondary)', backgroundColor: '#fafafa', color: 'var(--color-primary)' }}
+                    style={{ borderColor: 'var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)', fontSize: '0.9rem' }}
                   />
                 </div>
               )}
             </div>
-            <div className="modal-footer border-0 pt-0 pb-4 px-4 d-flex justify-content-center gap-3">
+            <div className="modal-footer border-0 pt-0 pb-4 px-4 d-flex justify-content-center gap-2">
               {options.type !== 'alert' && (
-                <button type="button" className="btn btn-outline-dark rounded-pill px-5 py-2 fw-bold" onClick={handleCancel} style={{ transition: 'all 0.3s ease' }}>
+                <button type="button" className="btn rounded-pill px-4 py-2" onClick={handleCancel} style={{ border: '1px solid var(--color-border)', color: 'var(--color-text-muted)', fontSize: '0.85rem' }}>
                   {options.cancelText || 'Отмена'}
                 </button>
               )}
-              <button type="button" className="btn btn-primary-custom rounded-pill px-5 py-2 fw-bold shadow-sm" onClick={handleConfirm}>
+              <button type="button" className="btn btn-primary-custom rounded-pill px-5 py-2" onClick={handleConfirm} style={{ fontSize: '0.85rem' }}>
                 {options.confirmText || 'ОК'}
               </button>
             </div>

@@ -369,3 +369,26 @@ h1, h2, h3, h4, h5, h6, .font-playfair {
     pointer-events: none;
     animation: langDim 0.9s ease-in-out forwards;
 }
+
+/* Modal fade + slide-up animation */
+@keyframes modalFadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+@keyframes modalSlideIn {
+    from { opacity: 0; transform: translateY(-12px) scale(0.97); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Dark mode: modal close button */
+[data-theme="dark"] .btn-close {
+    filter: invert(1) grayscale(1);
+}
+
+/* h1/h2 on non-hero dark sections → warm beige */
+[data-theme="dark"] h1:not(.page-hero h1):not(.hero-section h1),
+[data-theme="dark"] h2,
+[data-theme="dark"] h3,
+[data-theme="dark"] .font-playfair {
+    color: var(--color-text);
+}
