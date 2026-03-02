@@ -78,13 +78,13 @@ export const LanguageProvider = ({ children }: { children: React.ReactNode }) =>
   
   const setLang = (newLang: Language) => {
     const main = document.getElementById('main-content') ?? document.body;
-    main.style.transition = 'opacity 0.3s ease';
-    main.style.opacity = '0';
+    main.style.transition = 'opacity 0.2s ease';
+    main.style.opacity = '0.7';
     setTimeout(() => {
       setLangState(newLang);
       localStorage.setItem('yoga_lang', newLang);
       main.style.opacity = '1';
-    }, 300);
+    }, 200);
   };
 
   return (
