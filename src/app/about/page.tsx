@@ -45,6 +45,7 @@ export default function AboutPage() {
                   alt={tStr("О нас")} 
                   className="img-fluid rounded-4 shadow-lg position-relative"
                   style={{ zIndex: 1, objectFit: 'cover', height: '600px', width: '100%' }}
+                  referrerPolicy="no-referrer"
                 />
               </div>
             </div>
@@ -95,7 +96,7 @@ export default function AboutPage() {
             ].map((member, i) => (
               <div className="col-md-4" key={i}>
                 <div className="card border-0 rounded-4 overflow-hidden shadow-sm h-100">
-                  <img src={member.img} alt={member.name} className="card-img-top" style={{ height: '350px', objectFit: 'cover' }} />
+                  <img src={member.img} alt={member.name} className="card-img-top" style={{ height: '350px', objectFit: 'cover' }} referrerPolicy="no-referrer" />
                   <div className="card-body text-center p-4" style={{ backgroundColor: '#fff' }}>
                     <h4 className="h5 fw-bold mb-1" style={{ color: 'var(--color-text)' }}>{member.name}</h4>
                     <p className="small mb-0" style={{ color: 'var(--color-primary)' }}>{member.role}</p>
