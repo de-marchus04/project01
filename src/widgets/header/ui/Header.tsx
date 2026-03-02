@@ -8,6 +8,7 @@ import { getNavigationConfig } from "@/shared/config/navigation";
 import { useReminders } from "@/shared/hooks/useReminders";
 import { createPortal } from "react-dom";
 import { useLanguage } from "@/shared/i18n/LanguageContext";
+import { useTheme } from "@/shared/i18n/ThemeContext";
 
 export const Header = () => {
   const { data: session, status } = useSession();
@@ -21,6 +22,7 @@ export const Header = () => {
   const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
   const { lang, setLang, t } = useLanguage();
+  const { theme, toggleTheme } = useTheme();
   const navConfig = getNavigationConfig(t);
 
   useReminders();
@@ -238,6 +240,14 @@ export const Header = () => {
             </Link>
           </div>
           <div className="d-flex align-items-center gap-3">
+            <button
+              onClick={toggleTheme}
+              className="btn btn-link p-0 border-0"
+              style={{ color: 'var(--color-text)', outline: 'none' }}
+              title={theme === 'dark' ? 'Светлая тема' : 'Темная тема'}
+            >
+              <i className={`bi ${theme === 'dark' ? 'bi-sun' : 'bi-moon'} fs-4`}></i>
+            </button>
             <div className="d-flex align-items-center bg-white rounded-pill px-2 py-1 shadow-sm border" style={{ borderColor: 'var(--color-primary)' }}>
               <button 
                 className={`btn btn-sm border-0 fw-bold px-2 py-0 ${lang === 'ru' ? 'text-dark' : 'text-muted'}`} 

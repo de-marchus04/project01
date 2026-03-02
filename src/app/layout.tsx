@@ -8,6 +8,7 @@ import { LockoutTimer } from "@/widgets/lockout/ui/LockoutTimer";
 import { GlobalModal } from "@/shared/ui/Modal/GlobalModal";
 import { SupportWidget } from "@/widgets/support/ui/SupportWidget";
 import { LanguageProvider } from "@/shared/i18n/LanguageContext";
+import { ThemeProvider } from "@/shared/i18n/ThemeContext";
 import { Providers } from "./providers";
 
 const montserrat = Montserrat({ subsets: ["cyrillic", "latin"], variable: "--font-montserrat" });
@@ -58,6 +59,7 @@ export default function RootLayout({
       <body className={`${montserrat.variable} ${playfair.variable}`} style={{ backgroundColor: '#f6f7f9' }}>
         <Providers>
           <LanguageProvider>
+            <ThemeProvider>
             <div id="main-content" style={{ transition: 'transform 0.4s ease', minHeight: '100vh', backgroundColor: '#fff', position: 'relative', zIndex: 1, boxShadow: '-5px 0 15px rgba(0,0,0,0.05)' }}>
               <Header />
               <LockoutTimer />
@@ -68,6 +70,7 @@ export default function RootLayout({
 
               <Footer />
             </div>
+          </ThemeProvider>
           </LanguageProvider>
         </Providers>
 
