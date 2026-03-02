@@ -28,6 +28,7 @@ export const HeroSlider = ({ images, interval = 5000, showOverlay = true }: Hero
       {images.map((img, index) => (
         <div
           key={index}
+          className="hero-slider-slide"
           style={{
             position: 'absolute',
             top: 0,
@@ -39,7 +40,6 @@ export const HeroSlider = ({ images, interval = 5000, showOverlay = true }: Hero
             backgroundPosition: 'center',
             backgroundRepeat: 'no-repeat',
             opacity: index === currentIndex ? 1 : 0,
-            transition: 'opacity 1.5s ease-in-out',
             zIndex: 0
           }}
         />

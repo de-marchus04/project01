@@ -97,7 +97,7 @@ export const Header = () => {
         </Link>
       </div>
       
-      <ul className="nav flex-column gap-3 mb-auto">
+      <ul className="nav flex-column gap-1 mb-auto">
         {navConfig.map((item, index) => {
           if (item.label === "Главная") return null;
           
@@ -105,13 +105,13 @@ export const Header = () => {
             <li className="nav-item" key={index}>
               {item.children ? (
                 <>
-                  <div className="fw-bold small text-uppercase mb-2 mt-3" style={{ letterSpacing: '1px', color: 'var(--color-primary)' }}>{item.label}</div>
-                  <ul className="nav flex-column gap-2 ms-3 border-start ps-3" style={{ borderColor: 'var(--color-secondary)' }}>
+                  <div className="fw-bold small text-uppercase mt-3 mb-1" style={{ letterSpacing: '1px', color: 'var(--color-primary)' }}>{item.label}</div>
+                  <ul className="nav flex-column gap-0 ms-3 border-start ps-3" style={{ borderColor: 'var(--color-secondary)' }}>
                     {item.children.map((child, childIndex) => (
                       <li key={childIndex}>
                         <Link 
                           href={child.href || "#"} 
-                          className="text-decoration-none fs-5"
+                          className="text-decoration-none fs-6 d-block py-1"
                           style={{ 
                             color: pathname === child.href ? 'var(--color-primary)' : 'var(--color-text)',
                             transition: 'color 0.2s' 
@@ -127,7 +127,7 @@ export const Header = () => {
               ) : (
                 <Link 
                   href={item.href || "#"} 
-                  className="text-decoration-none fs-4 fw-medium"
+                  className="text-decoration-none fs-5 fw-medium d-block py-1"
                   style={{ 
                     color: pathname === item.href ? 'var(--color-primary)' : 'var(--color-text)',
                     transition: 'color 0.2s'

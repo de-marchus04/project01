@@ -15,13 +15,20 @@ export const CourseCard = ({ course, onBuy }: CourseCardProps) => {
   const localized_course = tData ? tData(course) : course;
   return (
     <div className="card h-100 shadow border-0 hover-scale-sm transition-all">
-      <div className="position-relative overflow-hidden" style={{ height: '200px' }}>
+      <div className="position-relative overflow-hidden" style={{ height: '200px', backgroundColor: 'var(--color-secondary)' }}>
         <Image 
           src={localized_course.imageUrl || 'https://images.unsplash.com/photo-1545205597-3d9d02c29597?q=80&w=2070&auto=format&fit=crop'} 
           alt={localized_course.title}
           fill
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           className="card-img-top object-fit-cover"
+          style={{ opacity: 0, transition: 'opacity 0.5s ease' }}
+          onLoad={(e) => { (e.target as HTMLImageElement).style.opacity = '1'; }}
+          onError={(e) => { 
+            const img = e.target as HTMLImageElement;
+            img.src = 'https://images.unsplash.com/photo-1545205597-3d9d02c29597?q=80&w=2070&auto=format&fit=crop';
+            img.style.opacity = '1';
+          }}
         />
       </div>
       <div className="card-body d-flex flex-column">

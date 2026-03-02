@@ -54,7 +54,7 @@ export default function AboutPage() {
       </section>
 
       {/* Values Section */}
-      <section className="py-5" style={{ backgroundColor: '#fff' }}>
+      <section className="py-5" style={{ backgroundColor: 'var(--color-surface)' }}>
         <div className="container py-5">
           <div className="text-center mb-5">
             <h2 className="h2 font-playfair fw-bold mb-3" style={{ color: 'var(--color-text)' }}>{t.home.valuesTitle}</h2>
@@ -97,7 +97,7 @@ export default function AboutPage() {
               <div className="col-md-4" key={i}>
                 <div className="card border-0 rounded-4 overflow-hidden shadow-sm h-100">
                   <img src={member.img} alt={member.name} className="card-img-top" style={{ height: '350px', objectFit: 'cover' }} referrerPolicy="no-referrer" />
-                  <div className="card-body text-center p-4" style={{ backgroundColor: '#fff' }}>
+                  <div className="card-body text-center p-4" style={{ backgroundColor: 'var(--color-surface)' }}>
                     <h4 className="h5 fw-bold mb-1" style={{ color: 'var(--color-text)' }}>{member.name}</h4>
                     <p className="small mb-0" style={{ color: 'var(--color-primary)' }}>{member.role}</p>
                   </div>

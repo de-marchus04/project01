@@ -46,7 +46,7 @@ export default function FAQPage() {
                     </button>
                   </h2>
                   <div className={`accordion-collapse collapse ${openId === faq.id ? 'show' : ''}`}>
-                    <div className="accordion-body" style={{ padding: '25px', backgroundColor: '#fff', color: 'var(--color-text-muted)', lineHeight: '1.6' }}>
+                    <div className="accordion-body" style={{ padding: '25px', backgroundColor: 'var(--color-surface)', color: 'var(--color-text-muted)', lineHeight: '1.6' }}>
                       {tStr(faq.answer)}
                     </div>
                   </div>

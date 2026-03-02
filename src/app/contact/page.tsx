@@ -92,7 +92,7 @@ export default function ContactPage() {
 
         <div className="row justify-content-center g-5">
           <div className="col-lg-5">
-            <div className="card border-0 shadow-sm rounded-4 h-100" style={{ backgroundColor: '#fff' }}>
+            <div className="card border-0 shadow-sm rounded-4 h-100" style={{ backgroundColor: 'var(--color-surface)' }}>
               <div className="card-body p-5">
                 <h3 className="h4 font-playfair fw-bold mb-4" style={{ color: 'var(--color-text)' }}>{t.contact.contactUs}</h3>
                 
@@ -130,7 +130,7 @@ export default function ContactPage() {
           </div>
 
           <div className="col-lg-7">
-            <div className="card border-0 shadow-sm rounded-4" style={{ backgroundColor: '#fff' }}>
+            <div className="card border-0 shadow-sm rounded-4" style={{ backgroundColor: 'var(--color-surface)' }}>
               <div className="card-body p-5">
                 <h3 className="h4 font-playfair fw-bold mb-4" style={{ color: 'var(--color-text)' }}>{t.contact.sendMessage}</h3>
                 <form onSubmit={handleSubmit}>
@@ -221,12 +221,12 @@ export default function ContactPage() {
               ].map((faq, i) => (
                 <div className="accordion-item border-0 mb-3 shadow-sm rounded-4 overflow-hidden" key={i}>
                   <h2 className="accordion-header">
-                    <button className="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target={`#faq${i}`} style={{ backgroundColor: '#fff', color: 'var(--color-text)' }}>
+                    <button className="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target={`#faq${i}`} style={{ backgroundColor: 'var(--color-surface)', color: 'var(--color-text)' }}>
                       {faq.q}
                     </button>
                   </h2>
                   <div id={`faq${i}`} className="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-                    <div className="accordion-body" style={{ backgroundColor: '#fff', color: 'var(--color-text-muted)' }}>
+                    <div className="accordion-body" style={{ backgroundColor: 'var(--color-surface)', color: 'var(--color-text-muted)' }}>
                       {faq.a}
                     </div>
                   </div>

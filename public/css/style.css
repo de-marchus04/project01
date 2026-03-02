@@ -25,6 +25,40 @@ button, a, .btn, .nav-link, .card {
                 transform 0.3s ease, box-shadow 0.3s ease !important;
 }
 
+/* HeroSlider images: opacity MUST animate — not overridden by * rule */
+.hero-slider-slide {
+    transition: opacity 1.5s ease-in-out !important;
+}
+
+/* All bg-light / bg-white / details-section dark mode override */
+[data-theme="dark"] .bg-light,
+[data-theme="dark"] .bg-white,
+[data-theme="dark"] .details-section,
+[data-theme="dark"] .accordion-body,
+[data-theme="dark"] .accordion-button,
+[data-theme="dark"] .accordion-item {
+    background-color: var(--color-surface) !important;
+    color: var(--color-text) !important;
+}
+[data-theme="dark"] .accordion-button:not(.collapsed) {
+    background-color: var(--color-primary) !important;
+    color: #fff !important;
+}
+[data-theme="dark"] .input-group-text {
+    background-color: var(--color-surface) !important;
+    color: var(--color-text-muted) !important;
+    border-color: var(--color-border) !important;
+}
+[data-theme="dark"] .form-control,
+[data-theme="dark"] .form-select {
+    background-color: var(--color-surface) !important;
+    color: var(--color-text) !important;
+    border-color: var(--color-border) !important;
+}
+[data-theme="dark"] .form-control::placeholder {
+    color: var(--color-text-muted) !important;
+}
+
 /* Sidebar slide transition must not be overridden by the * rule */
 .custom-sidebar {
     overflow-x: hidden !important;
@@ -59,6 +93,20 @@ button, a, .btn, .nav-link, .card {
 }
 [data-theme="dark"] .custom-sidebar .nav-item a:hover {
     background-color: rgba(40, 70, 40, 0.35);
+}
+
+/* Sidebar nav list: tight compact spacing */
+.custom-sidebar .nav.flex-column {
+    gap: 0.15rem !important;
+}
+.custom-sidebar .nav-item {
+    margin: 0 !important;
+}
+.custom-sidebar ul.nav.flex-column {
+    gap: 0.1rem !important;
+}
+.custom-sidebar .nav-item + .nav-item {
+    margin-top: 0 !important;
 }
 
 /* Hero page titles — warm cream instead of pure white */
