@@ -9,7 +9,22 @@
     --color-surface: #ffffff;
     --color-border: #e2ddd6;
     --color-card-bg: #ffffff;
+    --theme-transition: background-color 0.5s ease, color 0.5s ease, border-color 0.5s ease, box-shadow 0.5s ease;
 }
+
+/* Smooth theme transition on all elements */
+*,
+*::before,
+*::after {
+    transition: background-color 0.5s ease, color 0.5s ease, border-color 0.5s ease !important;
+}
+
+/* But don't override intentional hover/click transitions */
+button, a, .btn, .nav-link, .card {
+    transition: background-color 0.5s ease, color 0.5s ease, border-color 0.5s ease,
+                transform 0.3s ease, box-shadow 0.3s ease !important;
+}
+
 
 [data-theme="dark"] {
     --color-primary: #a0b090;
