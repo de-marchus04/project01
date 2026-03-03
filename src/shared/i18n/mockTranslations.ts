@@ -559,7 +559,7 @@ export const mockTranslations: Record<string, any> = {
     "en": "Listen",
     "uk": "Слухати"
   },
-  "Читать далее &rarr;": {
+  "Читать далее →": {
     "en": "Continue reading →",
     "uk": "Читати далі →"
   },

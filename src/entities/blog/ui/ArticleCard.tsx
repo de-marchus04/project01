@@ -31,7 +31,7 @@ export const ArticleCard = ({ article }: ArticleCardProps) => {
           {tStr(localized_article.title)}
         </h5>
         <p className="card-text text-muted small flex-grow-1">{tStr(localized_article.subtitle)}</p>
-        <button className="btn btn-link text-decoration-none p-0 fw-bold text-start mt-3" style={{ color: 'var(--color-primary)' }}>{tStr("Читать далее &rarr;")}</button>
+        <button className="btn btn-link text-decoration-none p-0 fw-bold text-start mt-3" style={{ color: 'var(--color-primary)' }}>{tStr("Читать далее →")}</button>
       </div>
       <div className="card-footer bg-white border-0 text-muted small">
         {new Date(localized_article.createdAt).toLocaleDateString('ru-RU')}
