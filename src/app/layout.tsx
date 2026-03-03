@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Montserrat, Playfair_Display } from "next/font/google";
 import "./globals.css";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap-icons/font/bootstrap-icons.css";
 import Script from "next/script";
 import { Header } from "@/widgets/header/ui/Header";
 import { Footer } from "@/widgets/footer/ui/Footer";
@@ -52,9 +54,12 @@ export default function RootLayout({
   return (
     <html lang="ru" suppressHydrationWarning>
       <head>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem('yoga_theme')||((window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();`,
+          }}
+        />
         <link rel="stylesheet" href="/css/style.css" />
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" />
       </head>
       <body className={`${montserrat.variable} ${playfair.variable}`} style={{ backgroundColor: '#f6f7f9' }}>
         <Providers>
@@ -74,7 +79,7 @@ export default function RootLayout({
           </LanguageProvider>
         </Providers>
 
-        <Script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" strategy="lazyOnload" />
+        <Script src="/bootstrap.bundle.min.js" strategy="lazyOnload" />
       </body>
     </html>
   );
