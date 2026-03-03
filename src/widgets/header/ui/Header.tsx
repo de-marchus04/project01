@@ -64,18 +64,18 @@ export const Header = () => {
   };
 
   const sidebar = mounted ? createPortal(
-    <div 
-      className="custom-sidebar" 
+    <div
+      className="custom-sidebar"
       style={{
         position: 'fixed',
         top: 0,
         left: 0,
-        width: '320px',
+        width: '340px',
         height: '100vh',
         backgroundColor: 'var(--color-bg)',
         borderRight: '1px solid var(--color-secondary)',
-        zIndex: 0, // Behind main-content
-        padding: '2rem',
+        zIndex: 0,
+        padding: '1.75rem 1.75rem 1.5rem',
         display: 'flex',
         flexDirection: 'column',
         overflowY: 'auto',
@@ -83,42 +83,54 @@ export const Header = () => {
         transition: 'transform 0.45s cubic-bezier(0.4, 0, 0.2, 1)',
       }}
     >
-      <div className="mb-5 mt-3 text-center">
-        <Link 
-          href="/" 
-          className="text-decoration-none font-playfair fw-bold fs-2"
-          style={{ 
-            letterSpacing: '1px', 
-            color: 'var(--color-primary)'
-          }}
+      {/* Logo */}
+      <div className="mb-4 mt-2 text-center pb-3" style={{ borderBottom: '1px solid var(--color-secondary)' }}>
+        <Link
+          href="/"
+          className="text-decoration-none font-playfair fw-bold"
+          style={{ letterSpacing: '2px', color: 'var(--color-primary)', fontSize: '1.6rem' }}
           onClick={() => setIsMenuOpen(false)}
         >
           YOGA.LIFE
         </Link>
       </div>
-      
-      <ul className="nav flex-column gap-1 mb-auto">
+
+      <ul className="nav flex-column mb-auto" style={{ gap: '0' }}>
         {navConfig.map((item, index) => {
           if (item.label === "Главная") return null;
-          
+
           return (
             <li className="nav-item" key={index}>
               {item.children ? (
                 <>
-                  <div className="fw-bold small text-uppercase mt-4 mb-1" style={{ letterSpacing: '1.5px', color: 'var(--color-primary)', fontSize: '0.72rem' }}>{item.label}</div>
-                  <ul className="nav flex-column gap-0 ms-3 border-start ps-3" style={{ borderColor: 'var(--color-secondary)' }}>
+                  <div
+                    className="fw-bold text-uppercase mt-4 mb-2"
+                    style={{
+                      letterSpacing: '1.5px',
+                      color: 'var(--color-primary)',
+                      fontSize: '0.82rem',
+                    }}
+                  >
+                    {item.label}
+                  </div>
+                  <ul className="nav flex-column ms-2 border-start ps-3" style={{ borderColor: 'var(--color-secondary)', gap: '2px' }}>
                     {item.children.map((child, childIndex) => (
                       <li key={childIndex}>
-                        <Link 
-                          href={child.href || "#"} 
-                          className="text-decoration-none d-block py-1"
-                          style={{ 
-                            fontSize: '0.95rem',
+                        <Link
+                          href={child.href || "#"}
+                          className="text-decoration-none d-block py-2"
+                          style={{
+                            fontSize: '1rem',
+                            lineHeight: '1.4',
                             color: pathname === child.href ? 'var(--color-primary)' : 'var(--color-text)',
-                            transition: 'color 0.2s' 
+                            transition: 'color 0.2s',
+                            fontWeight: pathname === child.href ? '600' : '400',
                           }}
                           onClick={() => setIsMenuOpen(false)}
                         >
+                          {pathname === child.href && (
+                            <span style={{ display: 'inline-block', width: '4px', height: '4px', borderRadius: '50%', backgroundColor: 'var(--color-primary)', marginRight: '8px', verticalAlign: 'middle', marginBottom: '2px' }} />
+                          )}
                           {child.label}
                         </Link>
                       </li>
@@ -126,13 +138,13 @@ export const Header = () => {
                   </ul>
                 </>
               ) : (
-                <Link 
-                  href={item.href || "#"} 
-                  className="text-decoration-none fw-medium d-block py-2"
-                  style={{ 
-                    fontSize: '1.1rem',
+                <Link
+                  href={item.href || "#"}
+                  className="text-decoration-none fw-semibold d-block py-2 mt-2"
+                  style={{
+                    fontSize: '1.15rem',
                     color: pathname === item.href ? 'var(--color-primary)' : 'var(--color-text)',
-                    transition: 'color 0.2s'
+                    transition: 'color 0.2s',
                   }}
                   onClick={() => setIsMenuOpen(false)}
                 >
@@ -147,33 +159,33 @@ export const Header = () => {
       {/* Profile / Auth block */}
       <div className="mt-4 pt-3 border-top" style={{ borderColor: 'var(--color-border)' }}>
         {isAuth ? (
-          <div style={{ borderRadius: '16px', backgroundColor: 'rgba(140,154,129,0.08)', padding: '12px 14px' }}>
+          <div style={{ borderRadius: '16px', backgroundColor: 'rgba(140,154,129,0.08)', padding: '14px 16px' }}>
             <div className="d-flex align-items-center gap-3 mb-3">
               {userPhoto && (userPhoto.startsWith('http') || userPhoto.startsWith('data:image')) ? (
-                <img src={userPhoto} alt={username} className="rounded-circle object-fit-cover" style={{ width: '44px', height: '44px', border: '2px solid var(--color-primary)' }} onError={(e) => { e.currentTarget.style.display = 'none'; }} />
+                <img src={userPhoto} alt={username} className="rounded-circle object-fit-cover" style={{ width: '48px', height: '48px', border: '2px solid var(--color-primary)' }} onError={(e) => { e.currentTarget.style.display = 'none'; }} />
               ) : (
-                <div className="rounded-circle d-flex align-items-center justify-content-center" style={{ width: '44px', height: '44px', flexShrink: 0, backgroundColor: 'var(--color-secondary)', border: '2px solid var(--color-primary)' }}>
-                  <i className="bi bi-person" style={{ color: 'var(--color-primary)', fontSize: '1.2rem' }}></i>
+                <div className="rounded-circle d-flex align-items-center justify-content-center" style={{ width: '48px', height: '48px', flexShrink: 0, backgroundColor: 'var(--color-secondary)', border: '2px solid var(--color-primary)' }}>
+                  <i className="bi bi-person" style={{ color: 'var(--color-primary)', fontSize: '1.4rem' }}></i>
                 </div>
               )}
               <div style={{ minWidth: 0 }}>
-                <div className="fw-semibold text-truncate" style={{ color: 'var(--color-text)', fontSize: '0.95rem' }}>{username}</div>
-                <div style={{ color: 'var(--color-primary)', fontSize: '0.75rem', letterSpacing: '0.5px' }}>{isAdmin ? t.header.admin : t.header.profile}</div>
+                <div className="fw-semibold text-truncate" style={{ color: 'var(--color-text)', fontSize: '1rem' }}>{username}</div>
+                <div style={{ color: 'var(--color-primary)', fontSize: '0.8rem', letterSpacing: '0.5px' }}>{isAdmin ? t.header.admin : t.header.profile}</div>
               </div>
             </div>
             <div className="d-flex gap-2">
-              <Link href={isAdmin ? "/admin" : "/profile"} className="btn btn-primary-custom rounded-pill flex-grow-1 py-1" style={{ fontSize: '0.85rem' }} onClick={() => setIsMenuOpen(false)}>
+              <Link href={isAdmin ? "/admin" : "/profile"} className="btn btn-primary-custom rounded-pill flex-grow-1 py-2" style={{ fontSize: '0.95rem' }} onClick={() => setIsMenuOpen(false)}>
                 {t.header.profile}
               </Link>
-              <button onClick={handleLogout} className="btn rounded-pill px-3 py-1" style={{ fontSize: '0.85rem', border: '1px solid var(--color-border)', color: 'var(--color-text-muted)' }}>
+              <button onClick={handleLogout} className="btn rounded-pill px-3 py-2" style={{ fontSize: '0.95rem', border: '1px solid var(--color-border)', color: 'var(--color-text-muted)' }}>
                 <i className="bi bi-box-arrow-right"></i>
               </button>
             </div>
           </div>
         ) : (
           <div>
-            <p className="small mb-2" style={{ color: 'var(--color-text-muted)' }}>{t.header.loginPrompt}</p>
-            <Link href="/login" className="btn btn-primary-custom rounded-pill py-2 w-100" style={{ fontSize: '0.9rem' }} onClick={() => setIsMenuOpen(false)}>
+            <p className="mb-3" style={{ color: 'var(--color-text-muted)', fontSize: '0.95rem' }}>{t.header.loginPrompt}</p>
+            <Link href="/login" className="btn btn-primary-custom rounded-pill py-2 w-100" style={{ fontSize: '1rem' }} onClick={() => setIsMenuOpen(false)}>
               {t.header.login}
             </Link>
           </div>
