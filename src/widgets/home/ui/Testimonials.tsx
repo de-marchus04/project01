@@ -21,7 +21,7 @@ export const Testimonials = () => {
         ]);
       }
     });
-  }, [lang]); // Re-run if language changes to possibly get new default translated text if fallback is used
+  }, [lang, t, tData]); // Re-run if language changes to possibly get new default translated text if fallback is used
 
   return (
     <section className="py-5" style={{ backgroundColor: 'var(--color-secondary)' }}>

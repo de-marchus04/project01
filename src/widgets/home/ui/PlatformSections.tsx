@@ -24,7 +24,7 @@ export const PlatformSections = () => {
             <div className="card h-100 border-0 text-white overflow-hidden position-relative group-hover" style={{ minHeight: '400px', borderRadius: '20px' }}>
               <Image 
                 src="https://images.unsplash.com/photo-1593811167562-9cef47bfc4d7?q=80&w=800&auto=format&fit=crop" 
-                alt="{t.nav.courses}" 
+                alt={t.nav.courses}
                 fill
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
                 className="object-fit-cover transition-transform duration-500 hover-scale-img" 
@@ -48,7 +48,7 @@ export const PlatformSections = () => {
             <div className="card h-100 border-0 text-white overflow-hidden position-relative group-hover" style={{ minHeight: '400px', borderRadius: '20px' }}>
               <Image 
                 src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?q=80&w=800&auto=format&fit=crop" 
-                alt="{t.nav.consultations}" 
+                alt={t.nav.consultations}
                 fill
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
                 className="object-fit-cover transition-transform duration-500 hover-scale-img" 
@@ -71,7 +71,7 @@ export const PlatformSections = () => {
             <div className="card h-100 border-0 text-white overflow-hidden position-relative group-hover" style={{ minHeight: '400px', borderRadius: '20px' }}>
               <Image 
                 src="https://images.unsplash.com/photo-1552196563-55cd4e45efb3?q=80&w=800&auto=format&fit=crop" 
-                alt="{t.home.travelTitle}" 
+                alt={t.home.travelTitle}
                 fill
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
                 className="object-fit-cover transition-transform duration-500 hover-scale-img" 
@@ -92,7 +92,7 @@ export const PlatformSections = () => {
             <div className="card h-100 border-0 text-white overflow-hidden position-relative group-hover" style={{ minHeight: '400px', borderRadius: '20px' }}>
               <Image 
                 src="https://images.unsplash.com/photo-1545205597-3d9d02c29597?q=80&w=800&auto=format&fit=crop" 
-                alt="{t.nav.blog}" 
+                alt={t.nav.blog}
                 fill
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
                 className="object-fit-cover transition-transform duration-500 hover-scale-img" 

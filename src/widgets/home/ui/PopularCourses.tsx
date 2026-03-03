@@ -24,7 +24,7 @@ export const PopularCourses = () => {
               <div className="card h-100 border-0 text-white overflow-hidden position-relative group-hover" style={{ minHeight: '400px', borderRadius: '20px' }}>
                 <Image 
                   src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?q=80&w=800&auto=format&fit=crop" 
-                  alt="{t.nav.coursesBeginners}" 
+                  alt={t.nav.coursesBeginners}
                   fill
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
                   className="object-fit-cover transition-transform duration-500 hover-scale-img" 
@@ -42,7 +42,7 @@ export const PopularCourses = () => {
               <div className="card h-100 border-0 text-white overflow-hidden position-relative group-hover" style={{ minHeight: '400px', borderRadius: '20px' }}>
                 <Image 
                   src="https://images.unsplash.com/photo-1508672019048-805c876b67e2?q=80&w=800&auto=format&fit=crop" 
-                  alt="{t.nav.coursesMeditation}" 
+                  alt={t.nav.coursesMeditation}
                   fill
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
                   className="object-fit-cover transition-transform duration-500 hover-scale-img" 
@@ -60,7 +60,7 @@ export const PopularCourses = () => {
               <div className="card h-100 border-0 text-white overflow-hidden position-relative group-hover" style={{ minHeight: '400px', borderRadius: '20px' }}>
                 <Image 
                   src="https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?q=80&w=800&auto=format&fit=crop" 
-                  alt="{t.nav.coursesBack}" 
+                  alt={t.nav.coursesBack}
                   fill
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
                   className="object-fit-cover transition-transform duration-500 hover-scale-img" 
@@ -78,7 +78,7 @@ export const PopularCourses = () => {
               <div className="card h-100 border-0 text-white overflow-hidden position-relative group-hover" style={{ minHeight: '400px', borderRadius: '20px' }}>
                 <Image 
                   src="https://images.unsplash.com/photo-1518609878373-06d740f60d8b?q=80&w=800&auto=format&fit=crop" 
-                  alt="{t.nav.coursesWomen}" 
+                  alt={t.nav.coursesWomen}
                   fill
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
                   className="object-fit-cover transition-transform duration-500 hover-scale-img" 

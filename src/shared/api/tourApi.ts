@@ -1,6 +1,7 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
+import { auth } from "@/auth";
 
 export interface Tour {
   id: string;
@@ -33,6 +34,8 @@ export async function getTourById(id: string): Promise<Tour | undefined> {
 }
 
 export async function addTour(tourData: Omit<Tour, 'id'>): Promise<Tour> {
+  const session = await auth();
+  if ((session?.user as any)?.role !== 'ADMIN') throw new Error('Нет доступа');
   const { translations, id: _mockId, ...validData } = tourData as any;
   const newItem = await prisma.tour.create({
     data: {
@@ -44,6 +47,8 @@ export async function addTour(tourData: Omit<Tour, 'id'>): Promise<Tour> {
 }
 
 export async function updateTour(id: string, updatedData: Partial<Tour>): Promise<Tour | undefined> {
+  const session = await auth();
+  if ((session?.user as any)?.role !== 'ADMIN') throw new Error('Нет доступа');
   const { translations, id: _id, ...validData } = updatedData as any;
   const updated = await prisma.tour.update({
     where: { id },
@@ -54,6 +59,8 @@ export async function updateTour(id: string, updatedData: Partial<Tour>): Promis
 
 export async function deleteTour(id: string): Promise<boolean> {
   try {
+    const session = await auth();
+    if ((session?.user as any)?.role !== 'ADMIN') throw new Error('Нет доступа');
     await prisma.tour.delete({ where: { id } });
     return true;
   } catch (e) {

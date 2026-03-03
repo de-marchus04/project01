@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
@@ -28,6 +28,11 @@ export default function Profile() {
   const [isPasswordChanged, setIsPasswordChanged] = useState(false);
   const [passwordError, setPasswordError] = useState<string | null>(null);
   const router = useRouter();
+
+  const sortedMessages = useMemo(
+    () => [...messages].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()),
+    [messages]
+  );
 
   useEffect(() => {
     if (status === 'loading') return;
@@ -87,7 +92,7 @@ export default function Profile() {
 
         // Загружаем сообщения
         if (email) {
-          getUserMessages(email).then(setMessages);
+          getUserMessages(email).then(setMessages).catch(err => console.error('getUserMessages error:', err));
         }
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -101,7 +106,7 @@ export default function Profile() {
     const handleSupportUpdate = () => {
       const email = session?.user?.email;
       if (email) {
-        getUserMessages(email).then(setMessages);
+        getUserMessages(email).then(setMessages).catch(err => console.error('getUserMessages error:', err));
       }
     };
 
@@ -141,8 +146,9 @@ export default function Profile() {
           canvas.width = width;
           canvas.height = height;
           const ctx = canvas.getContext('2d');
-          ctx?.drawImage(img, 0, 0, width, height);
-          
+          if (!ctx) return;
+          ctx.drawImage(img, 0, 0, width, height);
+
           const compressedBase64 = canvas.toDataURL('image/jpeg', 0.7);
           setUser(prev => prev ? { ...prev, photo: compressedBase64 } : null);
           setIsProfileEdited(true);
@@ -224,7 +230,8 @@ export default function Profile() {
           canvas.width = width;
           canvas.height = height;
           const ctx = canvas.getContext('2d');
-          ctx?.drawImage(img, 0, 0, width, height);
+          if (!ctx) return;
+          ctx.drawImage(img, 0, 0, width, height);
           const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
           setUser(prev => prev ? { ...prev, photo: dataUrl } : null);
           setIsProfileEdited(true);
@@ -366,7 +373,7 @@ export default function Profile() {
                           <h4 className="font-playfair fw-bold mb-4">{t.profile.historyTitle}</h4>
                           {messages.length > 0 ? (
                             <div className="d-flex flex-column gap-3">
-                              {messages.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()).map(msg => (
+                              {sortedMessages.map(msg => (
                                 <div key={msg.id} className="border rounded-3 p-3">
                                   <div className="d-flex justify-content-between align-items-start mb-2">
                                     <span className="badge bg-light text-dark border">{msg.questionType}</span>
@@ -407,41 +414,39 @@ export default function Profile() {
                               <p className="text-muted mb-0 small">{t.profile.subNewsDesc}</p>
                             </div>
                             <div className="form-check form-switch fs-4">
-                              <input 
-                                className="form-check-input" 
-                                type="checkbox" 
-                                role="switch" 
+                              <input
+                                className="form-check-input"
+                                type="checkbox"
+                                role="switch"
                                 checked={isSubscribed}
                                 onChange={handleSubscriptionToggle}
                                 style={{ cursor: 'pointer' }}
                               />
-
-                            <hr className="my-5" />
-                            <h5 className="font-playfair fw-bold mb-4">Смена пароля</h5>
-                            <form onSubmit={handlePasswordChange}>
-                              <div className="row g-4">
-                                <div className="col-md-6">
-                                  <label className="form-label fw-bold">Текущий пароль</label>
-                                  <input type="password" className="form-control" value={oldPassword} onChange={(e) => setOldPassword(e.target.value)} required />
-                                </div>
-                                <div className="col-md-6">
-                                  <label className="form-label fw-bold">Новый пароль</label>
-                                  <input type="password" className="form-control" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} required />
-                                </div>
-                                <div className="col-12 mt-4 d-flex align-items-center gap-3">
-                                  <button type="submit" className="btn btn-outline-dark rounded-pill px-4">Сменить пароль</button>
-                                  {isPasswordChanged && (
-                                    <div className="text-success fw-medium"><i className="bi bi-check-circle-fill me-2"></i>Пароль успешно изменён!</div>
-                                  )}
-                                  {passwordError && (
-                                    <div className="text-danger fw-medium"><i className="bi bi-exclamation-circle-fill me-2"></i>{passwordError}</div>
-                                  )}
-                                </div>
-                              </div>
-                            </form>
-
                             </div>
                           </div>
+                          <hr className="my-5" />
+                          <h5 className="font-playfair fw-bold mb-4">Смена пароля</h5>
+                          <form onSubmit={handlePasswordChange}>
+                            <div className="row g-4">
+                              <div className="col-md-6">
+                                <label className="form-label fw-bold">Текущий пароль</label>
+                                <input type="password" className="form-control" value={oldPassword} onChange={(e) => setOldPassword(e.target.value)} required />
+                              </div>
+                              <div className="col-md-6">
+                                <label className="form-label fw-bold">Новый пароль</label>
+                                <input type="password" className="form-control" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} required />
+                              </div>
+                              <div className="col-12 mt-4 d-flex align-items-center gap-3">
+                                <button type="submit" className="btn btn-outline-dark rounded-pill px-4">Сменить пароль</button>
+                                {isPasswordChanged && (
+                                  <div className="text-success fw-medium"><i className="bi bi-check-circle-fill me-2"></i>Пароль успешно изменён!</div>
+                                )}
+                                {passwordError && (
+                                  <div className="text-danger fw-medium"><i className="bi bi-exclamation-circle-fill me-2"></i>{passwordError}</div>
+                                )}
+                              </div>
+                            </div>
+                          </form>
                         </div>
                       </div>
                     )}

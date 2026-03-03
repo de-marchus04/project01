@@ -1,7 +1,7 @@
 "use client";
 
 import { useLanguage } from "@/shared/i18n/LanguageContext";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import { Course } from "@/entities/course/model/types";
 import { CourseCard } from "@/entities/course/ui/CourseCard";
@@ -20,10 +20,11 @@ export default function CoursesBeginnersClient({ initialData }: { initialData: P
   const [totalPages, setTotalPages] = useState(initialData.totalPages);
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState('default');
-  
+  const isFirstRender = useRef(true);
+
   useEffect(() => {
-    
-    
+
+
     async function loadProducts() {
       setLoading(true);
       try {
@@ -38,9 +39,15 @@ export default function CoursesBeginnersClient({ initialData }: { initialData: P
       }
     }
 
+    // Skip initial render since data is provided via props
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+
     // Debounce search
     const timeoutId = setTimeout(() => {
-      if (!initialData) { setLoading(true); loadProducts(); }
+      loadProducts();
     }, 300);
 
     return () => clearTimeout(timeoutId);

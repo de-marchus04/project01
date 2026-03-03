@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { authApi } from "@/shared/api/authApi";
 import { resetPassword } from "@/shared/api/authActions";
 import { useLanguage } from "@/shared/i18n/LanguageContext";
-import { signIn } from "next-auth/react";
+import { signIn, getSession } from "next-auth/react";
 
 export default function Login() {
   const { t, tStr } = useLanguage();
@@ -91,8 +91,8 @@ export default function Login() {
           return;
         }
 
-        const isAdmin = username.trim().toLowerCase() === 'admin' || username.trim().toLowerCase() === 'dimich04';
-        router.push(isAdmin ? '/admin' : '/profile');
+        const session = await getSession();
+        router.push((session?.user as any)?.role === 'ADMIN' ? '/admin' : '/profile');
       } else {
         // Login via NextAuth credentials provider
         const res = await signIn('credentials', {
@@ -108,14 +108,9 @@ export default function Login() {
 
         // Reset attempts on successful login
         localStorage.removeItem('yoga_login_attempts');
-        
-        // Redirect based on role — get role from signIn result isn't available here directly,
-        // so we use the session after it settles.
-        if (username.trim().toLowerCase() === 'admin' || username.trim().toLowerCase() === 'dimich04') {
-          router.push('/admin');
-        } else {
-          router.push('/profile');
-        }
+
+        const loginSession = await getSession();
+        router.push((loginSession?.user as any)?.role === 'ADMIN' ? '/admin' : '/profile');
       }
     } catch (err: any) {
       setError(err.message || ((t as any).auth ? (t as any).auth.errRegister : 'Аутентификация не удалась'));

@@ -82,11 +82,9 @@ export async function sendMessage(
 }
 
 export async function replyToMessage(id: string, replyText: string): Promise<void> {
-  // In a real app we'd save the reply. Here we just mark support ticket closed.
-  // The actual message sent back would need another field.
   await prisma.supportTicket.update({
     where: { id },
-    data: { status: 'CLOSED' } 
+    data: { status: 'CLOSED', reply: replyText }
   });
 }
 
@@ -96,11 +94,15 @@ export async function markAsRead(id: string): Promise<void> {
       where: { id },
       data: { readByUser: true }
     });
-  } catch {}
+  } catch (e) {
+    console.error('markAsRead error:', e);
+  }
 }
 
 export async function deleteMessage(id: string): Promise<void> {
   try {
     await prisma.supportTicket.delete({ where: { id } });
-  } catch(e) {}
+  } catch (e) {
+    console.error('deleteMessage error:', e);
+  }
 }

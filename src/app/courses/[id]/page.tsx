@@ -47,8 +47,7 @@ export default function CourseDetail() {
       }
     };
     window.addEventListener('storage', handleStorageChange);
-    const loc_course = course && tData ? tData(course) : course;
-  return () => window.removeEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
   }, [params.id]);
 
   const { buyProduct } = usePurchase();

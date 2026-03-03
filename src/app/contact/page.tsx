@@ -45,6 +45,12 @@ export default function ContactPage() {
       return;
     }
 
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email.trim())) {
+      modalService.alert(t.contact.alertAttention, 'Введите корректный email адрес');
+      return;
+    }
+
     const isCustom = questionType === t.contact.qCustom;
     if (isCustom && !message.trim()) {
       modalService.alert(t.contact.alertAttention, t.contact.alertFillMessage);

@@ -43,11 +43,11 @@ export async function getOrders(): Promise<Order[]> {
   })));
 }
 
-export async function addOrder(productName: string, price: number, customerName: string = "Гость", serviceId?: string, userId?: string): Promise<Order> {
+export async function addOrder(productName: string, price: number, customerName: string = "Гость", serviceId?: string, username?: string): Promise<Order> {
   // Resolve real user id from username if provided
   let resolvedUserId: string | null = null;
-  if (userId) {
-    const user = await prisma.user.findFirst({ where: { username: userId } });
+  if (username) {
+    const user = await prisma.user.findFirst({ where: { username: username } });
     resolvedUserId = user?.id ?? null;
   }
 

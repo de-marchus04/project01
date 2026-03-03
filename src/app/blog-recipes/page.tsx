@@ -61,7 +61,7 @@ export default function BlogRecipes() {
                   >{tStr("Все")}</button>
                   {tags.map(tag => (
                     <button 
-                      key={tStr(tag)}
+                      key={tag}
                       className={`btn rounded-pill px-4 ${selectedTag === tag ? 'btn-dark' : 'btn-outline-dark'}`}
                       onClick={() => setSelectedTag(tag)}
                     >

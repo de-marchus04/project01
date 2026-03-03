@@ -1,6 +1,7 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
+import { auth } from "@/auth";
 import bcrypt from "bcryptjs";
 
 export interface UserProfile {
@@ -31,6 +32,11 @@ export async function updateMyProfile(
   data: { name?: string; email?: string; phone?: string; avatar?: string }
 ): Promise<{ success: boolean; error?: string }> {
   try {
+    const session = await auth();
+    const sessionUsername = (session?.user as any)?.username;
+    if (!session?.user || sessionUsername !== username) {
+      return { success: false, error: 'Нет доступа' };
+    }
     await prisma.user.update({
       where: { username },
       data: {
@@ -42,12 +48,18 @@ export async function updateMyProfile(
     });
     return { success: true };
   } catch (error: any) {
-    return { success: false, error: error.message };
+    console.error('updateMyProfile error:', error);
+    return { success: false, error: 'Не удалось обновить профиль' };
   }
 }
 
 export async function changePassword(username: string, oldPassword: string, newPassword: string) {
   try {
+    const session = await auth();
+    const sessionUsername = (session?.user as any)?.username;
+    if (!session?.user || sessionUsername !== username) {
+      return { success: false, error: 'Нет доступа' };
+    }
     const user = await prisma.user.findUnique({
       where: { username }
     });
@@ -57,7 +69,7 @@ export async function changePassword(username: string, oldPassword: string, newP
     }
 
     const passwordsMatch = await bcrypt.compare(oldPassword, user.passwordHash);
-    
+
     if (!passwordsMatch) {
       return { success: false, error: "Текущий пароль неверен" };
     }
@@ -71,7 +83,8 @@ export async function changePassword(username: string, oldPassword: string, newP
 
     return { success: true };
   } catch (error: any) {
-    return { success: false, error: error.message };
+    console.error('changePassword error:', error);
+    return { success: false, error: 'Не удалось изменить пароль' };
   }
 }
 
@@ -94,6 +107,7 @@ export async function resetPassword(username: string, newPassword: string) {
 
     return { success: true };
   } catch (error: any) {
-    return { success: false, error: error.message };
+    console.error('resetPassword error:', error);
+    return { success: false, error: 'Не удалось сбросить пароль' };
   }
 }

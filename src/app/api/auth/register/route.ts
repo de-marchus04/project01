@@ -1,10 +1,8 @@
 export const dynamic = "force-dynamic";
 import { NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
-
-const prisma = new PrismaClient();
 
 // Simple in-memory rate limiter: max 5 registrations per IP per 10 minutes
 const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
@@ -65,10 +63,9 @@ export async function POST(req: Request) {
     }
 
     const passwordHash = await bcrypt.hash(pw, 10);
-    const role = un.toLowerCase() === 'admin' ? 'ADMIN' : 'USER';
 
     const user = await prisma.user.create({
-      data: { username: un, passwordHash, role }
+      data: { username: un, passwordHash, role: 'USER' }
     });
 
     return NextResponse.json({ 

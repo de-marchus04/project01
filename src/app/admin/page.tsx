@@ -344,7 +344,7 @@ export default function Admin() {
       if (type === 'podcast') await deletePodcast(id);
       if (type === 'recipe') await deleteRecipe(id);
       if (type === 'tour') await deleteTour(id);
-      if (type === 'faq') deleteFAQ(id);
+      if (type === 'faq') await deleteFAQ(id);
       if (type === 'testimonial') await deleteTestimonial(id);
       await loadData();
     } catch (error) {
@@ -442,8 +442,8 @@ export default function Admin() {
       }
       else if (activeTab === 'faqsPane') {
         const faqData = await translateObjectFields({ question: data.title, answer: data.description });
-        if (editingItem) updateFAQ(editingItem.id, faqData);
-        else addFAQ(faqData);
+        if (editingItem) await updateFAQ(editingItem.id, faqData);
+        else await addFAQ(faqData);
       }
       else if (activeTab === 'testimonialsPane') {
         const testimonialData = await translateObjectFields({ name: data.title, course: data.course, text: data.description });

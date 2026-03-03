@@ -1,5 +1,6 @@
 "use server";
 import { prisma } from "@/lib/prisma";
+import { auth } from "@/auth";
 import { Course } from "@/entities/course/model/types";
 import { PaginatedResponse } from "./blogApi";
 
@@ -29,7 +30,8 @@ export async function getBeginnersCourses(
     orderByClause = { price: 'desc' };
   }
 
-  const skip = (page - 1) * limit;
+  const safePage = Math.max(1, page);
+  const skip = (safePage - 1) * limit;
 
   const [courses, total] = await Promise.all([
     prisma.course.findMany({
@@ -44,7 +46,7 @@ export async function getBeginnersCourses(
   return JSON.parse(JSON.stringify({
     data: courses,
     total,
-    page,
+    page: safePage,
     limit,
     totalPages: Math.ceil(total / limit)
   }));
@@ -86,6 +88,8 @@ export async function getAllAdminCourses(): Promise<Course[]> {
 }
 
 export async function addCourse(courseData: Omit<Course, 'id'>, category: string): Promise<Course> {
+  const session = await auth();
+  if ((session?.user as any)?.role !== 'ADMIN') throw new Error('Нет доступа');
   const { translations, ...validData } = courseData as any;
   const newCourse = await prisma.course.create({
     data: {
@@ -98,6 +102,8 @@ export async function addCourse(courseData: Omit<Course, 'id'>, category: string
 }
 
 export async function updateCourse(id: string, updatedData: Partial<Course>): Promise<Course | undefined> {
+  const session = await auth();
+  if ((session?.user as any)?.role !== 'ADMIN') throw new Error('Нет доступа');
   const { translations, id: _, ...validData } = updatedData as any;
   const updated = await prisma.course.update({
     where: { id },
@@ -108,6 +114,8 @@ export async function updateCourse(id: string, updatedData: Partial<Course>): Pr
 
 export async function deleteCourse(id: string): Promise<boolean> {
   try {
+    const session = await auth();
+    if ((session?.user as any)?.role !== 'ADMIN') throw new Error('Нет доступа');
     await prisma.course.delete({ where: { id } });
     return true;
   } catch (e) {

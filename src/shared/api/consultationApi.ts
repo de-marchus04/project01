@@ -1,6 +1,7 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
+import { auth } from "@/auth";
 import { Course } from "@/entities/course/model/types";
 
 export async function getConsultationById(id: string): Promise<Course | undefined> {
@@ -40,6 +41,8 @@ export async function getAllAdminConsultations(): Promise<Course[]> {
 }
 
 export async function addConsultation(consultationData: Omit<Course, 'id'>, category: string): Promise<Course> {
+  const session = await auth();
+  if ((session?.user as any)?.role !== 'ADMIN') throw new Error('Нет доступа');
   const { translations, id: _mockId, ...validData } = consultationData as any;
   const newItem = await prisma.consultation.create({
     data: {
@@ -52,6 +55,8 @@ export async function addConsultation(consultationData: Omit<Course, 'id'>, cate
 }
 
 export async function updateConsultation(id: string, updatedData: Partial<Course>): Promise<Course | undefined> {
+  const session = await auth();
+  if ((session?.user as any)?.role !== 'ADMIN') throw new Error('Нет доступа');
   const { translations, id: _id, ...validData } = updatedData as any;
   const updated = await prisma.consultation.update({
     where: { id },
@@ -62,6 +67,8 @@ export async function updateConsultation(id: string, updatedData: Partial<Course
 
 export async function deleteConsultation(id: string): Promise<boolean> {
   try {
+    const session = await auth();
+    if ((session?.user as any)?.role !== 'ADMIN') throw new Error('Нет доступа');
     await prisma.consultation.delete({ where: { id } });
     return true;
   } catch (e) {
