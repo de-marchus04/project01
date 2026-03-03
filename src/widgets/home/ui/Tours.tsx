@@ -23,7 +23,7 @@ export const Tours = () => {
   const displayTours = tours.map((tour, i) => ({
     ...(tData ? tData(tour) : tour),
     imageUrl: tour.imageUrl || FALLBACK_IMAGES[i] || FALLBACK_IMAGES[0],
-    href: `/tours/${tour.id}`,
+    href: '/tours',
   }));
 
   const cards = displayTours.length > 0 ? displayTours : [
