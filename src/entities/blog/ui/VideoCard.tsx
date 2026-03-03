@@ -15,8 +15,8 @@ export const VideoCard = ({ video }: VideoCardProps) => {
 
   const localized_video = tData ? tData(video) : video;
   const thumbnail =
-    localized_video.thumbnailUrl ||
     getYoutubeThumbnail(localized_video.videoUrl) ||
+    localized_video.thumbnailUrl ||
     "https://images.unsplash.com/photo-1575052814086-f385e2e2ad1b?q=80&w=600&auto=format&fit=crop";
 
   return (
