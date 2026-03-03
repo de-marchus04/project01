@@ -1,14 +1,17 @@
 :root {
-    --color-primary: #8C9A81; /* Soft muted sage */
-    --color-primary-hover: #7A8870;
-    --color-secondary: #EFEBE1; /* Gentle beige */
-    --color-accent: #D4C4B7; /* Soft warm taupe, replacing red */
-    --color-bg: #FAF7F2; /* Very soft warm cream */
-    --color-text: #4A4843; /* Deep warm grey/brown, low contrast */
-    --color-text-muted: #827E76; /* Muted warm grey */
-    --color-surface: #ffffff;
-    --color-border: #e2ddd6;
-    --color-card-bg: #ffffff;
+    --color-primary: #5C6E4F;        /* глубокий лесной шалфей */
+    --color-primary-hover: #4A5A3E;
+    --color-secondary: #EDE5D8;      /* тёплый пергамент */
+    --color-accent: #C4714A;         /* терракота */
+    --color-accent-hover: #B05E39;
+    --color-accent-subtle: #F0DDD4;  /* бледная терракота */
+    --color-bg: #F7F3EC;             /* тёплый крем */
+    --color-surface: #FDFAF5;
+    --color-text: #3A3530;           /* тёмный тёплый коричневый */
+    --color-text-muted: #7A7268;
+    --color-border: #DDD6CA;
+    --color-card-bg: #FDFAF5;
+    --color-newsletter-input: rgba(255,255,255,0.15);
     --theme-transition: background-color 0.5s ease, color 0.5s ease, border-color 0.5s ease, box-shadow 0.5s ease;
 }
 
@@ -118,8 +121,8 @@ button, a, .btn, .nav-link, .card {
 
 /* Smooth image load — fade in when browser paints them */
 @keyframes imgFadeIn {
-    from { opacity: 0; }
-    to   { opacity: 1; }
+    from { opacity: 0; filter: blur(4px); }
+    to   { opacity: 1; filter: blur(0px); }
 }
 img:not([src=""]):not([src*="data:"]) {
     animation: imgFadeIn 0.6s ease forwards;
@@ -138,16 +141,19 @@ footer input::placeholder {
 
 
 [data-theme="dark"] {
-    --color-primary: #a0b090;
-    --color-primary-hover: #8fa07e;
-    --color-secondary: #2a2724;
-    --color-accent: #7a6a5e;
-    --color-bg: #1a1917;
-    --color-text: #e8e4de;
-    --color-text-muted: #a09890;
-    --color-surface: #242220;
-    --color-border: #3a3733;
-    --color-card-bg: #242220;
+    --color-primary: #8FAF7E;
+    --color-primary-hover: #7A9B6C;
+    --color-secondary: #252118;
+    --color-accent: #D4845A;         /* терракота ярче для тёмного фона */
+    --color-accent-hover: #BC6E44;
+    --color-accent-subtle: #2A1F18;
+    --color-bg: #161411;
+    --color-surface: #1E1B17;
+    --color-text: #EAE3D9;
+    --color-text-muted: #9A9088;
+    --color-border: #332E28;
+    --color-card-bg: #1E1B17;
+    --color-newsletter-input: rgba(0,0,0,0.25);
 }
 
 [data-theme="dark"] body,
@@ -231,21 +237,21 @@ h1, h2, h3, h4, h5, h6, .font-playfair {
     border-color: var(--color-primary-hover);
     color: white;
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(140, 154, 129, 0.3);
+    box-shadow: 0 6px 20px rgba(92, 110, 79, 0.40), 0 0 0 3px rgba(92,110,79,0.15);
 }
 
 .btn-accent-custom {
     background-color: var(--color-accent);
     border-color: var(--color-accent);
-    color: var(--color-text);
+    color: #fff;
     transition: all 0.3s ease;
 }
 .btn-accent-custom:hover {
-    background-color: #C4B4A7;
-    border-color: #C4B4A7;
-    color: var(--color-text);
+    background-color: var(--color-accent-hover);
+    border-color: var(--color-accent-hover);
+    color: #fff;
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(212, 196, 183, 0.3);
+    box-shadow: 0 4px 12px rgba(196, 113, 74, 0.35);
 }
 
 .btn-outline-primary-custom {
@@ -391,4 +397,117 @@ h1, h2, h3, h4, h5, h6, .font-playfair {
 [data-theme="dark"] h3,
 [data-theme="dark"] .font-playfair {
     color: var(--color-text);
+}
+
+/* ============================================================
+   ОРГАНИК / ПРИРОДНЫЙ — НОВЫЕ АНИМАЦИИ И УТИЛИТЫ
+   ============================================================ */
+
+/* Дыхание — иконки Features */
+@keyframes breathe {
+    0%, 100% { transform: scale(1);     box-shadow: 0 4px 15px rgba(92,110,79,0.12); }
+    50%       { transform: scale(1.07); box-shadow: 0 8px 25px rgba(92,110,79,0.22); }
+}
+
+/* Плавание — декоративные SVG элементы */
+@keyframes floatY {
+    0%   { transform: translateY(0px) rotate(0deg); }
+    50%  { transform: translateY(-10px) rotate(2deg); }
+    100% { transform: translateY(0px) rotate(0deg); }
+}
+
+/* Классы анимации */
+.icon-breathe {
+    animation: breathe 4s ease-in-out infinite;
+    will-change: transform;
+}
+
+.float-element {
+    animation: floatY 5s ease-in-out infinite;
+    will-change: transform;
+    pointer-events: none;
+    user-select: none;
+}
+
+/* Scroll-reveal */
+.reveal-up {
+    opacity: 0;
+    transform: translateY(32px);
+    transition: opacity 0.7s cubic-bezier(0.25,0.46,0.45,0.94),
+                transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94);
+}
+.reveal-up.reveal-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+.reveal-delay-1 { transition-delay: 0.10s; }
+.reveal-delay-2 { transition-delay: 0.20s; }
+.reveal-delay-3 { transition-delay: 0.30s; }
+.reveal-delay-4 { transition-delay: 0.40s; }
+
+/* Section badge с терракотовой чертой */
+.section-badge {
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 3px;
+    font-size: 0.78rem;
+    color: var(--color-primary);
+    display: inline-block;
+    position: relative;
+}
+.section-badge::after {
+    content: '';
+    display: block;
+    width: 30px;
+    height: 2px;
+    background: var(--color-accent);
+    margin: 6px auto 0;
+    border-radius: 2px;
+}
+
+/* Card hover scale для Next.js Image */
+.group-hover { overflow: hidden; }
+.group-hover img {
+    transition: transform 0.6s cubic-bezier(0.25,0.46,0.45,0.94) !important;
+}
+.group-hover:hover img { transform: scale(1.06); }
+
+/* Hover для карточек курсов и туров */
+#courses .card.group-hover,
+#tours .card {
+    box-shadow: 0 4px 24px rgba(58,53,48,0.08);
+    transition: box-shadow 0.4s ease, transform 0.35s ease !important;
+}
+#courses .card.group-hover:hover,
+#tours .card:hover {
+    box-shadow: 0 10px 36px rgba(92,110,79,0.16);
+    transform: translateY(-4px);
+}
+
+/* Testimonials — зернистая текстура фона */
+.testimonials-section {
+    background-color: var(--color-secondary);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4'%3E%3Crect width='1' height='1' fill='%23000' opacity='0.04'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+}
+
+/* Типографика — органичные отступы */
+body {
+    line-height: 1.75;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+h2.font-playfair,
+.display-5.font-playfair { letter-spacing: -0.3px; line-height: 1.18; }
+h3.font-playfair        { font-size: 1.3rem;  line-height: 1.28; }
+h4.font-playfair        { font-size: 1.12rem; line-height: 1.35; }
+.lead.font-montserrat   { font-size: 1.15rem; line-height: 1.7; font-weight: 400; }
+.fst-italic.font-montserrat { font-size: 0.97rem; line-height: 1.8; }
+
+/* Navbar фон для новой цветовой схемы */
+.navbar {
+    background-color: rgba(247, 243, 236, 0.95) !important;
+}
+[data-theme="dark"] .navbar {
+    background-color: rgba(30, 27, 23, 0.95) !important;
 }
