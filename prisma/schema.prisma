@@ -17,7 +17,7 @@ model User {
   id           String   @id @default(cuid())
   username     String   @unique
   email        String?  @unique
-  passwordHash String
+  passwordHash String?
   role         Role     @default(USER)
   avatar       String?
   name         String?  // Отображаемое имя
@@ -25,7 +25,9 @@ model User {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
-  orders Order[]
+  orders   Order[]
+  reviews  Review[]
+  wishlist Wishlist[]
 }
 
 enum Role {
@@ -204,4 +206,54 @@ enum TicketStatus {
   NEW
   IN_PROGRESS
   CLOSED
+}
+
+// -----------------------------------------------------------------------------
+// Рейтинги и отзывы
+// -----------------------------------------------------------------------------
+model Review {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  itemId    String
+  itemType  ItemType
+  rating    Int      // 1-5
+  text      String?  @db.Text
+  createdAt DateTime @default(now())
+
+  @@unique([userId, itemId, itemType])
+}
+
+// -----------------------------------------------------------------------------
+// Список желаний (Избранное)
+// -----------------------------------------------------------------------------
+model Wishlist {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  itemId    String
+  itemType  ItemType
+  createdAt DateTime @default(now())
+
+  @@unique([userId, itemId, itemType])
+}
+
+// -----------------------------------------------------------------------------
+// Промокоды
+// -----------------------------------------------------------------------------
+enum DiscountType {
+  PERCENT
+  FIXED
+}
+
+model PromoCode {
+  id            String       @id @default(cuid())
+  code          String       @unique
+  discountType  DiscountType
+  discountValue Float
+  maxUses       Int?
+  usedCount     Int          @default(0)
+  expiresAt     DateTime?
+  isActive      Boolean      @default(true)
+  createdAt     DateTime     @default(now())
 }

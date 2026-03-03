@@ -52,6 +52,23 @@ export const Footer = () => {
           <div className="col-lg-4">
             <h3 className="font-playfair mb-3 text-white">YOGA.LIFE</h3>
             <p style={{ color: 'rgba(244, 241, 234, 0.7)' }}>{t.footer.description}</p>
+            <div className="d-flex gap-3 mt-3">
+              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram"
+                style={{ color: 'rgba(244,241,234,0.7)', fontSize: '1.4rem', transition: 'color 0.2s' }}
+                onMouseOver={e => (e.currentTarget.style.color = '#fff')}
+                onMouseOut={e => (e.currentTarget.style.color = 'rgba(244,241,234,0.7)')}
+              ><i className="bi bi-instagram"></i></a>
+              <a href="https://t.me" target="_blank" rel="noopener noreferrer" aria-label="Telegram"
+                style={{ color: 'rgba(244,241,234,0.7)', fontSize: '1.4rem', transition: 'color 0.2s' }}
+                onMouseOver={e => (e.currentTarget.style.color = '#fff')}
+                onMouseOut={e => (e.currentTarget.style.color = 'rgba(244,241,234,0.7)')}
+              ><i className="bi bi-telegram"></i></a>
+              <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" aria-label="YouTube"
+                style={{ color: 'rgba(244,241,234,0.7)', fontSize: '1.4rem', transition: 'color 0.2s' }}
+                onMouseOver={e => (e.currentTarget.style.color = '#fff')}
+                onMouseOut={e => (e.currentTarget.style.color = 'rgba(244,241,234,0.7)')}
+              ><i className="bi bi-youtube"></i></a>
+            </div>
           </div>
           <div className="col-lg-2 col-6">
             <h5 className="mb-3 text-white">{t.footer.quickLinks}</h5>

@@ -254,6 +254,24 @@ export const Header = () => {
             </Link>
           </div>
           <div className="d-flex align-items-center gap-3">
+            <Link
+              href="/search"
+              className="rounded-circle d-flex align-items-center justify-content-center text-decoration-none"
+              style={{
+                color: theme === 'dark' ? '#EAE3D9' : '#5C6E4F',
+                fontSize: '1.2rem',
+                lineHeight: 1,
+                width: '38px',
+                height: '38px',
+                backgroundColor: theme === 'dark' ? '#2A2520' : '#EDE5D8',
+                border: theme === 'dark' ? '1.5px solid #4A4038' : '1.5px solid #5C6E4F',
+                flexShrink: 0,
+                boxShadow: '0 1px 4px rgba(0,0,0,0.15)',
+              }}
+              title="Поиск"
+            >
+              <i className="bi bi-search"></i>
+            </Link>
             <button
               onClick={toggleTheme}
               className="rounded-circle d-flex align-items-center justify-content-center"

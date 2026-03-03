@@ -9,6 +9,7 @@ import { getUserMessages, SupportMessage } from "@/shared/api/supportApi";
 import Image from "next/image";
 import { changePassword, getMyProfile, updateMyProfile } from "@/shared/api/authActions";
 import { checkSubscription, subscribeEmail, unsubscribeEmail } from "@/shared/api/subscriberApi";
+import { getUserWishlist, removeFromWishlist, WishlistItem } from "@/shared/api/wishlistApi";
 import { useLanguage } from "@/shared/i18n/LanguageContext";
 
 export default function Profile() {
@@ -18,8 +19,9 @@ export default function Profile() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [messages, setMessages] = useState<SupportMessage[]>([]);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<"enrollments" | "messages" | "subscriptions" | "settings">("enrollments");
+  const [activeTab, setActiveTab] = useState<"enrollments" | "messages" | "subscriptions" | "settings" | "wishlist">("enrollments");
   const [isSubscribed, setIsSubscribed] = useState(false);
+  const [wishlistItems, setWishlistItems] = useState<WishlistItem[]>([]);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [isProfileEdited, setIsProfileEdited] = useState(false);
   const [isProfileSaved, setIsProfileSaved] = useState(false);
@@ -113,6 +115,12 @@ export default function Profile() {
     window.addEventListener('yoga_support_updated', handleSupportUpdate);
     return () => window.removeEventListener('yoga_support_updated', handleSupportUpdate);
   }, [router, session, status]);
+
+  useEffect(() => {
+    if (activeTab === 'wishlist') {
+      getUserWishlist().then(setWishlistItems).catch(console.error);
+    }
+  }, [activeTab]);
 
   const handleLogout = () => {
     signOut({ callbackUrl: '/' });
@@ -355,6 +363,12 @@ export default function Profile() {
                 style={{ transition: 'all 0.3s ease' }}
               >
                 <i className="bi bi-person-gear me-2"></i>{tStr("Настройки профиля")}</button>
+              <button
+                className={`btn rounded-pill px-4 py-2 fw-bold ${activeTab === 'wishlist' ? 'btn-primary-custom text-white' : 'btn-light text-muted bg-transparent border-0'}`}
+                onClick={() => setActiveTab('wishlist')}
+                style={{ transition: 'all 0.3s ease' }}
+              >
+                <i className="bi bi-heart me-2"></i>{tStr("Избранное")}</button>
             </div>
           </div>
 
@@ -505,6 +519,65 @@ export default function Profile() {
                               </div>
                             </div>
                           </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {activeTab === 'wishlist' && (
+                      <div className="col-12">
+                        <div className="bg-white rounded-4 shadow-sm p-4">
+                          <h4 className="font-playfair fw-bold mb-4">
+                            <i className="bi bi-heart-fill text-danger me-2"></i>
+                            {tStr("Избранное")}
+                          </h4>
+                          {wishlistItems.length === 0 ? (
+                            <div className="text-center py-5 text-muted">
+                              <i className="bi bi-heart display-1" style={{ opacity: 0.2 }}></i>
+                              <p className="mt-3">{tStr("Список избранного пуст")}</p>
+                              <Link href="/courses" className="btn btn-primary-custom rounded-pill px-4 mt-2">
+                                {tStr("Перейти к курсам")}
+                              </Link>
+                            </div>
+                          ) : (
+                            <div className="row g-3">
+                              {wishlistItems.map(item => (
+                                <div key={item.id} className="col-sm-6 col-md-4">
+                                  <div className="card border-0 shadow-sm rounded-3 overflow-hidden h-100">
+                                    {item.imageUrl && (
+                                      <div style={{ height: '130px', overflow: 'hidden' }}>
+                                        <img src={item.imageUrl} alt={item.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                      </div>
+                                    )}
+                                    <div className="card-body p-3">
+                                      <span className="badge bg-secondary small mb-1">{item.itemType}</span>
+                                      <h6 className="fw-bold mb-1">{item.title}</h6>
+                                      {item.price !== undefined && (
+                                        <p className="fw-bold mb-2" style={{ color: 'var(--color-primary)' }}>
+                                          {item.price.toLocaleString('ru-RU')} ₴
+                                        </p>
+                                      )}
+                                      <div className="d-flex gap-2">
+                                        {item.url && (
+                                          <Link href={item.url} className="btn btn-sm btn-primary-custom rounded-pill flex-grow-1">
+                                            {tStr("Подробнее")}
+                                          </Link>
+                                        )}
+                                        <button
+                                          className="btn btn-sm btn-outline-danger rounded-pill"
+                                          onClick={async () => {
+                                            await removeFromWishlist(item.itemId, item.itemType as any);
+                                            setWishlistItems(prev => prev.filter(w => w.id !== item.id));
+                                          }}
+                                        >
+                                          <i className="bi bi-trash"></i>
+                                        </button>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          )}
                         </div>
                       </div>
                     )}
