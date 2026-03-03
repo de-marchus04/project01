@@ -256,18 +256,19 @@ export const Header = () => {
           <div className="d-flex align-items-center gap-3">
             <button
               onClick={toggleTheme}
-              className="rounded-circle d-flex align-items-center justify-content-center shadow-sm"
+              className="rounded-circle d-flex align-items-center justify-content-center"
               style={{
-                color: theme === 'dark' ? '#EAE3D9' : '#3A3530',
+                color: theme === 'dark' ? '#EAE3D9' : '#5C6E4F',
                 outline: 'none',
-                fontSize: '1.1rem',
+                fontSize: '1.2rem',
                 lineHeight: 1,
-                width: '36px',
-                height: '36px',
-                backgroundColor: theme === 'dark' ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.05)',
-                border: theme === 'dark' ? '1px solid rgba(234,227,217,0.35)' : '1px solid rgba(58,53,48,0.25)',
+                width: '38px',
+                height: '38px',
+                backgroundColor: theme === 'dark' ? '#2A2520' : '#EDE5D8',
+                border: theme === 'dark' ? '1.5px solid #4A4038' : '1.5px solid #5C6E4F',
                 flexShrink: 0,
                 cursor: 'pointer',
+                boxShadow: '0 1px 4px rgba(0,0,0,0.15)',
               }}
               title={theme === 'dark' ? 'Светлая тема' : 'Темная тема'}
             >
