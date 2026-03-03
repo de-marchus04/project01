@@ -5,18 +5,28 @@ interface VideoCardProps {
   video: Video;
 }
 
+const getYoutubeThumbnail = (url: string): string | null => {
+  const match = url?.match(/(?:youtube\.com\/(?:embed\/|watch\?v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+  return match ? `https://img.youtube.com/vi/${match[1]}/hqdefault.jpg` : null;
+};
+
 export const VideoCard = ({ video }: VideoCardProps) => {
   const { tData, tStr } = useLanguage();
 
   const localized_video = tData ? tData(video) : video;
+  const thumbnail =
+    localized_video.thumbnailUrl ||
+    getYoutubeThumbnail(localized_video.videoUrl) ||
+    "https://images.unsplash.com/photo-1575052814086-f385e2e2ad1b?q=80&w=600&auto=format&fit=crop";
+
   return (
     <div className="card h-100 shadow-sm border-0 hover-scale-sm transition-all">
       <div className="position-relative">
-        <img 
-          src={localized_video.thumbnailUrl} 
-          className="card-img-top" 
+        <img
+          src={thumbnail}
+          className="card-img-top"
           style={{ height: '200px', objectFit: 'cover' }}
-          alt={tStr(localized_video.title)} 
+          alt={tStr(localized_video.title)}
         />
         <div className="position-absolute top-50 start-50 translate-middle">
           <i className="bi bi-play-circle-fill text-white" style={{ fontSize: '4rem', opacity: 0.8 }}></i>
