@@ -385,6 +385,10 @@ programs: {
       "format": "ФОРМАТ",
       "access": "ДОСТУП",
       "author": "АВТОР",
+      "allCategories": "Всі курси",
+      "allCoursesTitle": "Всі курси YOGA.LIFE",
+      "allCoursesDesc": "Оберіть напрямок та почніть свою практику",
+      "goToCategoryPage": "Перейти на сторінку категорії",
       "buyNow": "Купити зараз"
   }
 ,

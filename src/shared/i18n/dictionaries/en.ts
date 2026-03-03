@@ -385,6 +385,10 @@ programs: {
       "format": "FORMAT",
       "access": "ACCESS",
       "author": "AUTHOR",
+      "allCategories": "All Courses",
+      "allCoursesTitle": "All YOGA.LIFE Courses",
+      "allCoursesDesc": "Choose a direction and start your practice",
+      "goToCategoryPage": "Go to category page",
       "buyNow": "Buy Now"
   }
 ,
