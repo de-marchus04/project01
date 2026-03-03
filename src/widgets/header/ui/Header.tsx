@@ -206,7 +206,7 @@ export const Header = () => {
     <>
       {sidebar}
       {overlay}
-      <nav className="navbar fixed-top" style={{ background: 'rgba(255,255,255,0.95)', backdropFilter: 'blur(10px)', borderBottom: '1px solid rgba(0,0,0,0.05)', transition: 'transform 0.4s ease' }}>
+      <nav className="navbar fixed-top" style={{ background: theme === 'dark' ? 'rgba(30,27,23,0.97)' : 'rgba(255,255,255,0.95)', backdropFilter: 'blur(10px)', borderBottom: '1px solid rgba(0,0,0,0.05)', transition: 'transform 0.4s ease, background 0.3s ease' }}>
         <div className="container-fluid px-4 py-1">
           
           {/* Left Side: Hamburger + Door + Logo */}
@@ -257,10 +257,10 @@ export const Header = () => {
             <button
               onClick={toggleTheme}
               className="btn btn-link p-0 border-0"
-              style={{ color: 'var(--color-text)', outline: 'none' }}
+              style={{ color: theme === 'dark' ? '#EAE3D9' : '#3A3530', outline: 'none', fontSize: '1.4rem', lineHeight: 1 }}
               title={theme === 'dark' ? 'Светлая тема' : 'Темная тема'}
             >
-              <i className={`bi ${theme === 'dark' ? 'bi-sun' : 'bi-moon'} fs-4`}></i>
+              <i className={`bi ${theme === 'dark' ? 'bi-sun-fill' : 'bi-moon-fill'}`}></i>
             </button>
             <div className="d-flex align-items-center rounded-pill px-2 py-1 shadow-sm border" style={{ borderColor: 'var(--color-primary)', backgroundColor: 'var(--color-surface)' }}>
               <button 
