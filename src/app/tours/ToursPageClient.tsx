@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { getTours, Tour } from "@/shared/api/tourApi";
+import { getTours } from "@/shared/api/tourApi";
+import type { Tour } from "@/entities/tour/model/types";
 import { HeroSlider } from "@/shared/ui/HeroSlider/HeroSlider";
 import { useLanguage } from "@/shared/i18n/LanguageContext";
 import { formatPrice } from "@/shared/lib/formatPrice";

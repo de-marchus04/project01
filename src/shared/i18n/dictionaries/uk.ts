@@ -37,7 +37,16 @@ export const uk = {
     company: "Компанія",
     subscribe: "Підпишіться",
     yourEmail: "Ваш email",
-    termsOfService: "Договір оферти"
+    termsOfService: "Договір оферти",
+    warningTitle: "Увага",
+    successTitle: "Успішно!",
+    errorTitle: "Помилка",
+    subscribeEmpty: "Будь ласка, введіть email адресу.",
+    subscribeInvalidEmail: "Невірний формат email адреси.",
+    subscribeAlreadySubscribed: "Цей email вже підписаний на розсилку.",
+    subscribeSuccess: "Ви успішно підписались на оновлення!",
+    subscribeError: "Не вдалося підписатись. Спробуйте пізніше.",
+    subscribeGenericError: "Сталася помилка під час підписки. Спробуйте пізніше."
   },
   home: {
     heroBadge: "ОНЛАЙН-СТУДІЯ ЙОГИ",

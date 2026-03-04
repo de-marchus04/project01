@@ -1,6 +1,6 @@
 "use server";
 
-import { prisma } from "@/lib/prisma";
+import { prisma } from "@/shared/lib/prisma";
 import { auth } from "@/auth";
 import { Article, Video, Podcast, Recipe } from "@/entities/blog/model/types";
 

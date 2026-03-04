@@ -156,8 +156,8 @@ export default function CourseDetail() {
                           <span>{feat}</span>
                         </li>
                       ))
-                    ) : localized_course.features && typeof localized_course.features === 'string' ? (
-                      localized_course.features.split('\n').filter((f: string) => f.trim()).map((feat: string, i: number) => (
+                    ) : localized_course.features && typeof (localized_course.features as any) === 'string' ? (
+                      (localized_course.features as any).split('\n').filter((f: string) => f.trim()).map((feat: string, i: number) => (
                         <li key={i} className="mb-3 d-flex align-items-start gap-3">
                           <i className="bi bi-check-circle-fill text-success mt-1"></i>
                           <span>{feat}</span>

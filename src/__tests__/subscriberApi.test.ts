@@ -3,7 +3,7 @@
  * Uses mocked Prisma client.
  */
 
-jest.mock("@/lib/prisma", () => ({
+jest.mock("@/shared/lib/prisma", () => ({
   prisma: {
     subscriber: {
       create: jest.fn(),
@@ -13,7 +13,7 @@ jest.mock("@/lib/prisma", () => ({
   },
 }));
 
-import { prisma } from "@/lib/prisma";
+import { prisma } from "@/shared/lib/prisma";
 import { subscribeEmail, unsubscribeEmail, checkSubscription } from "@/shared/api/subscriberApi";
 
 const mockPrisma = prisma as jest.Mocked<typeof prisma>;

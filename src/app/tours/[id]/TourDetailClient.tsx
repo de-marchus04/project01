@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import { getTourById, Tour } from "@/shared/api/tourApi";
+import { getTourById } from "@/shared/api/tourApi";
+import type { Tour } from "@/entities/tour/model/types";
 import { usePurchase } from "@/shared/hooks/usePurchase";
 import Link from "next/link";
 import { useLanguage } from "@/shared/i18n/LanguageContext";

@@ -37,7 +37,16 @@ export const en = {
     company: "Company",
     subscribe: "Subscribe",
     yourEmail: "Your email",
-    termsOfService: "Terms of Service"
+    termsOfService: "Terms of Service",
+    warningTitle: "Warning",
+    successTitle: "Success!",
+    errorTitle: "Error",
+    subscribeEmpty: "Please enter your email address.",
+    subscribeInvalidEmail: "Invalid email format.",
+    subscribeAlreadySubscribed: "This email is already subscribed.",
+    subscribeSuccess: "You have successfully subscribed to updates!",
+    subscribeError: "Failed to subscribe. Please try again later.",
+    subscribeGenericError: "An error occurred while subscribing. Please try again later."
   },
   home: {
     heroBadge: "ONLINE YOGA STUDIO",

@@ -349,26 +349,26 @@ export const Header = () => {
               <i className={`bi ${theme === 'dark' ? 'bi-sun-fill' : 'bi-moon-fill'}`}></i>
             </button>
             <div className="d-flex align-items-center rounded-pill px-2 py-1 shadow-sm border" style={{ borderColor: 'var(--color-primary)', backgroundColor: 'var(--color-surface)' }}>
-              <button 
-                className={`btn btn-sm border-0 fw-bold px-2 py-0 ${lang === 'ru' ? 'text-dark' : 'text-muted'}`} 
+              <button
+                className="btn btn-sm border-0 fw-bold px-2 py-0"
                 onClick={() => setLang('ru')}
-                style={{ fontSize: '0.85rem' }}
+                style={{ fontSize: '0.85rem', color: lang === 'ru' ? 'var(--color-primary)' : 'var(--color-text-muted)' }}
               >
                 RU
               </button>
-              <span className="text-muted opacity-50 mx-1" style={{ fontSize: '0.85rem' }}>|</span>
-              <button 
-                className={`btn btn-sm border-0 fw-bold px-2 py-0 ${lang === 'uk' ? 'text-dark' : 'text-muted'}`} 
+              <span className="opacity-50 mx-1" style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)' }}>|</span>
+              <button
+                className="btn btn-sm border-0 fw-bold px-2 py-0"
                 onClick={() => setLang('uk')}
-                style={{ fontSize: '0.85rem' }}
+                style={{ fontSize: '0.85rem', color: lang === 'uk' ? 'var(--color-primary)' : 'var(--color-text-muted)' }}
               >
                 UA
               </button>
-              <span className="text-muted opacity-50 mx-1" style={{ fontSize: '0.85rem' }}>|</span>
-              <button 
-                className={`btn btn-sm border-0 fw-bold px-2 py-0 ${lang === 'en' ? 'text-dark' : 'text-muted'}`} 
+              <span className="opacity-50 mx-1" style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)' }}>|</span>
+              <button
+                className="btn btn-sm border-0 fw-bold px-2 py-0"
                 onClick={() => setLang('en')}
-                style={{ fontSize: '0.85rem' }}
+                style={{ fontSize: '0.85rem', color: lang === 'en' ? 'var(--color-primary)' : 'var(--color-text-muted)' }}
               >
                 ENG
               </button>

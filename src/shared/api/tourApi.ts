@@ -1,22 +1,8 @@
 "use server";
 
-import { prisma } from "@/lib/prisma";
+import { prisma } from "@/shared/lib/prisma";
 import { auth } from "@/auth";
-
-export interface Tour {
-  id: string;
-  title: string;
-  description: string;
-  price: number;
-  imageUrl: string;
-  date: string;
-  location: string;
-  author?: string;
-  authorPhoto?: string;
-  translations?: any;
-  features?: string[];
-  fullDescription?: string;
-}
+import { Tour } from "@/entities/tour/model/types";
 
 export async function getTours(): Promise<Tour[]> {
   if (process.env.NEXT_RUNTIME === 'edge') { throw new Error('EDGE RUNTIME DETECTED IN SERVER ACTION'); }

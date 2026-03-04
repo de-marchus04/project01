@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { subscribeEmail } from "@/shared/api/subscriberApi";
 import { emailService } from "@/shared/api/emailService";
+import { sendWelcomeGuide } from "@/shared/api/emailActions";
 import { modalService } from "@/shared/ui/Modal/modalService";
 import { useLanguage } from "@/shared/i18n/LanguageContext";
 
@@ -14,14 +15,14 @@ export const Footer = () => {
 
   const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!email.trim()) {
-      modalService.alert("Внимание", "Пожалуйста, введите email адрес.");
+      modalService.alert(t.footer.warningTitle, t.footer.subscribeEmpty);
       return;
     }
 
     if (!emailService.isValidFormat(email)) {
-      await modalService.alert("Внимание", "Неверный формат email адреса.");
+      await modalService.alert(t.footer.warningTitle, t.footer.subscribeInvalidEmail);
       return;
     }
 
@@ -30,16 +31,16 @@ export const Footer = () => {
       const result = await subscribeEmail(email);
 
       if (result.alreadySubscribed) {
-        await modalService.alert("Внимание", "Этот email уже подписан на рассылку.");
+        await modalService.alert(t.footer.warningTitle, t.footer.subscribeAlreadySubscribed);
       } else if (result.success) {
-        await emailService.sendWelcomeGuide(email);
-        await modalService.alert("Успешно!", "Вы успешно подписались на обновления!");
+        await sendWelcomeGuide(email);
+        await modalService.alert(t.footer.successTitle, t.footer.subscribeSuccess);
         setEmail("");
       } else {
-        await modalService.alert("Ошибка", "Не удалось подписаться. Попробуйте позже.");
+        await modalService.alert(t.footer.errorTitle, t.footer.subscribeError);
       }
     } catch (error) {
-      modalService.alert("Внимание", "Произошла ошибка при подписке. Попробуйте позже.");
+      modalService.alert(t.footer.warningTitle, t.footer.subscribeGenericError);
     } finally {
       setIsLoading(false);
     }
@@ -109,7 +110,7 @@ export const Footer = () => {
           </div>
         </div>
         <div className="border-top mt-5 pt-4 d-flex flex-column flex-md-row justify-content-between align-items-center" style={{ borderColor: 'rgba(244, 241, 234, 0.2) !important', color: 'rgba(244, 241, 234, 0.5)' }}>
-          <small className="mb-2 mb-md-0">© 2026 YOGA.LIFE. {t.footer.rights}</small>
+          <small className="mb-2 mb-md-0">© {new Date().getFullYear()} YOGA.LIFE. {t.footer.rights}</small>
           <div className="d-flex gap-3">
             <Link href="/privacy" className="text-decoration-none" style={{ color: 'rgba(244, 241, 234, 0.5)', fontSize: '0.875em' }}>{t.footer.privacyPolicy}</Link>
             <Link href="/terms" className="text-decoration-none" style={{ color: 'rgba(244, 241, 234, 0.5)', fontSize: '0.875em' }}>{t.footer.termsOfService}</Link>

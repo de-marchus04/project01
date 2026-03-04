@@ -1,6 +1,6 @@
 "use server";
 
-import { prisma } from "@/lib/prisma";
+import { prisma } from "@/shared/lib/prisma";
 
 export async function subscribeEmail(email: string): Promise<{ success: boolean; alreadySubscribed?: boolean }> {
   try {

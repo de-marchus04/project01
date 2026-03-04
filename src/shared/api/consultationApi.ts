@@ -1,10 +1,10 @@
 "use server";
 
-import { prisma } from "@/lib/prisma";
+import { prisma } from "@/shared/lib/prisma";
 import { auth } from "@/auth";
-import { Course } from "@/entities/course/model/types";
+import { Consultation } from "@/entities/consultation/model/types";
 
-export async function getConsultationById(id: string): Promise<Course | undefined> {
+export async function getConsultationById(id: string): Promise<Consultation | undefined> {
   if (process.env.NEXT_RUNTIME === 'edge') { throw new Error('EDGE RUNTIME DETECTED IN SERVER ACTION'); }
   const consultation = await prisma.consultation.findUnique({
     where: { id }
@@ -12,35 +12,35 @@ export async function getConsultationById(id: string): Promise<Course | undefine
   return consultation ? JSON.parse(JSON.stringify(consultation)) : undefined;
 }
 
-export async function getPrivateConsultations(): Promise<Course[]> {
+export async function getPrivateConsultations(): Promise<Consultation[]> {
   const items = await prisma.consultation.findMany({
     where: { category: { startsWith: 'private' } }
   });
   return JSON.parse(JSON.stringify(items));
 }
 
-export async function getNutritionConsultations(): Promise<Course[]> {
+export async function getNutritionConsultations(): Promise<Consultation[]> {
   const items = await prisma.consultation.findMany({
     where: { category: { startsWith: 'nutrition' } }
   });
   return JSON.parse(JSON.stringify(items));
 }
 
-export async function getMentorshipConsultations(): Promise<Course[]> {
+export async function getMentorshipConsultations(): Promise<Consultation[]> {
   const items = await prisma.consultation.findMany({
     where: { category: { startsWith: 'mentorship' } }
   });
   return JSON.parse(JSON.stringify(items));
 }
 
-export async function getAllAdminConsultations(): Promise<Course[]> {
+export async function getAllAdminConsultations(): Promise<Consultation[]> {
   const items = await prisma.consultation.findMany({
     orderBy: { createdAt: 'desc' }
   });
   return JSON.parse(JSON.stringify(items));
 }
 
-export async function addConsultation(consultationData: Omit<Course, 'id'>, category: string): Promise<Course> {
+export async function addConsultation(consultationData: Omit<Consultation, 'id'>, category: string): Promise<Consultation> {
   const session = await auth();
   if ((session?.user as any)?.role !== 'ADMIN') throw new Error('Нет доступа');
   const { translations, id: _mockId, ...validData } = consultationData as any;
@@ -54,7 +54,7 @@ export async function addConsultation(consultationData: Omit<Course, 'id'>, cate
   return JSON.parse(JSON.stringify(newItem));
 }
 
-export async function updateConsultation(id: string, updatedData: Partial<Course>): Promise<Course | undefined> {
+export async function updateConsultation(id: string, updatedData: Partial<Consultation>): Promise<Consultation | undefined> {
   const session = await auth();
   if ((session?.user as any)?.role !== 'ADMIN') throw new Error('Нет доступа');
   const { translations, id: _id, ...validData } = updatedData as any;

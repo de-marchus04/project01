@@ -3,7 +3,7 @@
  * Uses mocked Prisma client.
  */
 
-jest.mock("@/lib/prisma", () => ({
+jest.mock("@/shared/lib/prisma", () => ({
   prisma: {
     user: {
       findUnique: jest.fn(),
@@ -17,7 +17,7 @@ jest.mock("bcryptjs", () => ({
   hash: jest.fn(),
 }));
 
-import { prisma } from "@/lib/prisma";
+import { prisma } from "@/shared/lib/prisma";
 import bcrypt from "bcryptjs";
 import { changePassword, updateMyProfile } from "@/shared/api/authActions";
 

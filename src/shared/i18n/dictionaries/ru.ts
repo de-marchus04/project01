@@ -37,7 +37,16 @@ export const ru = {
     company: "Компания",
     subscribe: "Подпишитесь",
     yourEmail: "Ваш email",
-    termsOfService: "Договор оферты"
+    termsOfService: "Договор оферты",
+    warningTitle: "Внимание",
+    successTitle: "Успешно!",
+    errorTitle: "Ошибка",
+    subscribeEmpty: "Пожалуйста, введите email адрес.",
+    subscribeInvalidEmail: "Неверный формат email адреса.",
+    subscribeAlreadySubscribed: "Этот email уже подписан на рассылку.",
+    subscribeSuccess: "Вы успешно подписались на обновления!",
+    subscribeError: "Не удалось подписаться. Попробуйте позже.",
+    subscribeGenericError: "Произошла ошибка при подписке. Попробуйте позже."
   },
   home: {
     heroBadge: "ОНЛАЙН-СТУДИЯ ЙОГИ",

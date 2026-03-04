@@ -4,7 +4,8 @@ import Link from "next/link";
 import { useLanguage } from "@/shared/i18n/LanguageContext";
 import { useScrollReveal } from "@/shared/hooks/useScrollReveal";
 import { useEffect, useState } from "react";
-import { getTours, Tour } from "@/shared/api/tourApi";
+import { getTours } from "@/shared/api/tourApi";
+import type { Tour } from "@/entities/tour/model/types";
 
 const FALLBACK_IMAGES = [
   "https://images.unsplash.com/photo-1537996194471-e657df975ab4?q=80&w=800",

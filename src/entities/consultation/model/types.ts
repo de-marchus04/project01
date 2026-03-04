@@ -1,9 +1,10 @@
-export interface Course {
+export interface Consultation {
   id: string;
+  category?: string;
   title: string;
   description: string;
   price: number;
-  imageUrl: string;
+  imageUrl?: string;
   author?: string;
   authorPhoto?: string;
   fullDescription?: string;

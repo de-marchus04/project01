@@ -1,9 +1,11 @@
-export interface Course {
+export interface Tour {
   id: string;
   title: string;
   description: string;
   price: number;
-  imageUrl: string;
+  imageUrl?: string;
+  date?: string;
+  location?: string;
   author?: string;
   authorPhoto?: string;
   fullDescription?: string;

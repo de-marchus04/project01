@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { Course } from "@/entities/course/model/types";
+import type { Consultation } from "@/entities/consultation/model/types";
 import { getConsultationById } from "@/shared/api/consultationApi";
 import { usePurchase } from "@/shared/hooks/usePurchase";
 import Link from "next/link";
@@ -13,7 +13,7 @@ export default function CourseDetail() {
   const { t, tData, tStr, lang } = useLanguage() as any;
   const params = useParams();
   const router = useRouter();
-  const [course, setCourse] = useState<Course | null>(null);
+  const [course, setCourse] = useState<Consultation | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -169,8 +169,8 @@ export default function CourseDetail() {
                           <span>{feat}</span>
                         </li>
                       ))
-                    ) : localized_course.features && typeof localized_course.features === 'string' ? (
-                      localized_course.features.split('\n').filter((f: string) => f.trim()).map((feat: string, i: number) => (
+                    ) : localized_course.features && typeof (localized_course.features as any) === 'string' ? (
+                      (localized_course.features as any).split('\n').filter((f: string) => f.trim()).map((feat: string, i: number) => (
                         <li key={i} className="mb-3 d-flex align-items-start gap-3">
                           <i className="bi bi-check-circle-fill text-success mt-1"></i>
                           <span>{feat}</span>

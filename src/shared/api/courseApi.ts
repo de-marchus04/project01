@@ -1,5 +1,5 @@
 "use server";
-import { prisma } from "@/lib/prisma";
+import { prisma } from "@/shared/lib/prisma";
 import { auth } from "@/auth";
 import { Course } from "@/entities/course/model/types";
 import { PaginatedResponse } from "./blogApi";
