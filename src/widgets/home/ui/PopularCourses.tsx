@@ -107,6 +107,11 @@ export const PopularCourses = () => {
             </Link>
           </div>
         </div>
+        <div className="text-center mt-5 reveal-up" ref={observe as any}>
+          <Link href="/courses" className="btn btn-primary-custom rounded-pill px-5 py-3 fw-bold fs-5">
+            {t.nav.coursesAll} <i className="bi bi-arrow-right ms-2"></i>
+          </Link>
+        </div>
       </div>
     </section>
   );

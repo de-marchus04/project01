@@ -34,9 +34,12 @@ export const PlatformSections = () => {
               />
               <div className="card-img-overlay d-flex flex-column justify-content-end p-4 z-2" style={{ background: WARM_OVERLAY }}>
                 <span className="badge rounded-pill mb-2 align-self-start" style={{ backgroundColor: 'var(--color-accent)', color: '#fff', fontSize: '0.75rem' }}>{t.home.practice}</span>
-                <h3 className="card-title fw-bold font-playfair mb-1">{t.nav.courses}</h3>
+                <Link href="/courses" className="text-white text-decoration-none">
+                  <h3 className="card-title fw-bold font-playfair mb-1">{t.nav.courses}</h3>
+                </Link>
                 <p className="card-text small text-white-50 mb-3">{t.home.coursesDesc}</p>
                 <div className="d-flex flex-wrap gap-2">
+                  <Link href="/courses" className="btn btn-sm btn-light rounded-pill fw-semibold" style={{ fontSize: '0.75rem' }}>{t.nav.coursesAll}</Link>
                   <Link href="/courses-beginners" className="btn btn-sm btn-outline-light rounded-pill" style={{ fontSize: '0.75rem' }}>{t.nav.coursesBeginners}</Link>
                   <Link href="/courses-meditation" className="btn btn-sm btn-outline-light rounded-pill" style={{ fontSize: '0.75rem' }}>{t.nav.coursesMeditation}</Link>
                   <Link href="/courses-back" className="btn btn-sm btn-outline-light rounded-pill" style={{ fontSize: '0.75rem' }}>{t.nav.coursesBack}</Link>
@@ -58,9 +61,12 @@ export const PlatformSections = () => {
               />
               <div className="card-img-overlay d-flex flex-column justify-content-end p-4 z-2" style={{ background: WARM_OVERLAY }}>
                 <span className="badge rounded-pill mb-2 align-self-start" style={{ backgroundColor: 'var(--color-accent)', color: '#fff', fontSize: '0.75rem' }}>{t.home.experts}</span>
-                <h3 className="card-title fw-bold font-playfair mb-1">{t.nav.consultations}</h3>
+                <Link href="/consultations" className="text-white text-decoration-none">
+                  <h3 className="card-title fw-bold font-playfair mb-1">{t.nav.consultations}</h3>
+                </Link>
                 <p className="card-text small text-white-50 mb-3">{t.home.consultDesc}</p>
                 <div className="d-flex flex-wrap gap-2">
+                  <Link href="/consultations" className="btn btn-sm btn-light rounded-pill fw-semibold" style={{ fontSize: '0.75rem' }}>{t.nav.consultAll}</Link>
                   <Link href="/consultations-private" className="btn btn-sm btn-outline-light rounded-pill" style={{ fontSize: '0.75rem' }}>{t.nav.consultPrivate}</Link>
                   <Link href="/consultations-nutrition" className="btn btn-sm btn-outline-light rounded-pill" style={{ fontSize: '0.75rem' }}>{t.nav.consultNutrition}</Link>
                   <Link href="/consultations-mentorship" className="btn btn-sm btn-outline-light rounded-pill" style={{ fontSize: '0.75rem' }}>{t.nav.consultMentorship}</Link>
