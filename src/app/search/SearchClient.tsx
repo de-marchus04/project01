@@ -2,16 +2,8 @@
 
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { useLanguage } from "@/shared/i18n/LanguageContext";
 import { globalSearch, GlobalSearchResponse, SearchResult } from "@/shared/api/searchApi";
-
-const TYPE_LABELS: Record<string, string> = {
-  course: 'Курс',
-  consultation: 'Консультация',
-  tour: 'Тур',
-  article: 'Статья',
-};
 
 const TYPE_ICONS: Record<string, string> = {
   course: 'bi-book',
@@ -20,7 +12,7 @@ const TYPE_ICONS: Record<string, string> = {
   article: 'bi-newspaper',
 };
 
-function ResultCard({ item }: { item: SearchResult }) {
+function ResultCard({ item, typeLabel }: { item: SearchResult; typeLabel: string }) {
   return (
     <Link href={item.url} className="text-decoration-none">
       <div className="card border-0 shadow-sm h-100 rounded-3 overflow-hidden"
@@ -36,7 +28,7 @@ function ResultCard({ item }: { item: SearchResult }) {
         <div className="card-body p-3">
           <span className="badge bg-secondary mb-2 small">
             <i className={`bi ${TYPE_ICONS[item.type]} me-1`}></i>
-            {TYPE_LABELS[item.type]}
+            {typeLabel}
           </span>
           <h6 className="card-title fw-bold mb-1" style={{ fontSize: '0.9rem' }}>{item.title}</h6>
           {item.description && (
@@ -87,11 +79,18 @@ export default function SearchClient({ initialQuery }: { initialQuery?: string }
     return () => clearTimeout(timer);
   }, [query]);
 
+  const typeLabels: Record<string, string> = {
+    course: t.search.typeCourse,
+    consultation: t.search.typeConsultation,
+    tour: t.search.typeTour,
+    article: t.search.typeArticle,
+  };
+
   const sections: { key: keyof Omit<GlobalSearchResponse, 'total'>; label: string }[] = [
-    { key: 'courses', label: 'Курсы' },
-    { key: 'consultations', label: 'Консультации' },
-    { key: 'tours', label: 'Туры' },
-    { key: 'articles', label: 'Статьи' },
+    { key: 'courses', label: t.search.sectionCourses },
+    { key: 'consultations', label: t.search.sectionConsultations },
+    { key: 'tours', label: t.search.sectionTours },
+    { key: 'articles', label: t.search.sectionArticles },
   ];
 
   const hasResults = results && results.total > 0;
@@ -104,7 +103,7 @@ export default function SearchClient({ initialQuery }: { initialQuery?: string }
         style={{ minHeight: '40vh', backgroundColor: 'var(--color-surface)', paddingTop: '120px' }}
       >
         <div className="container">
-          <h1 className="font-playfair text-center mb-4 display-5">Поиск по сайту</h1>
+          <h1 className="font-playfair text-center mb-4 display-5">{t.search.title}</h1>
           <div className="row justify-content-center">
             <div className="col-md-8 col-lg-6">
               <div className="input-group input-group-lg shadow-sm">
@@ -116,7 +115,7 @@ export default function SearchClient({ initialQuery }: { initialQuery?: string }
                   type="text"
                   className="form-control border-start-0 border-end-0 shadow-none"
                   style={{ backgroundColor: 'var(--color-card-bg)', color: 'var(--color-text)', borderColor: 'var(--color-border)' }}
-                  placeholder="Курс йоги, тур, статья..."
+                  placeholder={t.search.placeholder}
                   value={query}
                   onChange={e => setQuery(e.target.value)}
                 />
@@ -145,7 +144,7 @@ export default function SearchClient({ initialQuery }: { initialQuery?: string }
           {loading && (
             <div className="text-center py-5">
               <div className="spinner-border text-primary" role="status">
-                <span className="visually-hidden">Поиск...</span>
+                <span className="visually-hidden">{t.search.loading}</span>
               </div>
             </div>
           )}
@@ -154,7 +153,7 @@ export default function SearchClient({ initialQuery }: { initialQuery?: string }
           {!loading && emptySearch && (
             <div className="text-center py-5">
               <i className="bi bi-search display-1 text-muted"></i>
-              <p className="mt-3 text-muted fs-5">По запросу «{query}» ничего не найдено</p>
+              <p className="mt-3 text-muted fs-5">{t.search.noResults} «{query}»</p>
             </div>
           )}
 
@@ -162,7 +161,7 @@ export default function SearchClient({ initialQuery }: { initialQuery?: string }
           {!loading && !results && (
             <div className="text-center py-5 text-muted">
               <i className="bi bi-search display-1 opacity-25"></i>
-              <p className="mt-3 fs-5">Введите минимум 2 символа для поиска</p>
+              <p className="mt-3 fs-5">{t.search.minChars}</p>
             </div>
           )}
 
@@ -170,7 +169,7 @@ export default function SearchClient({ initialQuery }: { initialQuery?: string }
           {!loading && hasResults && (
             <>
               <p className="text-muted mb-4">
-                Найдено результатов: <strong>{results.total}</strong> по запросу «{query}»
+                {t.search.foundResults} <strong>{results.total}</strong> {t.search.byQuery} «{query}»
               </p>
               {sections.map(({ key, label }) => {
                 const items = results[key] as SearchResult[];
@@ -181,7 +180,7 @@ export default function SearchClient({ initialQuery }: { initialQuery?: string }
                     <div className="row g-3">
                       {items.map(item => (
                         <div key={item.id} className="col-sm-6 col-md-4 col-lg-3">
-                          <ResultCard item={item} />
+                          <ResultCard item={item} typeLabel={typeLabels[item.type] || item.type} />
                         </div>
                       ))}
                     </div>

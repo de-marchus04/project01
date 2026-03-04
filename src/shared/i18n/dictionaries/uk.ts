@@ -548,6 +548,23 @@ programs: {
       "buyNow": "Купити зараз"
   }
 ,
+  search: {
+    title: "Пошук по сайту",
+    placeholder: "Курс йоги, тур, стаття...",
+    loading: "Пошук...",
+    noResults: "За вашим запитом нічого не знайдено",
+    minChars: "Введіть мінімум 2 символи для пошуку",
+    foundResults: "Знайдено результатів:",
+    byQuery: "за запитом",
+    typeCourse: "Курс",
+    typeConsultation: "Консультація",
+    typeTour: "Тур",
+    typeArticle: "Стаття",
+    sectionCourses: "Курси",
+    sectionConsultations: "Консультації",
+    sectionTours: "Тури",
+    sectionArticles: "Статті",
+  },
   legal: {
       "termsTitle": "Договір оферти",
       "termsDesc": "Цей документ є публічною офертою і містить усі істотні умови надання інформаційно-консультаційних послуг.",

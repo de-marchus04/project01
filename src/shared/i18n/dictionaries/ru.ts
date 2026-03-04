@@ -538,6 +538,23 @@ programs: {
       "buyNow": "Купить сейчас"
   }
 ,
+  search: {
+    title: "Поиск по сайту",
+    placeholder: "Курс йоги, тур, статья...",
+    loading: "Поиск...",
+    noResults: "По запросу ничего не найдено",
+    minChars: "Введите минимум 2 символа для поиска",
+    foundResults: "Найдено результатов:",
+    byQuery: "по запросу",
+    typeCourse: "Курс",
+    typeConsultation: "Консультация",
+    typeTour: "Тур",
+    typeArticle: "Статья",
+    sectionCourses: "Курсы",
+    sectionConsultations: "Консультации",
+    sectionTours: "Туры",
+    sectionArticles: "Статьи",
+  },
   legal: {
       "termsTitle": "Договор оферты",
       "termsDesc": "Настоящий документ является публичной офертой и содержит все существенные условия предоставления информационно-консультационных услуг.",

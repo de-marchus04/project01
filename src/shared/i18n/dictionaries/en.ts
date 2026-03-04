@@ -548,6 +548,23 @@ programs: {
       "buyNow": "Buy now"
   }
 ,
+  search: {
+    title: "Search",
+    placeholder: "Yoga course, tour, article...",
+    loading: "Searching...",
+    noResults: "No results found for your query",
+    minChars: "Enter at least 2 characters to search",
+    foundResults: "Found results:",
+    byQuery: "for query",
+    typeCourse: "Course",
+    typeConsultation: "Consultation",
+    typeTour: "Tour",
+    typeArticle: "Article",
+    sectionCourses: "Courses",
+    sectionConsultations: "Consultations",
+    sectionTours: "Tours",
+    sectionArticles: "Articles",
+  },
   legal: {
       "termsTitle": "Public Offer Agreement",
       "termsDesc": "This document is a public offer and contains all essential conditions for the provision of information and consulting services.",

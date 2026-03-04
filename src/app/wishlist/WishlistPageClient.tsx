@@ -10,14 +10,14 @@ import { useLanguage } from "@/shared/i18n/LanguageContext";
 import { useScrollReveal } from "@/shared/hooks/useScrollReveal";
 import { SectionHeader } from "@/shared/ui/SectionHeader/SectionHeader";
 
-const TYPE_LABEL: Record<string, string> = {
-  COURSE: 'Курс',
-  CONSULTATION: 'Консультация',
-  TOUR: 'Тур',
-};
-
 export default function WishlistPageClient() {
   const { t, tStr } = useLanguage() as any;
+
+  const TYPE_LABEL: Record<string, string> = {
+    COURSE: t.search.typeCourse,
+    CONSULTATION: t.search.typeConsultation,
+    TOUR: t.search.typeTour,
+  };
   const { status } = useSession();
   const router = useRouter();
   const { observe } = useScrollReveal();
