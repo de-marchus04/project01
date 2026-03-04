@@ -4,8 +4,8 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import type { Consultation } from "@/entities/consultation/model/types";
 import { getConsultationById } from "@/shared/api/consultationApi";
-import { usePurchase } from "@/shared/hooks/usePurchase";
 import Link from "next/link";
+import { BuyButton } from "@/shared/ui/BuyButton/BuyButton";
 import { useLanguage } from "@/shared/i18n/LanguageContext";
 import { formatPrice } from "@/shared/lib/formatPrice";
 
@@ -47,11 +47,6 @@ export default function CourseDetail() {
     window.addEventListener('storage', handleStorageChange);
     return () => window.removeEventListener('storage', handleStorageChange);
   }, [params.id]);
-
-  const { buyProduct } = usePurchase();
-  const handleBuy = () => {
-    if (course) buyProduct(tData ? tData(course).title : course.title, tData ? tData(course).price : course.price);
-  };
 
   if (loading) {
     return (
@@ -236,7 +231,12 @@ export default function CourseDetail() {
                   <hr className="my-4" />
                   <div className="text-center">
                     <span className="d-block fs-3 fw-bold mb-3" style={{ color: 'var(--color-text)' }}>{formatPrice(localized_course.price, lang)}</span>
-                    <button onClick={handleBuy} className="btn btn-primary-custom w-100 rounded-pill py-3 fw-bold">{t.courseDetail.enroll}</button>
+                    <BuyButton
+                      title={localized_course.title}
+                      price={localized_course.price}
+                      label={t.courseDetail.enroll}
+                      className="btn btn-primary-custom w-100 rounded-pill py-3 fw-bold"
+                    />
                   </div>
                 </div>
               </div>

@@ -4,8 +4,8 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Course } from "@/entities/course/model/types";
 import { getBeginnersCourses, getBackCourses, getMeditationCourses, getWomenCourses, getCourseById, getAllAdminCourses, addCourse, updateCourse, deleteCourse } from "@/shared/api/courseApi";
-import { usePurchase } from "@/shared/hooks/usePurchase";
 import Link from "next/link";
+import { BuyButton } from "@/shared/ui/BuyButton/BuyButton";
 import { useLanguage } from "@/shared/i18n/LanguageContext";
 import { formatPrice } from "@/shared/lib/formatPrice";
 import ReviewSection from "@/shared/ui/ReviewSection";
@@ -52,14 +52,6 @@ export default function CourseDetail() {
     window.addEventListener('storage', handleStorageChange);
     return () => window.removeEventListener('storage', handleStorageChange);
   }, [params.id]);
-
-  const { buyProduct } = usePurchase();
-  const handleBuy = () => {
-    if (course) {
-      const localizedCourse = tData ? tData(course) : course;
-      buyProduct(localizedCourse.title, promoPrice ?? localizedCourse.price);
-    }
-  };
 
   if (loading) {
     return (
@@ -235,7 +227,12 @@ export default function CourseDetail() {
                       onApply={(finalPrice) => setPromoPrice(finalPrice)}
                       onClear={() => setPromoPrice(null)}
                     />
-                    <button onClick={handleBuy} className="btn btn-primary-custom w-100 rounded-pill py-3 fw-bold mt-3">{t.courseDetail.enroll}</button>
+                    <BuyButton
+                      title={localized_course.title}
+                      price={promoPrice ?? localized_course.price}
+                      label={t.courseDetail.enroll}
+                      className="btn btn-primary-custom w-100 rounded-pill py-3 fw-bold mt-3"
+                    />
                   </div>
                 </div>
               </div>

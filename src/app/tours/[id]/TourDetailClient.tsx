@@ -4,8 +4,8 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { getTourById } from "@/shared/api/tourApi";
 import type { Tour } from "@/entities/tour/model/types";
-import { usePurchase } from "@/shared/hooks/usePurchase";
 import Link from "next/link";
+import { BuyButton } from "@/shared/ui/BuyButton/BuyButton";
 import { useLanguage } from "@/shared/i18n/LanguageContext";
 import { formatPrice } from "@/shared/lib/formatPrice";
 
@@ -33,8 +33,6 @@ export default function TourDetail() {
     window.addEventListener('storage', handleStorageChange);
     return () => window.removeEventListener('storage', handleStorageChange);
   }, [params.id]);
-
-  const { buyProduct } = usePurchase();
 
   if (loading) {
     return (
@@ -161,10 +159,12 @@ export default function TourDetail() {
                       </>
                     )}
                   </ul>
-                  <button
-                    onClick={() => buyProduct(loc_tour.title, loc_tour.price)}
+                  <BuyButton
+                    title={loc_tour.title}
+                    price={loc_tour.price}
+                    label={tStr("Забронировать место")}
                     className="btn btn-primary-custom w-100 rounded-pill py-3 fw-bold fs-5"
-                  >{tStr("Забронировать место")}</button>
+                  />
                   <p className="text-center text-muted small mt-3 mb-0">{tStr("Количество мест строго ограничено")}</p>
                 </div>
               </div>

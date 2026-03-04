@@ -69,7 +69,7 @@ export const usePurchase = () => {
         );
       }
     } catch (error) {
-      await modalService.alert("Ошибка", tStr("Произошла ошибка при оформлении заказа. Попробуйте позже."));
+      await modalService.alert(tStr("Ошибка"), tStr("Произошла ошибка при оформлении заказа. Попробуйте позже."));
     }
   };
 
