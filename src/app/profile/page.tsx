@@ -236,7 +236,7 @@ export default function Profile() {
             <i className="bi bi-calendar-check display-1 mb-3" style={{ color: 'var(--color-text-muted)' }}></i>
             <h3 style={{ color: 'var(--color-text-muted)' }}>{t.profile.noEnrollments}</h3>
             <p className="mb-4" style={{ color: 'var(--color-text-muted)' }}>{t.profile.noEnrollmentsDesc}</p>
-            <Link href="/courses-beginners" className="btn btn-primary-custom rounded-pill px-4">{t.profile.goToPrograms}</Link>
+            <Link href="/courses" className="btn btn-primary-custom rounded-pill px-4">{t.profile.goToPrograms}</Link>
           </div>
         </div>
       );

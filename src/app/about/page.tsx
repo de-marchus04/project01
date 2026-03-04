@@ -124,7 +124,7 @@ export default function AboutPage() {
                 <h2 className="h2 font-playfair fw-bold text-white mb-3">{tStr("Готовы начать свой путь?")}</h2>
                 <p className="lead text-white mb-4" style={{ opacity: 0.9 }}>{tStr("Присоединяйтесь к нашему сообществу и откройте для себя мир гармонии и здоровья.")}</p>
                 <div>
-                  <Link href="/courses-beginners" className="btn btn-light rounded-pill px-5 py-3 fw-bold me-3 mb-3 mb-md-0" style={{ color: 'var(--color-primary)' }}>
+                  <Link href="/courses" className="btn btn-light rounded-pill px-5 py-3 fw-bold me-3 mb-3 mb-md-0" style={{ color: 'var(--color-primary)' }}>
                     {t.home.joinBtn}
                   </Link>
                   <Link href="/contact" className="btn btn-outline-light rounded-pill px-5 py-3 fw-bold">{tStr("Связаться с нами")}</Link>

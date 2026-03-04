@@ -74,7 +74,7 @@ export const Footer = () => {
           <div className="col-lg-2 col-6">
             <h5 className="mb-3 text-white">{t.footer.quickLinks}</h5>
             <ul className="list-unstyled">
-              <li><Link href="/courses-beginners" className="text-decoration-none" style={{ color: 'rgba(244, 241, 234, 0.7)' }}>{t.nav.courses}</Link></li>
+              <li><Link href="/courses" className="text-decoration-none" style={{ color: 'rgba(244, 241, 234, 0.7)' }}>{t.nav.courses}</Link></li>
               <li><Link href="/tours" className="text-decoration-none" style={{ color: 'rgba(244, 241, 234, 0.7)' }}>{t.nav.tours}</Link></li>
               <li><Link href="/consultations-private" className="text-decoration-none" style={{ color: 'rgba(244, 241, 234, 0.7)' }}>{t.nav.consultations}</Link></li>
             </ul>
