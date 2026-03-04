@@ -102,7 +102,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           select: { name: true, avatar: true }
         });
         if (dbUser) {
-          token.name = dbUser.name || token.username;
+          token.name = (dbUser.name || token.username) as string;
           token.avatar = dbUser.avatar;
         }
       }
