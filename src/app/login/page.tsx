@@ -1,23 +1,26 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { authApi } from "@/shared/api/authApi";
 import { resetPassword } from "@/shared/api/authActions";
 import { useLanguage } from "@/shared/i18n/LanguageContext";
+import { useTheme } from "@/shared/i18n/ThemeContext";
 import { signIn, getSession } from "next-auth/react";
 
 export default function Login() {
-  const { t, tStr } = useLanguage();
+  const { t } = useLanguage();
+  const { theme } = useTheme();
   const [isRegisterMode, setIsRegisterMode] = useState(false);
   const [isForgotPasswordMode, setIsForgotPasswordMode] = useState(false);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
+  const [timeLeft, setTimeLeft] = useState("");
 
-  // Rate Limiting (Блокировка после 3 неверных попыток)
+  // Rate Limiting (lock after 3 wrong attempts)
   const [attempts, setAttempts] = useState(0);
   const [lockUntil, setLockUntil] = useState<number | null>(null);
 
@@ -28,7 +31,6 @@ export default function Login() {
       if (lockTime && lockTime > Date.now()) {
         setLockUntil(lockTime);
       } else if (lockTime && lockTime <= Date.now()) {
-        // Убираем блокировку, если время прошло
         localStorage.removeItem('yoga_login_attempts');
         setAttempts(0);
         setLockUntil(null);
@@ -41,24 +43,22 @@ export default function Login() {
   const handleFailedAttempt = () => {
     const newCount = attempts + 1;
     setAttempts(newCount);
-    
+
     if (newCount >= 3) {
-      const lockTime = Date.now() + 15 * 60 * 1000; // 15 минут
+      const lockTime = Date.now() + 15 * 60 * 1000;
       setLockUntil(lockTime);
       localStorage.setItem('yoga_login_attempts', JSON.stringify({ count: newCount, lockTime }));
-      setError("Слишком много попыток. Аккаунт временно заблокирован на 15 минут.");
+      setError(t.login.errLockoutMsg);
     } else {
       localStorage.setItem('yoga_login_attempts', JSON.stringify({ count: newCount }));
-      setError((t as any).auth ? (t as any).auth.wrongCredentials : 'Неверный логин или пароль');
+      setError(`${t.login.errInvalidLogin}. ${t.login.errAttemptsLeft} ${3 - newCount}`);
     }
   };
 
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (lockUntil && Date.now() < lockUntil) {
-      return;
-    }
+
+    if (lockUntil && Date.now() < lockUntil) return;
 
     setError(null);
     setLoading(true);
@@ -68,64 +68,37 @@ export default function Login() {
         const res = await resetPassword(username, password);
         if (res.success) {
           setError(null);
-          alert("Пароль успешно изменён! Теперь вы можете войти.");
+          alert(t.login.forgotSuccess);
           setIsForgotPasswordMode(false);
           setPassword("");
         } else {
-          setError(res.error || "Ошибка смены пароля");
+          setError(res.error || t.login.forgotError);
         }
         return;
       }
+
       if (isRegisterMode) {
-        // Registration via API Route
         await authApi.register(username, password);
-        // Automatically login after register
-        const res = await signIn('credentials', {
-          redirect: false,
-          username,
-          password,
-        });
-
-        if (res?.error) {
-          setError(res.error);
-          return;
-        }
-
+        const res = await signIn('credentials', { redirect: false, username, password });
+        if (res?.error) { setError(res.error); return; }
         const session = await getSession();
         router.push((session?.user as any)?.role === 'ADMIN' ? '/admin' : '/profile');
       } else {
-        // Login via NextAuth credentials provider
-        const res = await signIn('credentials', {
-          redirect: false,
-          username,
-          password
-        });
-
-        if (res?.error) {
-          handleFailedAttempt();
-          return;
-        }
-
-        // Reset attempts on successful login
+        const res = await signIn('credentials', { redirect: false, username, password });
+        if (res?.error) { handleFailedAttempt(); return; }
         localStorage.removeItem('yoga_login_attempts');
-
         const loginSession = await getSession();
         router.push((loginSession?.user as any)?.role === 'ADMIN' ? '/admin' : '/profile');
       }
     } catch (err: any) {
-      setError(err.message || ((t as any).auth ? (t as any).auth.errRegister : 'Аутентификация не удалась'));
+      setError(err.message || t.login.errGeneric);
     } finally {
       setLoading(false);
     }
   };
 
-  const router = useRouter();
-  const [timeLeft, setTimeLeft] = useState("");
-
-  // Update timer for lockout
   useEffect(() => {
     if (!lockUntil) return;
-
     const interval = setInterval(() => {
       const now = Date.now();
       if (now >= lockUntil) {
@@ -141,101 +114,114 @@ export default function Login() {
         setTimeLeft(`${minutes}:${seconds < 10 ? '0' : ''}${seconds}`);
       }
     }, 1000);
-
     return () => clearInterval(interval);
   }, [lockUntil]);
 
+  const getTitle = () => {
+    if (isForgotPasswordMode) return t.login.forgotTitle;
+    return isRegisterMode ? t.login.regTitle : t.login.loginTitle;
+  };
+
+  const getSubtitle = () => {
+    if (isForgotPasswordMode) return t.login.forgotSubtitle;
+    return isRegisterMode ? t.login.regSubtitle : t.login.loginSubtitle;
+  };
+
+  const cardBg = theme === 'dark' ? 'rgba(30, 27, 23, 0.97)' : 'rgba(255, 255, 255, 0.95)';
+  const isLocked = lockUntil !== null && Date.now() < lockUntil;
+
   return (
     <main>
-      <section className="py-5" style={{ minHeight: "100vh", paddingTop: "120px", paddingBottom: "50px", background: "url('https://images.unsplash.com/photo-1545205597-3d9d02c29597?q=80&w=2070&auto=format&fit=crop') center/cover", display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <section style={{ minHeight: "100vh", paddingTop: "120px", paddingBottom: "50px", background: "url('https://images.unsplash.com/photo-1545205597-3d9d02c29597?q=80&w=2070&auto=format&fit=crop') center/cover", display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <div className="container mt-5">
           <div className="row justify-content-center">
             <div className="col-md-6 col-lg-5">
-              <div className="card shadow-lg overflow-hidden" style={{ background: 'rgba(255, 255, 255, 0.95)', backdropFilter: 'blur(10px)', border: '1px solid rgba(140, 154, 129, 0.2)', borderRadius: '24px' }}>
+              <div className="card shadow-lg overflow-hidden" style={{ background: cardBg, backdropFilter: 'blur(10px)', border: '1px solid rgba(140, 154, 129, 0.2)', borderRadius: '24px' }}>
                 <div className="card-body p-5">
                   <div className="text-center mb-4">
-                    <h2 className="font-playfair text-primary-custom">
-                      {isForgotPasswordMode ? 'Сброс пароля' : (isRegisterMode ? ((t as any).auth ? (t as any).auth.registerTitle : 'Регистрация') : ((t as any).auth ? (t as any).auth.loginTitle : 'Вход'))}
-                    </h2>
-                    <p className="text-muted">
-                      {isForgotPasswordMode ? 'Придумайте новый пароль' : (isRegisterMode ? ((t as any).auth ? (t as any).auth.registerSubtitle : 'Добро пожаловать!') : ((t as any).auth ? (t as any).auth.loginSubtitle : 'С возвращением!'))}
-                    </p>
+                    <h2 className="font-playfair text-primary-custom">{getTitle()}</h2>
+                    <p style={{ color: 'var(--color-text-muted)' }}>{getSubtitle()}</p>
                   </div>
-                  
+
                   {error && (
                     <div className="alert alert-danger py-2 rounded-3 text-center" role="alert">
                       {error}
                     </div>
                   )}
 
-                  {lockUntil && Date.now() < lockUntil && (
+                  {isLocked && (
                     <div className="alert alert-warning py-2 rounded-3 text-center" role="alert">
-                      Заблокировано. Повторите через: {timeLeft}
+                      {t.login.accountLock}. {t.login.unlockIn}: {timeLeft}
                     </div>
                   )}
 
                   <form onSubmit={handleAuth}>
                     <div className="mb-3">
-                      <label className="form-label text-muted small text-uppercase fw-bold" style={{ letterSpacing: '1px' }}>
-                        {(t as any).auth ? (t as any).auth.usernameLabel : 'Имя пользователя (Логин)'}
+                      <label className="form-label fw-bold small text-uppercase" style={{ letterSpacing: '1px', color: 'var(--color-text-muted)' }}>
+                        {t.login.usernameLabel}
                       </label>
-                      <input 
-                        type="text" 
-                        className="form-control form-control-lg bg-light"
-                        style={{ border: '1px solid rgba(140, 154, 129, 0.3)', borderRadius: '12px' }}
+                      <input
+                        type="text"
+                        className="form-control form-control-lg"
+                        style={{ border: '1px solid var(--color-border)', borderRadius: '12px', backgroundColor: 'var(--color-surface)', color: 'var(--color-text)' }}
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
-                        placeholder="admin или your_name"
+                        placeholder={t.login.usernamePlaceholder}
                         required
-                        disabled={loading || (lockUntil !== null && Date.now() < lockUntil)}
-                      />
-                    </div>
-                    
-                    <div className="mb-4">
-                      <label className="form-label text-muted small text-uppercase fw-bold" style={{ letterSpacing: '1px' }}>
-                        {isForgotPasswordMode ? 'Новый пароль' : ((t as any).auth ? (t as any).auth.passwordLabel : 'Пароль')}
-                      </label>
-                      <input 
-                        type="password" 
-                        className="form-control form-control-lg bg-light"
-                        style={{ border: '1px solid rgba(140, 154, 129, 0.3)', borderRadius: '12px' }}
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        placeholder="••••••••"
-                        required
-                        disabled={loading || (lockUntil !== null && Date.now() < lockUntil)}
+                        disabled={loading || isLocked}
                       />
                     </div>
 
-                    <button 
-                      type="submit" 
+                    <div className="mb-4">
+                      <label className="form-label fw-bold small text-uppercase" style={{ letterSpacing: '1px', color: 'var(--color-text-muted)' }}>
+                        {isForgotPasswordMode ? t.login.forgotPassLabel : t.login.passwordLabel}
+                      </label>
+                      <input
+                        type="password"
+                        className="form-control form-control-lg"
+                        style={{ border: '1px solid var(--color-border)', borderRadius: '12px', backgroundColor: 'var(--color-surface)', color: 'var(--color-text)' }}
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        placeholder={t.login.passwordPlaceholder}
+                        required
+                        disabled={loading || isLocked}
+                      />
+                    </div>
+
+                    <button
+                      type="submit"
                       className="btn btn-primary-custom w-100 py-3 rounded-pill fw-bold text-uppercase"
                       style={{ letterSpacing: '1px' }}
-                      disabled={loading || (lockUntil !== null && Date.now() < lockUntil)}
+                      disabled={loading || isLocked}
                     >
                       {loading ? (
                         <>
                           <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                          {t.common ? t.common.loading : 'Загрузка...'}
+                          {t.common.loading}
                         </>
                       ) : (
-                        isForgotPasswordMode ? 'Сохранить пароль' : (isRegisterMode ? ((t as any).auth ? (t as any).auth.btnRegister : 'Создать аккаунт') : ((t as any).auth ? (t as any).auth.btnLogin : 'Войти'))
+                        isForgotPasswordMode ? t.login.forgotBtn : (isRegisterMode ? t.login.regBtn : t.login.loginBtn)
                       )}
                     </button>
                   </form>
 
                   {!isForgotPasswordMode && !isRegisterMode && (
                     <div className="text-center mt-3">
-                      <button type="button" className="btn btn-link text-muted small" onClick={() => {setIsForgotPasswordMode(true); setError(null);}}>
-                        Забыли пароль?
+                      <button
+                        type="button"
+                        className="btn btn-link small"
+                        style={{ color: 'var(--color-text-muted)' }}
+                        onClick={() => { setIsForgotPasswordMode(true); setError(null); }}
+                      >
+                        {t.login.forgotPass}
                       </button>
                     </div>
                   )}
 
-
-                  <div className="text-center mt-4 pt-3 border-top">
-                    <button 
-                      className="btn btn-link text-decoration-none text-muted"
+                  <div className="text-center mt-4 pt-3" style={{ borderTop: '1px solid var(--color-border)' }}>
+                    <button
+                      className="btn btn-link text-decoration-none"
+                      style={{ color: 'var(--color-text-muted)' }}
                       onClick={() => {
                         if (isForgotPasswordMode) {
                           setIsForgotPasswordMode(false);
@@ -247,9 +233,12 @@ export default function Login() {
                       }}
                       disabled={loading}
                     >
-                      {isForgotPasswordMode ? 'Вернуться ко входу' : (isRegisterMode ? ((t as any).auth ? (t as any).auth.linkToLogin : 'Уже есть аккаунт? Войти') : ((t as any).auth ? (t as any).auth.linkToRegister : 'Нет аккаунта? Зарегистрироваться'))}
+                      {isForgotPasswordMode
+                        ? t.login.backToLogin
+                        : isRegisterMode
+                          ? `${t.login.alreadyHaveAccount} ${t.login.loginNow}`
+                          : `${t.login.noAccount} ${t.login.createNow}`}
                     </button>
-
                   </div>
                 </div>
               </div>

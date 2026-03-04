@@ -366,12 +366,22 @@ export const uk = {
       "unlockIn": "розблокування через",
       "errGeneric": "Сталася помилка",
       "errTooManyStats": "Занадто багато невірних спроб.",
+      "errLockoutMsg": "Забагато спроб. Акаунт заблоковано на 15 хвилин.",
       "errInvalidLogin": "Невірний логін або пароль",
       "errAttemptsLeft": "Залишилось спроб:",
       "noAccount": "Немає акаунту?",
       "createNow": "Створити зараз",
       "alreadyHaveAccount": "Вже є акаунт?",
-      "loginNow": "Увійти"
+      "loginNow": "Увійти",
+      "loginSubtitle": "З поверненням!",
+      "regSubtitle": "Ласкаво просимо!",
+      "forgotTitle": "Скидання пароля",
+      "forgotSubtitle": "Придумайте новий пароль",
+      "forgotBtn": "Зберегти пароль",
+      "forgotPassLabel": "Новий пароль",
+      "forgotSuccess": "Пароль успішно змінено! Тепер ви можете увійти.",
+      "forgotError": "Помилка зміни пароля",
+      "backToLogin": "Повернутися до входу"
   },
   profile: {
       "alertAccepted": "Вашу заявку на {product} було ПРИЙНЯТО!\nНезабаром з вами зв'яжеться менеджер.",

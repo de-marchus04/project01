@@ -356,12 +356,22 @@ export const ru = {
       "unlockIn": "разблокировка через",
       "errGeneric": "Произошла ошибка",
       "errTooManyStats": "Слишком много неверных попыток.",
+      "errLockoutMsg": "Слишком много попыток. Аккаунт заблокирован на 15 минут.",
       "errInvalidLogin": "Неверный логин или пароль",
       "errAttemptsLeft": "Осталось попыток:",
       "noAccount": "Нет аккаунта?",
       "createNow": "Создать сейчас",
       "alreadyHaveAccount": "Уже есть аккаунт?",
-      "loginNow": "Войти"
+      "loginNow": "Войти",
+      "loginSubtitle": "С возвращением!",
+      "regSubtitle": "Добро пожаловать!",
+      "forgotTitle": "Сброс пароля",
+      "forgotSubtitle": "Придумайте новый пароль",
+      "forgotBtn": "Сохранить пароль",
+      "forgotPassLabel": "Новый пароль",
+      "forgotSuccess": "Пароль успешно изменён! Теперь вы можете войти.",
+      "forgotError": "Ошибка смены пароля",
+      "backToLogin": "Вернуться ко входу"
   },
   profile: {
       "alertAccepted": "Ваша заявка на {product} была ПРИНЯТА!\nВскоре с вами свяжется менеджер.",

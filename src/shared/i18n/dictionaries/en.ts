@@ -366,12 +366,22 @@ export const en = {
       "unlockIn": "unlocks in",
       "errGeneric": "An error occurred",
       "errTooManyStats": "Too many invalid attempts.",
+      "errLockoutMsg": "Too many attempts. Account locked for 15 minutes.",
       "errInvalidLogin": "Invalid username or password",
       "errAttemptsLeft": "Attempts left:",
       "noAccount": "Don't have an account?",
       "createNow": "Create now",
       "alreadyHaveAccount": "Already have an account?",
-      "loginNow": "Login"
+      "loginNow": "Login",
+      "loginSubtitle": "Welcome back!",
+      "regSubtitle": "Welcome!",
+      "forgotTitle": "Reset Password",
+      "forgotSubtitle": "Create a new password",
+      "forgotBtn": "Save password",
+      "forgotPassLabel": "New password",
+      "forgotSuccess": "Password changed successfully! You can now log in.",
+      "forgotError": "Password change error",
+      "backToLogin": "Back to login"
   },
   profile: {
       "alertAccepted": "Your request for {product} has been ACCEPTED!\nA manager will contact you soon.",
