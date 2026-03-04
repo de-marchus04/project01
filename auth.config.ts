@@ -12,6 +12,15 @@ export const authConfig = {
       }
       return true;
     },
+    async session({ session, token }) {
+      if (session.user) {
+        (session.user as any).role = token.role;
+        (session.user as any).id = token.id;
+        (session.user as any).username = token.username;
+        (session.user as any).avatar = token.avatar;
+      }
+      return session;
+    },
   },
   session: { strategy: "jwt" },
   pages: { signIn: "/login" },
