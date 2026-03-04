@@ -6,10 +6,6 @@ export interface NavItem {
 
 export const getNavigationConfig = (t: any): NavItem[] => [
   {
-    label: t.nav.home,
-    href: "/",
-  },
-  {
     label: t.nav.courses,
     children: [
       { label: t.nav.coursesBeginners, href: "/courses-beginners" },

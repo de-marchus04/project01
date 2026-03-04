@@ -118,8 +118,6 @@ export const Header = () => {
 
       <ul className="nav flex-column mb-auto" style={{ gap: '0' }}>
         {navConfig.map((item, index) => {
-          if (item.label === "Главная") return null;
-
           return (
             <li className="nav-item" key={index}>
               {item.children ? (
@@ -295,12 +293,11 @@ export const Header = () => {
               </Link>
             )}
             
-            <Link 
-              className="navbar-brand mb-0 font-playfair fw-bold fs-3 ms-2" 
-              href="/" 
-              style={{ 
-                letterSpacing: '1px', 
-                color: 'var(--color-primary)',
+            <Link
+              className="navbar-brand mb-0 font-playfair fw-bold fs-3 ms-2 logo-brand"
+              href="/"
+              style={{
+                letterSpacing: '1px',
                 opacity: isMenuOpen ? 0 : 1,
                 transition: 'opacity 0.3s ease',
                 pointerEvents: isMenuOpen ? 'none' : 'auto'
@@ -312,38 +309,16 @@ export const Header = () => {
           <div className="d-flex align-items-center gap-3">
             <Link
               href="/search"
-              className="rounded-circle d-flex align-items-center justify-content-center text-decoration-none"
-              style={{
-                color: theme === 'dark' ? '#EAE3D9' : '#5C6E4F',
-                fontSize: '1.2rem',
-                lineHeight: 1,
-                width: '38px',
-                height: '38px',
-                backgroundColor: theme === 'dark' ? '#2A2520' : '#EDE5D8',
-                border: theme === 'dark' ? '1.5px solid #4A4038' : '1.5px solid #5C6E4F',
-                flexShrink: 0,
-                boxShadow: '0 1px 4px rgba(0,0,0,0.15)',
-              }}
+              className="icon-pill-btn rounded-circle d-flex align-items-center justify-content-center text-decoration-none"
+              style={{ fontSize: '1.2rem', lineHeight: 1, width: '38px', height: '38px', flexShrink: 0 }}
               title="Поиск"
             >
               <i className="bi bi-search"></i>
             </Link>
             <button
               onClick={toggleTheme}
-              className="rounded-circle d-flex align-items-center justify-content-center"
-              style={{
-                color: theme === 'dark' ? '#EAE3D9' : '#5C6E4F',
-                outline: 'none',
-                fontSize: '1.2rem',
-                lineHeight: 1,
-                width: '38px',
-                height: '38px',
-                backgroundColor: theme === 'dark' ? '#2A2520' : '#EDE5D8',
-                border: theme === 'dark' ? '1.5px solid #4A4038' : '1.5px solid #5C6E4F',
-                flexShrink: 0,
-                cursor: 'pointer',
-                boxShadow: '0 1px 4px rgba(0,0,0,0.15)',
-              }}
+              className="icon-pill-btn rounded-circle d-flex align-items-center justify-content-center"
+              style={{ fontSize: '1.2rem', lineHeight: 1, width: '38px', height: '38px', flexShrink: 0, cursor: 'pointer' }}
               title={theme === 'dark' ? 'Светлая тема' : 'Темная тема'}
             >
               <i className={`bi ${theme === 'dark' ? 'bi-sun-fill' : 'bi-moon-fill'}`}></i>

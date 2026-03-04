@@ -597,3 +597,85 @@ h4.font-playfair        { font-size: 1.12rem; line-height: 1.35; }
     color: var(--color-text);
     border-color: var(--color-border);
 }
+
+/* ================================================================
+   YOGA.LIFE LOGO — Sunlight-Through-Leaves Shimmer
+   A warm ray of light slowly sweeps the text, like golden sunlight
+   flickering through a forest canopy. In dark mode it becomes a cool
+   bioluminescent mint glow — the same motion, opposite mood.
+   ================================================================ */
+
+.logo-brand {
+    /* Gradient: sage base → terracotta warm-ray → sage base */
+    background: linear-gradient(
+        90deg,
+        var(--color-primary) 30%,
+        var(--color-accent)  49%,
+        #F0C060              53%,   /* sunlight highlight */
+        var(--color-accent)  57%,
+        var(--color-primary) 70%
+    );
+    background-size: 300% 100%;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    animation: botanicalShimmer 8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    will-change: background-position;
+    /* rounded corners needed for box-shadow glow to look natural */
+    border-radius: 4px;
+}
+
+/* Dark mode: sage base → mint-silver moonbeam → sage base */
+[data-theme="dark"] .logo-brand {
+    background: linear-gradient(
+        90deg,
+        var(--color-primary) 30%,
+        #6DBE82              49%,
+        #C4F0D0              53%,   /* moonbeam highlight */
+        #6DBE82              57%,
+        var(--color-primary) 70%
+    );
+    background-size: 300% 100%;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+}
+
+/* Shimmer sweeps left→right then holds on each side */
+@keyframes botanicalShimmer {
+    0%,  25% { background-position: -100% 0; }   /* pause before sweep */
+    60%, 100% { background-position: 200% 0; }   /* pause after sweep */
+}
+
+/* On hover: warm glow halo (uses box-shadow for smooth 0.3s transition) */
+.logo-brand:hover {
+    box-shadow: 0 0 22px rgba(196, 113, 74, 0.35), 0 0 8px rgba(92, 110, 79, 0.2);
+}
+[data-theme="dark"] .logo-brand:hover {
+    box-shadow: 0 0 24px rgba(109, 190, 130, 0.45), 0 0 10px rgba(196, 240, 208, 0.2);
+}
+
+/* ================================================================
+   ICON PILL BUTTONS (search + theme toggle in navbar)
+   Fully CSS-var driven — adapts to light/dark automatically.
+   ================================================================ */
+
+.icon-pill-btn {
+    color: var(--color-primary) !important;
+    background-color: var(--color-secondary) !important;
+    border: 1.5px solid var(--color-primary) !important;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
+    outline: none !important;
+}
+.icon-pill-btn:hover {
+    box-shadow: 0 2px 10px rgba(92, 110, 79, 0.30);
+}
+[data-theme="dark"] .icon-pill-btn {
+    background-color: var(--color-surface) !important;
+    border-color: var(--color-primary) !important;
+}
+[data-theme="dark"] .icon-pill-btn:hover {
+    box-shadow: 0 2px 12px rgba(143, 175, 126, 0.40);
+}
