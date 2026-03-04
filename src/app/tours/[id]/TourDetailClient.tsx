@@ -8,6 +8,7 @@ import Link from "next/link";
 import { BuyButton } from "@/shared/ui/BuyButton/BuyButton";
 import { useLanguage } from "@/shared/i18n/LanguageContext";
 import { formatPrice } from "@/shared/lib/formatPrice";
+import ReviewSection from "@/shared/ui/ReviewSection";
 
 export default function TourDetail() {
   const params = useParams();
@@ -172,6 +173,8 @@ export default function TourDetail() {
           </div>
         </div>
       </section>
+
+      <ReviewSection itemId={params.id as string} itemType="TOUR" />
     </main>
   );
 }

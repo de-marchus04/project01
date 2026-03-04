@@ -3,7 +3,7 @@
 import { useEffect, useState, useMemo } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
 import { getOrders, markOrderAsNotified, Order } from "@/shared/api/userApi";
 import { getUserMessages, SupportMessage } from "@/shared/api/supportApi";
 import { changePassword, getMyProfile, updateMyProfile } from "@/shared/api/authActions";
@@ -236,7 +236,7 @@ export default function Profile() {
             <i className="bi bi-calendar-check display-1 mb-3" style={{ color: 'var(--color-text-muted)' }}></i>
             <h3 style={{ color: 'var(--color-text-muted)' }}>{t.profile.noEnrollments}</h3>
             <p className="mb-4" style={{ color: 'var(--color-text-muted)' }}>{t.profile.noEnrollmentsDesc}</p>
-            <Link href="/courses" className="btn btn-primary-custom rounded-pill px-4">{t.profile.goToPrograms}</Link>
+            <Link href="/courses-beginners" className="btn btn-primary-custom rounded-pill px-4">{t.profile.goToPrograms}</Link>
           </div>
         </div>
       );
@@ -294,26 +294,70 @@ export default function Profile() {
   );
 
   return (
-    <main style={{ backgroundColor: 'var(--color-bg)', minHeight: '100vh', paddingTop: '96px' }}>
-      <header className="text-center" style={{ backgroundColor: 'var(--color-primary)', color: 'white', padding: '4rem 0', marginBottom: '3rem' }}>
-        <div className="container">
-          <h1 className="font-playfair display-4 fw-bold mb-3">{t.profile.pageTitle}</h1>
-          <p className="lead mb-0" style={{ color: 'var(--color-secondary)' }}>{t.profile.pageSubtitle}</p>
-        </div>
-      </header>
-
-      <div className="container pb-5">
-        <div className="d-flex justify-content-center mb-5">
-          <div className="p-1 rounded-pill shadow-sm d-inline-flex flex-wrap justify-content-center gap-1" style={{ backgroundColor: 'var(--color-card-bg)', border: '1px solid var(--color-border)' }}>
-            {tabBtn('enrollments', 'bi-journal-check', t.profile.tabEnrollments)}
-            {tabBtn('messages', 'bi-chat-dots', t.profile.tabMessages)}
-            {tabBtn('subscriptions', 'bi-envelope-paper', t.profile.tabSubscriptions)}
-            {tabBtn('settings', 'bi-person-gear', t.profile.tabSettings)}
-            {tabBtn('wishlist', 'bi-heart', t.profile.tabWishlist)}
-          </div>
-        </div>
-
+    <main style={{ backgroundColor: 'var(--color-bg)', minHeight: '100vh', paddingTop: '80px' }}>
+      <div className="container py-5">
         <div className="row g-4">
+
+          {/* LEFT SIDEBAR */}
+          <div className="col-md-3">
+            <div className="card border-0 shadow-sm rounded-4 p-4 sticky-top" style={{ top: '90px', backgroundColor: 'var(--color-card-bg)' }}>
+              {/* Avatar */}
+              <div className="text-center mb-4">
+                {user.photo && (user.photo.startsWith('http') || user.photo.startsWith('data:image')) ? (
+                  <img
+                    src={user.photo}
+                    alt={user.name || user.username}
+                    className="rounded-circle object-fit-cover mb-3"
+                    style={{ width: '90px', height: '90px', border: '3px solid var(--color-primary)', display: 'block', margin: '0 auto 12px' }}
+                  />
+                ) : (
+                  <div className="rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" style={{ width: '90px', height: '90px', backgroundColor: 'var(--color-primary)', flexShrink: 0 }}>
+                    <span style={{ color: '#fff', fontSize: '2rem', fontWeight: 700, lineHeight: 1 }}>
+                      {(user.name || user.username || '?').charAt(0).toUpperCase()}
+                    </span>
+                  </div>
+                )}
+                <h5 className="fw-bold mb-1 text-truncate" style={{ color: 'var(--color-text)' }}>{user.name || user.username}</h5>
+                <span className="badge rounded-pill px-3 py-2" style={{ backgroundColor: 'var(--color-secondary)', color: 'var(--color-primary)', fontSize: '0.8rem', fontWeight: 600 }}>
+                  {t.profile.statusUser}
+                </span>
+              </div>
+
+              {/* Vertical tab nav */}
+              <div className="profile-sidebar-nav d-flex flex-column gap-1 mb-4">
+                {([
+                  ['enrollments', 'bi-journal-check', t.profile.tabEnrollments],
+                  ['messages', 'bi-chat-dots', t.profile.tabMessages],
+                  ['subscriptions', 'bi-envelope-paper', t.profile.tabSubscriptions],
+                  ['settings', 'bi-person-gear', t.profile.tabSettings],
+                  ['wishlist', 'bi-heart', t.profile.tabWishlist],
+                ] as [typeof activeTab, string, string][]).map(([tab, icon, label]) => (
+                  <div
+                    key={tab}
+                    className={`nav-tab-item${activeTab === tab ? ' active' : ''}`}
+                    onClick={() => setActiveTab(tab)}
+                  >
+                    <i className={`bi ${icon}`}></i>
+                    {label}
+                  </div>
+                ))}
+              </div>
+
+              {/* Logout */}
+              <button
+                onClick={() => signOut({ callbackUrl: '/login' })}
+                className="btn w-100 rounded-pill py-2"
+                style={{ border: '1px solid var(--color-border)', color: 'var(--color-text-muted)', fontSize: '0.9rem' }}
+              >
+                <i className="bi bi-box-arrow-right me-2"></i>
+                {t.header?.logout || 'Выйти'}
+              </button>
+            </div>
+          </div>
+
+          {/* RIGHT CONTENT */}
+          <div className="col-md-9">
+            <div className="row g-4">
           {loading ? (
             <div className="col-12 text-center py-5">
               <div className="spinner-border" role="status" style={{ color: 'var(--color-primary)' }}></div>
@@ -522,6 +566,8 @@ export default function Profile() {
               )}
             </>
           )}
+            </div>
+          </div>
         </div>
       </div>
 

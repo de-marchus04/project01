@@ -678,92 +678,72 @@ export default function Admin() {
   );
 
   return (
-    <main style={{ backgroundColor: 'var(--color-bg)', minHeight: '100vh', paddingTop: '96px' }}>
-      <div className="container pb-5">
-          <div className="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
-              <div>
-                  <h1 className="mb-1 font-playfair fw-bold" style={{ color: 'var(--color-text)' }}>{t.admin.titleAdmin}</h1>
-                  <p className="mb-0" style={{ color: 'var(--color-text-muted)' }}>{t.admin.subtitle}</p>
-              </div>
-              <div className="badge fs-6" style={{
-                backgroundColor: isProfileSaved ? '#198754' : (isProfileEdited ? '#ffc107' : 'var(--color-primary)'),
-                color: isProfileEdited && !isProfileSaved ? '#000' : '#fff',
-                transition: 'all 0.3s ease'
-              }}>
-                {isProfileSaved ? <><i className="bi bi-check2-circle me-1"></i> {t.admin.badgeSaved}</> : 'Admin'}
-              </div>
+    <main style={{ backgroundColor: 'var(--color-bg)', minHeight: '100vh', paddingTop: '64px' }}>
+      <div className="d-flex admin-layout">
+        {/* LEFT SIDEBAR */}
+        <aside className="admin-sidebar p-3">
+          <div className="font-playfair fw-bold text-white mb-3 pb-3 px-2" style={{ fontSize: '1.15rem', borderBottom: '1px solid rgba(255,255,255,0.15)' }}>
+            YOGA.LIFE Admin
           </div>
-
-          {/* Dashboard Stats */}
-          <div className="row g-4 mb-4">
-            <div className="col-md-4">
-              <div className="card border-0 p-4 h-100" style={{ borderRadius: '16px', boxShadow: '0 4px 20px rgba(0, 0, 0, 0.05)' }}>
-                <div className="d-flex align-items-center mb-3">
-                  <div className="bg-success bg-opacity-10 p-3 rounded-circle me-3">
-                    <i className="bi bi-currency-dollar text-success fs-4"></i>
-                  </div>
-                  <h5 className="mb-0 fw-bold" style={{ color: 'var(--color-text-muted)' }}>{t.admin.statEarnedFull}</h5>
-                </div>
-                <h2 className="mb-0 fw-bold" style={{ color: 'var(--color-text)' }}>{formatPrice(stats.earnedTotal, lang)}</h2>
+          <div className="px-2 mb-3">
+            <span className="badge fs-6 rounded-pill d-block text-center py-2" style={{
+              backgroundColor: isProfileSaved ? '#198754' : (isProfileEdited ? '#ffc107' : 'rgba(255,255,255,0.15)'),
+              color: isProfileEdited && !isProfileSaved ? '#000' : '#fff',
+            }}>
+              {isProfileSaved ? <><i className="bi bi-check2-circle me-1"></i>{t.admin.badgeSaved}</> : t.admin.titleAdmin}
+            </span>
+          </div>
+          {/* Bento stats */}
+          <div className="row g-2 mb-3 px-1">
+            <div className="col-6">
+              <div className="bento-stat">
+                <span className="bento-value">{formatPrice(stats.earnedTotal, lang)}</span>
+                <span className="bento-label">{t.admin.statEarnedFull}</span>
               </div>
             </div>
-            <div className="col-md-4">
-              <div className="card border-0 p-4 h-100" style={{ borderRadius: '16px', boxShadow: '0 4px 20px rgba(0, 0, 0, 0.05)' }}>
-                <div className="d-flex align-items-center mb-3">
-                  <div className="bg-primary bg-opacity-10 p-3 rounded-circle me-3">
-                    <i className="bi bi-bell text-primary fs-4"></i>
-                  </div>
-                  <h5 className="mb-0 fw-bold" style={{ color: 'var(--color-text-muted)' }}>{t.admin.statNewReqFull}</h5>
-                </div>
-                <h2 className="mb-0 fw-bold" style={{ color: 'var(--color-text)' }}>{stats.newRequests}</h2>
+            <div className="col-6">
+              <div className="bento-stat">
+                <span className="bento-value">{stats.newRequests}</span>
+                <span className="bento-label">{t.admin.statNewReqFull}</span>
               </div>
             </div>
-            <div className="col-md-4">
-              <div className="card border-0 p-4 h-100" style={{ borderRadius: '16px', boxShadow: '0 4px 20px rgba(0, 0, 0, 0.05)' }}>
-                <div className="d-flex align-items-center mb-3">
-                  <div className="bg-warning bg-opacity-10 p-3 rounded-circle me-3">
-                    <i className="bi bi-star text-warning fs-4"></i>
-                  </div>
-                  <h5 className="mb-0 fw-bold" style={{ color: 'var(--color-text-muted)' }}>{t.admin.statPopService}</h5>
-                </div>
-                <h4 className="mb-0 fw-bold text-truncate" style={{ color: 'var(--color-text)' }} title={stats.popularService}>{stats.popularService}</h4>
+            <div className="col-12">
+              <div className="bento-stat">
+                <span className="bento-value" style={{ fontSize: '0.85rem' }}>{stats.popularService}</span>
+                <span className="bento-label">{t.admin.statPopService}</span>
               </div>
             </div>
           </div>
-
-          <section className="card border-0 p-4 mb-4" style={{ borderRadius: '16px', boxShadow: '0 4px 20px rgba(0, 0, 0, 0.05)' }}>
-              <div className="d-flex flex-wrap gap-2">
-                  {([
-                    ['coursesPane', t.admin.tabCourses],
-                    ['consultationsPane', t.admin.tabConsult],
-                    ['articlesPane', t.admin.tabBlog],
-                    ['videosPane', t.admin.tabVideos],
-                    ['podcastsPane', t.admin.tabPodcasts],
-                    ['recipesPane', t.admin.tabRecipes],
-                    ['toursPane', t.admin.tabTours],
-                    ['ordersPane', t.admin.tabOrders],
-                    ['supportPane', t.admin.tabSupport],
-                    ['faqsPane', t.admin.tabFaq],
-                    ['testimonialsPane', t.admin.tabTestimonials],
-                    ['profilePane', t.admin.tabProfile],
-                  ] as [string, string][]).map(([pane, label]) => (
-                    <button
-                      key={pane}
-                      className="btn rounded-pill px-4"
-                      style={{
-                        backgroundColor: activeTab === pane ? 'var(--color-primary)' : 'transparent',
-                        color: activeTab === pane ? '#fff' : 'var(--color-text)',
-                        border: `1px solid ${activeTab === pane ? 'var(--color-primary)' : 'var(--color-border)'}`,
-                        fontWeight: activeTab === pane ? 600 : 400,
-                      }}
-                      onClick={() => { setActiveTab(pane); closeForm(); }}
-                    >
-                      {label}
-                    </button>
-                  ))}
+          {/* Nav items */}
+          <nav className="d-flex flex-column gap-1 px-1">
+            {([
+              ['coursesPane', t.admin.tabCourses, 'bi-book'],
+              ['consultationsPane', t.admin.tabConsult, 'bi-person-circle'],
+              ['articlesPane', t.admin.tabBlog, 'bi-newspaper'],
+              ['videosPane', t.admin.tabVideos, 'bi-play-circle'],
+              ['podcastsPane', t.admin.tabPodcasts, 'bi-mic'],
+              ['recipesPane', t.admin.tabRecipes, 'bi-egg-fried'],
+              ['toursPane', t.admin.tabTours, 'bi-geo-alt'],
+              ['ordersPane', t.admin.tabOrders, 'bi-clipboard-check'],
+              ['supportPane', t.admin.tabSupport, 'bi-chat-dots'],
+              ['faqsPane', t.admin.tabFaq, 'bi-question-circle'],
+              ['testimonialsPane', t.admin.tabTestimonials, 'bi-star'],
+              ['profilePane', t.admin.tabProfile, 'bi-person-gear'],
+            ] as [string, string, string][]).map(([pane, label, icon]) => (
+              <div
+                key={pane}
+                className={`nav-tab-item${activeTab === pane ? ' active' : ''}`}
+                onClick={() => { setActiveTab(pane); closeForm(); }}
+              >
+                <i className={`bi ${icon}`}></i>
+                {label}
               </div>
-          </section>
+            ))}
+          </nav>
+        </aside>
 
+        {/* MAIN CONTENT AREA */}
+        <div className="flex-grow-1 p-4" style={{ minHeight: 'calc(100vh - 64px)', overflowY: 'auto' }}>
           {renderForm()}
 
           {activeTab === 'coursesPane' && !isFormOpen && renderTable(
@@ -1093,6 +1073,7 @@ export default function Admin() {
             </section>
           )}
 
+        </div>
       </div>
 
       {/* Toast Notification */}

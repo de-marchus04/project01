@@ -101,36 +101,37 @@ export default function SearchClient({ initialQuery }: { initialQuery?: string }
     <main>
       <section
         className="py-5 d-flex align-items-center"
-        style={{ minHeight: '40vh', background: 'linear-gradient(135deg, var(--color-primary-soft, #f8f5f0) 0%, var(--color-bg) 100%)', paddingTop: '120px' }}
+        style={{ minHeight: '40vh', backgroundColor: 'var(--color-surface)', paddingTop: '120px' }}
       >
         <div className="container">
           <h1 className="font-playfair text-center mb-4 display-5">Поиск по сайту</h1>
           <div className="row justify-content-center">
             <div className="col-md-8 col-lg-6">
-              <div className="input-group input-group-lg shadow">
-                <span className="input-group-text bg-white border-end-0 rounded-start-pill ps-4">
+              <div className="input-group input-group-lg shadow-sm">
+                <span className="input-group-text border-end-0 rounded-start-pill ps-4" style={{ backgroundColor: 'var(--color-card-bg)', borderColor: 'var(--color-border)' }}>
                   <i className="bi bi-search text-muted"></i>
                 </span>
                 <input
                   ref={inputRef}
                   type="text"
-                  className="form-control border-start-0 border-end-0 bg-white"
+                  className="form-control border-start-0 border-end-0 shadow-none"
+                  style={{ backgroundColor: 'var(--color-card-bg)', color: 'var(--color-text)', borderColor: 'var(--color-border)' }}
                   placeholder="Курс йоги, тур, статья..."
                   value={query}
                   onChange={e => setQuery(e.target.value)}
                 />
                 {query && (
                   <button
-                    className="btn btn-outline-secondary border-start-0 rounded-end-pill pe-4"
+                    className="btn border-start-0 rounded-end-pill pe-4"
                     type="button"
                     onClick={() => setQuery('')}
-                    style={{ background: 'white' }}
+                    style={{ backgroundColor: 'var(--color-card-bg)', borderColor: 'var(--color-border)', color: 'var(--color-text-muted)' }}
                   >
                     <i className="bi bi-x-lg"></i>
                   </button>
                 )}
                 {!query && (
-                  <span className="input-group-text bg-white border-start-0 rounded-end-pill pe-4"></span>
+                  <span className="input-group-text border-start-0 rounded-end-pill pe-4" style={{ backgroundColor: 'var(--color-card-bg)', borderColor: 'var(--color-border)' }}></span>
                 )}
               </div>
             </div>
@@ -138,7 +139,7 @@ export default function SearchClient({ initialQuery }: { initialQuery?: string }
         </div>
       </section>
 
-      <section className="py-5 bg-light details-section">
+      <section className="py-5" style={{ backgroundColor: 'var(--color-bg)' }}>
         <div className="container">
           {/* Loading */}
           {loading && (

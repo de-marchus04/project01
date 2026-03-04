@@ -1,6 +1,7 @@
 "use server";
 
 import { prisma } from "@/shared/lib/prisma";
+import { emailService } from "@/shared/api/emailService";
 
 export interface Order {
   id: string;
@@ -88,7 +89,30 @@ export async function updateOrderStatus(id: string, status: string): Promise<Ord
       user: true
     }
   });
-  
+
+  // Send status notification email
+  const userEmail = (updated as any).user?.email;
+  const productName = (updated as any).productName || `Товар (${updated.itemType})`;
+  if (userEmail) {
+    try {
+      if (mappedStatus === 'COMPLETED') {
+        await emailService.sendEmail(
+          userEmail,
+          `Статус вашей заявки «${productName}» — YOGA.LIFE`,
+          `Здравствуйте!\n\nВаша заявка на «${productName}» принята. Менеджер свяжется с вами в ближайшее время.\n\nС уважением, команда YOGA.LIFE`
+        );
+      } else if (mappedStatus === 'CANCELLED') {
+        await emailService.sendEmail(
+          userEmail,
+          `Статус вашей заявки «${productName}» — YOGA.LIFE`,
+          `Здравствуйте!\n\nВаша заявка на «${productName}» была отклонена. Если у вас есть вопросы, свяжитесь с нами.\n\nС уважением, команда YOGA.LIFE`
+        );
+      }
+    } catch (e) {
+      console.warn('[userApi] Email notification failed:', e);
+    }
+  }
+
   return JSON.parse(JSON.stringify({
     id: updated.id,
     productName: (updated as any).productName || `Товар (${updated.itemType})`,

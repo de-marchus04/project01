@@ -8,6 +8,7 @@ import Link from "next/link";
 import { BuyButton } from "@/shared/ui/BuyButton/BuyButton";
 import { useLanguage } from "@/shared/i18n/LanguageContext";
 import { formatPrice } from "@/shared/lib/formatPrice";
+import ReviewSection from "@/shared/ui/ReviewSection";
 
 export default function CourseDetail() {
   const { t, tData, tStr, lang } = useLanguage() as any;
@@ -243,6 +244,8 @@ export default function CourseDetail() {
             </div>
           </div>
       </section>
+
+      <ReviewSection itemId={params.id as string} itemType="CONSULTATION" />
     </main>
   );
 }
