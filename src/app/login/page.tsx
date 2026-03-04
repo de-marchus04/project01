@@ -7,6 +7,7 @@ import { resetPassword } from "@/shared/api/authActions";
 import { useLanguage } from "@/shared/i18n/LanguageContext";
 import { useTheme } from "@/shared/i18n/ThemeContext";
 import { signIn, getSession } from "next-auth/react";
+import { modalService } from "@/shared/ui/Modal/modalService";
 
 export default function Login() {
   const { t } = useLanguage();
@@ -68,7 +69,7 @@ export default function Login() {
         const res = await resetPassword(username, password);
         if (res.success) {
           setError(null);
-          alert(t.login.forgotSuccess);
+          await modalService.alert('', t.login.forgotSuccess);
           setIsForgotPasswordMode(false);
           setPassword("");
         } else {

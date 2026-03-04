@@ -26,7 +26,7 @@ import { useSession, signOut } from "next-auth/react";
 export default function Admin() {
   const { lang, t } = useLanguage();
   const { theme } = useTheme();
-  const { data: session, status } = useSession();
+  const { data: session, status, update } = useSession();
 
   const translateStatus = (s: string) => {
     if (s === 'В обработке') return t.admin.statusProcessing;
@@ -91,6 +91,7 @@ export default function Admin() {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [toastType, setToastType] = useState<'success' | 'error'>('success');
   const [isProfileEdited, setIsProfileEdited] = useState(false);
   const [isProfileSaved, setIsProfileSaved] = useState(false);
   const [oldPassword, setOldPassword] = useState("");
@@ -106,6 +107,12 @@ export default function Admin() {
   });
 
   const router = useRouter();
+
+  const showToast = (msg: string, type: 'success' | 'error' = 'success') => {
+    setToastMessage(msg);
+    setToastType(type);
+    setTimeout(() => setToastMessage(null), 3000);
+  };
 
   const loadData = async () => {
     try {
@@ -187,52 +194,39 @@ export default function Admin() {
     e.preventDefault();
     
     if (!adminProfile.name || !adminProfile.photoUrl || adminProfile.name.trim() === '' || adminProfile.photoUrl.trim() === '') {
-      setToastMessage(t.admin.reqFields);
-      setTimeout(() => setToastMessage(null), 3000);
+      showToast(t.admin.reqFields, 'error');
       return;
     }
 
     try {
       const username = (session?.user as any)?.username || 'admin';
-      
+
       const oldProfile = await getMyProfile(username);
       let oldAuthorName = 'Админ сайта';
       if (oldProfile?.name) {
         oldAuthorName = `${oldProfile.name} (Админ сайта)`;
       }
-      
+
       await updateMyProfile(username, {
         name: adminProfile.name,
         email: adminProfile.email,
         phone: adminProfile.phone,
         avatar: adminProfile.photoUrl
       });
-      
-      const authorName = `${adminProfile.name} (Админ сайта)`;
-      
-      // Вызываем серверный экшен для обновления всех статей, курсов БД
-      await bulkUpdateAuthor(authorName, adminProfile.photoUrl, oldAuthorName);
 
-      // Принудительно обновляем Header, вызывая событие storage
-      window.dispatchEvent(new Event('storage'));
+      // Refresh the JWT session so the header reflects the new name/avatar immediately
+      await update();
+
+      const authorName = `${adminProfile.name} (Админ сайта)`;
+      await bulkUpdateAuthor(authorName, adminProfile.photoUrl, oldAuthorName);
 
       setIsProfileEdited(false);
       setIsProfileSaved(true);
       setTimeout(() => setIsProfileSaved(false), 3000);
-
-      setToastMessage(null);
-      setTimeout(() => {
-        setToastMessage(t.admin.profileSaved);
-      }, 50);
-      
-      if ((window as any).profileToastTimeout) {
-        clearTimeout((window as any).profileToastTimeout);
-      }
-      (window as any).profileToastTimeout = setTimeout(() => setToastMessage(null), 3000);
+      showToast(t.admin.profileSaved, 'success');
     } catch (error) {
       console.error("Error saving profile:", error);
-      setToastMessage(t.admin.errSaveImg);
-      setTimeout(() => setToastMessage(null), 3000);
+      showToast(t.admin.errSaveImg, 'error');
     }
   };
 
@@ -476,8 +470,7 @@ export default function Admin() {
       }
       
       await loadData();
-      setToastMessage(t.admin.itemSaved);
-      setTimeout(() => setToastMessage(null), 3000);
+      showToast(t.admin.itemSaved, 'success');
       
       if (!editingItem) {
         closeForm();
@@ -1102,10 +1095,15 @@ export default function Admin() {
       {/* Toast Notification */}
       {toastMessage && (
         <div className="position-fixed bottom-0 end-0 p-4" style={{ zIndex: 1050 }}>
-          <div className="toast show align-items-center text-white bg-success border-0 shadow-lg rounded-4" role="alert" aria-live="assertive" aria-atomic="true">
+          <div className="toast show align-items-center border-0 shadow-lg" role="alert" aria-live="assertive" aria-atomic="true"
+            style={{
+              borderRadius: '16px',
+              backgroundColor: toastType === 'error' ? '#dc3545' : 'var(--color-primary)',
+              color: '#fff',
+            }}>
             <div className="d-flex">
-              <div className="toast-body d-flex align-items-center fs-6">
-                <i className="bi bi-check-circle-fill me-3 fs-4"></i>
+              <div className="toast-body d-flex align-items-center" style={{ fontSize: '0.95rem' }}>
+                <i className={`bi ${toastType === 'error' ? 'bi-exclamation-circle-fill' : 'bi-check-circle-fill'} me-3`} style={{ fontSize: '1.2rem' }}></i>
                 {toastMessage}
               </div>
               <button type="button" className="btn-close btn-close-white me-3 m-auto" onClick={() => setToastMessage(null)} aria-label="Close"></button>

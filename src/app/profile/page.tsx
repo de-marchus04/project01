@@ -10,6 +10,7 @@ import { changePassword, getMyProfile, updateMyProfile } from "@/shared/api/auth
 import { checkSubscription, subscribeEmail, unsubscribeEmail } from "@/shared/api/subscriberApi";
 import { getUserWishlist, removeFromWishlist, WishlistItem } from "@/shared/api/wishlistApi";
 import { useLanguage } from "@/shared/i18n/LanguageContext";
+import { modalService } from "@/shared/ui/Modal/modalService";
 
 export default function Profile() {
   const { t } = useLanguage();
@@ -92,12 +93,12 @@ export default function Profile() {
         );
         setOrders(userOrders);
 
-        userOrders.forEach(order => {
+        userOrders.forEach(async order => {
           if ((order.status === 'Принята' || order.status === 'Отклонена') && !order.notified) {
             if (order.status === 'Принята') {
-              alert(t.profile.alertAccepted.replace("{product}", `"${order.productName}"`));
+              await modalService.alert('', t.profile.alertAccepted.replace("{product}", `"${order.productName}"`));
             } else {
-              alert(t.profile.alertRejected.replace("{product}", `"${order.productName}"`));
+              await modalService.alert('', t.profile.alertRejected.replace("{product}", `"${order.productName}"`));
             }
             markOrderAsNotified(order.id);
           }
@@ -525,10 +526,15 @@ export default function Profile() {
 
       {toastMessage && (
         <div className="position-fixed bottom-0 end-0 p-4" style={{ zIndex: 1050 }}>
-          <div className={`toast show align-items-center text-white ${toastType === 'error' ? 'bg-danger' : 'bg-success'} border-0 shadow-lg rounded-4`} role="alert" aria-live="assertive" aria-atomic="true">
+          <div className="toast show align-items-center border-0 shadow-lg" role="alert" aria-live="assertive" aria-atomic="true"
+            style={{
+              borderRadius: '16px',
+              backgroundColor: toastType === 'error' ? '#dc3545' : 'var(--color-primary)',
+              color: '#fff',
+            }}>
             <div className="d-flex">
-              <div className="toast-body d-flex align-items-center fs-6">
-                <i className={`bi ${toastType === 'error' ? 'bi-exclamation-circle-fill' : 'bi-check-circle-fill'} me-3 fs-4`}></i>
+              <div className="toast-body d-flex align-items-center" style={{ fontSize: '0.95rem' }}>
+                <i className={`bi ${toastType === 'error' ? 'bi-exclamation-circle-fill' : 'bi-check-circle-fill'} me-3`} style={{ fontSize: '1.2rem' }}></i>
                 {toastMessage}
               </div>
               <button type="button" className="btn-close btn-close-white me-3 m-auto" onClick={() => setToastMessage(null)} aria-label="Close"></button>

@@ -234,15 +234,38 @@ export const Header = () => {
             {isAuth ? (
               <Link
                 href={isAdmin ? "/admin" : "/profile"}
-                className="text-decoration-none"
-                style={{ color: 'var(--color-text)' }}
+                className="text-decoration-none d-flex align-items-center gap-2"
+                style={{ minWidth: 0 }}
                 title={isAdmin ? t.header.admin : t.header.profile}
               >
-                <i className="bi bi-door-open fs-3"></i>
+                {userPhoto && (userPhoto.startsWith('http') || userPhoto.startsWith('data:image')) ? (
+                  <img
+                    src={userPhoto}
+                    alt={username}
+                    className="rounded-circle object-fit-cover flex-shrink-0"
+                    style={{ width: '34px', height: '34px', border: '2px solid var(--color-primary)' }}
+                    onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                  />
+                ) : (
+                  <div
+                    className="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0"
+                    style={{ width: '34px', height: '34px', backgroundColor: 'var(--color-primary)', border: '2px solid var(--color-primary)' }}
+                  >
+                    <span style={{ color: '#fff', fontSize: '0.85rem', fontWeight: 700, lineHeight: 1 }}>
+                      {username ? username.charAt(0).toUpperCase() : <i className="bi bi-person" />}
+                    </span>
+                  </div>
+                )}
+                <span
+                  className="d-none d-sm-block fw-medium text-truncate"
+                  style={{ maxWidth: '110px', color: 'var(--color-text)', fontSize: '0.9rem' }}
+                >
+                  {username}
+                </span>
               </Link>
             ) : (
-              <Link 
-                href="/login" 
+              <Link
+                href="/login"
                 className="text-decoration-none"
                 style={{ color: 'var(--color-text)' }}
                 title={t.header.login}
