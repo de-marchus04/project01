@@ -9,14 +9,17 @@ import { useReminders } from "@/shared/hooks/useReminders";
 import { createPortal } from "react-dom";
 import { useLanguage } from "@/shared/i18n/LanguageContext";
 import { useTheme } from "@/shared/i18n/ThemeContext";
+import { getMyProfile } from "@/shared/api/authActions";
 
 export const Header = () => {
   const { data: session, status } = useSession();
   const isAuth = status === "authenticated";
   const sessionUser = session?.user as any;
   const isAdmin = sessionUser?.role === "ADMIN";
-  const username = sessionUser?.name || sessionUser?.username || "";
-  const userPhoto = sessionUser?.avatar || "";
+
+  const [freshProfile, setFreshProfile] = useState<{ name?: string | null; avatar?: string | null } | null>(null);
+  const username = freshProfile?.name || sessionUser?.name || sessionUser?.username || "";
+  const userPhoto = freshProfile?.avatar || sessionUser?.avatar || "";
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -26,6 +29,24 @@ export const Header = () => {
   const navConfig = getNavigationConfig(t);
 
   useReminders();
+
+  // Fetch fresh profile from DB on mount and when profile_updated event fires
+  // This bypasses the JWT cookie (which can't store large base64 avatars)
+  useEffect(() => {
+    if (isAuth && sessionUser?.username) {
+      getMyProfile(sessionUser.username).then(p => { if (p) setFreshProfile(p); });
+    }
+  }, [isAuth, sessionUser?.username]);
+
+  useEffect(() => {
+    const handler = () => {
+      if (sessionUser?.username) {
+        getMyProfile(sessionUser.username).then(p => { if (p) setFreshProfile(p); });
+      }
+    };
+    window.addEventListener('profile_updated', handler);
+    return () => window.removeEventListener('profile_updated', handler);
+  }, [sessionUser?.username]);
 
   useEffect(() => {
     setMounted(true);

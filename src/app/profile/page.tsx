@@ -205,6 +205,7 @@ export default function Profile() {
 
     // Refresh the JWT session so the header reflects the new name/avatar immediately
     await update();
+    window.dispatchEvent(new CustomEvent('profile_updated'));
 
     setIsProfileEdited(false);
     setIsProfileSaved(true);

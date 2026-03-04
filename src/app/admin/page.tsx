@@ -216,6 +216,7 @@ export default function Admin() {
 
       // Refresh the JWT session so the header reflects the new name/avatar immediately
       await update();
+      window.dispatchEvent(new CustomEvent('profile_updated'));
 
       const authorName = `${adminProfile.name} (Админ сайта)`;
       await bulkUpdateAuthor(authorName, adminProfile.photoUrl, oldAuthorName);

@@ -103,7 +103,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         });
         if (dbUser) {
           token.name = (dbUser.name || token.username) as string;
-          token.avatar = dbUser.avatar;
+          // Only store HTTP avatars in JWT cookie — base64 images overflow the 4KB cookie limit
+          if (!dbUser.avatar || dbUser.avatar.startsWith('http')) {
+            token.avatar = dbUser.avatar;
+          }
         }
       }
       // Hydrate old/incomplete tokens: if username is missing, fetch from DB by sub (user id)
@@ -115,7 +118,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         if (dbUser) {
           token.username = dbUser.username;
           token.name = (dbUser.name || dbUser.username) as string;
-          token.avatar = dbUser.avatar;
+          if (!dbUser.avatar || dbUser.avatar.startsWith('http')) {
+            token.avatar = dbUser.avatar;
+          }
           token.role = dbUser.role;
         }
       }
