@@ -40,6 +40,13 @@ export async function getAllAdminConsultations(): Promise<Consultation[]> {
   return JSON.parse(JSON.stringify(items));
 }
 
+export async function getAllConsultations(): Promise<Consultation[]> {
+  const items = await prisma.consultation.findMany({
+    orderBy: { createdAt: 'desc' }
+  });
+  return JSON.parse(JSON.stringify(items));
+}
+
 export async function addConsultation(consultationData: Omit<Consultation, 'id'>, category: string): Promise<Consultation> {
   const session = await auth();
   if ((session?.user as any)?.role !== 'ADMIN') throw new Error('Нет доступа');

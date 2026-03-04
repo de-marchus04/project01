@@ -11,7 +11,9 @@ export const getNavigationConfig = (t: any): NavItem[] => [
   },
   {
     label: t.nav.courses,
+    href: "/courses",
     children: [
+      { label: t.nav.coursesAll, href: "/courses" },
       { label: t.nav.coursesBeginners, href: "/courses-beginners" },
       { label: t.nav.coursesMeditation, href: "/courses-meditation" },
       { label: t.nav.coursesBack, href: "/courses-back" },
@@ -20,7 +22,9 @@ export const getNavigationConfig = (t: any): NavItem[] => [
   },
   {
     label: t.nav.consultations,
+    href: "/consultations",
     children: [
+      { label: t.nav.consultAll, href: "/consultations" },
       { label: t.nav.consultPrivate, href: "/consultations-private" },
       { label: t.nav.consultNutrition, href: "/consultations-nutrition" },
       { label: t.nav.consultMentorship, href: "/consultations-mentorship" },
