@@ -99,14 +99,20 @@ export default function BlogArticles() {
           <div className="container py-5">
               {tags.length > 0 && (
                 <div className="d-flex flex-wrap gap-2 justify-content-center mb-4">
-                  <button 
-                    className={`btn rounded-pill px-4 ${!selectedTag ? 'btn-dark' : 'btn-outline-dark'}`}
+                  <button
+                    className="btn rounded-pill px-4"
+                    style={!selectedTag
+                      ? { backgroundColor: 'var(--color-text)', color: 'var(--color-bg)', border: '1px solid var(--color-text)' }
+                      : { backgroundColor: 'transparent', color: 'var(--color-text)', border: '1px solid var(--color-border)' }}
                     onClick={() => setSelectedTag(null)}
                   >{tStr("Все")}</button>
                   {tags.map(tag => (
-                    <button 
+                    <button
                       key={tag}
-                      className={`btn rounded-pill px-4 ${selectedTag === tag ? 'btn-dark' : 'btn-outline-dark'}`}
+                      className="btn rounded-pill px-4"
+                      style={selectedTag === tag
+                        ? { backgroundColor: 'var(--color-text)', color: 'var(--color-bg)', border: '1px solid var(--color-text)' }
+                        : { backgroundColor: 'transparent', color: 'var(--color-text)', border: '1px solid var(--color-border)' }}
                       onClick={() => setSelectedTag(tag)}
                     >
                       {tStr(tag)}
@@ -118,7 +124,7 @@ export default function BlogArticles() {
               <div className="row justify-content-center mb-5">
                 <div className="col-md-6">
                   <div className="input-group">
-                    <span className="input-group-text bg-white border-end-0 rounded-start-pill ps-4">
+                    <span className="input-group-text border-end-0 rounded-start-pill ps-4" style={{ backgroundColor: 'var(--color-card-bg)' }}>
                       <i className="bi bi-search text-muted"></i>
                     </span>
                     <input 
@@ -195,7 +201,7 @@ export default function BlogArticles() {
                     {selectedArticle.authorPhoto ? (
                       <img src={selectedArticle.authorPhoto} alt={selectedArticle.author || tStr("Автор")} className="rounded-circle object-fit-cover me-3 border" style={{ width: '60px', height: '60px' }} />
                     ) : (
-                      <div className="rounded-circle bg-light d-flex align-items-center justify-content-center me-3 border" style={{ width: '60px', height: '60px' }}>
+                      <div className="rounded-circle d-flex align-items-center justify-content-center me-3 border" style={{ width: '60px', height: '60px', backgroundColor: 'var(--color-surface)' }}>
                         <i className="bi bi-person text-muted fs-3"></i>
                       </div>
                     )}

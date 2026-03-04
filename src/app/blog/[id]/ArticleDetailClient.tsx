@@ -28,7 +28,7 @@ export default function ArticleDetail() {
         }
       } catch (err) {
         console.error("Error loading article:", err);
-        setError("Не удалось загрузить статью.");
+        setError(tStr("Не удалось загрузить статью."));
       } finally {
         setLoading(false);
       }
@@ -141,19 +141,19 @@ export default function ArticleDetail() {
                 <div className="d-flex justify-content-between align-items-center">
                   <div className="d-flex gap-2">
                     {loc_article.tag ? (
-                      <span className="badge bg-light text-dark border">{loc_article.tag}</span>
+                      <span className="badge border" style={{ backgroundColor: 'var(--color-surface)', color: 'var(--color-text)', borderColor: 'var(--color-border)' }}>{loc_article.tag}</span>
                     ) : (
                       <>
-                        <span className="badge bg-light text-dark border">{tStr("Осознанность")}</span>
-                        <span className="badge bg-light text-dark border">{tStr("Практика")}</span>
+                        <span className="badge border" style={{ backgroundColor: 'var(--color-surface)', color: 'var(--color-text)', borderColor: 'var(--color-border)' }}>{tStr("Осознанность")}</span>
+                        <span className="badge border" style={{ backgroundColor: 'var(--color-surface)', color: 'var(--color-text)', borderColor: 'var(--color-border)' }}>{tStr("Практика")}</span>
                       </>
                     )}
                   </div>
                   <div className="d-flex gap-3">
-                    <button className="btn btn-light rounded-circle shadow-sm" style={{ width: '40px', height: '40px' }}>
+                    <button className="btn rounded-circle shadow-sm" style={{ width: '40px', height: '40px', backgroundColor: 'var(--color-card-bg)', border: '1px solid var(--color-border)' }}>
                       <i className="bi bi-telegram text-primary"></i>
                     </button>
-                    <button className="btn btn-light rounded-circle shadow-sm" style={{ width: '40px', height: '40px' }}>
+                    <button className="btn rounded-circle shadow-sm" style={{ width: '40px', height: '40px', backgroundColor: 'var(--color-card-bg)', border: '1px solid var(--color-border)' }}>
                       <i className="bi bi-whatsapp text-success"></i>
                     </button>
                   </div>

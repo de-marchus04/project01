@@ -919,5 +919,6 @@ export const mockTranslations: Record<string, any> = {
   "Промокод": { "en": "Promo code", "uk": "Промокод" },
   "Применить": { "en": "Apply", "uk": "Застосувати" },
   "Добавить в избранное": { "en": "Add to wishlist", "uk": "Додати до обраного" },
-  "Удалить из избранного": { "en": "Remove from wishlist", "uk": "Видалити з обраного" }
+  "Удалить из избранного": { "en": "Remove from wishlist", "uk": "Видалити з обраного" },
+  "Не удалось загрузить статью.": { "en": "Failed to load article.", "uk": "Не вдалося завантажити статтю." }
 };
