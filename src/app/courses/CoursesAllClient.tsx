@@ -10,6 +10,8 @@ import { getAllCourses } from "@/shared/api/courseApi";
 import { Pagination } from "@/shared/ui/Pagination";
 import { HeroSlider } from "@/shared/ui/HeroSlider/HeroSlider";
 import { PaginatedResponse } from "@/shared/api/blogApi";
+import { useScrollReveal } from "@/shared/hooks/useScrollReveal";
+import { SectionHeader } from "@/shared/ui/SectionHeader/SectionHeader";
 
 const CATEGORIES = [
   { key: 'all', labelKey: 'all' },
@@ -30,6 +32,7 @@ const CATEGORY_LINKS: Record<string, string> = {
 
 export default function CoursesAllClient({ initialData }: { initialData: PaginatedResponse<Course> }) {
   const { t } = useLanguage();
+  const { observe } = useScrollReveal();
   const [products, setProducts] = useState<Course[]>(initialData.data);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -121,12 +124,16 @@ export default function CoursesAllClient({ initialData }: { initialData: Paginat
       </section>
 
       {/* CONTENT SECTION */}
-      <section id="courses-content" className="py-5 bg-light details-section">
+      <section id="courses-content" className="py-5" style={{ backgroundColor: 'var(--color-bg)' }}>
         <div className="container py-5">
-          <h2 className="font-playfair mb-5 text-center">{t.programs?.availablePrograms}</h2>
+          <SectionHeader
+            badge={t.programs?.labelCourse}
+            title={t.programs?.availablePrograms || 'Доступные программы'}
+            observe={observe}
+          />
 
           {/* Category Tabs */}
-          <div className="d-flex flex-wrap gap-2 justify-content-center mb-4">
+          <div className="d-flex flex-wrap gap-2 justify-content-center mb-4 reveal-up" ref={observe as any}>
             {CATEGORIES.map(({ key }) => (
               <button
                 key={key}
@@ -149,7 +156,7 @@ export default function CoursesAllClient({ initialData }: { initialData: Paginat
           )}
 
           {/* Search and Sort */}
-          <div className="row mb-4 justify-content-center">
+          <div className="row mb-4 justify-content-center reveal-up" ref={observe as any}>
             <div className="col-md-6 col-lg-4 mb-3 mb-md-0">
               <input
                 type="text"
@@ -196,8 +203,8 @@ export default function CoursesAllClient({ initialData }: { initialData: Paginat
               <p className="text-center text-muted">{t.programs?.noProducts || 'Нет результатов'}</p>
             )}
 
-            {!loading && !error && products.map(product => (
-              <div key={product.id} className="col-md-6 col-lg-4">
+            {!loading && !error && products.map((product, idx) => (
+              <div key={product.id} className={`col-md-6 col-lg-4 reveal-up reveal-delay-${idx % 3}`} ref={observe as any}>
                 <CourseCard course={product} onBuy={buyProduct} />
               </div>
             ))}

@@ -4,8 +4,6 @@ import { prisma } from "@/shared/lib/prisma";
 import { auth } from "@/auth";
 import { Tour } from "@/entities/tour/model/types";
 
-export type { Tour };
-
 export async function getTours(): Promise<Tour[]> {
   if (process.env.NEXT_RUNTIME === 'edge') { throw new Error('EDGE RUNTIME DETECTED IN SERVER ACTION'); }
   const items = await prisma.tour.findMany({

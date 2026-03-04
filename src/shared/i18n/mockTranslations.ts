@@ -920,5 +920,481 @@ export const mockTranslations: Record<string, any> = {
   "Применить": { "en": "Apply", "uk": "Застосувати" },
   "Добавить в избранное": { "en": "Add to wishlist", "uk": "Додати до обраного" },
   "Удалить из избранного": { "en": "Remove from wishlist", "uk": "Видалити з обраного" },
-  "Не удалось загрузить статью.": { "en": "Failed to load article.", "uk": "Не вдалося завантажити статтю." }
+  "Не удалось загрузить статью.": { "en": "Failed to load article.", "uk": "Не вдалося завантажити статтю." },
+
+  // ─── Seed data: Courses ──────────────────────────────────────────────────────
+
+  // Course 1: Beginners
+  "Йога для начинающих: Первые шаги": {
+    "en": "Yoga for Beginners: First Steps",
+    "uk": "Йога для початківців: Перші кроки"
+  },
+  "Идеальный старт для тех, кто хочет познакомиться с йогой. Мягкие асаны, дыхательные практики и основы медитации.": {
+    "en": "The perfect start for those who want to learn yoga. Gentle asanas, breathing practices and the basics of meditation.",
+    "uk": "Ідеальний старт для тих, хто хоче познайомитися з йогою. М'які асани, дихальні практики та основи медитації."
+  },
+  "Этот курс создан специально для тех, кто делает первые шаги в мире йоги. Вы освоите базовые асаны, научитесь правильно дышать и заложите фундамент для дальнейшей практики. Курс включает 12 занятий по 45 минут, каждое из которых постепенно усложняется. Особое внимание уделяется безопасности и профилактике травм.": {
+    "en": "This course was created specifically for those taking their first steps in yoga. You will master the basic asanas, learn to breathe correctly and lay the foundation for further practice. The course includes 12 sessions of 45 minutes, gradually increasing in complexity. Special emphasis is placed on safety and injury prevention.",
+    "uk": "Цей курс створений спеціально для тих, хто робить перші кроки у світі йоги. Ви освоїте базові асани, навчитеся правильно дихати та закладете фундамент для подальшої практики. Курс включає 12 занять по 45 хвилин, кожне з яких поступово ускладнюється. Особлива увага приділяється безпеці та профілактиці травм."
+  },
+  "12 видео-уроков по 45 минут": {
+    "en": "12 video lessons of 45 minutes each",
+    "uk": "12 відео-уроків по 45 хвилин"
+  },
+  "Гид по безопасной практике": {
+    "en": "Safe practice guide",
+    "uk": "Гід з безпечної практики"
+  },
+  "Дыхательные техники пранаяма": {
+    "en": "Pranayama breathing techniques",
+    "uk": "Дихальні техніки пранаяма"
+  },
+  "Домашняя программа на 30 дней": {
+    "en": "30-day home program",
+    "uk": "Домашня програма на 30 днів"
+  },
+  "Обратная связь от инструктора": {
+    "en": "Instructor feedback",
+    "uk": "Зворотній зв'язок від інструктора"
+  },
+
+  // Course 2: Morning yoga
+  "Утренняя йога: Зарядка для тела и духа": {
+    "en": "Morning Yoga: A Workout for Body and Spirit",
+    "uk": "Ранкова йога: Зарядка для тіла та духу"
+  },
+  "Короткие, но эффективные утренние практики для бодрости и хорошего настроения на весь день.": {
+    "en": "Short but effective morning practices for energy and a good mood all day long.",
+    "uk": "Короткі, але ефективні ранкові практики для бадьорості та гарного настрою на весь день."
+  },
+  "Начните каждое утро с энергией! Этот курс содержит 20 коротких практик по 20-30 минут, которые легко вписать в утреннее расписание. Мягкое пробуждение тела, активация дыхания и позитивный настрой.": {
+    "en": "Start every morning with energy! This course contains 20 short practices of 20–30 minutes, easy to fit into your morning routine. Gentle body awakening, breath activation and a positive mindset.",
+    "uk": "Починайте кожен ранок із енергією! Цей курс містить 20 коротких практик по 20–30 хвилин, які легко вписати в ранковий розклад. М'яке пробудження тіла, активація дихання та позитивний настрій."
+  },
+  "20 утренних практик по 20-30 минут": {
+    "en": "20 morning practices of 20–30 minutes each",
+    "uk": "20 ранкових практик по 20–30 хвилин"
+  },
+  "Будильник-практика (аудио)": {
+    "en": "Alarm practice (audio)",
+    "uk": "Будильник-практика (аудіо)"
+  },
+  "Техники пробуждения энергии": {
+    "en": "Energy awakening techniques",
+    "uk": "Техніки пробудження енергії"
+  },
+  "Чек-лист самочувствия": {
+    "en": "Wellbeing checklist",
+    "uk": "Чек-лист самопочуття"
+  },
+  "Бессрочный доступ": {
+    "en": "Lifetime access",
+    "uk": "Безстроковий доступ"
+  },
+
+  // Course 3: Women's yoga
+  "Женская йога: Гармония и баланс": {
+    "en": "Women's Yoga: Harmony and Balance",
+    "uk": "Жіноча йога: Гармонія та баланс"
+  },
+  "Практики, разработанные специально для женского тела. Гормональный баланс, гибкость, внутренняя сила.": {
+    "en": "Practices specially designed for the female body. Hormonal balance, flexibility, inner strength.",
+    "uk": "Практики, розроблені спеціально для жіночого тіла. Гормональний баланс, гнучкість, внутрішня сила."
+  },
+  "Курс учитывает особенности женского тела и цикличность женской природы. Практики адаптированы под разные фазы цикла и помогают поддерживать гормональный баланс.": {
+    "en": "The course takes into account the specifics of the female body and the cyclical nature of female physiology. Practices are adapted to different phases of the cycle and help maintain hormonal balance.",
+    "uk": "Курс враховує особливості жіночого тіла та циклічність жіночої природи. Практики адаптовані до різних фаз циклу та допомагають підтримувати гормональний баланс."
+  },
+  "16 тематических занятий": {
+    "en": "16 themed sessions",
+    "uk": "16 тематичних занять"
+  },
+  "Практики для каждой фазы цикла": {
+    "en": "Practices for each cycle phase",
+    "uk": "Практики для кожної фази циклу"
+  },
+  "Работа с тазовым дном": {
+    "en": "Pelvic floor work",
+    "uk": "Робота з тазовим дном"
+  },
+  "Медитации для женской энергии": {
+    "en": "Meditations for feminine energy",
+    "uk": "Медитації для жіночої енергії"
+  },
+  "Закрытое сообщество участниц": {
+    "en": "Private participant community",
+    "uk": "Закрита спільнота учасниць"
+  },
+
+  // Course 4: Meditation for busy people
+  "Медитация для занятых: 10 минут в день": {
+    "en": "Meditation for the Busy: 10 Minutes a Day",
+    "uk": "Медитація для зайнятих: 10 хвилин на день"
+  },
+  "Научитесь медитировать даже при плотном рабочем графике. Техники осознанности для современного человека.": {
+    "en": "Learn to meditate even with a packed work schedule. Mindfulness techniques for the modern person.",
+    "uk": "Навчіться медитувати навіть при щільному робочому графіку. Техніки усвідомленості для сучасної людини."
+  },
+  "Практический курс медитации без эзотерики. Только рабочие техники, которые реально снижают уровень стресса и тревожности. Каждое занятие занимает не более 10-15 минут.": {
+    "en": "A practical meditation course without mysticism. Only proven techniques that genuinely reduce stress and anxiety. Each session takes no more than 10–15 minutes.",
+    "uk": "Практичний курс медитації без езотерики. Лише робочі техніки, які реально знижують рівень стресу та тривожності. Кожне заняття займає не більше 10–15 хвилин."
+  },
+  "30-дневная программа": {
+    "en": "30-day program",
+    "uk": "30-денна програма"
+  },
+  "Практики по 10-15 минут": {
+    "en": "10–15 minute practices",
+    "uk": "Практики по 10–15 хвилин"
+  },
+  "Аудио и видео форматы": {
+    "en": "Audio and video formats",
+    "uk": "Аудіо та відео формати"
+  },
+  "Дневник осознанности (PDF)": {
+    "en": "Mindfulness journal (PDF)",
+    "uk": "Щоденник усвідомленості (PDF)"
+  },
+  "Техники для офиса и дороги": {
+    "en": "Techniques for the office and on the go",
+    "uk": "Техніки для офісу та в дорозі"
+  },
+
+  // Course 5: Healthy back
+  "Здоровая спина: Йога при сидячей работе": {
+    "en": "Healthy Back: Yoga for Desk Workers",
+    "uk": "Здорова спина: Йога при сидячій роботі"
+  },
+  "Специальный курс для людей с сидячим образом жизни. Устраним боли в спине, шее и плечах за 4 недели.": {
+    "en": "A specialized course for people with a sedentary lifestyle. Eliminate back, neck and shoulder pain in 4 weeks.",
+    "uk": "Спеціальний курс для людей із сидячим способом життя. Усунемо болі у спині, шиї та плечах за 4 тижні."
+  },
+  "Если вы проводите за компьютером 6-8 часов в день, этот курс для вас. Программа направлена на проработку хронически зажатых зон: поясница, грудной отдел, шея и плечи.": {
+    "en": "If you spend 6–8 hours a day at a computer, this course is for you. The program targets chronically tense areas: lower back, thoracic spine, neck and shoulders.",
+    "uk": "Якщо ви проводите за комп'ютером 6–8 годин на день, цей курс для вас. Програма спрямована на опрацювання хронічно затиснутих зон: поперек, грудний відділ, шия та плечі."
+  },
+  "Программа на 4 недели": {
+    "en": "4-week program",
+    "uk": "Програма на 4 тижні"
+  },
+  "Упражнения за рабочим столом": {
+    "en": "Exercises at your desk",
+    "uk": "Вправи за робочим столом"
+  },
+  "Комплекс утром и вечером": {
+    "en": "Morning and evening complex",
+    "uk": "Комплекс вранці та ввечері"
+  },
+  "Рекомендации по эргономике": {
+    "en": "Ergonomic recommendations",
+    "uk": "Рекомендації з ергономіки"
+  },
+  "Консультация инструктора": {
+    "en": "Instructor consultation",
+    "uk": "Консультація інструктора"
+  },
+
+  // Course 6: Neck and shoulders
+  "Йога для шеи и плеч: офисный синдром": {
+    "en": "Yoga for Neck and Shoulders: Office Syndrome",
+    "uk": "Йога для шиї та плечей: офісний синдром"
+  },
+  "Целевые практики для снятия напряжения в шее, плечах и верхней части спины — главных зонах стресса офисного работника.": {
+    "en": "Targeted practices for relieving tension in the neck, shoulders and upper back — the main stress zones of office workers.",
+    "uk": "Цільові практики для зняття напруги в шиї, плечах та верхній частині спини — головних зонах стресу офісного працівника."
+  },
+  "Сфокусированный курс на проблемные зоны шейно-воротниковой области. 15-минутные комплексы, которые можно делать прямо на рабочем месте.": {
+    "en": "A focused course on the neck and shoulder zone. 15-minute complexes you can do right at your workstation.",
+    "uk": "Сфокусований курс на проблемні зони шийно-комірцевої ділянки. 15-хвилинні комплекси, які можна робити прямо на робочому місці."
+  },
+  "18 коротких практик по 15 минут": {
+    "en": "18 short practices of 15 minutes each",
+    "uk": "18 коротких практик по 15 хвилин"
+  },
+  "Комплексы для рабочего места": {
+    "en": "Workplace complexes",
+    "uk": "Комплекси для робочого місця"
+  },
+  "Самомассаж шеи и плеч": {
+    "en": "Self-massage for neck and shoulders",
+    "uk": "Самомасаж шиї та плечей"
+  },
+  "Профилактика головных болей": {
+    "en": "Headache prevention",
+    "uk": "Профілактика головних болів"
+  },
+  "Видео в HD качестве": {
+    "en": "HD quality video",
+    "uk": "Відео у HD якості"
+  },
+
+  // ─── Seed data: Consultations ─────────────────────────────────────────────────
+
+  // Consultation 1: Individual session
+  "Индивидуальная сессия с инструктором": {
+    "en": "Individual Session with an Instructor",
+    "uk": "Індивідуальна сесія з інструктором"
+  },
+  "Персональная практика, адаптированная под ваши цели, уровень подготовки и физические особенности.": {
+    "en": "Personal practice adapted to your goals, fitness level and physical characteristics.",
+    "uk": "Персональна практика, адаптована під ваші цілі, рівень підготовки та фізичні особливості."
+  },
+  "Индивидуальная сессия — максимально персонализированный подход. Инструктор проводит диагностику вашей осанки, гибкости и уровня стресса, после чего составляет программу именно для вас.": {
+    "en": "An individual session is the most personalized approach. The instructor assesses your posture, flexibility and stress level, then creates a program specifically for you.",
+    "uk": "Індивідуальна сесія — максимально персоналізований підхід. Інструктор проводить діагностику вашої постави, гнучкості та рівня стресу, після чого складає програму саме для вас."
+  },
+  "60-минутная онлайн-сессия": {
+    "en": "60-minute online session",
+    "uk": "60-хвилинна онлайн-сесія"
+  },
+  "Предварительная анкета и диагностика": {
+    "en": "Pre-session questionnaire and assessment",
+    "uk": "Попередня анкета та діагностика"
+  },
+  "Индивидуальная программа после сессии": {
+    "en": "Individual program after the session",
+    "uk": "Індивідуальна програма після сесії"
+  },
+  "Запись занятия": {
+    "en": "Session recording",
+    "uk": "Запис заняття"
+  },
+  "Поддержка в мессенджере 7 дней": {
+    "en": "Messenger support for 7 days",
+    "uk": "Підтримка в месенджері 7 днів"
+  },
+
+  // Consultation 2: Package 5 sessions
+  "Пакет: 5 индивидуальных занятий": {
+    "en": "Package: 5 Individual Sessions",
+    "uk": "Пакет: 5 індивідуальних занять"
+  },
+  "Пять персональных занятий с одним инструктором — для системного прогресса и глубоких изменений.": {
+    "en": "Five personal sessions with one instructor — for systematic progress and lasting change.",
+    "uk": "П'ять персональних занять з одним інструктором — для системного прогресу та глибоких змін."
+  },
+  "Пакет позволяет работать с инструктором системно: первое занятие — диагностика и план, последующие — работа по программе, последнее — подведение итогов и план самостоятельной практики.": {
+    "en": "The package enables systematic work with the instructor: the first session covers diagnostics and planning, subsequent sessions follow the program, and the final session summarizes results and creates a self-practice plan.",
+    "uk": "Пакет дозволяє працювати з інструктором системно: перше заняття — діагностика та план, наступні — робота за програмою, останнє — підведення підсумків та план самостійної практики."
+  },
+  "5 занятий по 60 минут": {
+    "en": "5 sessions of 60 minutes each",
+    "uk": "5 занять по 60 хвилин"
+  },
+  "Запись всех занятий": {
+    "en": "Recordings of all sessions",
+    "uk": "Запис усіх занять"
+  },
+  "Чат с инструктором на весь период": {
+    "en": "Chat with the instructor for the full period",
+    "uk": "Чат з інструктором на весь період"
+  },
+  "Скидка 20% vs разовых": {
+    "en": "20% discount vs individual sessions",
+    "uk": "Знижка 20% проти разових"
+  },
+
+  // Consultation 3: Nutrition
+  "Консультация по питанию для практикующих йогу": {
+    "en": "Nutrition Consultation for Yoga Practitioners",
+    "uk": "Консультація з харчування для практикуючих йогу"
+  },
+  "Разберём как питание влияет на практику. Аюрведические рекомендации и современный подход к питанию йога.": {
+    "en": "We explore how nutrition affects your practice. Ayurvedic recommendations and a modern approach to yoga nutrition.",
+    "uk": "Розберемо як харчування впливає на практику. Аюрведичні рекомендації та сучасний підхід до харчування йога."
+  },
+  "Питание — неотъемлемая часть йогической практики. На консультации разберём ваш рацион, выявим продукты, мешающие практике, и составим план питания с учётом аюрведических принципов.": {
+    "en": "Nutrition is an integral part of yogic practice. In the consultation we will analyze your diet, identify foods that hinder practice, and create a nutrition plan based on Ayurvedic principles.",
+    "uk": "Харчування — невід'ємна частина йогічної практики. На консультації розберемо ваш раціон, виявимо продукти, що заважають практиці, та складемо план харчування з урахуванням аюрведичних принципів."
+  },
+  "90-минутная консультация": {
+    "en": "90-minute consultation",
+    "uk": "90-хвилинна консультація"
+  },
+  "Анализ текущего рациона": {
+    "en": "Current diet analysis",
+    "uk": "Аналіз поточного раціону"
+  },
+  "Аюрведическая диагностика доши": {
+    "en": "Ayurvedic dosha assessment",
+    "uk": "Аюрведична діагностика доші"
+  },
+  "Персональный план питания на месяц": {
+    "en": "Personal nutrition plan for one month",
+    "uk": "Персональний план харчування на місяць"
+  },
+  "Список рекомендованных продуктов": {
+    "en": "List of recommended foods",
+    "uk": "Список рекомендованих продуктів"
+  },
+
+  // Consultation 4: Mentorship
+  "Менторство: Путь инструктора йоги": {
+    "en": "Mentorship: The Path of a Yoga Instructor",
+    "uk": "Менторство: Шлях інструктора йоги"
+  },
+  "Для тех, кто хочет стать инструктором. Сопровождение от первого занятия до собственной практики.": {
+    "en": "For those who want to become an instructor. Guidance from your first class to running your own practice.",
+    "uk": "Для тих, хто хоче стати інструктором. Супровід від першого заняття до власної практики."
+  },
+  "3-месячная программа менторства для будущих и начинающих инструкторов йоги. Еженедельные встречи, разбор ваших занятий, помощь с поиском учеников и выстраиванием бизнеса.": {
+    "en": "A 3-month mentorship program for aspiring and new yoga instructors. Weekly meetings, review of your classes, help finding students and building your business.",
+    "uk": "3-місячна програма менторства для майбутніх та початківців-інструкторів йоги. Щотижневі зустрічі, розбір ваших занять, допомога з пошуком учнів та побудовою бізнесу."
+  },
+  "3 месяца менторской поддержки": {
+    "en": "3 months of mentorship support",
+    "uk": "3 місяці менторської підтримки"
+  },
+  "Еженедельные встречи (4 в месяц)": {
+    "en": "Weekly meetings (4 per month)",
+    "uk": "Щотижневі зустрічі (4 на місяць)"
+  },
+  "Разбор занятий с обратной связью": {
+    "en": "Session review with feedback",
+    "uk": "Розбір занять зі зворотним зв'язком"
+  },
+  "Шаблоны программ и материалов": {
+    "en": "Program and material templates",
+    "uk": "Шаблони програм та матеріалів"
+  },
+  "Помощь с позиционированием": {
+    "en": "Positioning and branding support",
+    "uk": "Допомога з позиціонуванням"
+  },
+
+  // ─── Seed data: Tours ─────────────────────────────────────────────────────────
+
+  // Tour 1: Bali retreat
+  "Йога-ретрит на Бали: 7 дней трансформации": {
+    "en": "Yoga Retreat in Bali: 7 Days of Transformation",
+    "uk": "Йога-ретрит на Балі: 7 днів трансформації"
+  },
+  "Неделя глубокой практики в сердце Бали. Утренние медитации, двухразовые занятия йогой и купание в рисовых террасах.": {
+    "en": "A week of deep practice in the heart of Bali. Morning meditations, twice-daily yoga classes and bathing in the rice terraces.",
+    "uk": "Тиждень глибокої практики в серці Балі. Ранкові медитації, дворазові заняття йогою та купання на рисових терасах."
+  },
+  "Бали — священное место для практикующих со всего мира. Ретрит проходит в традиционном балийском центре недалеко от Убуда. Программа включает два занятия йогой в день, ежедневные медитации на восходе и посещение балийских храмов.": {
+    "en": "Bali is a sacred place for practitioners from all over the world. The retreat takes place at a traditional Balinese center near Ubud. The program includes two yoga sessions a day, daily sunrise meditations and visits to Balinese temples.",
+    "uk": "Балі — священне місце для практикуючих з усього світу. Ретрит проходить у традиційному балійському центрі неподалік від Убуда. Програма включає два заняття йогою на день, щоденні медитації на світанку та відвідування балійських храмів."
+  },
+  "7 ночей в эко-вилле": {
+    "en": "7 nights in an eco-villa",
+    "uk": "7 ночей в еко-віллі"
+  },
+  "Двухразовое питание (растительное)": {
+    "en": "Two meals a day (plant-based)",
+    "uk": "Дворазове харчування (рослинне)"
+  },
+  "14 занятий йогой": {
+    "en": "14 yoga sessions",
+    "uk": "14 занять йогою"
+  },
+  "Экскурсии и церемонии": {
+    "en": "Excursions and ceremonies",
+    "uk": "Екскурсії та церемонії"
+  },
+  "Трансфер из аэропорта": {
+    "en": "Airport transfer",
+    "uk": "Трансфер з аеропорту"
+  },
+  "Малая группа до 10 человек": {
+    "en": "Small group of up to 10 people",
+    "uk": "Мала група до 10 осіб"
+  },
+  "15–22 сентября 2025": {
+    "en": "September 15–22, 2025",
+    "uk": "15–22 вересня 2025"
+  },
+  "Убуд, Бали": {
+    "en": "Ubud, Bali",
+    "uk": "Убуд, Балі"
+  },
+
+  // Tour 2: Alps retreat
+  "Горный ретрит в Альпах: Йога и хайкинг": {
+    "en": "Mountain Retreat in the Alps: Yoga and Hiking",
+    "uk": "Гірський ретрит в Альпах: Йога та хайкінг"
+  },
+  "Сочетание горных прогулок и йога-практики на высоте 1800 м. Для тех, кто ищет перезагрузку в окружении природы.": {
+    "en": "A combination of mountain walks and yoga practice at 1800 m altitude. For those seeking a reset surrounded by nature.",
+    "uk": "Поєднання гірських прогулянок та йога-практики на висоті 1800 м. Для тих, хто шукає перезавантаження в оточенні природи."
+  },
+  "Альпийский ретрит сочетает активный отдых и глубокую практику. Каждое утро — йога с видом на горные вершины, после завтрака — хайкинг, вечером — восстановительная йога у камина.": {
+    "en": "The Alpine retreat combines active rest and deep practice. Each morning: yoga with mountain peak views; after breakfast: hiking; evenings: restorative yoga by the fireplace.",
+    "uk": "Альпійський ретрит поєднує активний відпочинок та глибоку практику. Щоранку — йога з видом на гірські вершини, після сніданку — хайкінг, ввечері — відновлювальна йога біля каміну."
+  },
+  "6 ночей в горном шале": {
+    "en": "6 nights in a mountain chalet",
+    "uk": "6 ночей у гірському шале"
+  },
+  "Трёхразовое питание": {
+    "en": "Three meals a day",
+    "uk": "Триразове харчування"
+  },
+  "12 занятий йогой": {
+    "en": "12 yoga sessions",
+    "uk": "12 занять йогою"
+  },
+  "4 хайкинг-маршрута": {
+    "en": "4 hiking routes",
+    "uk": "4 хайкінг-маршрути"
+  },
+  "СПА и сауна": {
+    "en": "SPA and sauna",
+    "uk": "СПА та сауна"
+  },
+  "Профессиональный гид": {
+    "en": "Professional guide",
+    "uk": "Професійний гід"
+  },
+  "3–9 августа 2025": {
+    "en": "August 3–9, 2025",
+    "uk": "3–9 серпня 2025"
+  },
+  "Инсбрук, Австрия": {
+    "en": "Innsbruck, Austria",
+    "uk": "Інсбрук, Австрія"
+  },
+
+  // Tour 3: Carpathian winter retreat
+  "Зимний ретрит: Йога в Карпатах": {
+    "en": "Winter Retreat: Yoga in the Carpathians",
+    "uk": "Зимовий ретрит: Йога в Карпатах"
+  },
+  "Уютный зимний ретрит в Карпатах с горячей баней и карпатской атмосферой.": {
+    "en": "A cozy winter retreat in the Carpathians with a hot banya and authentic Carpathian atmosphere.",
+    "uk": "Затишний зимовий ретрит у Карпатах з гарячою банею та карпатською атмосферою."
+  },
+  "Зимние Карпаты — особенная магия. Ретрит проходит в уютной усадьбе с собственным банным комплексом. Утренняя практика, прогулки в заснеженном лесу, баня и вечерняя медитация.": {
+    "en": "Winter Carpathians — a special magic. The retreat takes place in a cozy estate with its own bathhouse complex. Morning practice, walks in the snowy forest, banya and evening meditation.",
+    "uk": "Зимові Карпати — особлива магія. Ретрит проходить у затишній садибі з власним банним комплексом. Ранкова практика, прогулянки у засніженому лісі, баня та вечірня медитація."
+  },
+  "4 ночи в карпатской усадьбе": {
+    "en": "4 nights in a Carpathian estate",
+    "uk": "4 ночі в карпатській садибі"
+  },
+  "8 занятий йогой": {
+    "en": "8 yoga sessions",
+    "uk": "8 занять йогою"
+  },
+  "Банный комплекс": {
+    "en": "Bathhouse complex",
+    "uk": "Банний комплекс"
+  },
+  "Вечерние чайные церемонии": {
+    "en": "Evening tea ceremonies",
+    "uk": "Вечірні чайні церемонії"
+  },
+  "Трансфер из Львова": {
+    "en": "Transfer from Lviv",
+    "uk": "Трансфер зі Львова"
+  },
+  "10–14 января 2026": {
+    "en": "January 10–14, 2026",
+    "uk": "10–14 січня 2026"
+  },
+  "Яремче, Карпаты": {
+    "en": "Yaremche, Carpathians",
+    "uk": "Яремче, Карпати"
+  }
 };

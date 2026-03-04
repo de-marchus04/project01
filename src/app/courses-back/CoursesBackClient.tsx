@@ -9,9 +9,12 @@ import { getBackCoursesPaginated } from "@/shared/api/courseApi";
 import { Pagination } from "@/shared/ui/Pagination";
 import { HeroSlider } from "@/shared/ui/HeroSlider/HeroSlider";
 import { PaginatedResponse } from "@/shared/api/blogApi";
+import { useScrollReveal } from "@/shared/hooks/useScrollReveal";
+import { SectionHeader } from "@/shared/ui/SectionHeader/SectionHeader";
 
 export default function CoursesBackClient({ initialData }: { initialData: PaginatedResponse<Course> }) {
   const { t } = useLanguage();
+  const { observe } = useScrollReveal();
   const [products, setProducts] = useState<Course[]>(initialData.data);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -66,9 +69,13 @@ export default function CoursesBackClient({ initialData }: { initialData: Pagina
         </div>
       </section>
 
-      <section id="courses-content" className="py-5 bg-light details-section">
+      <section id="courses-content" className="py-5" style={{ backgroundColor: 'var(--color-bg)' }}>
         <div className="container py-5">
-          <h2 className="font-playfair mb-5 text-center">{t.programs.availablePrograms}</h2>
+          <SectionHeader
+            badge={t.programs.labelCourse}
+            title={t.programs.availablePrograms}
+            observe={observe}
+          />
 
           <div className="row mb-4 justify-content-center">
             <div className="col-md-6 col-lg-4 mb-3 mb-md-0">
@@ -90,8 +97,8 @@ export default function CoursesBackClient({ initialData }: { initialData: Pagina
             {loading && <div className="text-center"><div className="spinner-border text-primary" role="status"><span className="visually-hidden">{t.programs.loading}</span></div></div>}
             {error && <div className="alert alert-warning text-center">{error}</div>}
             {!loading && !error && products.length === 0 && <p className="text-center text-muted">{t.programs.noProducts}</p>}
-            {!loading && !error && products.map(product => (
-              <div key={product.id} className="col-md-6 col-lg-4">
+            {!loading && !error && products.map((product, idx) => (
+              <div key={product.id} className={`col-md-6 col-lg-4 reveal-up reveal-delay-${idx % 3}`} ref={observe as any}>
                 <CourseCard course={product} onBuy={buyProduct} />
               </div>
             ))}
