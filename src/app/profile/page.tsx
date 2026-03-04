@@ -13,7 +13,7 @@ import { useLanguage } from "@/shared/i18n/LanguageContext";
 
 export default function Profile() {
   const { t } = useLanguage();
-  const { data: session, status } = useSession();
+  const { data: session, status, update } = useSession();
   const [user, setUser] = useState<{ username: string, email?: string, phone?: string, photo?: string, name?: string } | null>(null);
   const [orders, setOrders] = useState<Order[]>([]);
   const [messages, setMessages] = useState<SupportMessage[]>([]);
@@ -201,6 +201,9 @@ export default function Profile() {
       phone: user.phone,
       avatar: user.photo,
     });
+
+    // Refresh the JWT session so the header reflects the new name/avatar immediately
+    await update();
 
     setIsProfileEdited(false);
     setIsProfileSaved(true);

@@ -57,7 +57,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   ],
   callbacks: {
     ...authConfig.callbacks,
-    async jwt({ token, user, account, profile }) {
+    async jwt({ token, user, account, profile, trigger }) {
       // OAuth login (Google / GitHub)
       if (account && account.provider !== 'credentials' && profile) {
         const email = (profile as any).email as string | undefined;
@@ -93,6 +93,18 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         token.id = user.id;
         token.avatar = (user as any).avatar;
         token.username = (user as any).username;
+        token.name = (user as any).name || (user as any).username;
+      }
+      // Re-fetch fresh profile data from DB when session.update() is called
+      if (trigger === 'update' && token.username) {
+        const dbUser = await prisma.user.findUnique({
+          where: { username: token.username as string },
+          select: { name: true, avatar: true }
+        });
+        if (dbUser) {
+          token.name = dbUser.name || token.username;
+          token.avatar = dbUser.avatar;
+        }
       }
       return token;
     },
@@ -102,6 +114,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         (session.user as any).id = token.id;
         (session.user as any).avatar = token.avatar;
         (session.user as any).username = token.username;
+        session.user.name = token.name as string;
       }
       return session;
     }
