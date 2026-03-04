@@ -106,6 +106,23 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           token.avatar = dbUser.avatar;
         }
       }
+      // Hydrate old/incomplete tokens: if username is missing, fetch from DB by sub (user id)
+      if (!token.username && token.sub) {
+        const dbUser = await prisma.user.findUnique({
+          where: { id: token.sub as string },
+          select: { username: true, name: true, avatar: true, role: true }
+        });
+        if (dbUser) {
+          token.username = dbUser.username;
+          token.name = (dbUser.name || dbUser.username) as string;
+          token.avatar = dbUser.avatar;
+          token.role = dbUser.role;
+        }
+      }
+      // Always ensure name is at least the username
+      if (!token.name && token.username) {
+        token.name = token.username as string;
+      }
       return token;
     },
     async session({ session, token }) {
