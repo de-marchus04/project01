@@ -236,7 +236,7 @@ export default function Profile() {
             <i className="bi bi-calendar-check display-1 mb-3" style={{ color: 'var(--color-text-muted)' }}></i>
             <h3 style={{ color: 'var(--color-text-muted)' }}>{t.profile.noEnrollments}</h3>
             <p className="mb-4" style={{ color: 'var(--color-text-muted)' }}>{t.profile.noEnrollmentsDesc}</p>
-            <Link href="/courses-beginners" className="btn btn-primary-custom rounded-pill px-4">{t.profile.goToPrograms}</Link>
+            <Link href="/courses" className="btn btn-primary-custom rounded-pill px-4">{t.profile.goToPrograms}</Link>
           </div>
         </div>
       );
@@ -277,21 +277,6 @@ export default function Profile() {
       );
     });
   };
-
-  const tabBtn = (tab: typeof activeTab, icon: string, label: string) => (
-    <button
-      className="btn rounded-pill px-4 py-2 fw-bold"
-      style={{
-        backgroundColor: activeTab === tab ? 'var(--color-primary)' : 'transparent',
-        color: activeTab === tab ? '#fff' : 'var(--color-text-muted)',
-        border: 'none',
-        transition: 'all 0.3s ease',
-      }}
-      onClick={() => setActiveTab(tab)}
-    >
-      <i className={`bi ${icon} me-2`}></i>{label}
-    </button>
-  );
 
   return (
     <main style={{ backgroundColor: 'var(--color-bg)', minHeight: '100vh', paddingTop: '80px' }}>
