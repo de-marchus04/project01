@@ -13,7 +13,8 @@ export default function ArticleDetail() {
   const [article, setArticle] = useState<Article | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const { tData, tStr } = useLanguage() as any;
+  const { tData, tStr, lang } = useLanguage() as any;
+  const dateLocale = lang === 'en' ? 'en-US' : lang === 'uk' ? 'uk-UA' : 'ru-RU';
 
   useEffect(() => {
     async function loadArticle() {
@@ -80,7 +81,7 @@ export default function ArticleDetail() {
       >
           <div className="container position-relative z-2 text-center">
               <span className="text-uppercase mb-3 d-block small fw-bold" style={{ letterSpacing: '2px', color: 'var(--color-secondary)' }}>
-                  {new Date(loc_article.createdAt).toLocaleDateString('ru-RU')}
+                  {new Date(loc_article.createdAt).toLocaleDateString(dateLocale)}
               </span>
               <h1 className="display-4 font-playfair mb-4 mx-auto" style={{ maxWidth: '800px', textShadow: '0 4px 15px rgba(0,0,0,0.2)' }}>
                   {loc_article.title}
@@ -89,7 +90,7 @@ export default function ArticleDetail() {
       </section>
 
       {/* CONTENT SECTION */}
-      <section className="py-5 bg-light">
+      <section className="py-5" style={{ backgroundColor: 'var(--color-surface)' }}>
           <div className="container py-5">
             <div className="row justify-content-center">
               <div className="col-lg-8">
@@ -129,7 +130,7 @@ export default function ArticleDetail() {
                       />
                       <h3 className="font-playfair mt-4 mb-4 text-dark">{tStr("С чего начать?")}</h3>
                       <p className="mb-4">{tStr("Не пытайтесь изменить все сразу. Начните с малого: 10 минут утренней медитации или короткий комплекс растяжки перед сном. Главное — регулярность. Постепенно ваше тело само попросит большего, и практика станет естественной частью вашей жизни.")}</p>
-                      <div className="bg-white p-4 rounded-4 shadow-sm mt-5 border-start border-4" style={{ borderColor: 'var(--color-accent) !important' }}>
+                      <div className="p-4 rounded-4 shadow-sm mt-5 border-start border-4" style={{ backgroundColor: 'var(--color-card-bg)', borderColor: 'var(--color-accent) !important' }}>
                         <h5 className="font-playfair mb-3">{tStr("Практический совет")}</h5>
                         <p className="mb-0 small">{tStr(`Попробуйте внедрить правило "одной минуты". Если вам кажется, что у вас совершенно нет времени на практику, пообещайте себе позаниматься ровно одну минуту. Часто самое сложное — это просто расстелить коврик.`)}</p>
                       </div>

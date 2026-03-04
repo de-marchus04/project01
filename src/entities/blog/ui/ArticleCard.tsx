@@ -7,13 +7,14 @@ interface ArticleCardProps {
 }
 
 export const ArticleCard = ({ article }: ArticleCardProps) => {
-  const { tData, tStr } = useLanguage();
+  const { tData, tStr, lang } = useLanguage() as any;
 
   const localized_article = tData ? tData(article) : article;
+  const dateLocale = lang === 'en' ? 'en-US' : lang === 'uk' ? 'uk-UA' : 'ru-RU';
   return (
     <div className="card h-100 shadow-sm border-0 hover-scale-sm transition-all">
       <div className="position-relative w-100" style={{ height: '200px' }}>
-        <Image 
+        <Image
           src={localized_article.imageUrl || 'https://images.unsplash.com/photo-1545205597-3d9d02c29597?q=80&w=2070&auto=format&fit=crop'}
           alt={tStr(localized_article.title)}
           fill
@@ -33,8 +34,8 @@ export const ArticleCard = ({ article }: ArticleCardProps) => {
         <p className="card-text text-muted small flex-grow-1">{tStr(localized_article.subtitle)}</p>
         <button className="btn btn-link text-decoration-none p-0 fw-bold text-start mt-3" style={{ color: 'var(--color-primary)' }}>{tStr("Читать далее →")}</button>
       </div>
-      <div className="card-footer bg-white border-0 text-muted small">
-        {new Date(localized_article.createdAt).toLocaleDateString('ru-RU')}
+      <div className="card-footer border-0 text-muted small" style={{ backgroundColor: 'var(--color-card-bg)' }}>
+        {new Date(localized_article.createdAt).toLocaleDateString(dateLocale)}
       </div>
     </div>
   );

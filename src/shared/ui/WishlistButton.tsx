@@ -3,6 +3,7 @@
 import { useState, useEffect, useTransition } from "react";
 import { useSession } from "next-auth/react";
 import { addToWishlist, removeFromWishlist, isInWishlist } from "@/shared/api/wishlistApi";
+import { useLanguage } from "@/shared/i18n/LanguageContext";
 
 interface WishlistButtonProps {
   itemId: string;
@@ -12,6 +13,7 @@ interface WishlistButtonProps {
 
 export function WishlistButton({ itemId, itemType, size = 'md' }: WishlistButtonProps) {
   const { data: session } = useSession();
+  const { tStr } = useLanguage() as any;
   const [inWishlist, setInWishlist] = useState(false);
   const [isPending, startTransition] = useTransition();
 
@@ -41,7 +43,7 @@ export function WishlistButton({ itemId, itemType, size = 'md' }: WishlistButton
     <button
       onClick={(e) => { e.preventDefault(); e.stopPropagation(); toggle(); }}
       disabled={isPending}
-      title={inWishlist ? 'Удалить из избранного' : 'Добавить в избранное'}
+      title={inWishlist ? tStr('Удалить из избранного') : tStr('Добавить в избранное')}
       style={{
         width: btnSize,
         height: btnSize,

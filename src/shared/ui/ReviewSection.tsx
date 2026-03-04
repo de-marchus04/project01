@@ -3,6 +3,7 @@
 import { useState, useEffect, useTransition } from "react";
 import { useSession } from "next-auth/react";
 import { getItemReviews, getUserReview, upsertReview, deleteReview, ReviewData, ReviewStats } from "@/shared/api/reviewApi";
+import { useLanguage } from "@/shared/i18n/LanguageContext";
 
 interface ReviewSectionProps {
   itemId: string;
@@ -39,6 +40,7 @@ function StarRating({ value, onChange, readOnly = false, size = 'md' }: {
 
 export default function ReviewSection({ itemId, itemType }: ReviewSectionProps) {
   const { data: session } = useSession();
+  const { tStr, lang } = useLanguage() as any;
   const [reviews, setReviews] = useState<ReviewData[]>([]);
   const [stats, setStats] = useState<ReviewStats>({ average: 0, total: 0, distribution: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 } });
   const [myReview, setMyReview] = useState<ReviewData | null>(null);
@@ -47,6 +49,8 @@ export default function ReviewSection({ itemId, itemType }: ReviewSectionProps) 
   const [showForm, setShowForm] = useState(false);
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
+
+  const dateLocale = lang === 'en' ? 'en-US' : lang === 'uk' ? 'uk-UA' : 'ru-RU';
 
   const loadReviews = () => {
     getItemReviews(itemId, itemType).then(({ reviews, stats }) => {
@@ -94,9 +98,9 @@ export default function ReviewSection({ itemId, itemType }: ReviewSectionProps) 
   };
 
   return (
-    <section className="py-5 bg-light">
+    <section className="py-5" style={{ backgroundColor: 'var(--color-surface)' }}>
       <div className="container py-3">
-        <h3 className="font-playfair fw-bold mb-4">Отзывы и оценки</h3>
+        <h3 className="font-playfair fw-bold mb-4" style={{ color: 'var(--color-text)' }}>{tStr("Отзывы и оценки")}</h3>
 
         {/* Summary */}
         {stats.total > 0 && (
@@ -104,7 +108,7 @@ export default function ReviewSection({ itemId, itemType }: ReviewSectionProps) 
             <div className="col-md-3 text-center">
               <div className="display-3 fw-bold" style={{ color: 'var(--color-primary)' }}>{stats.average}</div>
               <StarRating value={Math.round(stats.average)} readOnly size="lg" />
-              <div className="text-muted mt-1">{stats.total} отзывов</div>
+              <div className="text-muted mt-1">{stats.total} {tStr("отзывов")}</div>
             </div>
             <div className="col-md-9">
               {[5, 4, 3, 2, 1].map(star => {
@@ -114,7 +118,7 @@ export default function ReviewSection({ itemId, itemType }: ReviewSectionProps) 
                   <div key={star} className="d-flex align-items-center gap-3 mb-2">
                     <span className="text-muted small" style={{ width: '20px' }}>{star}</span>
                     <i className="bi bi-star-fill" style={{ color: '#f5a623', fontSize: '0.8rem' }}></i>
-                    <div className="flex-grow-1 bg-white rounded-pill overflow-hidden" style={{ height: '10px', border: '1px solid #ddd' }}>
+                    <div className="flex-grow-1 rounded-pill overflow-hidden" style={{ height: '10px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)' }}>
                       <div className="rounded-pill" style={{ width: `${pct}%`, height: '100%', background: '#f5a623', transition: 'width 0.5s' }}></div>
                     </div>
                     <span className="text-muted small" style={{ width: '20px' }}>{count}</span>
@@ -129,28 +133,28 @@ export default function ReviewSection({ itemId, itemType }: ReviewSectionProps) 
         {session?.user ? (
           <div className="mb-5">
             {myReview && !showForm ? (
-              <div className="card border-0 shadow-sm rounded-3 p-4 mb-3">
+              <div className="card border-0 shadow-sm rounded-3 p-4 mb-3" style={{ backgroundColor: 'var(--color-card-bg)' }}>
                 <div className="d-flex justify-content-between align-items-start mb-2">
                   <div>
-                    <strong>Ваш отзыв</strong>
+                    <strong style={{ color: 'var(--color-text)' }}>{tStr("Ваш отзыв")}</strong>
                     <div className="mt-1"><StarRating value={myReview.rating} readOnly size="sm" /></div>
                   </div>
                   <div className="d-flex gap-2">
-                    <button className="btn btn-sm btn-outline-secondary rounded-pill" onClick={() => setShowForm(true)}>Изменить</button>
-                    <button className="btn btn-sm btn-outline-danger rounded-pill" onClick={handleDelete} disabled={isPending}>Удалить</button>
+                    <button className="btn btn-sm btn-outline-secondary rounded-pill" onClick={() => setShowForm(true)}>{tStr("Изменить")}</button>
+                    <button className="btn btn-sm btn-outline-danger rounded-pill" onClick={handleDelete} disabled={isPending}>{tStr("Удалить")}</button>
                   </div>
                 </div>
                 {myReview.text && <p className="text-muted mb-0">{myReview.text}</p>}
               </div>
             ) : !showForm ? (
               <button className="btn btn-primary-custom rounded-pill px-4" onClick={() => setShowForm(true)}>
-                <i className="bi bi-star me-2"></i>Оставить отзыв
+                <i className="bi bi-star me-2"></i>{tStr("Оставить отзыв")}
               </button>
             ) : null}
 
             {showForm && (
-              <form onSubmit={handleSubmit} className="card border-0 shadow-sm rounded-3 p-4">
-                <h6 className="fw-bold mb-3">Ваша оценка</h6>
+              <form onSubmit={handleSubmit} className="card border-0 shadow-sm rounded-3 p-4" style={{ backgroundColor: 'var(--color-card-bg)' }}>
+                <h6 className="fw-bold mb-3" style={{ color: 'var(--color-text)' }}>{tStr("Ваша оценка")}</h6>
                 <div className="mb-3">
                   <StarRating value={rating} onChange={setRating} />
                 </div>
@@ -158,7 +162,7 @@ export default function ReviewSection({ itemId, itemType }: ReviewSectionProps) 
                   <textarea
                     className="form-control rounded-3"
                     rows={3}
-                    placeholder="Расскажите о своём опыте..."
+                    placeholder={tStr("Расскажите о своём опыте...")}
                     value={text}
                     onChange={e => setText(e.target.value)}
                     style={{ resize: 'none' }}
@@ -168,26 +172,26 @@ export default function ReviewSection({ itemId, itemType }: ReviewSectionProps) 
                 <div className="d-flex gap-2">
                   <button type="submit" className="btn btn-primary-custom rounded-pill px-4" disabled={isPending}>
                     {isPending ? <span className="spinner-border spinner-border-sm me-1"></span> : null}
-                    {myReview ? 'Обновить' : 'Отправить'}
+                    {myReview ? tStr("Обновить") : tStr("Отправить")}
                   </button>
-                  <button type="button" className="btn btn-outline-secondary rounded-pill px-4" onClick={() => setShowForm(false)}>Отмена</button>
+                  <button type="button" className="btn btn-outline-secondary rounded-pill px-4" onClick={() => setShowForm(false)}>{tStr("Отмена")}</button>
                 </div>
               </form>
             )}
           </div>
         ) : (
           <p className="text-muted mb-4">
-            <a href="/login" style={{ color: 'var(--color-primary)' }}>Войдите</a>, чтобы оставить отзыв
+            <a href="/login" style={{ color: 'var(--color-primary)' }}>{tStr("Войдите")}</a>, {tStr("чтобы оставить отзыв")}
           </p>
         )}
 
         {/* Reviews list */}
         {reviews.length === 0 ? (
-          <p className="text-muted">Отзывов пока нет. Будьте первым!</p>
+          <p className="text-muted">{tStr("Отзывов пока нет. Будьте первым!")}</p>
         ) : (
           <div className="d-flex flex-column gap-3">
             {reviews.map(review => (
-              <div key={review.id} className="card border-0 shadow-sm rounded-3 p-4">
+              <div key={review.id} className="card border-0 shadow-sm rounded-3 p-4" style={{ backgroundColor: 'var(--color-card-bg)' }}>
                 <div className="d-flex align-items-center gap-3 mb-2">
                   {review.avatar ? (
                     <img src={review.avatar} alt={review.username} style={{ width: '36px', height: '36px', borderRadius: '50%', objectFit: 'cover' }} />
@@ -197,10 +201,10 @@ export default function ReviewSection({ itemId, itemType }: ReviewSectionProps) 
                     </div>
                   )}
                   <div>
-                    <div className="fw-bold">{review.username}</div>
+                    <div className="fw-bold" style={{ color: 'var(--color-text)' }}>{review.username}</div>
                     <div className="d-flex align-items-center gap-2">
                       <StarRating value={review.rating} readOnly size="sm" />
-                      <small className="text-muted">{new Date(review.createdAt).toLocaleDateString('ru-RU')}</small>
+                      <small className="text-muted">{new Date(review.createdAt).toLocaleDateString(dateLocale)}</small>
                     </div>
                   </div>
                 </div>

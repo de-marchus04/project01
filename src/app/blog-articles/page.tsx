@@ -9,7 +9,8 @@ import { Pagination } from "@/shared/ui/Pagination";
 import { HeroSlider } from "@/shared/ui/HeroSlider/HeroSlider";
 
 export default function BlogArticles() {
-  const { t , tStr} = useLanguage() as any;
+  const { t, tStr, lang } = useLanguage() as any;
+  const dateLocale = lang === 'en' ? 'en-US' : lang === 'uk' ? 'uk-UA' : 'ru-RU';
   const [articles, setArticles] = useState<Article[]>([]);
   const [tags, setTags] = useState<string[]>([]);
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
@@ -94,7 +95,7 @@ export default function BlogArticles() {
       </section>
 
       {/* CONTENT SECTION */}
-      <section id="articles-content" className="py-5 bg-light">
+      <section id="articles-content" className="py-5" style={{ backgroundColor: 'var(--color-bg)' }}>
           <div className="container py-5">
               {tags.length > 0 && (
                 <div className="d-flex flex-wrap gap-2 justify-content-center mb-4">
@@ -189,7 +190,7 @@ export default function BlogArticles() {
                   </div>
                 </div>
                 
-                <div className="p-4 p-md-5 bg-white">
+                <div className="p-4 p-md-5" style={{ backgroundColor: 'var(--color-card-bg)' }}>
                   <div className="d-flex align-items-center mb-5 pb-4 border-bottom">
                     {selectedArticle.authorPhoto ? (
                       <img src={selectedArticle.authorPhoto} alt={selectedArticle.author || tStr("Автор")} className="rounded-circle object-fit-cover me-3 border" style={{ width: '60px', height: '60px' }} />
@@ -200,7 +201,7 @@ export default function BlogArticles() {
                     )}
                     <div>
                       <p className="mb-0 fw-bold fs-5">{selectedArticle.author || tStr("Админ сайта")}</p>
-                      <p className="mb-0 text-muted">{new Date(selectedArticle.createdAt).toLocaleDateString('ru-RU')}</p>
+                      <p className="mb-0 text-muted">{new Date(selectedArticle.createdAt).toLocaleDateString(dateLocale)}</p>
                     </div>
                   </div>
 

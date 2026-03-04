@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { validatePromoCode, PromoResult } from "@/shared/api/promoApi";
+import { useLanguage } from "@/shared/i18n/LanguageContext";
 
 interface PromoCodeInputProps {
   originalPrice: number;
@@ -10,6 +11,7 @@ interface PromoCodeInputProps {
 }
 
 export default function PromoCodeInput({ originalPrice, onApply, onClear }: PromoCodeInputProps) {
+  const { tStr } = useLanguage() as any;
   const [code, setCode] = useState('');
   const [result, setResult] = useState<PromoResult | null>(null);
   const [isPending, startTransition] = useTransition();
@@ -38,7 +40,7 @@ export default function PromoCodeInput({ originalPrice, onApply, onClear }: Prom
           <input
             type="text"
             className="form-control rounded-start-pill"
-            placeholder="Промокод"
+            placeholder={tStr("Промокод")}
             value={code}
             onChange={e => setCode(e.target.value.toUpperCase())}
             style={{ letterSpacing: '1px' }}
@@ -50,7 +52,7 @@ export default function PromoCodeInput({ originalPrice, onApply, onClear }: Prom
             onClick={handleApply}
             disabled={isPending || !code.trim()}
           >
-            {isPending ? <span className="spinner-border spinner-border-sm"></span> : 'Применить'}
+            {isPending ? <span className="spinner-border spinner-border-sm"></span> : tStr("Применить")}
           </button>
         </div>
       ) : (
