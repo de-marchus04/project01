@@ -10,7 +10,7 @@ import { useLanguage } from "@/shared/i18n/LanguageContext";
 import { formatPrice } from "@/shared/lib/formatPrice";
 
 export default function CourseDetail() {
-  const { t, tData } = useLanguage();
+  const { t, tData, tStr } = useLanguage() as any;
   const params = useParams();
   const router = useRouter();
   const { lang } = useLanguage();
@@ -68,10 +68,52 @@ export default function CourseDetail() {
 
   const localized_course = course ? tData(course) : null;
   if (error || !course) {
+    const idStr = (params.id as string) || '';
+    const isPrivate = idStr.startsWith('private');
+    const isNutrition = idStr.startsWith('nutrition');
+    const heroImg = isPrivate
+      ? 'https://images.unsplash.com/photo-1515020617130-eca80c7d0753?q=80&w=2070&auto=format&fit=crop'
+      : isNutrition
+      ? 'https://images.unsplash.com/photo-1490645935967-10de6ba17061?q=80&w=2053&auto=format&fit=crop'
+      : 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=2071&auto=format&fit=crop';
+    const heroTitle = isPrivate
+      ? t.programs.consultPrivateTitle
+      : isNutrition
+      ? t.programs.consultDietTitle
+      : t.programs.consultMentor;
+    const heroDesc = isPrivate
+      ? t.programs.consultPrivateDesc
+      : isNutrition
+      ? t.programs.consultDietDesc
+      : t.programs.consultMentorDesc;
+    const backHref = isPrivate ? '/consultations-private' : isNutrition ? '/consultations-nutrition' : '/consultations-mentorship';
     return (
-      <main className="container py-5 text-center" style={{ minHeight: '60vh', paddingTop: '150px !important' }}>
-        <h2 className="font-playfair mb-4">{error || t.courseDetail.notFound}</h2>
-        <button onClick={() => router.back()} className="btn btn-outline-primary-custom rounded-pill px-4">{t.courseDetail.goBack}</button>
+      <main>
+        <section className="hero-section text-white position-relative d-flex align-items-end"
+          style={{ height: '55vh', minHeight: '420px', background: `linear-gradient(rgba(62,66,58,0.55),rgba(62,66,58,0.75)),url('${heroImg}') center/cover` }}>
+          <div className="container position-relative z-2 pb-5">
+            <button onClick={() => router.back()} className="btn btn-outline-light rounded-pill px-4 py-2 mb-4 d-inline-flex align-items-center gap-2">
+              <i className="bi bi-arrow-left"></i>{t.courseDetail.back}
+            </button>
+            <h1 className="display-4 font-playfair mb-3" style={{ textShadow: '0 4px 15px rgba(0,0,0,0.2)' }}>{heroTitle}</h1>
+            <p className="lead col-lg-7 fw-light mb-0" style={{ textShadow: '0 2px 10px rgba(0,0,0,0.2)' }}>{heroDesc}</p>
+          </div>
+        </section>
+        <section className="py-5" style={{ backgroundColor: 'var(--color-bg)' }}>
+          <div className="container py-3 text-center">
+            <div className="p-5 rounded-4 d-inline-block" style={{ backgroundColor: 'var(--color-card-bg)', border: '1px solid var(--color-border)', maxWidth: 520 }}>
+              <i className="bi bi-calendar-check fs-1 mb-4 d-block" style={{ color: 'var(--color-primary)' }}></i>
+              <h4 className="font-playfair fw-bold mb-3" style={{ color: 'var(--color-text)' }}>{t.programs.consultTitleNum}</h4>
+              <p className="text-muted mb-4">{t.programs.consultDescNum}</p>
+              <a href={backHref} className="btn rounded-pill px-5 py-2 fw-semibold me-2 mb-2" style={{ backgroundColor: 'var(--color-primary)', color: '#fff', border: 'none' }}>
+                {t.programs.btnConsult}
+              </a>
+              <button onClick={() => router.back()} className="btn btn-outline-secondary rounded-pill px-4 py-2 mb-2">
+                {t.courseDetail.goBack}
+              </button>
+            </div>
+          </div>
+        </section>
       </main>
     );
   }
