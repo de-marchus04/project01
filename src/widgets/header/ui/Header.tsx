@@ -232,14 +232,14 @@ export const Header = () => {
             </button>
 
             {isAuth ? (
-              <button 
-                onClick={handleLogout}
-                className="btn btn-link p-0 text-decoration-none"
+              <Link
+                href={isAdmin ? "/admin" : "/profile"}
+                className="text-decoration-none"
                 style={{ color: 'var(--color-text)' }}
-                title={t.header.logout}
+                title={isAdmin ? t.header.admin : t.header.profile}
               >
                 <i className="bi bi-door-open fs-3"></i>
-              </button>
+              </Link>
             ) : (
               <Link 
                 href="/login" 
