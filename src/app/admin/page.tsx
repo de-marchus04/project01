@@ -16,6 +16,7 @@ import { getMessages, replyToMessage, deleteMessage, SupportMessage } from "@/sh
 import { getTestimonials, addTestimonial, updateTestimonial, deleteTestimonial, Testimonial } from "@/shared/api/testimonialApi";
 import { getFAQs, addFAQ, updateFAQ, deleteFAQ, FAQ } from "@/shared/api/faqApi";
 import { useLanguage } from "@/shared/i18n/LanguageContext";
+import { useTheme } from "@/shared/i18n/ThemeContext";
 import { formatPrice } from "@/shared/lib/formatPrice";
 import { bulkUpdateAuthor } from "@/shared/api/adminApi";
 import { changePassword, getMyProfile, updateMyProfile } from "@/shared/api/authActions";
@@ -24,7 +25,15 @@ import { useSession, signOut } from "next-auth/react";
 
 export default function Admin() {
   const { lang, t } = useLanguage();
+  const { theme } = useTheme();
   const { data: session, status } = useSession();
+
+  const translateStatus = (s: string) => {
+    if (s === 'В обработке') return t.admin.statusProcessing;
+    if (s === 'Принята') return t.admin.statusAccepted;
+    if (s === 'Отклонена') return t.admin.statusRejected;
+    return s;
+  };
   const [activeTab, setActiveTab] = useState("coursesPane");
   const [courses, setCourses] = useState<Course[]>([]);
   const [consultations, setConsultations] = useState<Course[]>([]);
@@ -170,7 +179,7 @@ export default function Admin() {
       setNewPassword("");
       setTimeout(() => setIsPasswordChanged(false), 3000);
     } else {
-      setPasswordError(res.error || "Ошибка смены пароля");
+      setPasswordError(res.error || t.admin.errPasswordChange);
     }
   };
 
@@ -303,7 +312,7 @@ export default function Admin() {
           // Show a minor visual feedback placeholder on the input if we want, but letting the promise resolve is ok
           const input = document.getElementById('mainImageUrlInput') as HTMLInputElement;
           if (input) {
-            input.value = "Загрузка в облако. Ожидайте...";
+            input.value = t.admin.uploading;
           }
           uploadImageToCloud(dataUrl).then(cloudUrl => {
              if (input) input.value = cloudUrl;
@@ -485,55 +494,55 @@ export default function Admin() {
     if (!isFormOpen) return null;
 
     return (
-      <div className="card border-0 p-4 mb-4" style={{ borderRadius: '16px', boxShadow: '0 4px 20px rgba(0, 0, 0, 0.05)', background: '#fff' }}>
+      <div className="card border-0 p-4 mb-4" style={{ borderRadius: '16px', boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)' }}>
         <div className="d-flex justify-content-between align-items-center mb-4">
-          <h3 className="h5 fw-bold mb-0">{editingItem ? 'Редактировать' : 'Добавить'}</h3>
+          <h3 className="h5 fw-bold mb-0" style={{ color: 'var(--color-text)' }}>{editingItem ? t.admin.modeEdit : t.admin.modeAdd}</h3>
           <button type="button" className="btn-close" onClick={closeForm}></button>
         </div>
         <form onSubmit={handleSave}>
           <div className="row g-3">
             <div className="col-md-12">
-              <label className="form-label">{activeTab === 'faqsPane' ? 'Вопрос' : activeTab === 'testimonialsPane' ? 'Имя пользователя'  : 'Название / Заголовок'}</label>
+              <label className="form-label">{activeTab === 'faqsPane' ? t.admin.formQuestion : activeTab === 'testimonialsPane' ? t.admin.formUsername  : t.admin.formTitleLabel}</label>
               <input type="text" name="title" className="form-control" required defaultValue={activeTab === 'faqsPane' ? editingItem?.question || '' : activeTab === 'testimonialsPane' ? editingItem?.name || ''  : editingItem?.title || ''} />
             </div>
             
             {activeTab === 'articlesPane' && (
               <>
                 <div className="col-md-12">
-                  <label className="form-label">Подзаголовок</label>
+                  <label className="form-label">{t.admin.formSubtitle}</label>
                   <textarea name="subtitle" className="form-control" rows={2} required defaultValue={editingItem?.subtitle || ''}></textarea>
                 </div>
                 <div className="col-md-12">
-                  <label className="form-label">Полный текст статьи</label>
+                  <label className="form-label">{t.admin.formContent}</label>
                   <textarea name="content" className="form-control" rows={6} defaultValue={editingItem?.content || ''}></textarea>
                 </div>
               </>
             )}
 
-            {activeTab === 'testimonialsPane' && (<div className="col-md-12"><label className="form-label">Курс / Продукт</label><input type="text" name="course" className="form-control" required defaultValue={editingItem?.course || ''} /></div>)}{activeTab !== 'articlesPane' && (
+            {activeTab === 'testimonialsPane' && (<div className="col-md-12"><label className="form-label">{t.admin.formCourseLabel}</label><input type="text" name="course" className="form-control" required defaultValue={editingItem?.course || ''} /></div>)}{activeTab !== 'articlesPane' && (
               <div className="col-md-12">
-                <label className="form-label">{activeTab === 'faqsPane' ? 'Ответ' : activeTab === 'testimonialsPane' ? 'Текст отзыва' : 'Описание'}</label>
+                <label className="form-label">{activeTab === 'faqsPane' ? t.admin.formAnswer : activeTab === 'testimonialsPane' ? t.admin.formReview : t.admin.formDesc}</label>
                 <textarea name="description" className="form-control" rows={3} required defaultValue={activeTab === 'faqsPane' ? editingItem?.answer || '' : activeTab === 'testimonialsPane' ? editingItem?.text || '' : editingItem?.description || ''}></textarea>
               </div>
             )}
 
             {['coursesPane', 'consultationsPane', 'toursPane'].includes(activeTab) && (
               <div className="col-md-6">
-                <label className="form-label">Цена ({lang === 'en' ? '$' : '₴'})</label>
+                <label className="form-label">{t.admin.formPrice} ({lang === 'en' ? '$' : '₴'})</label>
                 <input type="number" name="price" className="form-control" required defaultValue={editingItem?.price || ''} />
               </div>
             )}
 
             {['videosPane', 'podcastsPane', 'recipesPane', 'articlesPane'].includes(activeTab) && (
               <div className="col-md-6">
-                <label className="form-label">Тег</label>
+                <label className="form-label">{t.admin.formTag}</label>
                 <input type="text" name="tag" className="form-control" defaultValue={editingItem?.tag || ''} />
               </div>
             )}
 
             {activeTab === 'videosPane' && (
               <div className="col-md-6">
-                <label className="form-label">URL видео</label>
+                <label className="form-label">{t.admin.formVideoUrl}</label>
                 <input type="text" name="videoUrl" className="form-control" required defaultValue={editingItem?.videoUrl || ''} />
               </div>
             )}
@@ -541,11 +550,11 @@ export default function Admin() {
             {activeTab === 'podcastsPane' && (
               <>
                 <div className="col-md-6">
-                  <label className="form-label">URL аудио</label>
+                  <label className="form-label">{t.admin.formAudioUrl}</label>
                   <input type="text" name="audioUrl" className="form-control" required defaultValue={editingItem?.audioUrl || ''} />
                 </div>
                 <div className="col-md-6">
-                  <label className="form-label">Длительность</label>
+                  <label className="form-label">{t.admin.formDuration}</label>
                   <input type="text" name="duration" className="form-control" required defaultValue={editingItem?.duration || ''} />
                 </div>
               </>
@@ -553,32 +562,32 @@ export default function Admin() {
 
             {['recipesPane', 'coursesPane', 'consultationsPane', 'toursPane'].includes(activeTab) && (
               <div className="col-md-12">
-                <label className="form-label">{activeTab === 'recipesPane' ? 'Полное описание (рецепт)' : 'Подробное инфо для страницы'}</label>
+                <label className="form-label">{activeTab === 'recipesPane' ? t.admin.formRecipeDesc : t.admin.formFullDesc}</label>
                 <textarea name="fullDescription" className="form-control" rows={5} defaultValue={editingItem?.fullDescription || ''}></textarea>
               </div>
             )}
             
             {['coursesPane', 'consultationsPane', 'toursPane'].includes(activeTab) && (
               <div className="col-md-12">
-                <label className="form-label">Что ждет на курсе (каждый пункт с новой строки)</label>
-                <textarea name="features" className="form-control" rows={4} defaultValue={editingItem?.features || ''} placeholder="Детальные видеоуроки&#10;Доступ навсегда&#10;Поддержка кураторов"></textarea>
+                <label className="form-label">{t.admin.formFeatures}</label>
+                <textarea name="features" className="form-control" rows={4} defaultValue={editingItem?.features || ''} placeholder={t.admin.formFeaturesPlaceholder}></textarea>
               </div>
             )}
 
             {activeTab === 'recipesPane' && (
               <div className="col-md-6">
-                <label className="form-label">Время приготовления</label>
+                <label className="form-label">{t.admin.formTime}</label>
                 <input type="text" name="time" className="form-control" required defaultValue={editingItem?.time || ''} />
               </div>
             )}
 
             {activeTab !== 'podcastsPane' && (
               <div className="col-md-6">
-                <label className="form-label">URL изображения <span className="text-danger">*</span></label>
+                <label className="form-label">{t.admin.formImageUrl} <span className="text-danger">*</span></label>
                 <div className="d-flex gap-2">
                   <input type="text" id="mainImageUrlInput" name="imageUrl" className="form-control" required defaultValue={editingItem?.imageUrl || editingItem?.thumbnailUrl || ''} />
                   <label className="btn btn-outline-secondary text-nowrap d-flex align-items-center" style={{ cursor: 'pointer' }}>
-                    <i className="bi bi-upload me-2"></i>С ПК
+                    <i className="bi bi-upload me-2"></i>{t.admin.formFromPc}
                     <input type="file" accept="image/*" className="d-none" onChange={handleMainImageUpload} />
                   </label>
                 </div>
@@ -587,23 +596,23 @@ export default function Admin() {
 
             {!editingItem && activeTab === 'coursesPane' && (
               <div className="col-md-6">
-                <label className="form-label">Категория</label>
+                <label className="form-label">{t.admin.formCategory}</label>
                 <select name="category" className="form-select">
-                  <option value="beginners">Для начинающих</option>
-                  <option value="back">Здоровая спина</option>
-                  <option value="meditation">Медитация</option>
-                  <option value="women">Женское здоровье</option>
+                  <option value="beginners">{t.admin.catBeginners}</option>
+                  <option value="back">{t.admin.catBack}</option>
+                  <option value="meditation">{t.admin.catMeditation}</option>
+                  <option value="women">{t.admin.catWomen}</option>
                 </select>
               </div>
             )}
 
             {!editingItem && activeTab === 'consultationsPane' && (
               <div className="col-md-6">
-                <label className="form-label">Категория</label>
+                <label className="form-label">{t.admin.formCategory}</label>
                 <select name="category" className="form-select">
-                  <option value="private">Индивидуальные</option>
-                  <option value="nutrition">Нутрициология</option>
-                  <option value="mentorship">Менторство</option>
+                  <option value="private">{t.admin.catPrivate}</option>
+                  <option value="nutrition">{t.admin.catNutrition}</option>
+                  <option value="mentorship">{t.admin.catMentorship}</option>
                 </select>
               </div>
             )}
@@ -611,22 +620,22 @@ export default function Admin() {
             {activeTab === 'toursPane' && (
               <>
                 <div className="col-md-6">
-                  <label className="form-label">Даты</label>
+                  <label className="form-label">{t.admin.formDates}</label>
                   <input type="text" name="date" className="form-control" required defaultValue={editingItem?.date || ''} />
                 </div>
                 <div className="col-md-6">
-                  <label className="form-label">Локация</label>
+                  <label className="form-label">{t.admin.formLocation}</label>
                   <input type="text" name="location" className="form-control" required defaultValue={editingItem?.location || ''} />
                 </div>
               </>
             )}
 
             <div className="col-12 mt-4">
-              <button type="submit" className="btn btn-dark px-4" disabled={isSubmitting}>
-                {isSubmitting ? 'Сохранение...' : 'Сохранить'}
+              <button type="submit" className="btn px-4 rounded-pill" style={{ backgroundColor: 'var(--color-primary)', color: '#fff', border: 'none' }} disabled={isSubmitting}>
+                {isSubmitting ? t.admin.formSaving : t.admin.formSave}
               </button>
-              <button type="button" className="btn btn-outline-secondary ms-2 px-4" onClick={closeForm}>
-                Отмена
+              <button type="button" className="btn ms-2 px-4 rounded-pill" style={{ border: '1px solid var(--color-border)', color: 'var(--color-text)', backgroundColor: 'transparent' }} onClick={closeForm}>
+                {t.admin.formCancel}
               </button>
             </div>
           </div>
@@ -638,9 +647,9 @@ export default function Admin() {
   const renderTable = (items: any[], type: string, columns: string[], renderRow: (item: any) => React.ReactNode) => (
     <section className="card border-0 p-4" style={{ borderRadius: '16px', boxShadow: '0 4px 20px rgba(0, 0, 0, 0.05)' }}>
       <div className="d-flex justify-content-between align-items-center mb-4">
-        <h3 className="h5 fw-bold mb-0">Управление</h3>
-        <button className="btn btn-dark btn-sm px-3 rounded-pill" onClick={openAddForm}>
-          <i className="bi bi-plus-lg"></i> Добавить
+        <h3 className="h5 fw-bold mb-0" style={{ color: 'var(--color-text)' }}>{t.admin.manage}</h3>
+        <button className="btn btn-sm px-3 rounded-pill" style={{ backgroundColor: 'var(--color-primary)', color: '#fff', border: 'none' }} onClick={openAddForm}>
+          <i className="bi bi-plus-lg"></i> {t.admin.addBtn}
         </button>
       </div>
       <div className="table-responsive">
@@ -648,7 +657,7 @@ export default function Admin() {
           <thead className="table-light">
             <tr>
               {columns.map((col, i) => <th key={i}>{col}</th>)}
-              <th className="text-end">Действия</th>
+              <th className="text-end">{t.admin.colActions}</th>
             </tr>
           </thead>
           <tbody>
@@ -663,7 +672,7 @@ export default function Admin() {
             ))}
             {items.length === 0 && (
               <tr>
-                <td colSpan={columns.length + 1} className="text-center text-muted py-4">Нет данных</td>
+                <td colSpan={columns.length + 1} className="text-center py-4" style={{ color: 'var(--color-text-muted)' }}>{t.admin.noData}</td>
               </tr>
             )}
           </tbody>
@@ -678,131 +687,148 @@ export default function Admin() {
           <div className="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
               <div>
                   <h1 className="mb-1 font-playfair fw-bold" style={{ color: 'var(--color-text)' }}>{t.admin.titleAdmin}</h1>
-                  <p className="mb-0" style={{ color: 'var(--color-text-muted)' }}>Управление курсами, консультациями, блогом и турами.</p>
+                  <p className="mb-0" style={{ color: 'var(--color-text-muted)' }}>{t.admin.subtitle}</p>
               </div>
-              <div className="badge fs-6" style={{ 
+              <div className="badge fs-6" style={{
                 backgroundColor: isProfileSaved ? '#198754' : (isProfileEdited ? '#ffc107' : 'var(--color-primary)'),
                 color: isProfileEdited && !isProfileSaved ? '#000' : '#fff',
                 transition: 'all 0.3s ease'
               }}>
-                {isProfileSaved ? <><i className="bi bi-check2-circle me-1"></i> Сохранено</> : 'Admin'}
+                {isProfileSaved ? <><i className="bi bi-check2-circle me-1"></i> {t.admin.badgeSaved}</> : 'Admin'}
               </div>
           </div>
 
           {/* Dashboard Stats */}
           <div className="row g-4 mb-4">
             <div className="col-md-4">
-              <div className="card border-0 p-4 h-100" style={{ borderRadius: '16px', boxShadow: '0 4px 20px rgba(0, 0, 0, 0.05)', background: 'linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%)' }}>
+              <div className="card border-0 p-4 h-100" style={{ borderRadius: '16px', boxShadow: '0 4px 20px rgba(0, 0, 0, 0.05)' }}>
                 <div className="d-flex align-items-center mb-3">
                   <div className="bg-success bg-opacity-10 p-3 rounded-circle me-3">
                     <i className="bi bi-currency-dollar text-success fs-4"></i>
                   </div>
-                  <h5 className="mb-0 fw-bold text-muted">Заработано всего</h5>
+                  <h5 className="mb-0 fw-bold" style={{ color: 'var(--color-text-muted)' }}>{t.admin.statEarnedFull}</h5>
                 </div>
-                <h2 className="mb-0 fw-bold">{formatPrice(stats.earnedTotal, lang)}</h2>
+                <h2 className="mb-0 fw-bold" style={{ color: 'var(--color-text)' }}>{formatPrice(stats.earnedTotal, lang)}</h2>
               </div>
             </div>
             <div className="col-md-4">
-              <div className="card border-0 p-4 h-100" style={{ borderRadius: '16px', boxShadow: '0 4px 20px rgba(0, 0, 0, 0.05)', background: 'linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%)' }}>
+              <div className="card border-0 p-4 h-100" style={{ borderRadius: '16px', boxShadow: '0 4px 20px rgba(0, 0, 0, 0.05)' }}>
                 <div className="d-flex align-items-center mb-3">
                   <div className="bg-primary bg-opacity-10 p-3 rounded-circle me-3">
                     <i className="bi bi-bell text-primary fs-4"></i>
                   </div>
-                  <h5 className="mb-0 fw-bold text-muted">Новых заявок</h5>
+                  <h5 className="mb-0 fw-bold" style={{ color: 'var(--color-text-muted)' }}>{t.admin.statNewReqFull}</h5>
                 </div>
-                <h2 className="mb-0 fw-bold">{stats.newRequests}</h2>
+                <h2 className="mb-0 fw-bold" style={{ color: 'var(--color-text)' }}>{stats.newRequests}</h2>
               </div>
             </div>
             <div className="col-md-4">
-              <div className="card border-0 p-4 h-100" style={{ borderRadius: '16px', boxShadow: '0 4px 20px rgba(0, 0, 0, 0.05)', background: 'linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%)' }}>
+              <div className="card border-0 p-4 h-100" style={{ borderRadius: '16px', boxShadow: '0 4px 20px rgba(0, 0, 0, 0.05)' }}>
                 <div className="d-flex align-items-center mb-3">
                   <div className="bg-warning bg-opacity-10 p-3 rounded-circle me-3">
                     <i className="bi bi-star text-warning fs-4"></i>
                   </div>
-                  <h5 className="mb-0 fw-bold text-muted">{t.admin.statPopService}</h5>
+                  <h5 className="mb-0 fw-bold" style={{ color: 'var(--color-text-muted)' }}>{t.admin.statPopService}</h5>
                 </div>
-                <h4 className="mb-0 fw-bold text-truncate" title={stats.popularService}>{stats.popularService}</h4>
+                <h4 className="mb-0 fw-bold text-truncate" style={{ color: 'var(--color-text)' }} title={stats.popularService}>{stats.popularService}</h4>
               </div>
             </div>
           </div>
 
           <section className="card border-0 p-4 mb-4" style={{ borderRadius: '16px', boxShadow: '0 4px 20px rgba(0, 0, 0, 0.05)' }}>
               <div className="d-flex flex-wrap gap-2">
-                  <button className={`btn rounded-pill px-4 ${activeTab === 'coursesPane' ? 'btn-dark active' : 'btn-outline-dark'}`} onClick={() => {setActiveTab('coursesPane'); closeForm();}}>Курсы</button>
-                  <button className={`btn rounded-pill px-4 ${activeTab === 'consultationsPane' ? 'btn-dark active' : 'btn-outline-dark'}`} onClick={() => {setActiveTab('consultationsPane'); closeForm();}}>Консультации</button>
-                  <button className={`btn rounded-pill px-4 ${activeTab === 'articlesPane' ? 'btn-dark active' : 'btn-outline-dark'}`} onClick={() => {setActiveTab('articlesPane'); closeForm();}}>Блог</button>
-                  <button className={`btn rounded-pill px-4 ${activeTab === 'videosPane' ? 'btn-dark active' : 'btn-outline-dark'}`} onClick={() => {setActiveTab('videosPane'); closeForm();}}>Видео</button>
-                  <button className={`btn rounded-pill px-4 ${activeTab === 'podcastsPane' ? 'btn-dark active' : 'btn-outline-dark'}`} onClick={() => {setActiveTab('podcastsPane'); closeForm();}}>Подкасты</button>
-                  <button className={`btn rounded-pill px-4 ${activeTab === 'recipesPane' ? 'btn-dark active' : 'btn-outline-dark'}`} onClick={() => {setActiveTab('recipesPane'); closeForm();}}>Рецепты</button>
-                  <button className={`btn rounded-pill px-4 ${activeTab === 'toursPane' ? 'btn-dark active' : 'btn-outline-dark'}`} onClick={() => {setActiveTab('toursPane'); closeForm();}}>Туры/Ретриты</button>
-                  <button className={`btn rounded-pill px-4 ${activeTab === 'ordersPane' ? 'btn-dark active' : 'btn-outline-dark'}`} onClick={() => {setActiveTab('ordersPane'); closeForm();}}>Заявки</button>
-                  <button className={`btn rounded-pill px-4 ${activeTab === 'supportPane' ? 'btn-dark active' : 'btn-outline-dark'}`} onClick={() => {setActiveTab('supportPane'); closeForm();}}>Поддержка</button>
-                  <button className={`btn rounded-pill px-4 ${activeTab === 'faqsPane' ? 'btn-dark active' : 'btn-outline-dark'}`} onClick={() => {setActiveTab('faqsPane'); closeForm();}}>FAQ</button><button className={`btn rounded-pill px-4 ${activeTab === 'testimonialsPane' ? 'btn-dark active' : 'btn-outline-dark'}`} onClick={() => {setActiveTab('testimonialsPane'); closeForm();}}>Отзывы</button>
-                  <button className={`btn rounded-pill px-4 ${activeTab === 'profilePane' ? 'btn-dark active' : 'btn-outline-dark'}`} onClick={() => {setActiveTab('profilePane'); closeForm();}}>Профиль</button>
+                  {([
+                    ['coursesPane', t.admin.tabCourses],
+                    ['consultationsPane', t.admin.tabConsult],
+                    ['articlesPane', t.admin.tabBlog],
+                    ['videosPane', t.admin.tabVideos],
+                    ['podcastsPane', t.admin.tabPodcasts],
+                    ['recipesPane', t.admin.tabRecipes],
+                    ['toursPane', t.admin.tabTours],
+                    ['ordersPane', t.admin.tabOrders],
+                    ['supportPane', t.admin.tabSupport],
+                    ['faqsPane', t.admin.tabFaq],
+                    ['testimonialsPane', t.admin.tabTestimonials],
+                    ['profilePane', t.admin.tabProfile],
+                  ] as [string, string][]).map(([pane, label]) => (
+                    <button
+                      key={pane}
+                      className="btn rounded-pill px-4"
+                      style={{
+                        backgroundColor: activeTab === pane ? 'var(--color-primary)' : 'transparent',
+                        color: activeTab === pane ? '#fff' : 'var(--color-text)',
+                        border: `1px solid ${activeTab === pane ? 'var(--color-primary)' : 'var(--color-border)'}`,
+                        fontWeight: activeTab === pane ? 600 : 400,
+                      }}
+                      onClick={() => { setActiveTab(pane); closeForm(); }}
+                    >
+                      {label}
+                    </button>
+                  ))}
               </div>
           </section>
 
           {renderForm()}
 
           {activeTab === 'coursesPane' && !isFormOpen && renderTable(
-            courses, 'course', ['ID', 'Название', 'Цена'],
+            courses, 'course', ['ID', t.admin.colTitle, t.admin.colPrice],
             (item) => (<><td>{item.id}</td><td>{item.title}</td><td>{formatPrice(item.price, lang)}</td></>)
           )}
 
           {activeTab === 'consultationsPane' && !isFormOpen && renderTable(
-            consultations, 'consultation', ['ID', 'Название', 'Цена'],
+            consultations, 'consultation', ['ID', t.admin.colTitle, t.admin.colPrice],
             (item) => (<><td>{item.id}</td><td>{item.title}</td><td>{formatPrice(item.price, lang)}</td></>)
           )}
 
           {activeTab === 'articlesPane' && !isFormOpen && renderTable(
-            articles, 'article', ['ID', 'Заголовок', 'Тег', 'Дата'],
+            articles, 'article', ['ID', t.admin.colTitle2, t.admin.colTag, t.admin.colDate],
             (item) => (<><td>{item.id}</td><td>{item.title}</td><td>{item.tag || '-'}</td><td>{new Date(item.createdAt).toLocaleDateString()}</td></>)
           )}
 
           {activeTab === 'videosPane' && !isFormOpen && renderTable(
-            videos, 'video', ['ID', 'Название', 'Тег'],
+            videos, 'video', ['ID', t.admin.colTitle, t.admin.colTag],
             (item) => (<><td>{item.id}</td><td>{item.title}</td><td>{item.tag || '-'}</td></>)
           )}
 
           {activeTab === 'podcastsPane' && !isFormOpen && renderTable(
-            podcasts, 'podcast', ['ID', 'Название', 'Тег', 'Длительность'],
+            podcasts, 'podcast', ['ID', t.admin.colTitle, t.admin.colTag, t.admin.colDuration],
             (item) => (<><td>{item.id}</td><td>{item.title}</td><td>{item.tag || '-'}</td><td>{item.duration}</td></>)
           )}
 
           {activeTab === 'recipesPane' && !isFormOpen && renderTable(
-            recipes, 'recipe', ['ID', 'Название', 'Тег', 'Время'],
+            recipes, 'recipe', ['ID', t.admin.colTitle, t.admin.colTag, t.admin.colTime],
             (item) => (<><td>{item.id}</td><td>{item.title}</td><td>{item.tag || '-'}</td><td>{item.time}</td></>)
           )}
 
           {activeTab === 'toursPane' && !isFormOpen && renderTable(
-            tours, 'tour', ['ID', 'Название', 'Даты', 'Локация', 'Цена'],
+            tours, 'tour', ['ID', t.admin.colTitle, t.admin.colDates, t.admin.colLocation, t.admin.colPrice],
             (item) => (<><td>{item.id}</td><td>{item.title}</td><td>{item.date}</td><td>{item.location}</td><td>{formatPrice(item.price, lang)}</td></>)
           )}
 
           {activeTab === 'faqsPane' && !isFormOpen && renderTable(
-            faqs, 'faq', ['ID', 'Вопрос', 'Ответ'],
+            faqs, 'faq', ['ID', t.admin.colQuestion, t.admin.colAnswer],
             (item) => (<><td>{item.id}</td><td>{item.question}</td><td className="text-truncate" style={{maxWidth: '200px'}}>{item.answer}</td></>)
           )}
           {activeTab === 'testimonialsPane' && !isFormOpen && renderTable(
-            testimonials, 'testimonial', ['ID', 'Имя', 'Курс', 'Отзыв'],
+            testimonials, 'testimonial', ['ID', t.admin.colName, t.admin.colCourse, t.admin.colReview],
             (item) => (<><td>{item.id}</td><td>{item.name}</td><td>{item.course}</td><td className="text-truncate" style={{maxWidth: '200px'}}>{item.text}</td></>)
           )}
 
 
           {activeTab === 'ordersPane' && !isFormOpen && (
             <section className="card border-0 p-4" style={{ borderRadius: '16px', boxShadow: '0 4px 20px rgba(0, 0, 0, 0.05)' }}>
-                <h3 className="h5 fw-bold mb-4">{t.admin.inRequests}</h3>
+                <h3 className="h5 fw-bold mb-4" style={{ color: 'var(--color-text)' }}>{t.admin.inRequests}</h3>
                 <div className="table-responsive">
                     <table className="table table-hover align-middle">
                         <thead className="table-light">
                             <tr>
                                 <th>ID</th>
-                                <th>Дата</th>
-                                <th>Клиент</th>
-                                <th>Продукт</th>
-                                <th>Сумма</th>
-                                <th>Статус</th>
-                                <th className="text-end">Действия</th>
+                                <th>{t.admin.colDate}</th>
+                                <th>{t.admin.colClient}</th>
+                                <th>{t.admin.colProduct}</th>
+                                <th>{t.admin.colAmount}</th>
+                                <th>{t.admin.colStatus}</th>
+                                <th className="text-end">{t.admin.colActions}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -811,36 +837,36 @@ export default function Admin() {
                                     <td>{order.id}</td>
                                     <td>{order.date}</td>
                                     <td>
-                                      {order.customerName || 'Неизвестно'}
-                                      {order.userId && <span className="badge bg-light text-dark ms-2 border">Зарегистрирован</span>}
-                                      {!order.userId && <span className="badge bg-light text-muted ms-2 border">Гость</span>}
+                                      {order.customerName || t.admin.unknownClient}
+                                      {order.userId && <span className="badge bg-light ms-2 border" style={{ color: 'var(--color-text)' }}>{t.admin.colRegistered}</span>}
+                                      {!order.userId && <span className="badge bg-light ms-2 border" style={{ color: 'var(--color-text-muted)' }}>{t.admin.colGuest}</span>}
                                     </td>
                                     <td>{order.productName}</td>
                                     <td>{formatPrice(order.price, lang)}</td>
                                     <td>
                                         <span className={`badge ${
-                                          order.status === 'Принята' ? 'bg-success' : 
-                                          order.status === 'Отклонена' ? 'bg-danger' : 
+                                          order.status === 'Принята' ? 'bg-success' :
+                                          order.status === 'Отклонена' ? 'bg-danger' :
                                           'bg-warning text-dark'
                                         }`}>
-                                            {order.status}
+                                            {translateStatus(order.status)}
                                         </span>
                                     </td>
                                     <td className="text-end">
-                                        <select 
+                                        <select
                                             className="form-select form-select-sm d-inline-block w-auto me-2"
                                             value={order.status}
                                             onChange={(e) => handleOrderStatusChange(order.id, e.target.value)}
                                         >
-                                            <option value="В обработке">В обработке</option>
-                                            <option value="Принята">Принять</option>
-                                            <option value="Отклонена">Отклонить</option>
+                                            <option value="В обработке">{t.admin.statusProcessing}</option>
+                                            <option value="Принята">{t.admin.statusAcceptLabel}</option>
+                                            <option value="Отклонена">{t.admin.statusRejectLabel}</option>
                                         </select>
                                         {(order.status === 'Принята' || order.status === 'Отклонена') && (
-                                            <button 
-                                                className="btn btn-sm btn-outline-danger border-0" 
+                                            <button
+                                                className="btn btn-sm btn-outline-danger border-0"
                                                 onClick={() => handleDeleteOrder(order.id)}
-                                                title="Удалить заявку"
+                                                title={t.admin.deleteOrderTitle}
                                                 style={{ transition: 'all 0.3s ease' }}
                                                 onMouseOver={(e) => {
                                                     e.currentTarget.style.backgroundColor = '#dc3545';
@@ -858,7 +884,7 @@ export default function Admin() {
                                 </tr>
                             ))}
                             {orders.length === 0 && (
-                                <tr><td colSpan={6} className="text-center text-muted py-4">Нет заявок</td></tr>
+                                <tr><td colSpan={6} className="text-center py-4" style={{ color: 'var(--color-text-muted)' }}>{t.admin.noOrders}</td></tr>
                             )}
                         </tbody>
                     </table>
@@ -868,16 +894,16 @@ export default function Admin() {
 
           {activeTab === 'supportPane' && !isFormOpen && (
             <section className="card border-0 p-4" style={{ borderRadius: '16px', boxShadow: '0 4px 20px rgba(0, 0, 0, 0.05)' }}>
-                <h3 className="h5 fw-bold mb-4">{t.admin.supportMessages}</h3>
+                <h3 className="h5 fw-bold mb-4" style={{ color: 'var(--color-text)' }}>{t.admin.supportMessages}</h3>
                 <div className="table-responsive">
                     <table className="table table-hover align-middle">
                         <thead className="table-light">
                             <tr>
-                                <th>Дата</th>
-                                <th>Пользователь</th>
-                                <th>Вопрос</th>
-                                <th>Статус</th>
-                                <th>Действия</th>
+                                <th>{t.admin.colDate}</th>
+                                <th>{t.admin.colUser}</th>
+                                <th>{t.admin.colQuestion}</th>
+                                <th>{t.admin.colStatus}</th>
+                                <th>{t.admin.colActions}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -886,34 +912,35 @@ export default function Admin() {
                                     <td>{new Date(msg.createdAt).toLocaleString()}</td>
                                     <td>
                                       <div><strong>{msg.userName}</strong></div>
-                                      <div className="text-muted small">{msg.userEmail}</div>
+                                      <div style={{ color: 'var(--color-text-muted)', fontSize: '0.85em' }}>{msg.userEmail}</div>
                                     </td>
                                     <td style={{ maxWidth: '300px' }}>
                                       <div className="fw-bold small text-primary mb-1">{msg.questionType}</div>
                                       <div className="text-truncate" title={msg.message}>{msg.message}</div>
                                       {msg.reply && (
-                                        <div className="mt-2 p-2 bg-light rounded small">
-                                          <strong>Ответ:</strong> {msg.reply}
+                                        <div className="mt-2 p-2 rounded small" style={{ backgroundColor: 'var(--color-secondary)', color: 'var(--color-text)' }}>
+                                          <strong>{t.admin.supportReplyLabel}</strong> {msg.reply}
                                         </div>
                                       )}
                                     </td>
                                     <td>
                                         <span className={`badge ${msg.status === 'new' ? 'bg-danger' : msg.status === 'replied' ? 'bg-success' : 'bg-secondary'}`}>
-                                            {msg.status === 'new' ? 'Новое' : msg.status === 'replied' ? 'Отвечено' : 'Бот'}
+                                            {msg.status === 'new' ? t.admin.supportNewStatus : msg.status === 'replied' ? t.admin.supportRepliedStatus : t.admin.supportBotStatus}
                                         </span>
                                     </td>
                                     <td>
                                         {msg.status === 'new' && (
                                           <div className="d-flex flex-column gap-2">
-                                            <textarea 
-                                              className="form-control form-control-sm" 
-                                              rows={2} 
-                                              placeholder="Ваш ответ..."
+                                            <textarea
+                                              className="form-control form-control-sm"
+                                              rows={2}
+                                              placeholder={t.admin.supportReplyPlaceholder}
                                               value={replyText[msg.id] || ''}
                                               onChange={(e) => setReplyText({...replyText, [msg.id]: e.target.value})}
                                             />
-                                            <button 
-                                              className="btn btn-sm btn-dark"
+                                            <button
+                                              className="btn btn-sm rounded-pill"
+                                              style={{ backgroundColor: 'var(--color-primary)', color: '#fff', border: 'none' }}
                                               onClick={async () => {
                                                 if (!replyText[msg.id]) return;
                                                 await replyToMessage(msg.id, replyText[msg.id]);
@@ -921,19 +948,19 @@ export default function Admin() {
                                                 setReplyText({...replyText, [msg.id]: ''});
                                               }}
                                             >
-                                              Отправить
+                                              {t.common.send}
                                             </button>
                                           </div>
                                         )}
                                         {msg.status !== 'new' && (
-                                          <button 
+                                          <button
                                             className="btn btn-sm btn-outline-danger mt-2 w-100"
                                             onClick={async () => {
                                               const confirmed = await modalService.confirm(
-                                                "Удалить сообщение?",
-                                                "Вы действительно хотите удалить это сообщение?",
-                                                "Удалить",
-                                                "Отмена"
+                                                t.admin.deleteMsgTitle,
+                                                t.admin.deleteMsgConfirm,
+                                                t.common.delete,
+                                                t.common.cancel
                                               );
                                               if (confirmed) {
                                                 await deleteMessage(msg.id);
@@ -941,14 +968,14 @@ export default function Admin() {
                                               }
                                             }}
                                           >
-                                            Удалить
+                                            {t.common.delete}
                                           </button>
                                         )}
                                     </td>
                                 </tr>
                             ))}
                             {supportMessages.length === 0 && (
-                                <tr><td colSpan={5} className="text-center text-muted py-4">Нет сообщений</td></tr>
+                                <tr><td colSpan={5} className="text-center py-4" style={{ color: 'var(--color-text-muted)' }}>{t.admin.noMessages}</td></tr>
                             )}
                         </tbody>
                     </table>
@@ -1005,60 +1032,60 @@ export default function Admin() {
           {activeTab === 'profilePane' && !isFormOpen && (
             <section className="card border-0 p-4" style={{ borderRadius: '16px', boxShadow: '0 4px 20px rgba(0, 0, 0, 0.05)' }}>
               <div className="d-flex justify-content-between align-items-center mb-4">
-                <h3 className="h5 fw-bold mb-0">{t.admin.profileManage}</h3>
+                <h3 className="h5 fw-bold mb-0" style={{ color: 'var(--color-text)' }}>{t.admin.profileManage}</h3>
               </div>
               <div>
                 <div className="row g-3">
                   <div className="col-md-6">
-                    <label className="form-label fw-bold">Имя (Отображается в статьях) <span className="text-danger">*</span></label>
+                    <label className="form-label fw-bold">{t.admin.profileName} <span className="text-danger">*</span></label>
                     <input type="text" className="form-control" value={adminProfile.name} onChange={(e) => { setAdminProfile({...adminProfile, name: e.target.value}); setIsProfileEdited(true); }} />
                   </div>
                   <div className="col-md-6">
-                    <label className="form-label fw-bold">Email</label>
+                    <label className="form-label fw-bold">{t.admin.profileEmail}</label>
                     <input type="email" className="form-control" value={adminProfile.email} onChange={(e) => { setAdminProfile({...adminProfile, email: e.target.value}); setIsProfileEdited(true); }} />
                   </div>
                   <div className="col-md-6">
-                    <label className="form-label fw-bold">Телефон</label>
+                    <label className="form-label fw-bold">{t.admin.profilePhone}</label>
                     <input type="tel" className="form-control" value={adminProfile.phone} onChange={(e) => { setAdminProfile({...adminProfile, phone: e.target.value}); setIsProfileEdited(true); }} />
                   </div>
                   <div className="col-md-6">
-                    <label className="form-label fw-bold">Фотография <span className="text-danger">*</span></label>
+                    <label className="form-label fw-bold">{t.admin.profilePhoto} <span className="text-danger">*</span></label>
                     <div className="d-flex gap-2">
-                      <input type="text" className="form-control" placeholder="URL картинки" value={adminProfile.photoUrl} onChange={(e) => { setAdminProfile({...adminProfile, photoUrl: e.target.value}); setIsProfileEdited(true); }} />
+                      <input type="text" className="form-control" placeholder={t.admin.profilePhotoPlaceholder} value={adminProfile.photoUrl} onChange={(e) => { setAdminProfile({...adminProfile, photoUrl: e.target.value}); setIsProfileEdited(true); }} />
                       <label className="btn btn-outline-secondary text-nowrap d-flex align-items-center" style={{ cursor: 'pointer' }}>
-                        <i className="bi bi-upload me-2"></i>С ПК
+                        <i className="bi bi-upload me-2"></i>{t.admin.profileFromPc}
                         <input type="file" accept="image/*" className="d-none" onChange={handleImageUpload} />
                       </label>
                     </div>
                   </div>
                   <div className="col-12 mt-4 d-flex align-items-center gap-3">
-                    <button type="button" onClick={handleProfileSave} className="btn btn-dark px-4 rounded-pill">{t.admin.btnSaveProfile}</button>
+                    <button type="button" onClick={handleProfileSave} className="btn px-4 rounded-pill" style={{ backgroundColor: 'var(--color-primary)', color: '#fff', border: 'none' }}>{t.admin.btnSaveProfile}</button>
                     {isProfileSaved && (
-                      <div className="d-flex align-items-center text-success fw-medium" style={{ animation: 'fadeIn 0.3s ease' }}>
+                      <div className="d-flex align-items-center fw-medium" style={{ color: '#198754', animation: 'fadeIn 0.3s ease' }}>
                         <i className="bi bi-check-circle-fill me-2 fs-5"></i>
-                        Изменения вступили в силу
+                        {t.admin.profileChangesApplied}
                       </div>
                     )}
 
                 <hr className="my-5" />
-                <h5 className="fw-bold mb-4">Смена пароля администратора</h5>
+                <h5 className="fw-bold mb-4" style={{ color: 'var(--color-text)' }}>{t.admin.profileChangePassword}</h5>
                 <form onSubmit={handlePasswordChange}>
                   <div className="row g-3">
                     <div className="col-md-6">
-                      <label className="form-label fw-bold">Текущий пароль</label>
+                      <label className="form-label fw-bold">{t.admin.profileCurrentPass}</label>
                       <input type="password" className="form-control" value={oldPassword} onChange={(e) => setOldPassword(e.target.value)} required />
                     </div>
                     <div className="col-md-6">
-                      <label className="form-label fw-bold">Новый пароль</label>
+                      <label className="form-label fw-bold">{t.admin.profileNewPass}</label>
                       <input type="password" className="form-control" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} required />
                     </div>
                     <div className="col-12 mt-4 d-flex align-items-center gap-3">
-                      <button type="submit" className="btn btn-outline-dark rounded-pill px-4">Сменить пароль</button>
+                      <button type="submit" className="btn rounded-pill px-4" style={{ border: '2px solid var(--color-primary)', color: 'var(--color-primary)', backgroundColor: 'transparent' }}>{t.admin.profileChangeBtn}</button>
                       {isPasswordChanged && (
-                        <div className="text-success fw-medium"><i className="bi bi-check-circle-fill me-2"></i>Пароль успешно изменён!</div>
+                        <div className="fw-medium" style={{ color: '#198754' }}><i className="bi bi-check-circle-fill me-2"></i>{t.admin.profilePassChanged}</div>
                       )}
                       {passwordError && (
-                        <div className="text-danger fw-medium"><i className="bi bi-exclamation-circle-fill me-2"></i>{passwordError}</div>
+                        <div className="fw-medium" style={{ color: '#dc3545' }}><i className="bi bi-exclamation-circle-fill me-2"></i>{passwordError}</div>
                       )}
                     </div>
                   </div>

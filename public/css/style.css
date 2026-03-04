@@ -511,3 +511,77 @@ h4.font-playfair        { font-size: 1.12rem; line-height: 1.35; }
 [data-theme="dark"] .navbar {
     background-color: rgba(30, 27, 23, 0.95) !important;
 }
+
+/* ── Dark mode: Bootstrap form controls ── */
+[data-theme="dark"] .form-control,
+[data-theme="dark"] .form-select {
+    background-color: var(--color-surface);
+    color: var(--color-text);
+    border-color: var(--color-border);
+}
+[data-theme="dark"] .form-control:focus,
+[data-theme="dark"] .form-select:focus {
+    background-color: var(--color-surface);
+    color: var(--color-text);
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 0.2rem rgba(143, 175, 126, 0.25);
+}
+[data-theme="dark"] .form-control::placeholder {
+    color: var(--color-text-muted);
+}
+[data-theme="dark"] .form-label {
+    color: var(--color-text);
+}
+
+/* ── Dark mode: Bootstrap tables ── */
+[data-theme="dark"] .table {
+    color: var(--color-text);
+    border-color: var(--color-border);
+}
+[data-theme="dark"] .table > :not(caption) > * > * {
+    background-color: transparent;
+    border-color: var(--color-border);
+    color: var(--color-text);
+}
+[data-theme="dark"] .table-light,
+[data-theme="dark"] .table-light > th,
+[data-theme="dark"] .table-light > td {
+    background-color: var(--color-secondary) !important;
+    color: var(--color-text) !important;
+    border-color: var(--color-border) !important;
+}
+[data-theme="dark"] .table-hover > tbody > tr:hover > * {
+    background-color: rgba(255, 255, 255, 0.04);
+}
+
+/* ── Dark mode: Bootstrap cards ── */
+[data-theme="dark"] .card {
+    background-color: var(--color-card-bg);
+    border-color: var(--color-border);
+}
+
+/* ── Dark mode: close button ── */
+[data-theme="dark"] .btn-close {
+    filter: invert(1) grayscale(100%) brightness(200%);
+}
+
+/* ── Dark mode: badges bg-light ── */
+[data-theme="dark"] .badge.bg-light {
+    background-color: var(--color-secondary) !important;
+    color: var(--color-text) !important;
+    border-color: var(--color-border) !important;
+}
+
+/* ── Dark mode: alert-info box ── */
+[data-theme="dark"] .alert-info {
+    background-color: rgba(143, 175, 126, 0.12) !important;
+    color: var(--color-text) !important;
+    border-color: var(--color-primary) !important;
+}
+
+/* ── Dark mode: input-group-text ── */
+[data-theme="dark"] .input-group-text {
+    background-color: var(--color-secondary);
+    color: var(--color-text);
+    border-color: var(--color-border);
+}
