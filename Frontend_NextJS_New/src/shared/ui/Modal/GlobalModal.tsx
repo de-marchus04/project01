@@ -48,7 +48,7 @@ export const GlobalModal = () => {
 
   return (
     <>
-      <div className="modal-backdrop fade show" style={{ zIndex: 1050, backgroundColor: 'rgba(26, 26, 26, 0.5)', backdropFilter: 'var(--glass-blur)' }}></div>
+      <div className="modal-backdrop fade show" style={{ zIndex: 1050, backgroundColor: 'rgba(26, 26, 26, 0.5)', backdropFilter: 'blur(12px)' }}></div>
       <div
         className="modal fade show d-block"
         tabIndex={-1}
@@ -59,9 +59,9 @@ export const GlobalModal = () => {
         aria-labelledby="modal-title"
       >
         <div className="modal-dialog modal-dialog-centered" onClick={(e) => e.stopPropagation()}>
-          <div className="modal-content border-0" style={{ borderRadius: 'var(--radius-xl)', backgroundColor: 'var(--color-bg-card)', overflow: 'hidden', boxShadow: 'var(--shadow-xl)' }}>
+          <div className="modal-content border-0" style={{ borderRadius: '24px', backgroundColor: 'var(--color-card-bg)', overflow: 'hidden', boxShadow: '0 20px 60px rgba(0,0,0,0.15)' }}>
             <div className="modal-header border-0 pb-0 pt-4 px-4 d-flex justify-content-center position-relative">
-              <h5 id="modal-title" className="modal-title font-playfair fw-bold text-center w-100" style={{ color: 'var(--color-primary)', fontSize: 'var(--text-xl)' }}>
+              <h5 id="modal-title" className="modal-title font-playfair fw-bold text-center w-100" style={{ color: 'var(--color-primary)', fontSize: '1.25rem' }}>
                 {options.title || (options.type === 'alert' ? 'Внимание' : 'Подтверждение')}
               </h5>
               <button
@@ -73,14 +73,14 @@ export const GlobalModal = () => {
               ></button>
             </div>
             <div className="modal-body py-4 px-4 text-center">
-              <p className="mb-0" style={{ whiteSpace: 'pre-wrap', color: 'var(--color-text-secondary)', lineHeight: 'var(--leading-relaxed)', fontSize: 'var(--text-lg)' }}>{options.message}</p>
+              <p className="mb-0" style={{ whiteSpace: 'pre-wrap', color: 'var(--color-text-muted)', lineHeight: '1.75', fontSize: '1.125rem' }}>{options.message}</p>
 
               {options.type === 'prompt' && (
                 <div className="mt-4">
                   <input
                     type="text"
                     className="form-control px-4 py-3 text-center"
-                    style={{ fontSize: 'var(--text-lg)', borderRadius: 'var(--radius-full)' }}
+                    style={{ fontSize: '1.125rem', borderRadius: '9999px' }}
                     value={inputValue}
                     onChange={(e) => setInputValue(e.target.value)}
                     placeholder={options.placeholder}
@@ -98,7 +98,7 @@ export const GlobalModal = () => {
                   type="button"
                   className="btn btn-outline-primary-custom px-5 py-2 fw-bold"
                   onClick={handleCancel}
-                  style={{ borderRadius: 'var(--radius-full)' }}
+                  style={{ borderRadius: '9999px' }}
                 >
                   {options.cancelText || 'Отмена'}
                 </button>
@@ -107,7 +107,7 @@ export const GlobalModal = () => {
                 type="button"
                 className="btn btn-primary-custom px-5 py-2 fw-bold"
                 onClick={handleConfirm}
-                style={{ borderRadius: 'var(--radius-full)' }}
+                style={{ borderRadius: '9999px' }}
               >
                 {options.confirmText || 'ОК'}
               </button>

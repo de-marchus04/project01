@@ -104,15 +104,15 @@ export const Newsletter = () => {
       <div className="container py-5">
         <div className="row justify-content-center">
           <div className="col-lg-8 text-center">
-            <h2 className="font-playfair fw-bold mb-4 text-white" style={{ fontSize: 'var(--text-4xl)' }}>{t.home.newsletterTitle}</h2>
-            <p className="lead mb-5" style={{ color: 'rgba(255,255,255,0.8)', lineHeight: 'var(--leading-relaxed)' }}>
+            <h2 className="font-playfair fw-bold mb-4 text-white" style={{ fontSize: '2.25rem' }}>{t.home.newsletterTitle}</h2>
+            <p className="lead mb-5" style={{ color: 'rgba(255,255,255,0.8)', lineHeight: '1.75' }}>
               {t.home.newsletterDesc}
             </p>
             <form className="d-flex flex-column flex-sm-row gap-3 justify-content-center mx-auto" style={{ maxWidth: '500px' }} onSubmit={handleSubmit}>
               <input
                 type="email"
                 className="form-control form-control-lg border-0 px-4"
-                style={{ borderRadius: 'var(--radius-full)' }}
+                style={{ borderRadius: '9999px' }}
                 placeholder={t.home.newsletterPlaceholder}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -123,7 +123,7 @@ export const Newsletter = () => {
               <button
                 type="submit"
                 className="btn btn-accent-custom btn-lg px-5 fw-bold"
-                style={{ borderRadius: 'var(--radius-full)' }}
+                style={{ borderRadius: '9999px' }}
                 disabled={isLoading}
               >
                 {isLoading ? t.home.newsletterSending : t.home.newsletterBtn}

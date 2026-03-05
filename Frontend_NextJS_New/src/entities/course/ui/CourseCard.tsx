@@ -28,12 +28,12 @@ export const CourseCard = ({ course, onBuy }: CourseCardProps) => {
         <Link href={localized_course.id.match(/^(private|nutrition|mentorship)/) ? `/consultations/${localized_course.id}` : `/courses/${localized_course.id}`} className="text-decoration-none">
           <h5 className="card-title font-playfair fw-bold mb-3">{localized_course.title}</h5>
         </Link>
-        <p className="card-text flex-grow-1" style={{ color: 'var(--color-text-muted)', fontSize: 'var(--text-sm)' }}>{localized_course.description}</p>
-        <div className="d-flex justify-content-between align-items-center mt-4 pt-3" style={{ borderTop: '1px solid var(--color-border-light)' }}>
-          <span className="fw-bold" style={{ fontSize: 'var(--text-2xl)' }}>{formatPrice(localized_course.price, lang)}</span>
+        <p className="card-text flex-grow-1" style={{ color: 'var(--color-text-muted)', fontSize: '0.875rem' }}>{localized_course.description}</p>
+        <div className="d-flex justify-content-between align-items-center mt-4 pt-3" style={{ borderTop: '1px solid var(--color-border)' }}>
+          <span className="fw-bold" style={{ fontSize: '1.5rem' }}>{formatPrice(localized_course.price, lang)}</span>
           <button
             className="btn btn-primary-custom fw-bold px-4"
-            style={{ borderRadius: 'var(--radius-full)' }}
+            style={{ borderRadius: '9999px' }}
             onClick={() => onBuy(localized_course.title, localized_course.price)}
           >{tStr("Записаться")}</button>
         </div>

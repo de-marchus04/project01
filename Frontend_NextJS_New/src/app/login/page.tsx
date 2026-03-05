@@ -141,7 +141,7 @@ export default function Login() {
         <div className="container mt-5">
           <div className="row justify-content-center">
             <div className="col-md-6 col-lg-5">
-              <div className="card-glass shadow-lg overflow-hidden animate-fade-in" style={{ borderRadius: 'var(--radius-xl)' }}>
+              <div className="shadow-lg overflow-hidden" style={{ borderRadius: '24px', backgroundColor: 'rgba(255,255,255,0.85)', backdropFilter: 'blur(12px)', border: '1px solid rgba(255,255,255,0.3)' }}>
                 <div className="card-body p-5">
                   <div className="text-center mb-4">
                     <h2 className="font-playfair text-primary-custom">
@@ -153,13 +153,13 @@ export default function Login() {
                   </div>
 
                   {error && (
-                    <div className="alert alert-danger py-2 text-center" style={{ borderRadius: 'var(--radius-md)' }} role="alert">
+                    <div className="alert alert-danger py-2 text-center" style={{ borderRadius: '12px' }} role="alert">
                       {error}
                     </div>
                   )}
 
                   {lockUntil && Date.now() < lockUntil && (
-                    <div className="alert alert-warning py-2 text-center" style={{ borderRadius: 'var(--radius-md)' }} role="alert">
+                    <div className="alert alert-warning py-2 text-center" style={{ borderRadius: '12px' }} role="alert">
                       Заблокировано. Повторите через: {timeLeft}
                     </div>
                   )}
@@ -198,7 +198,7 @@ export default function Login() {
                     <button
                       type="submit"
                       className="btn btn-primary-custom w-100 py-3 fw-bold text-uppercase"
-                      style={{ borderRadius: 'var(--radius-full)', letterSpacing: 'var(--tracking-wide)' }}
+                      style={{ borderRadius: '9999px', letterSpacing: '0.05em' }}
                       disabled={loading || (lockUntil !== null && Date.now() < lockUntil)}
                     >
                       {loading ? (

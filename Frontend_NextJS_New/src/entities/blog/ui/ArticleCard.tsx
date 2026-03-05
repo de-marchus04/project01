@@ -22,7 +22,7 @@ export const ArticleCard = ({ article }: ArticleCardProps) => {
         />
         {localized_article.tag && (
           <div className="position-absolute top-0 start-0 m-3">
-            <span className="badge" style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-text-on-primary)', boxShadow: 'var(--shadow-sm)' }}>{tStr(localized_article.tag)}</span>
+            <span className="badge" style={{ backgroundColor: 'var(--color-primary)', color: '#fff', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>{tStr(localized_article.tag)}</span>
           </div>
         )}
       </div>
@@ -30,10 +30,10 @@ export const ArticleCard = ({ article }: ArticleCardProps) => {
         <h5 className="card-title font-playfair fw-bold mb-3">
           {tStr(localized_article.title)}
         </h5>
-        <p className="card-text flex-grow-1" style={{ color: 'var(--color-text-muted)', fontSize: 'var(--text-sm)' }}>{tStr(localized_article.subtitle)}</p>
+        <p className="card-text flex-grow-1" style={{ color: 'var(--color-text-muted)', fontSize: '0.875rem' }}>{tStr(localized_article.subtitle)}</p>
         <button className="btn btn-link text-decoration-none p-0 fw-bold text-start mt-3" style={{ color: 'var(--color-primary)' }}>{tStr("Читать далее &rarr;")}</button>
       </div>
-      <div className="card-footer border-0" style={{ backgroundColor: 'var(--color-bg-card)', color: 'var(--color-text-muted)', fontSize: 'var(--text-sm)' }}>
+      <div className="card-footer border-0" style={{ backgroundColor: 'var(--color-card-bg)', color: 'var(--color-text-muted)', fontSize: '0.875rem' }}>
         {new Date(localized_article.createdAt).toLocaleDateString('ru-RU')}
       </div>
     </article>

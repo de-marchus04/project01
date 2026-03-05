@@ -100,9 +100,9 @@ export const Header = () => {
         width: '320px',
         height: '100vh',
         backgroundColor: 'var(--color-bg)',
-        borderRight: '1px solid var(--color-border-light)',
+        borderRight: '1px solid var(--color-border)',
         zIndex: 0,
-        padding: 'var(--space-6)',
+        padding: '1.5rem',
         display: 'flex',
         flexDirection: 'column',
         overflowY: 'auto'
@@ -113,9 +113,9 @@ export const Header = () => {
           href="/"
           className="text-decoration-none font-playfair fw-bold"
           style={{
-            letterSpacing: 'var(--tracking-tight)',
+            letterSpacing: '-0.025em',
             color: 'var(--color-primary)',
-            fontSize: 'var(--text-3xl)'
+            fontSize: '1.875rem'
           }}
           onClick={() => setIsMenuOpen(false)}
         >
@@ -131,17 +131,17 @@ export const Header = () => {
             <li className="nav-item" key={index}>
               {item.children ? (
                 <>
-                  <div className="fw-bold small text-uppercase mb-2 mt-3" style={{ letterSpacing: 'var(--tracking-wide)', color: 'var(--color-primary)', fontSize: 'var(--text-xs)' }}>{item.label}</div>
-                  <ul className="nav flex-column gap-2 ms-3 border-start ps-3" style={{ borderColor: 'var(--color-border-light) !important' }}>
+                  <div className="fw-bold small text-uppercase mb-2 mt-3" style={{ letterSpacing: '0.05em', color: 'var(--color-primary)', fontSize: '0.75rem' }}>{item.label}</div>
+                  <ul className="nav flex-column gap-2 ms-3 border-start ps-3" style={{ borderColor: 'var(--color-border) !important' }}>
                     {item.children.map((child, childIndex) => (
                       <li key={childIndex}>
                         <Link
                           href={child.href || "#"}
                           className={`text-decoration-none ${pathname === child.href ? 'fw-semibold' : ''}`}
                           style={{
-                            color: pathname === child.href ? 'var(--color-primary)' : 'var(--color-text-secondary)',
-                            transition: 'color var(--duration-fast) var(--ease-out)',
-                            fontSize: 'var(--text-lg)'
+                            color: pathname === child.href ? 'var(--color-primary)' : 'var(--color-text-muted)',
+                            transition: 'color 150ms ease-out',
+                            fontSize: '1.125rem'
                           }}
                           onClick={() => setIsMenuOpen(false)}
                           aria-current={pathname === child.href ? 'page' : undefined}
@@ -158,8 +158,8 @@ export const Header = () => {
                   className={`text-decoration-none fw-medium ${pathname === item.href ? 'fw-bold' : ''}`}
                   style={{
                     color: pathname === item.href ? 'var(--color-primary)' : 'var(--color-text)',
-                    transition: 'color var(--duration-fast) var(--ease-out)',
-                    fontSize: 'var(--text-xl)'
+                    transition: 'color 150ms ease-out',
+                    fontSize: '1.25rem'
                   }}
                   onClick={() => setIsMenuOpen(false)}
                   aria-current={pathname === item.href ? 'page' : undefined}
@@ -172,33 +172,33 @@ export const Header = () => {
         })}
       </ul>
 
-      <div className="mt-5 pt-4 border-top" style={{ borderColor: 'var(--color-border-light) !important' }}>
+      <div className="mt-5 pt-4 border-top" style={{ borderColor: 'var(--color-border) !important' }}>
         {isAuth ? (
           <div className="d-flex flex-column gap-3">
             <div className="d-flex align-items-center gap-3 mb-2">
               {userPhoto ? (
-                <img src={userPhoto} alt={username} className="rounded-circle object-fit-cover" style={{ width: '50px', height: '50px', boxShadow: 'var(--shadow-sm)' }} />
+                <img src={userPhoto} alt={username} className="rounded-circle object-fit-cover" style={{ width: '50px', height: '50px', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }} />
               ) : (
-                <div className="rounded-circle d-flex align-items-center justify-content-center" style={{ width: '50px', height: '50px', backgroundColor: 'var(--color-primary-light)', boxShadow: 'var(--shadow-sm)' }}>
+                <div className="rounded-circle d-flex align-items-center justify-content-center" style={{ width: '50px', height: '50px', backgroundColor: 'var(--color-accent-subtle)', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>
                   <i className="bi bi-person fs-4" style={{ color: 'var(--color-primary)' }}></i>
                 </div>
               )}
               <div>
                 <div className="fw-bold" style={{ color: 'var(--color-text)' }}>{username}</div>
-                <div style={{ color: 'var(--color-text-muted)', fontSize: 'var(--text-sm)' }}>{isAdmin ? t.header.admin : t.header.profile}</div>
+                <div style={{ color: 'var(--color-text-muted)', fontSize: '0.875rem' }}>{isAdmin ? t.header.admin : t.header.profile}</div>
               </div>
             </div>
-            <Link href={isAdmin ? "/admin" : "/profile"} className="btn btn-primary-custom py-2 w-100" style={{ borderRadius: 'var(--radius-full)' }} onClick={() => setIsMenuOpen(false)}>
+            <Link href={isAdmin ? "/admin" : "/profile"} className="btn btn-primary-custom py-2 w-100" style={{ borderRadius: '9999px' }} onClick={() => setIsMenuOpen(false)}>
               {t.header.profile}
             </Link>
-            <button onClick={handleLogout} className="btn btn-outline-danger py-2 w-100" style={{ borderRadius: 'var(--radius-full)' }}>
+            <button onClick={handleLogout} className="btn btn-outline-danger py-2 w-100" style={{ borderRadius: '9999px' }}>
               {t.header.logout}
             </button>
           </div>
         ) : (
           <div className="d-flex flex-column gap-3">
-            <p className="mb-0" style={{ color: 'var(--color-text-muted)', fontSize: 'var(--text-sm)' }}>{t.header.loginPrompt}</p>
-            <Link href="/login" className="btn btn-primary-custom py-2 w-100" style={{ borderRadius: 'var(--radius-full)' }} onClick={() => setIsMenuOpen(false)}>
+            <p className="mb-0" style={{ color: 'var(--color-text-muted)', fontSize: '0.875rem' }}>{t.header.loginPrompt}</p>
+            <Link href="/login" className="btn btn-primary-custom py-2 w-100" style={{ borderRadius: '9999px' }} onClick={() => setIsMenuOpen(false)}>
               {t.header.login}
             </Link>
           </div>
@@ -222,7 +222,7 @@ export const Header = () => {
         zIndex: 1040,
         opacity: isMenuOpen ? 1 : 0,
         pointerEvents: isMenuOpen ? 'auto' : 'none',
-        transition: 'opacity var(--duration-slow) var(--ease-out)'
+        transition: 'opacity 500ms ease-out'
       }}
     />,
     document.getElementById('main-content') || document.body
@@ -272,11 +272,11 @@ export const Header = () => {
               className="navbar-brand mb-0 font-playfair fw-bold ms-2"
               href="/"
               style={{
-                letterSpacing: 'var(--tracking-tight)',
-                fontSize: 'var(--text-2xl)',
+                letterSpacing: '-0.025em',
+                fontSize: '1.5rem',
                 color: 'var(--color-primary)',
                 opacity: isMenuOpen ? 0 : 1,
-                transition: 'opacity var(--duration-normal) var(--ease-out)',
+                transition: 'opacity 300ms ease-out',
                 pointerEvents: isMenuOpen ? 'none' : 'auto'
               }}
             >
@@ -286,33 +286,33 @@ export const Header = () => {
 
           {/* Right Side: Language Selector */}
           <div className="d-flex align-items-center gap-3">
-            <div className="d-flex align-items-center rounded-pill px-2 py-1" role="group" aria-label="Language selector" style={{ backgroundColor: 'var(--color-bg-card)', boxShadow: 'var(--shadow-xs)', border: '1px solid var(--color-border)' }}>
+            <div className="d-flex align-items-center rounded-pill px-2 py-1" role="group" aria-label="Language selector" style={{ backgroundColor: 'var(--color-card-bg)', boxShadow: '0 1px 2px rgba(0,0,0,0.04)', border: '1px solid var(--color-border)' }}>
               <button
                 className={`btn btn-sm border-0 fw-bold px-2 py-0 ${lang === 'ru' ? '' : ''}`}
                 onClick={() => setLang('ru')}
                 aria-label="Russian"
                 aria-pressed={lang === 'ru'}
-                style={{ fontSize: 'var(--text-xs)', color: lang === 'ru' ? 'var(--color-text)' : 'var(--color-text-muted)' }}
+                style={{ fontSize: '0.75rem', color: lang === 'ru' ? 'var(--color-text)' : 'var(--color-text-muted)' }}
               >
                 RU
               </button>
-              <span className="opacity-25 mx-1" style={{ fontSize: 'var(--text-xs)', color: 'var(--color-text-muted)' }}>|</span>
+              <span className="opacity-25 mx-1" style={{ fontSize: '0.75rem', color: 'var(--color-text-muted)' }}>|</span>
               <button
                 className={`btn btn-sm border-0 fw-bold px-2 py-0`}
                 onClick={() => setLang('uk')}
                 aria-label="Ukrainian"
                 aria-pressed={lang === 'uk'}
-                style={{ fontSize: 'var(--text-xs)', color: lang === 'uk' ? 'var(--color-text)' : 'var(--color-text-muted)' }}
+                style={{ fontSize: '0.75rem', color: lang === 'uk' ? 'var(--color-text)' : 'var(--color-text-muted)' }}
               >
                 UA
               </button>
-              <span className="opacity-25 mx-1" style={{ fontSize: 'var(--text-xs)', color: 'var(--color-text-muted)' }}>|</span>
+              <span className="opacity-25 mx-1" style={{ fontSize: '0.75rem', color: 'var(--color-text-muted)' }}>|</span>
               <button
                 className={`btn btn-sm border-0 fw-bold px-2 py-0`}
                 onClick={() => setLang('en')}
                 aria-label="English"
                 aria-pressed={lang === 'en'}
-                style={{ fontSize: 'var(--text-xs)', color: lang === 'en' ? 'var(--color-text)' : 'var(--color-text-muted)' }}
+                style={{ fontSize: '0.75rem', color: lang === 'en' ? 'var(--color-text)' : 'var(--color-text-muted)' }}
               >
                 ENG
               </button>

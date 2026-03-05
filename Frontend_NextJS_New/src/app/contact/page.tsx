@@ -82,21 +82,21 @@ export default function ContactPage() {
   };
 
   return (
-    <main className="min-vh-100 pt-5 section-warm">
+    <main className="min-vh-100 pt-5" style={{ backgroundColor: 'var(--color-bg)' }}>
       <div className="container py-5">
-        <div className="text-center mb-5 animate-fade-in">
+        <div className="text-center mb-5">
           <h1 className="display-4 font-playfair fw-bold mb-3">{t.contact.contactTitle}</h1>
           <p className="lead" style={{ color: 'var(--color-text-muted)' }}>{t.contact.contactSubtitle}</p>
         </div>
 
         <div className="row justify-content-center g-5">
           <div className="col-lg-5">
-            <div className="card border-0 h-100 animate-fade-in animate-fade-in-delay-1" style={{ borderRadius: 'var(--radius-lg)' }}>
+            <div className="card border-0 h-100" style={{ borderRadius: '16px' }}>
               <div className="card-body p-5">
                 <h3 className="h4 font-playfair fw-bold mb-4">{t.contact.contactUs}</h3>
 
                 <div className="d-flex align-items-center mb-4">
-                  <div className="rounded-circle me-3 d-flex align-items-center justify-content-center flex-shrink-0" style={{ backgroundColor: 'var(--color-accent-light)', width: '50px', height: '50px' }}>
+                  <div className="rounded-circle me-3 d-flex align-items-center justify-content-center flex-shrink-0" style={{ backgroundColor: 'var(--color-accent-subtle)', width: '50px', height: '50px' }}>
                     <i className="bi bi-geo-alt fs-4" style={{ color: 'var(--color-primary)' }}></i>
                   </div>
                   <div>
@@ -106,7 +106,7 @@ export default function ContactPage() {
                 </div>
 
                 <div className="d-flex align-items-center mb-4">
-                  <div className="rounded-circle me-3 d-flex align-items-center justify-content-center flex-shrink-0" style={{ backgroundColor: 'var(--color-accent-light)', width: '50px', height: '50px' }}>
+                  <div className="rounded-circle me-3 d-flex align-items-center justify-content-center flex-shrink-0" style={{ backgroundColor: 'var(--color-accent-subtle)', width: '50px', height: '50px' }}>
                     <i className="bi bi-envelope fs-4" style={{ color: 'var(--color-primary)' }}></i>
                   </div>
                   <div>
@@ -116,7 +116,7 @@ export default function ContactPage() {
                 </div>
 
                 <div className="d-flex align-items-center">
-                  <div className="rounded-circle me-3 d-flex align-items-center justify-content-center flex-shrink-0" style={{ backgroundColor: 'var(--color-accent-light)', width: '50px', height: '50px' }}>
+                  <div className="rounded-circle me-3 d-flex align-items-center justify-content-center flex-shrink-0" style={{ backgroundColor: 'var(--color-accent-subtle)', width: '50px', height: '50px' }}>
                     <i className="bi bi-telephone fs-4" style={{ color: 'var(--color-primary)' }}></i>
                   </div>
                   <div>
@@ -129,7 +129,7 @@ export default function ContactPage() {
           </div>
 
           <div className="col-lg-7">
-            <div className="card border-0 animate-fade-in animate-fade-in-delay-2" style={{ borderRadius: 'var(--radius-lg)' }}>
+            <div className="card border-0" style={{ borderRadius: '16px' }}>
               <div className="card-body p-5">
                 <h3 className="h4 font-playfair fw-bold mb-4">{t.contact.sendMessage}</h3>
                 <form onSubmit={handleSubmit}>
@@ -188,7 +188,7 @@ export default function ContactPage() {
                       <button
                         type="submit"
                         className="btn btn-primary-custom w-100 py-3 fw-bold"
-                        style={{ borderRadius: 'var(--radius-full)' }}
+                        style={{ borderRadius: '9999px' }}
                         disabled={isSubmitting}
                       >
                         {isSubmitting ? t.contact.sendingBtn : t.contact.sendBtn}
@@ -215,14 +215,14 @@ export default function ContactPage() {
                 { q: t.contact.q3, a: t.contact.a3 },
                 { q: t.contact.q4, a: t.contact.a4 }
               ].map((faq, i) => (
-                <div className="accordion-item border-0 mb-3 overflow-hidden" style={{ borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-sm)' }} key={i}>
+                <div className="accordion-item border-0 mb-3 overflow-hidden" style={{ borderRadius: '16px', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }} key={i}>
                   <h2 className="accordion-header">
-                    <button className="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target={`#faq${i}`} style={{ backgroundColor: 'var(--color-bg-card)' }}>
+                    <button className="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target={`#faq${i}`} style={{ backgroundColor: 'var(--color-card-bg)' }}>
                       {faq.q}
                     </button>
                   </h2>
                   <div id={`faq${i}`} className="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-                    <div className="accordion-body" style={{ backgroundColor: 'var(--color-bg-card)', color: 'var(--color-text-secondary)' }}>
+                    <div className="accordion-body" style={{ backgroundColor: 'var(--color-card-bg)', color: 'var(--color-text-muted)' }}>
                       {faq.a}
                     </div>
                   </div>

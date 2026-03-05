@@ -22,12 +22,12 @@ export const RecipeCard = ({ recipe }: RecipeCardProps) => {
       <div className="card-body">
         <div className="d-flex justify-content-between align-items-center mb-3">
           <h5 className="card-title font-playfair fw-bold mb-0">{tStr(localized_recipe.title)}</h5>
-          <span className="badge" style={{ backgroundColor: 'var(--color-accent)', color: 'var(--color-text-on-accent)', borderRadius: 'var(--radius-full)' }}>
+          <span className="badge" style={{ backgroundColor: 'var(--color-accent)', color: '#fff', borderRadius: '9999px' }}>
             <i className="bi bi-clock me-1" aria-hidden="true"></i>{localized_recipe.time}
           </span>
         </div>
-        <p className="card-text" style={{ color: 'var(--color-text-muted)', fontSize: 'var(--text-sm)' }}>{tStr(localized_recipe.description)}</p>
-        <button className="btn btn-outline-primary-custom btn-sm px-4 mt-2" style={{ borderRadius: 'var(--radius-full)' }}>{tStr("Смотреть рецепт")}</button>
+        <p className="card-text" style={{ color: 'var(--color-text-muted)', fontSize: '0.875rem' }}>{tStr(localized_recipe.description)}</p>
+        <button className="btn btn-outline-primary-custom btn-sm px-4 mt-2" style={{ borderRadius: '9999px' }}>{tStr("Смотреть рецепт")}</button>
       </div>
     </article>
   );

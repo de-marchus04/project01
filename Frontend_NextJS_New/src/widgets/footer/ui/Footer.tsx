@@ -40,36 +40,36 @@ export const Footer = () => {
   const footerMutedColor = 'rgba(255, 255, 255, 0.45)';
 
   return (
-    <footer role="contentinfo" style={{ backgroundColor: 'var(--color-text)', padding: 'var(--space-12) 0 var(--space-8)' }}>
+    <footer role="contentinfo" style={{ backgroundColor: 'var(--color-text)', padding: '3rem 0 2rem' }}>
       <div className="container">
         <div className="row gy-4">
           <div className="col-lg-4">
-            <h3 className="font-playfair mb-3 text-white" style={{ fontSize: 'var(--text-2xl)' }}>YOGA.LIFE</h3>
-            <p style={{ color: footerLinkColor, lineHeight: 'var(--leading-relaxed)' }}>{t.footer.description}</p>
+            <h3 className="font-playfair mb-3 text-white" style={{ fontSize: '1.5rem' }}>YOGA.LIFE</h3>
+            <p style={{ color: footerLinkColor, lineHeight: '1.75' }}>{t.footer.description}</p>
           </div>
           <div className="col-lg-2 col-6">
-            <h5 className="mb-3 text-white" style={{ fontSize: 'var(--text-base)' }}>{t.footer.quickLinks}</h5>
+            <h5 className="mb-3 text-white" style={{ fontSize: '1rem' }}>{t.footer.quickLinks}</h5>
             <ul className="list-unstyled d-flex flex-column gap-2">
-              <li><Link href="/courses-beginners" className="text-decoration-none" style={{ color: footerLinkColor, transition: 'color var(--duration-fast)' }}>{t.nav.courses}</Link></li>
-              <li><Link href="/tours" className="text-decoration-none" style={{ color: footerLinkColor, transition: 'color var(--duration-fast)' }}>{t.nav.tours}</Link></li>
-              <li><Link href="/consultations-private" className="text-decoration-none" style={{ color: footerLinkColor, transition: 'color var(--duration-fast)' }}>{t.nav.consultations}</Link></li>
+              <li><Link href="/courses-beginners" className="text-decoration-none" style={{ color: footerLinkColor, transition: 'color 150ms' }}>{t.nav.courses}</Link></li>
+              <li><Link href="/tours" className="text-decoration-none" style={{ color: footerLinkColor, transition: 'color 150ms' }}>{t.nav.tours}</Link></li>
+              <li><Link href="/consultations-private" className="text-decoration-none" style={{ color: footerLinkColor, transition: 'color 150ms' }}>{t.nav.consultations}</Link></li>
             </ul>
           </div>
           <div className="col-lg-2 col-6">
-            <h5 className="mb-3 text-white" style={{ fontSize: 'var(--text-base)' }}>{t.footer.contacts}</h5>
+            <h5 className="mb-3 text-white" style={{ fontSize: '1rem' }}>{t.footer.contacts}</h5>
             <ul className="list-unstyled d-flex flex-column gap-2">
-              <li><Link href="/about" className="text-decoration-none" style={{ color: footerLinkColor, transition: 'color var(--duration-fast)' }}>{t.nav.about}</Link></li>
-              <li><Link href="/contact" className="text-decoration-none" style={{ color: footerLinkColor, transition: 'color var(--duration-fast)' }}>{t.nav.contact}</Link></li>
-              <li><Link href="/blog-articles" className="text-decoration-none" style={{ color: footerLinkColor, transition: 'color var(--duration-fast)' }}>{t.nav.blog}</Link></li>
+              <li><Link href="/about" className="text-decoration-none" style={{ color: footerLinkColor, transition: 'color 150ms' }}>{t.nav.about}</Link></li>
+              <li><Link href="/contact" className="text-decoration-none" style={{ color: footerLinkColor, transition: 'color 150ms' }}>{t.nav.contact}</Link></li>
+              <li><Link href="/blog-articles" className="text-decoration-none" style={{ color: footerLinkColor, transition: 'color 150ms' }}>{t.nav.blog}</Link></li>
             </ul>
           </div>
           <div className="col-lg-4">
-            <h5 className="mb-3 text-white" style={{ fontSize: 'var(--text-base)' }}>{t.footer.subscribe}</h5>
+            <h5 className="mb-3 text-white" style={{ fontSize: '1rem' }}>{t.footer.subscribe}</h5>
             <form className="d-flex gap-2" onSubmit={handleSubscribe}>
               <input
                 type="email"
                 className="form-control me-2"
-                style={{ borderRadius: 'var(--radius-full)', backgroundColor: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', color: '#fff' }}
+                style={{ borderRadius: '9999px', backgroundColor: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', color: '#fff' }}
                 placeholder={t.footer.yourEmail}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -79,7 +79,7 @@ export const Footer = () => {
               <button
                 type="submit"
                 className="btn btn-accent-custom px-4"
-                style={{ borderRadius: 'var(--radius-full)' }}
+                style={{ borderRadius: '9999px' }}
                 disabled={isLoading}
               >
                 {isLoading ? "..." : "OK"}
@@ -87,12 +87,12 @@ export const Footer = () => {
             </form>
           </div>
         </div>
-        <div className="divider-gradient" style={{ margin: 'var(--space-8) 0 var(--space-5)', background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent)' }}></div>
+        <div style={{ margin: '2rem 0 1.25rem', height: '1px', background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent)' }}></div>
         <div className="d-flex flex-column flex-md-row justify-content-between align-items-center" style={{ color: footerMutedColor }}>
           <small className="mb-2 mb-md-0">© 2026 YOGA.LIFE. {t.footer.rights}</small>
           <div className="d-flex gap-3">
-            <Link href="/privacy" className="text-decoration-none" style={{ color: footerMutedColor, fontSize: 'var(--text-sm)' }}>{t.footer.privacyPolicy}</Link>
-            <Link href="/terms" className="text-decoration-none" style={{ color: footerMutedColor, fontSize: 'var(--text-sm)' }}>{t.footer.termsOfService}</Link>
+            <Link href="/privacy" className="text-decoration-none" style={{ color: footerMutedColor, fontSize: '0.875rem' }}>{t.footer.privacyPolicy}</Link>
+            <Link href="/terms" className="text-decoration-none" style={{ color: footerMutedColor, fontSize: '0.875rem' }}>{t.footer.termsOfService}</Link>
           </div>
         </div>
       </div>
