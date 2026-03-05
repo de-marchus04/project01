@@ -1,15 +1,62 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { useLanguage } from "@/shared/i18n/LanguageContext";
 import { useScrollReveal } from "@/shared/hooks/useScrollReveal";
 
 const WARM_OVERLAY = 'linear-gradient(to top, rgba(35,25,18,0.95) 0%, rgba(50,38,28,0.5) 55%, rgba(35,25,18,0) 100%)';
 
+const CARDS = [
+  { href: '/courses', img: 'https://images.unsplash.com/photo-1593811167562-9cef47bfc4d7?q=80&w=800&auto=format&fit=crop', badgeKey: 'practice', titleKey: 'courses', descKey: 'coursesDesc' },
+  { href: '/consultations', img: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?q=80&w=800&auto=format&fit=crop', badgeKey: 'experts', titleKey: 'consultations', descKey: 'consultDesc' },
+  { href: '/tours', img: 'https://images.unsplash.com/photo-1552196563-55cd4e45efb3?q=80&w=800&auto=format&fit=crop', badgeKey: 'retreats', titleKey: 'tours', descKey: 'travelDesc' },
+  { href: '/blog', img: 'https://images.unsplash.com/photo-1545205597-3d9d02c29597?q=80&w=800&auto=format&fit=crop', badgeKey: 'usefulness', titleKey: 'blog', descKey: 'blogDesc' },
+] as const;
+
+const cardStyle: React.CSSProperties = {
+  minHeight: '400px',
+  borderRadius: '20px',
+  overflow: 'hidden',
+  position: 'relative',
+  display: 'flex',
+};
+
+const imgStyle: React.CSSProperties = {
+  position: 'absolute',
+  inset: 0,
+  width: '100%',
+  height: '100%',
+  objectFit: 'cover',
+  zIndex: 0,
+};
+
+const overlayStyle: React.CSSProperties = {
+  background: WARM_OVERLAY,
+  position: 'absolute',
+  inset: 0,
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'flex-end',
+  padding: '1.5rem',
+  zIndex: 1,
+};
+
 export const PlatformSections = () => {
   const { t } = useLanguage();
   const { observe } = useScrollReveal();
+
+  const getTitle = (key: string) => {
+    const map: Record<string, string> = { courses: t.nav.courses, consultations: t.nav.consultations, tours: t.nav.tours, blog: t.nav.blog };
+    return map[key] || key;
+  };
+  const getBadge = (key: string) => {
+    const map: Record<string, string> = { practice: t.home.practice, experts: t.home.experts, retreats: t.home.retreats, usefulness: t.home.usefulness };
+    return map[key] || key;
+  };
+  const getDesc = (key: string) => {
+    const map: Record<string, string> = { coursesDesc: t.home.coursesDesc, consultDesc: t.home.consultDesc, travelDesc: t.home.travelDesc, blogDesc: t.home.blogDesc };
+    return map[key] || key;
+  };
 
   return (
     <section className="py-5" style={{ backgroundColor: 'var(--color-surface)' }}>
@@ -22,85 +69,28 @@ export const PlatformSections = () => {
           </p>
         </div>
         <div className="row g-4 justify-content-center">
-          {/* Курсы */}
-          <div className="col-md-6 col-lg-3 reveal-up" ref={observe as any}>
-            <Link href="/courses" className="text-decoration-none">
-              <div className="card h-100 border-0 text-white overflow-hidden position-relative group-hover" style={{ minHeight: '400px', borderRadius: '20px' }}>
-                <Image
-                  src="https://images.unsplash.com/photo-1593811167562-9cef47bfc4d7?q=80&w=800&auto=format&fit=crop"
-                  alt={t.nav.courses}
-                  fill
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
-                  className="object-fit-cover"
-                />
-                <div className="card-img-overlay d-flex flex-column justify-content-end p-4 z-2" style={{ background: WARM_OVERLAY }}>
-                  <span className="badge rounded-pill mb-2 align-self-start" style={{ backgroundColor: 'var(--color-accent)', color: '#fff', fontSize: '0.75rem' }}>{t.home.practice}</span>
-                  <h3 className="card-title fw-bold font-playfair mb-1">{t.nav.courses}</h3>
-                  <p className="card-text small text-white-50 mb-0">{t.home.coursesDesc}</p>
+          {CARDS.map((card, idx) => (
+            <div key={card.href} className={`col-md-6 col-lg-3 reveal-up${idx > 0 ? ` reveal-delay-${idx}` : ''}`} ref={observe as any}>
+              <Link href={card.href} className="text-decoration-none">
+                <div className="group-hover text-white" style={cardStyle}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={card.img}
+                    alt={getTitle(card.titleKey)}
+                    style={imgStyle}
+                    loading="eager"
+                  />
+                  <div style={overlayStyle}>
+                    <span className="badge rounded-pill mb-2 align-self-start" style={{ backgroundColor: 'var(--color-accent)', color: '#fff', fontSize: '0.75rem' }}>
+                      {getBadge(card.badgeKey)}
+                    </span>
+                    <h3 className="fw-bold font-playfair mb-1">{getTitle(card.titleKey)}</h3>
+                    <p className="small mb-0" style={{ color: 'rgba(255,255,255,0.5)' }}>{getDesc(card.descKey)}</p>
+                  </div>
                 </div>
-              </div>
-            </Link>
-          </div>
-
-          {/* Консультации */}
-          <div className="col-md-6 col-lg-3 reveal-up reveal-delay-1" ref={observe as any}>
-            <Link href="/consultations" className="text-decoration-none">
-              <div className="card h-100 border-0 text-white overflow-hidden position-relative group-hover" style={{ minHeight: '400px', borderRadius: '20px' }}>
-                <Image
-                  src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?q=80&w=800&auto=format&fit=crop"
-                  alt={t.nav.consultations}
-                  fill
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
-                  className="object-fit-cover"
-                />
-                <div className="card-img-overlay d-flex flex-column justify-content-end p-4 z-2" style={{ background: WARM_OVERLAY }}>
-                  <span className="badge rounded-pill mb-2 align-self-start" style={{ backgroundColor: 'var(--color-accent)', color: '#fff', fontSize: '0.75rem' }}>{t.home.experts}</span>
-                  <h3 className="card-title fw-bold font-playfair mb-1">{t.nav.consultations}</h3>
-                  <p className="card-text small text-white-50 mb-0">{t.home.consultDesc}</p>
-                </div>
-              </div>
-            </Link>
-          </div>
-
-          {/* Туры */}
-          <div className="col-md-6 col-lg-3 reveal-up reveal-delay-2" ref={observe as any}>
-            <Link href="/tours" className="text-decoration-none">
-              <div className="card h-100 border-0 text-white overflow-hidden position-relative group-hover" style={{ minHeight: '400px', borderRadius: '20px' }}>
-                <Image
-                  src="https://images.unsplash.com/photo-1552196563-55cd4e45efb3?q=80&w=800&auto=format&fit=crop"
-                  alt={t.home.travelTitle}
-                  fill
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
-                  className="object-fit-cover"
-                />
-                <div className="card-img-overlay d-flex flex-column justify-content-end p-4 z-2" style={{ background: WARM_OVERLAY }}>
-                  <span className="badge rounded-pill mb-2 align-self-start" style={{ backgroundColor: 'var(--color-accent)', color: '#fff', fontSize: '0.75rem' }}>{t.home.retreats}</span>
-                  <h3 className="card-title fw-bold font-playfair mb-1">{t.nav.tours}</h3>
-                  <p className="card-text small text-white-50 mb-0">{t.home.travelDesc}</p>
-                </div>
-              </div>
-            </Link>
-          </div>
-
-          {/* Блог */}
-          <div className="col-md-6 col-lg-3 reveal-up reveal-delay-3" ref={observe as any}>
-            <Link href="/blog" className="text-decoration-none">
-              <div className="card h-100 border-0 text-white overflow-hidden position-relative group-hover" style={{ minHeight: '400px', borderRadius: '20px' }}>
-                <Image
-                  src="https://images.unsplash.com/photo-1545205597-3d9d02c29597?q=80&w=800&auto=format&fit=crop"
-                  alt={t.nav.blog}
-                  fill
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
-                  className="object-fit-cover"
-                />
-                <div className="card-img-overlay d-flex flex-column justify-content-end p-4 z-2" style={{ background: WARM_OVERLAY }}>
-                  <span className="badge rounded-pill mb-2 align-self-start" style={{ backgroundColor: 'var(--color-accent)', color: '#fff', fontSize: '0.75rem' }}>{t.home.usefulness}</span>
-                  <h3 className="card-title fw-bold font-playfair mb-1">{t.nav.blog}</h3>
-                  <p className="card-text small text-white-50 mb-0">{t.home.blogDesc}</p>
-                </div>
-              </div>
-            </Link>
-          </div>
+              </Link>
+            </div>
+          ))}
         </div>
       </div>
     </section>

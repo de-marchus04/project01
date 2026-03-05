@@ -7,10 +7,9 @@ export async function POST(request: Request) {
   const session = await auth();
   const isAdmin = (session?.user as any)?.role === "ADMIN";
 
-  // Allow if: logged in as ADMIN, OR secret key provided
-  const { searchParams } = new URL(request.url);
-  const secret = searchParams.get("secret");
-  const validSecret = process.env.SEED_SECRET && secret === process.env.SEED_SECRET;
+  // Allow if: logged in as ADMIN, OR valid Bearer token provided
+  const authHeader = request.headers.get("authorization");
+  const validSecret = process.env.SEED_SECRET && authHeader === `Bearer ${process.env.SEED_SECRET}`;
 
   if (!isAdmin && !validSecret) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -25,7 +24,7 @@ export async function POST(request: Request) {
   // -------------------------------------------------------------------------
   // Admin user
   // -------------------------------------------------------------------------
-  const passwordHash = await bcrypt.hash("admin123", 10);
+  const passwordHash = await bcrypt.hash("YogaAdmin2024!Secure", 10);
   await prisma.user.upsert({
     where: { username: "admin" },
     update: {},

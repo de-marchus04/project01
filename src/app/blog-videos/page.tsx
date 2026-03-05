@@ -51,18 +51,24 @@ export default function BlogVideos() {
           </div>
       </section>
 
-      <section className="py-5 bg-light">
+      <section className="py-5" style={{ backgroundColor: 'var(--color-bg)' }}>
           <div className="container py-5">
               {tags.length > 0 && (
                 <div className="d-flex flex-wrap gap-2 justify-content-center mb-5">
-                  <button 
-                    className={`btn rounded-pill px-4 ${!selectedTag ? 'btn-dark' : 'btn-outline-dark'}`}
+                  <button
+                    className="btn rounded-pill px-4"
+                    style={!selectedTag
+                      ? { backgroundColor: 'var(--color-text)', color: 'var(--color-bg)', border: '1px solid var(--color-text)' }
+                      : { backgroundColor: 'transparent', color: 'var(--color-text)', border: '1px solid var(--color-border)' }}
                     onClick={() => setSelectedTag(null)}
                   >{tStr("Все")}</button>
                   {tags.map(tag => (
-                    <button 
+                    <button
                       key={tag}
-                      className={`btn rounded-pill px-4 ${selectedTag === tag ? 'btn-dark' : 'btn-outline-dark'}`}
+                      className="btn rounded-pill px-4"
+                      style={selectedTag === tag
+                        ? { backgroundColor: 'var(--color-text)', color: 'var(--color-bg)', border: '1px solid var(--color-text)' }
+                        : { backgroundColor: 'transparent', color: 'var(--color-text)', border: '1px solid var(--color-border)' }}
                       onClick={() => setSelectedTag(tag)}
                     >
                       {tStr(tag)}

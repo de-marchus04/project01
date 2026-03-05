@@ -96,6 +96,8 @@ export default function CourseDetail() {
     );
   }
 
+  if (!localized_course) return null;
+
   return (
     <main>
       {/* HERO SECTION */}
@@ -106,7 +108,7 @@ export default function CourseDetail() {
               minHeight: '500px',
               paddingTop: '100px',
               paddingBottom: '40px',
-              background: `linear-gradient(rgba(62, 66, 58, 0.6), rgba(62, 66, 58, 0.8)), url('${localized_course.imageUrl}') no-repeat center center/cover`
+              background: `linear-gradient(rgba(62, 66, 58, 0.6), rgba(62, 66, 58, 0.8)), url('${localized_course?.imageUrl ?? ''}') no-repeat center center/cover`
           }}
         >
             <div className="container position-relative z-2 h-100 d-flex flex-column">

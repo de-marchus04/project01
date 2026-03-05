@@ -20,7 +20,7 @@ export const PodcastCard = ({ podcast }: PodcastCardProps) => {
       </div>
       <div className="d-flex flex-column align-items-center align-items-md-end gap-2">
         <span className="badge bg-light text-dark border">{localized_podcast.duration}</span>
-        <button className="btn btn-outline-dark rounded-pill btn-sm px-4">{tStr("Слушать")}</button>
+        <button className="btn rounded-pill btn-sm px-4" style={{ backgroundColor: 'var(--color-primary)', color: '#fff', border: 'none' }}>{tStr("Слушать")}</button>
       </div>
     </div>
   );

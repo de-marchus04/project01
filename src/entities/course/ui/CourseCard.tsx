@@ -6,15 +6,16 @@ import { formatPrice } from "@/shared/lib/formatPrice";
 import { WishlistButton } from "@/shared/ui/WishlistButton";
 
 interface CourseCardProps {
-  course: Course;
+  course: Course & { category?: string };
   onBuy: (title: string, price: number) => void;
+  type?: 'course' | 'consultation';
 }
 
-export const CourseCard = ({ course, onBuy }: CourseCardProps) => {
+export const CourseCard = ({ course, onBuy, type }: CourseCardProps) => {
   const { lang, tData , tStr} = useLanguage() as any;
 
   const localized_course = tData ? tData(course) : course;
-  const isConsultation = /^(private|nutrition|mentorship)/.test(localized_course.id);
+  const isConsultation = type === 'consultation' || /^(private|nutrition|mentorship)/.test(localized_course.category || localized_course.id);
   const itemType = isConsultation ? 'CONSULTATION' : 'COURSE';
   const detailUrl = isConsultation ? `/consultations/${localized_course.id}` : `/courses/${localized_course.id}`;
 

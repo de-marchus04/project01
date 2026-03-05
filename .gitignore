@@ -40,3 +40,17 @@ data_dump.sql
 
 # infrastructure
 Infra/backups/*.sql.gz
+
+# old/backup project directories
+Yoga_Life_Final_Project/
+Frontend_NextJS_New/_backup/
+Frontend_NextJS_New/version_3_backup/
+
+# temp migration/fix scripts in Frontend_NextJS_New
+Frontend_NextJS_New/*.js
+Frontend_NextJS_New/*.json
+Frontend_NextJS_New/*.txt
+Frontend_NextJS_New/*.html
+Frontend_NextJS_New/css/
+Frontend_NextJS_New/js/
+Frontend_NextJS_New/scripts/

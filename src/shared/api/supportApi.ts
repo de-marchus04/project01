@@ -1,6 +1,8 @@
 "use server";
 
 import { prisma } from "@/shared/lib/prisma";
+import { headers } from "next/headers";
+import { rateLimit } from "@/shared/lib/rateLimit";
 
 export interface SupportMessage {
   id: string;
@@ -57,6 +59,11 @@ export async function sendMessage(
   message: string,
   isBot: boolean = false
 ): Promise<SupportMessage> {
+  const h = await headers();
+  const ip = h.get('x-forwarded-for') || 'unknown';
+  const rl = rateLimit(`support:${ip}`, { windowMs: 600_000, max: 10 });
+  if (!rl.success) throw new Error('Слишком много запросов. Попробуйте позже.');
+
   const status = isBot ? 'CLOSED' : 'NEW';
   
   const newItem = await prisma.supportTicket.create({

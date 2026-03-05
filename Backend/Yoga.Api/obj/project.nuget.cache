@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "Gq+zik2vwV69bk1W+TxiqJsa1s2fS7F4PtU8MBmlpb6agK3iVVMpBpnzRHnpsIUnP6n8lQ08zHt1p47qT7nVAQ==",
+  "dgSpecHash": "sdFKfftA+G/DBXo8cMvb6hHgVf7D5Jl7XYjzr+pZwlf5tt9qInn3LHCKfcL74ANgG4wYkMQrbekeqGDtqUvLRQ==",
   "success": true,
   "projectFilePath": "/home/dmitrij/Freelance_Projects/YogaPlatform/Backend/Yoga.Api/Yoga.Api.csproj",
   "expectedPackageFiles": [
+    "/home/dmitrij/.nuget/packages/bcrypt.net-next/4.1.0/bcrypt.net-next.4.1.0.nupkg.sha512",
     "/home/dmitrij/.nuget/packages/fluentvalidation/12.1.1/fluentvalidation.12.1.1.nupkg.sha512",
     "/home/dmitrij/.nuget/packages/fluentvalidation.dependencyinjectionextensions/12.1.1/fluentvalidation.dependencyinjectionextensions.12.1.1.nupkg.sha512",
     "/home/dmitrij/.nuget/packages/humanizer.core/2.14.1/humanizer.core.2.14.1.nupkg.sha512",

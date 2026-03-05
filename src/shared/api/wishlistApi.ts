@@ -21,7 +21,8 @@ export async function addToWishlist(itemId: string, itemType: 'COURSE' | 'TOUR' 
   try {
     await prisma.wishlist.create({ data: { userId, itemId, itemType } });
     return { success: true };
-  } catch {
+  } catch (e) {
+    console.error('addToWishlist error:', e);
     return { success: false, error: 'Уже в избранном' };
   }
 }
@@ -78,7 +79,9 @@ export async function getUserWishlist(): Promise<WishlistItem[]> {
         price = tour?.price;
         url = `/tours/${item.itemId}`;
       }
-    } catch {}
+    } catch (e) {
+      console.error('getUserWishlist enrichment error:', e);
+    }
 
     return { id: item.id, itemId: item.itemId, itemType: item.itemType, createdAt: item.createdAt.toISOString(), title, imageUrl, price, url };
   }));

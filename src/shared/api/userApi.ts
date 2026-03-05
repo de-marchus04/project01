@@ -130,7 +130,10 @@ export async function deleteOrder(id: string): Promise<boolean> {
   try {
     await prisma.order.delete({ where: { id } });
     return true;
-  } catch (e) { return false; }
+  } catch (e) {
+    console.error('deleteOrder error:', e);
+    return false;
+  }
 }
 
 export async function markOrderAsNotified(id: string): Promise<void> {

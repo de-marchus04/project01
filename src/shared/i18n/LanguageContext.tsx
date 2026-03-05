@@ -10,7 +10,7 @@ type Language = 'ru' | 'en' | 'uk';
 type Dictionary = typeof ru;
 
 interface LanguageContextType {
-  tData: <T>(obj: T) => T;
+  tData: <T extends Record<string, any>>(obj: T) => T;
   tStr: (str: string) => string;
   lang: Language;
   setLang: (lang: Language) => void;
@@ -53,16 +53,23 @@ export const LanguageProvider = ({ children }: { children: React.ReactNode }) =>
     let newObj: any = { ...obj };
     
     if (lang !== 'ru') {
-      const keys = ['title', 'description', 'subtitle', 'content', 'fullDescription', 'location', 'question', 'answer', 'date', 'tag', 'duration', 'category', 'author', 'text', 'name', 'course']; 
+      const keys = ['title', 'description', 'subtitle', 'content', 'fullDescription', 'location', 'question', 'answer', 'date', 'tag', 'duration', 'category', 'author', 'text', 'name', 'course', 'features'];
       for (const key of keys) {
-        if (typeof newObj[key] === 'string') {
-          const str = newObj[key];
-          if (mockTranslations[str] && (mockTranslations[str] as any)[lang]) {
-            newObj[key] = (mockTranslations[str] as any)[lang];
-          } else if (key === 'author' && str.includes('(Админ сайта)')) {
+        const val = newObj[key];
+        if (typeof val === 'string') {
+          if (mockTranslations[val] && (mockTranslations[val] as any)[lang]) {
+            newObj[key] = (mockTranslations[val] as any)[lang];
+          } else if (key === 'author' && val.includes('(Админ сайта)')) {
             const translatedAdmin = (mockTranslations['Админ сайта'] as any)?.[lang] || 'Site Admin';
-            newObj[key] = str.replace('(Админ сайта)', `(${translatedAdmin})`);
+            newObj[key] = val.replace('(Админ сайта)', `(${translatedAdmin})`);
           }
+        } else if (Array.isArray(val)) {
+          newObj[key] = val.map((item: any) => {
+            if (typeof item === 'string' && mockTranslations[item] && (mockTranslations[item] as any)[lang]) {
+              return (mockTranslations[item] as any)[lang];
+            }
+            return item;
+          });
         }
       }
     }

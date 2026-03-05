@@ -82,7 +82,7 @@ export default function ConsultationsNutritionClient({ initialData }: { initialD
 
             {!loading && !error && products.map((product: any, idx: number) => (
               <div key={product.id} className={`col-md-6 col-lg-4 reveal-up reveal-delay-${idx % 3}`} ref={observe as any}>
-                <CourseCard course={product} onBuy={buyProduct} />
+                <CourseCard course={product} onBuy={buyProduct} type="consultation" />
               </div>
             ))}
           </div>

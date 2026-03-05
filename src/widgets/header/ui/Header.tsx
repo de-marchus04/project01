@@ -55,9 +55,9 @@ export const Header = () => {
   useEffect(() => {
     const mainContent = document.getElementById('main-content');
     if (mainContent) {
-      // CSS handles the transition via #main-content rule in style.css
       if (isMenuOpen) {
-        mainContent.style.transform = 'translateX(320px)';
+        const pushWidth = window.innerWidth <= 575 ? window.innerWidth : 320;
+        mainContent.style.transform = `translateX(${pushWidth}px)`;
         document.body.style.overflow = 'hidden';
       } else {
         mainContent.style.transform = 'translateX(0)';
@@ -251,37 +251,47 @@ export const Header = () => {
             </button>
 
             {isAuth ? (
-              <Link
-                href={isAdmin ? "/admin" : "/profile"}
-                className="text-decoration-none d-flex align-items-center gap-2"
-                style={{ minWidth: 0 }}
-                title={isAdmin ? t.header.admin : t.header.profile}
-              >
-                {userPhoto && (userPhoto.startsWith('http') || userPhoto.startsWith('data:image')) ? (
-                  <img
-                    src={userPhoto}
-                    alt={username}
-                    className="rounded-circle object-fit-cover flex-shrink-0"
-                    style={{ width: '34px', height: '34px', border: '2px solid var(--color-primary)' }}
-                    onError={(e) => { e.currentTarget.style.display = 'none'; }}
-                  />
-                ) : (
-                  <div
-                    className="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0"
-                    style={{ width: '34px', height: '34px', backgroundColor: 'var(--color-primary)', border: '2px solid var(--color-primary)' }}
-                  >
-                    <span style={{ color: '#fff', fontSize: '0.85rem', fontWeight: 700, lineHeight: 1 }}>
-                      {username ? username.charAt(0).toUpperCase() : <i className="bi bi-person" />}
-                    </span>
-                  </div>
-                )}
-                <span
-                  className="d-none d-sm-block fw-medium text-truncate"
-                  style={{ maxWidth: '110px', color: 'var(--color-text)', fontSize: '0.9rem' }}
+              <>
+                <Link
+                  href={isAdmin ? "/admin" : "/profile"}
+                  className="text-decoration-none d-flex align-items-center gap-2"
+                  style={{ minWidth: 0 }}
+                  title={isAdmin ? t.header.admin : t.header.profile}
                 >
-                  {username}
-                </span>
-              </Link>
+                  {userPhoto && (userPhoto.startsWith('http') || userPhoto.startsWith('data:image')) ? (
+                    <img
+                      src={userPhoto}
+                      alt={username}
+                      className="rounded-circle object-fit-cover flex-shrink-0"
+                      style={{ width: '34px', height: '34px', border: '2px solid var(--color-primary)' }}
+                      onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                    />
+                  ) : (
+                    <div
+                      className="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0"
+                      style={{ width: '34px', height: '34px', backgroundColor: 'var(--color-primary)', border: '2px solid var(--color-primary)' }}
+                    >
+                      <span style={{ color: '#fff', fontSize: '0.85rem', fontWeight: 700, lineHeight: 1 }}>
+                        {username ? username.charAt(0).toUpperCase() : <i className="bi bi-person" />}
+                      </span>
+                    </div>
+                  )}
+                  <span
+                    className="d-none d-sm-block fw-medium text-truncate"
+                    style={{ maxWidth: '110px', color: 'var(--color-text)', fontSize: '0.9rem' }}
+                  >
+                    {username}
+                  </span>
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  className="btn btn-link p-0 border-0"
+                  style={{ color: 'var(--color-text-muted)', lineHeight: 1 }}
+                  title={t.header?.logout || 'Выйти'}
+                >
+                  <i className="bi bi-door-open fs-4"></i>
+                </button>
+              </>
             ) : (
               <Link
                 href="/login"

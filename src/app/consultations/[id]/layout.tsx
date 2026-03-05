@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import { getBeginnersCourses, getBackCourses, getMeditationCourses, getWomenCourses, getCourseById, getAllAdminCourses, addCourse, updateCourse, deleteCourse } from "@/shared/api/courseApi";
+import { getConsultationById } from "@/shared/api/consultationApi";
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -8,33 +8,31 @@ type Props = {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   try {
-    // В реальном приложении здесь будет запрос к БД/API
-    // Для демо используем наш мок-API (он синхронный, но мы оборачиваем в Promise для совместимости)
     const resolvedParams = await params;
-    const course = await getCourseById(resolvedParams.id);
-    
-    if (!course) {
+    const consultation = await getConsultationById(resolvedParams.id);
+
+    if (!consultation) {
       return {
-        title: "Курс не найден | YOGA.LIFE",
+        title: "Консультация не найдена | YOGA.LIFE",
       };
     }
 
     return {
-      title: `${course.title} | Курсы YOGA.LIFE`,
-      description: course.description.substring(0, 160) + "...",
+      title: `${consultation.title} | Консультации YOGA.LIFE`,
+      description: consultation.description.substring(0, 160) + "...",
       openGraph: {
-        title: course.title,
-        description: course.description.substring(0, 160) + "...",
-        images: [course.imageUrl],
+        title: consultation.title,
+        description: consultation.description.substring(0, 160) + "...",
+        images: consultation.imageUrl ? [consultation.imageUrl] : [],
       },
     };
   } catch (error) {
     return {
-      title: "Курс | YOGA.LIFE",
+      title: "Консультация | YOGA.LIFE",
     };
   }
 }
 
-export default function CourseLayout({ children }: Props) {
+export default function ConsultationLayout({ children }: Props) {
   return <>{children}</>;
 }

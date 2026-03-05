@@ -8,7 +8,7 @@
     ],
     "allowJs": true,
     "skipLibCheck": true,
-    "strict": false,
+    "strict": true,
     "noEmit": true,
     "incremental": true,
     "module": "esnext",
@@ -37,6 +37,6 @@
     "**/*.tsx"
   ],
   "exclude": [
-    "node_modules", "version_3_backup", "_backup"
+    "node_modules", "version_3_backup", "_backup", "Frontend_NextJS", "Frontend_NextJS_New", "Frontend", "Frontend_Restored", "Backend", "Infra", "Yoga_Life_Final_Project"
   ]
 }

@@ -4,9 +4,10 @@ import TourDetailClient from './TourDetailClient';
 
 const BASE_URL = 'https://yoga-platform-9j65.vercel.app';
 
-export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   try {
-    const tour = await getTourById(params.id);
+    const { id } = await params;
+    const tour = await getTourById(id);
     if (!tour) return { title: 'Тур | YOGA.LIFE' };
     return {
       title: `${tour.title} | YOGA.LIFE`,
@@ -15,7 +16,7 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
         title: tour.title,
         description: tour.description?.slice(0, 160),
         images: tour.imageUrl ? [{ url: tour.imageUrl }] : [],
-        url: `${BASE_URL}/tours/${params.id}`,
+        url: `${BASE_URL}/tours/${id}`,
         type: 'website',
       },
     };

@@ -3,6 +3,8 @@
 import { prisma } from "@/shared/lib/prisma";
 import { auth } from "@/auth";
 import bcrypt from "bcryptjs";
+import { headers } from "next/headers";
+import { rateLimit } from "@/shared/lib/rateLimit";
 
 export interface UserProfile {
   id: string;
@@ -55,6 +57,11 @@ export async function updateMyProfile(
 
 export async function changePassword(username: string, oldPassword: string, newPassword: string) {
   try {
+    const h = await headers();
+    const ip = h.get('x-forwarded-for') || 'unknown';
+    const rl = rateLimit(`changePwd:${ip}`, { windowMs: 600_000, max: 5 });
+    if (!rl.success) return { success: false, error: 'Слишком много запросов. Попробуйте позже.' };
+
     const session = await auth();
     const sessionUsername = (session?.user as any)?.username;
     if (!session?.user || sessionUsername !== username) {
@@ -66,6 +73,10 @@ export async function changePassword(username: string, oldPassword: string, newP
 
     if (!user) {
       return { success: false, error: "Пользователь не найден" };
+    }
+
+    if (!user.passwordHash) {
+      return { success: false, error: "Пароль не установлен" };
     }
 
     const passwordsMatch = await bcrypt.compare(oldPassword, user.passwordHash);
@@ -90,6 +101,21 @@ export async function changePassword(username: string, oldPassword: string, newP
 
 export async function resetPassword(username: string, newPassword: string) {
   try {
+    const h = await headers();
+    const ip = h.get('x-forwarded-for') || 'unknown';
+    const rl = rateLimit(`resetPwd:${ip}`, { windowMs: 600_000, max: 5 });
+    if (!rl.success) return { success: false, error: 'Слишком много запросов. Попробуйте позже.' };
+
+    const session = await auth();
+    const sessionUser = session?.user as any;
+    if (!session?.user || sessionUser?.role !== 'ADMIN') {
+      return { success: false, error: 'Только администратор может сбросить пароль' };
+    }
+
+    if (!newPassword || newPassword.length < 6) {
+      return { success: false, error: 'Пароль должен быть не менее 6 символов' };
+    }
+
     const user = await prisma.user.findUnique({
       where: { username }
     });
