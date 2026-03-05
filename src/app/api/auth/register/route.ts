@@ -4,7 +4,9 @@ import bcrypt from 'bcryptjs';
 import { prisma } from '@/shared/lib/prisma';
 import { z } from 'zod';
 
-// Simple in-memory rate limiter: max 5 registrations per IP per 10 minutes
+// Rate limiter: max 5 registrations per IP per 10 minutes.
+// NOTE: In-memory store resets between serverless cold starts.
+// For stricter rate limiting in production, use Vercel KV or Upstash Redis.
 const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
 const RATE_LIMIT_MAX = 5;
 const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;

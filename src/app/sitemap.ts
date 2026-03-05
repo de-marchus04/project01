@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next';
 import { prisma } from '@/shared/lib/prisma';
 
-const BASE_URL = 'https://yoga-platform-9j65.vercel.app';
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://yoga-platform.vercel.app';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticRoutes: MetadataRoute.Sitemap = [

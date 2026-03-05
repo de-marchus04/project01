@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 import { getTourById } from '@/shared/api/tourApi';
 import TourDetailClient from './TourDetailClient';
 
-const BASE_URL = 'https://yoga-platform-9j65.vercel.app';
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://yoga-platform.vercel.app';
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   try {

@@ -1032,52 +1032,6 @@ export default function Admin() {
             </section>
           )}
 
-
-          {activeTab === 'mediaPane' && !isFormOpen && (
-            <section className="card border-0 p-4" style={{ borderRadius: '16px', boxShadow: '0 4px 20px rgba(0, 0, 0, 0.05)' }}>
-                <div className="d-flex justify-content-between align-items-center mb-4">
-                  <h3 className="h5 fw-bold mb-0">{t.admin.mediaManage}</h3>
-                  <button className="btn btn-dark btn-sm px-3 rounded-pill" onClick={() => modalService.alert('', 'Функция загрузки медиа в разработке')}>
-                    <i className="bi bi-cloud-upload"></i> Загрузить медиа
-                  </button>
-                </div>
-                <div className="alert alert-info border-0 rounded-4" style={{ backgroundColor: '#e8f4f8', color: '#0c5460' }}>
-                  <i className="bi bi-info-circle me-2"></i>
-                  Здесь вы можете загружать изображения и видео-анимации для использования в слайдерах (Hero-блоках) на страницах курсов, туров, консультаций и блога.
-                </div>
-                <div className="row g-3 mt-2">
-                  {[1, 2, 3, 4].map(i => (
-                    <div key={i} className="col-md-3 col-sm-6">
-                      <div className="card border-0 shadow-sm rounded-4 overflow-hidden position-relative group-hover">
-                        <div style={{ height: '150px', backgroundColor: '#e9ecef', backgroundImage: `url('https://images.unsplash.com/photo-${1500000000000 + i * 1000000}?q=80&w=300')`, backgroundSize: 'cover', backgroundPosition: 'center' }} className="d-flex align-items-center justify-content-center text-muted">
-                        </div>
-                        <div className="card-body p-2 d-flex justify-content-between align-items-center">
-                          <small className="text-muted text-truncate" style={{ maxWidth: '80%' }}>hero_bg_${i}.jpg</small>
-                          <button className="btn btn-link text-danger p-0"><i className="bi bi-trash"></i></button>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-            </section>
-          )}
-
-          {activeTab === 'siteContentPane' && !isFormOpen && (
-            <section className="card border-0 p-4" style={{ borderRadius: '16px', boxShadow: '0 4px 20px rgba(0, 0, 0, 0.05)' }}>
-                <div className="d-flex justify-content-between align-items-center mb-4">
-                  <h3 className="h5 fw-bold mb-0">{t.admin.contentManage}</h3>
-                </div>
-                <div className="alert alert-info border-0 rounded-4" style={{ backgroundColor: '#e8f4f8', color: '#0c5460' }}>
-                  <i className="bi bi-info-circle me-2"></i>
-                  В этом разделе вы можете редактировать текстовое и визуальное содержимое основных страниц сайта.
-                </div>
-              <div className="text-center py-5 text-muted">
-                <i className="bi bi-tools display-4 d-block mb-3"></i>
-                <p>Раздел находится в разработке. В будущем здесь появится возможность редактировать контент всех страниц сайта.</p>
-              </div>
-            </section>
-          )}
-
           {activeTab === 'profilePane' && !isFormOpen && (
             <section className="card border-0 p-4" style={{ borderRadius: '16px', boxShadow: '0 4px 20px rgba(0, 0, 0, 0.05)' }}>
               <div className="d-flex justify-content-between align-items-center mb-4">

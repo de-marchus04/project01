@@ -4,14 +4,20 @@ import { prisma } from "@/shared/lib/prisma";
 import * as bcrypt from "bcryptjs";
 
 export async function POST(request: Request) {
+  // In production, only allow seeding with a valid Bearer token (no UI access)
+  const isProduction = process.env.NODE_ENV === 'production';
+
   const session = await auth();
   const isAdmin = (session?.user as any)?.role === "ADMIN";
 
-  // Allow if: logged in as ADMIN, OR valid Bearer token provided
   const authHeader = request.headers.get("authorization");
   const validSecret = process.env.SEED_SECRET && authHeader === `Bearer ${process.env.SEED_SECRET}`;
 
-  if (!isAdmin && !validSecret) {
+  if (isProduction && !validSecret) {
+    return NextResponse.json({ error: "Seed endpoint requires Bearer token in production" }, { status: 403 });
+  }
+
+  if (!isProduction && !isAdmin && !validSecret) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -24,7 +30,11 @@ export async function POST(request: Request) {
   // -------------------------------------------------------------------------
   // Admin user
   // -------------------------------------------------------------------------
-  const passwordHash = await bcrypt.hash("YogaAdmin2024!Secure", 10);
+  const adminPassword = process.env.ADMIN_DEFAULT_PASSWORD;
+  if (!adminPassword) {
+    return NextResponse.json({ error: "ADMIN_DEFAULT_PASSWORD env variable is not set" }, { status: 500 });
+  }
+  const passwordHash = await bcrypt.hash(adminPassword, 10);
   await prisma.user.upsert({
     where: { username: "admin" },
     update: {},
