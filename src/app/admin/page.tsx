@@ -1,8 +1,11 @@
 "use client";
-import { uploadImageToCloud } from "@/shared/api/uploadApi";
+import { uploadImageToCloud, getCloudImages, deleteCloudImage } from "@/shared/api/uploadApi";
+import type { CloudImage } from "@/shared/api/uploadApi";
+import { getAllSubscribers, deleteSubscriber } from "@/shared/api/subscriberApi";
+import type { Subscriber } from "@/shared/api/subscriberApi";
+import { getPromoCodes, createPromoCode, togglePromoCodeActive, deletePromoCode } from "@/shared/api/promoApi";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { getBeginnersCourses, getBackCourses, getMeditationCourses, getWomenCourses, getCourseById, getAllAdminCourses, addCourse, updateCourse, deleteCourse } from "@/shared/api/courseApi";
 import { getAllAdminConsultations, deleteConsultation, updateConsultation, addConsultation } from "@/shared/api/consultationApi";
@@ -50,6 +53,12 @@ export default function Admin() {
   const [faqs, setFaqs] = useState<FAQ[]>([]);
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [replyText, setReplyText] = useState<{ [key: string]: string }>({});
+  const [cloudImages, setCloudImages] = useState<CloudImage[]>([]);
+  const [mediaUploading, setMediaUploading] = useState(false);
+  const [subscribers, setSubscribers] = useState<Subscriber[]>([]);
+  const [promoCodes, setPromoCodes] = useState<any[]>([]);
+  const [promoForm, setPromoForm] = useState({ code: '', discountType: 'PERCENT' as 'PERCENT' | 'FIXED', discountValue: 10, maxUses: '', expiresAt: '' });
+  const [isPromoFormOpen, setIsPromoFormOpen] = useState(false);
   
   const [stats, setStats] = useState({
     earnedTotal: 0,
@@ -141,6 +150,9 @@ export default function Admin() {
       getMessages().then(setSupportMessages);
       getFAQs().then(setFaqs);
       setTestimonials(testimonialsData);
+      getCloudImages().then(setCloudImages).catch(() => {});
+      getAllSubscribers().then(setSubscribers).catch(() => {});
+      getPromoCodes().then(setPromoCodes).catch(() => {});
     } catch (error) {
       console.error("Error loading admin data:", error);
     }
@@ -776,6 +788,9 @@ export default function Admin() {
                 ['toursPane', t.admin.tabTours, 'bi-geo-alt'],
                 ['ordersPane', t.admin.tabOrders, 'bi-clipboard-check'],
                 ['supportPane', t.admin.tabSupport, 'bi-chat-dots'],
+                ['subscribersPane', t.admin.tabSubscribers, 'bi-envelope'],
+                ['promoPane', t.admin.tabPromo, 'bi-tag'],
+                ['mediaPane', t.admin.tabMedia, 'bi-images'],
                 ['faqsPane', t.admin.tabFaq, 'bi-question-circle'],
                 ['testimonialsPane', t.admin.tabTestimonials, 'bi-star'],
                 ['profilePane', t.admin.tabProfile, 'bi-person-gear'],
@@ -1029,6 +1044,275 @@ export default function Admin() {
                         </tbody>
                     </table>
                 </div>
+            </section>
+          )}
+
+          {activeTab === 'mediaPane' && !isFormOpen && (
+            <section className="card border-0 p-4" style={{ borderRadius: '16px', boxShadow: '0 4px 20px rgba(0, 0, 0, 0.05)' }}>
+              <div className="d-flex justify-content-between align-items-center mb-4">
+                <h3 className="h5 fw-bold mb-0" style={{ color: 'var(--color-text)' }}>{t.admin.mediaTitle}</h3>
+                <label className="btn btn-sm px-3 rounded-pill" style={{ backgroundColor: 'var(--color-primary)', color: '#fff', border: 'none', cursor: 'pointer' }}>
+                  <i className="bi bi-cloud-upload me-2"></i>
+                  {mediaUploading ? t.admin.mediaUploading : t.admin.mediaUpload}
+                  <input type="file" accept="image/*" className="d-none" disabled={mediaUploading} onChange={async (e) => {
+                    const file = e.target.files?.[0];
+                    if (!file) return;
+                    setMediaUploading(true);
+                    const reader = new FileReader();
+                    reader.onloadend = async () => {
+                      try {
+                        const img = new window.Image();
+                        img.onload = async () => {
+                          const canvas = document.createElement('canvas');
+                          const MAX = 1200;
+                          let w = img.width, h = img.height;
+                          if (w > MAX) { h *= MAX / w; w = MAX; }
+                          if (h > MAX) { w *= MAX / h; h = MAX; }
+                          canvas.width = w; canvas.height = h;
+                          canvas.getContext('2d')?.drawImage(img, 0, 0, w, h);
+                          const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+                          await uploadImageToCloud(dataUrl);
+                          const imgs = await getCloudImages();
+                          setCloudImages(imgs);
+                          showToast(t.admin.itemSaved, 'success');
+                          setMediaUploading(false);
+                        };
+                        img.src = reader.result as string;
+                      } catch {
+                        showToast(t.admin.errSave, 'error');
+                        setMediaUploading(false);
+                      }
+                    };
+                    reader.readAsDataURL(file);
+                    e.target.value = '';
+                  }} />
+                </label>
+              </div>
+              {cloudImages.length === 0 ? (
+                <div className="text-center py-5" style={{ color: 'var(--color-text-muted)' }}>
+                  <i className="bi bi-images" style={{ fontSize: '3rem', opacity: 0.3 }}></i>
+                  <p className="mt-3">{t.admin.mediaNoImages}</p>
+                </div>
+              ) : (
+                <div className="row g-3">
+                  {cloudImages.map((img) => (
+                    <div key={img.public_id} className="col-6 col-md-4 col-lg-3">
+                      <div className="card border-0 h-100" style={{ borderRadius: '12px', overflow: 'hidden', border: '1px solid var(--color-border)', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>
+                        <div style={{ position: 'relative', paddingTop: '75%', backgroundColor: 'var(--color-secondary)' }}>
+                          <img
+                            src={img.secure_url}
+                            alt=""
+                            style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover' }}
+                          />
+                        </div>
+                        <div className="p-2">
+                          <div className="small text-truncate mb-1" style={{ color: 'var(--color-text-muted)', fontSize: '0.75rem' }}>
+                            {img.width}x{img.height} &middot; {img.format.toUpperCase()} &middot; {(img.bytes / 1024).toFixed(0)}KB
+                          </div>
+                          <div className="d-flex gap-1">
+                            <button
+                              className="btn btn-sm flex-grow-1 rounded-pill"
+                              style={{ fontSize: '0.75rem', border: '1px solid var(--color-border)', color: 'var(--color-text)' }}
+                              onClick={() => {
+                                navigator.clipboard.writeText(img.secure_url);
+                                showToast(t.admin.mediaCopied, 'success');
+                              }}
+                            >
+                              <i className="bi bi-clipboard me-1"></i>{t.admin.mediaCopyUrl}
+                            </button>
+                            <button
+                              className="btn btn-sm rounded-pill"
+                              style={{ fontSize: '0.75rem', border: '1px solid #dc3545', color: '#dc3545' }}
+                              onClick={async () => {
+                                if (!(await modalService.confirm('', t.admin.mediaConfirmDel))) return;
+                                await deleteCloudImage(img.public_id);
+                                const imgs = await getCloudImages();
+                                setCloudImages(imgs);
+                              }}
+                            >
+                              <i className="bi bi-trash"></i>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </section>
+          )}
+
+          {activeTab === 'subscribersPane' && !isFormOpen && (
+            <section className="card border-0 p-4" style={{ borderRadius: '16px', boxShadow: '0 4px 20px rgba(0, 0, 0, 0.05)' }}>
+              <div className="d-flex justify-content-between align-items-center mb-4">
+                <h3 className="h5 fw-bold mb-0" style={{ color: 'var(--color-text)' }}>{t.admin.subsTitle}</h3>
+                <span className="badge rounded-pill px-3 py-2" style={{ backgroundColor: 'var(--color-secondary)', color: 'var(--color-primary)', fontSize: '0.85rem', border: '1px solid var(--color-border)' }}>
+                  {t.admin.subsTotal}: {subscribers.length}
+                </span>
+              </div>
+              <div className="table-responsive">
+                <table className="table table-hover align-middle">
+                  <thead className="table-light">
+                    <tr>
+                      <th>#</th>
+                      <th>{t.admin.subsEmail}</th>
+                      <th>{t.admin.subsDate}</th>
+                      <th className="text-end">{t.admin.colActions}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {subscribers.map((sub, idx) => (
+                      <tr key={sub.id}>
+                        <td>{idx + 1}</td>
+                        <td>{sub.email}</td>
+                        <td>{new Date(sub.createdAt).toLocaleDateString()}</td>
+                        <td className="text-end">
+                          <button
+                            className="btn btn-sm btn-outline-danger rounded-pill"
+                            onClick={async () => {
+                              if (!(await modalService.confirm('', t.admin.subsConfirmDel))) return;
+                              await deleteSubscriber(sub.id);
+                              const subs = await getAllSubscribers();
+                              setSubscribers(subs);
+                            }}
+                          >
+                            <i className="bi bi-x-lg me-1"></i>{t.admin.subsDelete}
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                    {subscribers.length === 0 && (
+                      <tr><td colSpan={4} className="text-center py-4" style={{ color: 'var(--color-text-muted)' }}>{t.admin.subsNoData}</td></tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </section>
+          )}
+
+          {activeTab === 'promoPane' && !isFormOpen && (
+            <section className="card border-0 p-4" style={{ borderRadius: '16px', boxShadow: '0 4px 20px rgba(0, 0, 0, 0.05)' }}>
+              <div className="d-flex justify-content-between align-items-center mb-4">
+                <h3 className="h5 fw-bold mb-0" style={{ color: 'var(--color-text)' }}>{t.admin.promoTitle}</h3>
+                <button className="btn btn-sm px-3 rounded-pill" style={{ backgroundColor: 'var(--color-primary)', color: '#fff', border: 'none' }}
+                  onClick={() => setIsPromoFormOpen(!isPromoFormOpen)}
+                >
+                  <i className="bi bi-plus-lg me-1"></i>{t.admin.promoAddNew}
+                </button>
+              </div>
+
+              {isPromoFormOpen && (
+                <div className="card border-0 p-3 mb-4" style={{ borderRadius: '12px', backgroundColor: 'var(--color-secondary)', border: '1px solid var(--color-border)' }}>
+                  <div className="row g-3">
+                    <div className="col-md-3">
+                      <label className="form-label small fw-bold">{t.admin.promoCode}</label>
+                      <input type="text" className="form-control" placeholder="YOGA2024" value={promoForm.code}
+                        onChange={(e) => setPromoForm({...promoForm, code: e.target.value.toUpperCase()})} />
+                    </div>
+                    <div className="col-md-2">
+                      <label className="form-label small fw-bold">{t.admin.promoType}</label>
+                      <select className="form-select" value={promoForm.discountType}
+                        onChange={(e) => setPromoForm({...promoForm, discountType: e.target.value as 'PERCENT' | 'FIXED'})}>
+                        <option value="PERCENT">{t.admin.promoPercent} (%)</option>
+                        <option value="FIXED">{t.admin.promoFixed} ({lang === 'en' ? '$' : '₴'})</option>
+                      </select>
+                    </div>
+                    <div className="col-md-2">
+                      <label className="form-label small fw-bold">{t.admin.promoValue}</label>
+                      <input type="number" className="form-control" value={promoForm.discountValue}
+                        onChange={(e) => setPromoForm({...promoForm, discountValue: Number(e.target.value)})} />
+                    </div>
+                    <div className="col-md-2">
+                      <label className="form-label small fw-bold">{t.admin.promoMaxUses}</label>
+                      <input type="number" className="form-control" placeholder={t.admin.promoUnlimited} value={promoForm.maxUses}
+                        onChange={(e) => setPromoForm({...promoForm, maxUses: e.target.value})} />
+                    </div>
+                    <div className="col-md-3">
+                      <label className="form-label small fw-bold">{t.admin.promoExpires}</label>
+                      <input type="date" className="form-control" value={promoForm.expiresAt}
+                        onChange={(e) => setPromoForm({...promoForm, expiresAt: e.target.value})} />
+                    </div>
+                    <div className="col-12">
+                      <button className="btn btn-sm px-4 rounded-pill" style={{ backgroundColor: 'var(--color-primary)', color: '#fff', border: 'none' }}
+                        onClick={async () => {
+                          if (!promoForm.code) return;
+                          await createPromoCode({
+                            code: promoForm.code,
+                            discountType: promoForm.discountType,
+                            discountValue: promoForm.discountValue,
+                            maxUses: promoForm.maxUses ? Number(promoForm.maxUses) : undefined,
+                            expiresAt: promoForm.expiresAt || undefined,
+                          });
+                          const codes = await getPromoCodes();
+                          setPromoCodes(codes);
+                          setPromoForm({ code: '', discountType: 'PERCENT', discountValue: 10, maxUses: '', expiresAt: '' });
+                          setIsPromoFormOpen(false);
+                          showToast(t.admin.itemSaved, 'success');
+                        }}
+                      >
+                        {t.admin.formSave}
+                      </button>
+                      <button className="btn btn-sm ms-2 px-4 rounded-pill" style={{ border: '1px solid var(--color-border)', color: 'var(--color-text)' }}
+                        onClick={() => setIsPromoFormOpen(false)}>
+                        {t.admin.formCancel}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              <div className="table-responsive">
+                <table className="table table-hover align-middle">
+                  <thead className="table-light">
+                    <tr>
+                      <th>{t.admin.promoCode}</th>
+                      <th>{t.admin.promoType}</th>
+                      <th>{t.admin.promoValue}</th>
+                      <th>{t.admin.promoUsed}</th>
+                      <th>{t.admin.promoExpires}</th>
+                      <th>{t.admin.promoActive}</th>
+                      <th className="text-end">{t.admin.colActions}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {promoCodes.map((promo) => (
+                      <tr key={promo.id}>
+                        <td><code style={{ color: 'var(--color-primary)', fontWeight: 600 }}>{promo.code}</code></td>
+                        <td>{promo.discountType === 'PERCENT' ? t.admin.promoPercent : t.admin.promoFixed}</td>
+                        <td>{promo.discountType === 'PERCENT' ? `${promo.discountValue}%` : formatPrice(promo.discountValue, lang)}</td>
+                        <td>{promo.usedCount}{promo.maxUses ? ` / ${promo.maxUses}` : ''}</td>
+                        <td>{promo.expiresAt ? new Date(promo.expiresAt).toLocaleDateString() : t.admin.promoNoExpiry}</td>
+                        <td>
+                          <div className="form-check form-switch">
+                            <input className="form-check-input" type="checkbox" checked={promo.isActive}
+                              onChange={async () => {
+                                await togglePromoCodeActive(promo.id, !promo.isActive);
+                                const codes = await getPromoCodes();
+                                setPromoCodes(codes);
+                              }}
+                            />
+                          </div>
+                        </td>
+                        <td className="text-end">
+                          <button className="btn btn-sm btn-outline-danger rounded-pill"
+                            onClick={async () => {
+                              if (!(await modalService.confirm('', t.admin.promoConfirmDel))) return;
+                              await deletePromoCode(promo.id);
+                              const codes = await getPromoCodes();
+                              setPromoCodes(codes);
+                            }}
+                          >
+                            <i className="bi bi-trash"></i>
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                    {promoCodes.length === 0 && (
+                      <tr><td colSpan={7} className="text-center py-4" style={{ color: 'var(--color-text-muted)' }}>{t.admin.promoNoData}</td></tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
             </section>
           )}
 
