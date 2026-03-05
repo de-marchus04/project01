@@ -334,7 +334,17 @@ export const ru = {
       "promoFixed": "Фиксированная",
       "promoUnlimited": "Без ограничений",
       "promoNoExpiry": "Бессрочно",
-      "promoConfirmDel": "Удалить этот промокод?"
+      "promoConfirmDel": "Удалить этот промокод?",
+      "formAuthorName": "Имя автора / организатора",
+      "formAuthorPhoto": "Фото автора / организатора",
+      "tabTeam": "Команда",
+      "teamTitle": "Члены команды",
+      "teamName": "Имя",
+      "teamRole": "Должность / Роль",
+      "teamPhoto": "URL фото",
+      "teamOrder": "Порядок",
+      "teamNoData": "Нет членов команды",
+      "teamConfirmDel": "Удалить этого члена команды?"
   },
   contact: {
       "contactTitle": "Контакты",

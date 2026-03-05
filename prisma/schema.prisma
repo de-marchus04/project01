@@ -269,3 +269,16 @@ model PromoCode {
   isActive      Boolean      @default(true)
   createdAt     DateTime     @default(now())
 }
+
+// -----------------------------------------------------------------------------
+// Команда (На странице "О нас")
+// -----------------------------------------------------------------------------
+model TeamMember {
+  id        String   @id @default(cuid())
+  name      String
+  role      String
+  imageUrl  String?
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

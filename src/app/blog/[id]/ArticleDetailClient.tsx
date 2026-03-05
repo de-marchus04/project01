@@ -117,7 +117,27 @@ export default function ArticleDetail() {
                 <p className="lead text-muted mb-5 font-playfair fst-italic" style={{ fontSize: '1.25rem', borderLeft: '4px solid var(--color-primary)', paddingLeft: '1.5rem' }}>
                   {loc_article.subtitle}
                 </p>
-                <div className="article-content" style={{ fontSize: '1.1rem', lineHeight: '1.8', color: '#4a4a4a', whiteSpace: 'pre-wrap' }}>
+
+                {/* Author card */}
+                {(loc_article.author || loc_article.authorPhoto) && (
+                  <div className="d-flex align-items-center gap-3 mb-5 p-3 rounded-3" style={{ backgroundColor: 'var(--color-bg)', border: '1px solid var(--color-border)' }}>
+                    {loc_article.authorPhoto ? (
+                      <img src={loc_article.authorPhoto} alt={loc_article.author || ''} className="rounded-circle object-fit-cover" style={{ width: '48px', height: '48px' }} />
+                    ) : (
+                      <div className="rounded-circle d-flex align-items-center justify-content-center" style={{ width: '48px', height: '48px', backgroundColor: 'var(--color-primary)', color: '#fff', fontSize: '1.2rem', fontWeight: 600 }}>
+                        {(loc_article.author || '?')[0]}
+                      </div>
+                    )}
+                    <div>
+                      <div className="fw-bold" style={{ color: 'var(--color-text)' }}>{loc_article.author}</div>
+                      <div className="small" style={{ color: 'var(--color-text-muted)' }}>
+                        {new Date(loc_article.createdAt).toLocaleDateString(dateLocale, { year: 'numeric', month: 'long', day: 'numeric' })}
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                <div className="article-content" style={{ fontSize: '1.1rem', lineHeight: '1.8', color: 'var(--color-text)', whiteSpace: 'pre-wrap' }}>
                   {loc_article.content || (
                     <>
                       <p className="mb-4">{tStr("Йога — это не просто набор физических упражнений, это целостная система, которая помогает найти баланс между телом и разумом. В современном мире, полном стрессов и суеты, практика йоги становится настоящим спасением для многих людей.")}</p>

@@ -583,9 +583,9 @@ export const mockTranslations: Record<string, any> = {
     "en": "Authorization required",
     "uk": "Потрібна авторизація"
   },
-  "Хотите войти в личный кабинет, чтобы сохранить историю записей?\\n\\nНажмите 'ОК' для входа/регистрации.\\nНажмите 'Отмена' для быстрой записи без регистрации.": {
-    "en": "Do you want to log into your personal account to save your recording history?\\n\\nClick 'OK' to log in/register.\\nClick 'Cancel' to quickly record without registering.",
-    "uk": "Бажаєте увійти в особистий кабінет, щоб зберегти історію записів?"
+  "Хотите войти в личный кабинет, чтобы сохранить историю записей?\n\nНажмите 'ОК' для входа/регистрации.\nНажмите 'Отмена' для быстрой записи без регистрации.": {
+    "en": "Do you want to log into your personal account to save your booking history?\n\nClick 'OK' to log in/register.\nClick 'Cancel' for a quick booking without registration.",
+    "uk": "Бажаєте увійти в особистий кабінет, щоб зберегти історію записів?\n\nНатисніть 'ОК' для входу/реєстрації.\nНатисніть 'Скасувати' для швидкого запису без реєстрації."
   },
   "ОК": {
     "en": "OK",
@@ -610,6 +610,10 @@ export const mockTranslations: Record<string, any> = {
   "Ошибка": {
     "en": "Error",
     "uk": "Помилка"
+  },
+  "Внимание": {
+    "en": "Attention",
+    "uk": "Увага"
   },
   "Запись отменена. Контактные данные обязательны.": {
     "en": "Registration cancelled. Contact information is required.",

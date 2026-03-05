@@ -38,7 +38,7 @@ export const usePurchase = () => {
         }
         
         if (contactInfo.trim() === "") {
-          await modalService.alert(tStr("Внимание"), tStr("Запись отменена. Пожалуйста, укажите контактные данные."));
+          await modalService.alert(tStr("Внимание"), tStr("Запись отменена. Контактные данные обязательны."));
           return;
         }
         customerName = contactInfo;

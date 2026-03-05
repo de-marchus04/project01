@@ -1,13 +1,21 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { useLanguage } from "@/shared/i18n/LanguageContext";
 import { useScrollReveal } from "@/shared/hooks/useScrollReveal";
 import { SectionHeader } from "@/shared/ui/SectionHeader/SectionHeader";
+import { getTeamMembers } from "@/shared/api/teamApi";
+import type { TeamMember } from "@/shared/api/teamApi";
 
 export default function AboutPage() {
   const { t, tStr } = useLanguage();
   const { observe } = useScrollReveal();
+  const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
+
+  useEffect(() => {
+    getTeamMembers().then(setTeamMembers).catch(() => {});
+  }, []);
 
   return (
     <main className="min-vh-100 pt-5" style={{ backgroundColor: 'var(--color-bg)' }}>
@@ -96,11 +104,11 @@ export default function AboutPage() {
             observe={observe}
           />
           <div className="row g-4 justify-content-center">
-            {[
+            {(teamMembers.length > 0 ? teamMembers.map((m) => ({ name: m.name, role: m.role, img: m.imageUrl || '' })) : [
               { name: t.home.team1Name, role: t.home.team1Role, img: "https://images.unsplash.com/photo-1518611012118-696072aa579a?q=80&w=800&auto=format&fit=crop" },
               { name: t.home.team2Name, role: t.home.team2Role, img: "https://images.unsplash.com/photo-1599901860904-17e6ed7083a0?q=80&w=800&auto=format&fit=crop" },
               { name: t.home.team3Name, role: t.home.team3Role, img: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?q=80&w=800&auto=format&fit=crop" }
-            ].map((member, i) => (
+            ]).map((member, i) => (
               <div className={`col-md-4 reveal-up reveal-delay-${i}`} key={i} ref={observe as any}>
                 <div className="card border-0 rounded-4 overflow-hidden shadow-sm h-100">
                   <img src={member.img} alt={member.name} className="card-img-top" style={{ height: '350px', objectFit: 'cover' }} referrerPolicy="no-referrer" />

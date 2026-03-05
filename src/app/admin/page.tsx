@@ -4,6 +4,8 @@ import type { CloudImage } from "@/shared/api/uploadApi";
 import { getAllSubscribers, deleteSubscriber } from "@/shared/api/subscriberApi";
 import type { Subscriber } from "@/shared/api/subscriberApi";
 import { getPromoCodes, createPromoCode, togglePromoCodeActive, deletePromoCode } from "@/shared/api/promoApi";
+import { getTeamMembers, addTeamMember, updateTeamMember, deleteTeamMember } from "@/shared/api/teamApi";
+import type { TeamMember } from "@/shared/api/teamApi";
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -59,6 +61,7 @@ export default function Admin() {
   const [promoCodes, setPromoCodes] = useState<any[]>([]);
   const [promoForm, setPromoForm] = useState({ code: '', discountType: 'PERCENT' as 'PERCENT' | 'FIXED', discountValue: 10, maxUses: '', expiresAt: '' });
   const [isPromoFormOpen, setIsPromoFormOpen] = useState(false);
+  const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
   
   const [stats, setStats] = useState({
     earnedTotal: 0,
@@ -153,6 +156,7 @@ export default function Admin() {
       getCloudImages().then(setCloudImages).catch(() => {});
       getAllSubscribers().then(setSubscribers).catch(() => {});
       getPromoCodes().then(setPromoCodes).catch(() => {});
+      getTeamMembers().then(setTeamMembers).catch(() => {});
     } catch (error) {
       console.error("Error loading admin data:", error);
     }
@@ -365,6 +369,7 @@ export default function Admin() {
       if (type === 'tour') await deleteTour(id);
       if (type === 'faq') await deleteFAQ(id);
       if (type === 'testimonial') await deleteTestimonial(id);
+      if (type === 'team') await deleteTeamMember(id);
       await loadData();
     } catch (error) {
       console.error(error);
@@ -433,8 +438,8 @@ export default function Admin() {
     const data = Object.fromEntries(formData.entries()) as any;
     
     try {
-      let authorName = adminProfile.name ? `${adminProfile.name} (Админ сайта)` : ((session?.user as any)?.username ? `${(session?.user as any).username} (Админ сайта)` : 'Админ сайта');
-      let authorPhoto = adminProfile.photoUrl || '';
+      let authorName = data.authorName?.trim() || (adminProfile.name ? `${adminProfile.name} (Админ сайта)` : ((session?.user as any)?.username ? `${(session?.user as any).username} (Админ сайта)` : 'Админ сайта'));
+      let authorPhoto = data.authorPhotoUrl?.trim() || adminProfile.photoUrl || '';
 
       if (activeTab === 'coursesPane') {
         const courseData = await translateObjectFields({ title: data.title, description: data.description, fullDescription: data.fullDescription, features: data.features, price: Number(data.price), imageUrl: data.imageUrl, author: authorName, authorPhoto });
@@ -484,6 +489,11 @@ export default function Admin() {
         if (editingItem) await updateRecipe(editingItem.id, recipeData);
         else await addRecipe(recipeData);
       }
+      else if (activeTab === 'teamPane') {
+        const teamData = { name: data.title, role: data.description, imageUrl: data.imageUrl, sortOrder: Number(data.sortOrder) || 0 };
+        if (editingItem) await updateTeamMember(editingItem.id, teamData);
+        else await addTeamMember(teamData);
+      }
       
       await loadData();
       showToast(t.admin.itemSaved, 'success');
@@ -511,8 +521,8 @@ export default function Admin() {
         <form onSubmit={handleSave}>
           <div className="row g-3">
             <div className="col-md-12">
-              <label className="form-label">{activeTab === 'faqsPane' ? t.admin.formQuestion : activeTab === 'testimonialsPane' ? t.admin.formUsername  : t.admin.formTitleLabel}</label>
-              <input type="text" name="title" className="form-control" required defaultValue={activeTab === 'faqsPane' ? editingItem?.question || '' : activeTab === 'testimonialsPane' ? editingItem?.name || ''  : editingItem?.title || ''} />
+              <label className="form-label">{activeTab === 'faqsPane' ? t.admin.formQuestion : activeTab === 'testimonialsPane' ? t.admin.formUsername : activeTab === 'teamPane' ? t.admin.teamName : t.admin.formTitleLabel}</label>
+              <input type="text" name="title" className="form-control" required defaultValue={activeTab === 'faqsPane' ? editingItem?.question || '' : activeTab === 'testimonialsPane' ? editingItem?.name || '' : activeTab === 'teamPane' ? editingItem?.name || '' : editingItem?.title || ''} />
             </div>
             
             {activeTab === 'articlesPane' && (
@@ -530,8 +540,8 @@ export default function Admin() {
 
             {activeTab === 'testimonialsPane' && (<div className="col-md-12"><label className="form-label">{t.admin.formCourseLabel}</label><input type="text" name="course" className="form-control" required defaultValue={editingItem?.course || ''} /></div>)}{activeTab !== 'articlesPane' && (
               <div className="col-md-12">
-                <label className="form-label">{activeTab === 'faqsPane' ? t.admin.formAnswer : activeTab === 'testimonialsPane' ? t.admin.formReview : t.admin.formDesc}</label>
-                <textarea name="description" className="form-control" rows={3} required defaultValue={activeTab === 'faqsPane' ? editingItem?.answer || '' : activeTab === 'testimonialsPane' ? editingItem?.text || '' : editingItem?.description || ''}></textarea>
+                <label className="form-label">{activeTab === 'faqsPane' ? t.admin.formAnswer : activeTab === 'testimonialsPane' ? t.admin.formReview : activeTab === 'teamPane' ? t.admin.teamRole : t.admin.formDesc}</label>
+                <textarea name="description" className="form-control" rows={3} required defaultValue={activeTab === 'faqsPane' ? editingItem?.answer || '' : activeTab === 'testimonialsPane' ? editingItem?.text || '' : activeTab === 'teamPane' ? editingItem?.role || '' : editingItem?.description || ''}></textarea>
               </div>
             )}
 
@@ -590,6 +600,13 @@ export default function Admin() {
               </div>
             )}
 
+            {activeTab === 'teamPane' && (
+              <div className="col-md-6">
+                <label className="form-label">{t.admin.teamOrder}</label>
+                <input type="number" name="sortOrder" className="form-control" defaultValue={editingItem?.sortOrder || 0} />
+              </div>
+            )}
+
             {activeTab !== 'podcastsPane' && (
               <div className="col-md-6">
                 <label className="form-label">{t.admin.formImageUrl} <span className="text-danger">*</span></label>
@@ -635,6 +652,19 @@ export default function Admin() {
                 <div className="col-md-6">
                   <label className="form-label">{t.admin.formLocation}</label>
                   <input type="text" name="location" className="form-control" required defaultValue={editingItem?.location || ''} />
+                </div>
+              </>
+            )}
+
+            {['articlesPane', 'toursPane', 'coursesPane', 'consultationsPane'].includes(activeTab) && (
+              <>
+                <div className="col-md-6">
+                  <label className="form-label">{t.admin.formAuthorName}</label>
+                  <input type="text" name="authorName" className="form-control" defaultValue={editingItem?.author || ''} placeholder={adminProfile.name || ''} />
+                </div>
+                <div className="col-md-6">
+                  <label className="form-label">{t.admin.formAuthorPhoto}</label>
+                  <input type="text" name="authorPhotoUrl" className="form-control" defaultValue={editingItem?.authorPhoto || ''} placeholder={adminProfile.photoUrl || ''} />
                 </div>
               </>
             )}
@@ -793,6 +823,7 @@ export default function Admin() {
                 ['mediaPane', t.admin.tabMedia, 'bi-images'],
                 ['faqsPane', t.admin.tabFaq, 'bi-question-circle'],
                 ['testimonialsPane', t.admin.tabTestimonials, 'bi-star'],
+                ['teamPane', t.admin.tabTeam, 'bi-people'],
                 ['profilePane', t.admin.tabProfile, 'bi-person-gear'],
               ] as [string, string, string][]).map(([pane, label, icon]) => (
                 <div
@@ -1309,6 +1340,62 @@ export default function Admin() {
                     ))}
                     {promoCodes.length === 0 && (
                       <tr><td colSpan={7} className="text-center py-4" style={{ color: 'var(--color-text-muted)' }}>{t.admin.promoNoData}</td></tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </section>
+          )}
+
+          {activeTab === 'teamPane' && !isFormOpen && (
+            <section className="card border-0 p-4" style={{ borderRadius: '16px', boxShadow: '0 4px 20px rgba(0, 0, 0, 0.05)' }}>
+              <div className="d-flex justify-content-between align-items-center mb-4">
+                <h3 className="h5 fw-bold mb-0" style={{ color: 'var(--color-text)' }}>{t.admin.teamTitle}</h3>
+                <button className="btn btn-sm px-3 rounded-pill" style={{ backgroundColor: 'var(--color-primary)', color: '#fff', border: 'none' }}
+                  onClick={() => { setEditingItem(null); setIsFormOpen(true); }}>
+                  <i className="bi bi-plus-lg me-1"></i>{t.admin.addBtn}
+                </button>
+              </div>
+              <div className="table-responsive">
+                <table className="table table-hover align-middle">
+                  <thead className="table-light">
+                    <tr>
+                      <th style={{ width: '50px' }}>#</th>
+                      <th style={{ width: '60px' }}></th>
+                      <th>{t.admin.teamName}</th>
+                      <th>{t.admin.teamRole}</th>
+                      <th className="text-end">{t.admin.colActions}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {teamMembers.map((member, idx) => (
+                      <tr key={member.id}>
+                        <td>{idx + 1}</td>
+                        <td>
+                          {member.imageUrl ? (
+                            <img src={member.imageUrl} alt={member.name} className="rounded-circle" style={{ width: '40px', height: '40px', objectFit: 'cover' }} />
+                          ) : (
+                            <div className="rounded-circle d-flex align-items-center justify-content-center" style={{ width: '40px', height: '40px', backgroundColor: 'var(--color-primary)', color: '#fff', fontWeight: 600 }}>
+                              {member.name[0]}
+                            </div>
+                          )}
+                        </td>
+                        <td className="fw-bold">{member.name}</td>
+                        <td style={{ color: 'var(--color-text-muted)' }}>{member.role}</td>
+                        <td className="text-end">
+                          <button className="btn btn-sm btn-outline-secondary rounded-pill me-1"
+                            onClick={() => { setEditingItem(member); setIsFormOpen(true); }}>
+                            <i className="bi bi-pencil me-1"></i>{t.admin.btnEdit}
+                          </button>
+                          <button className="btn btn-sm btn-outline-danger rounded-pill"
+                            onClick={() => handleDelete(member.id, 'team')}>
+                            <i className="bi bi-trash"></i>
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                    {teamMembers.length === 0 && (
+                      <tr><td colSpan={5} className="text-center py-4" style={{ color: 'var(--color-text-muted)' }}>{t.admin.teamNoData}</td></tr>
                     )}
                   </tbody>
                 </table>

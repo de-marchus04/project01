@@ -344,7 +344,17 @@ export const en = {
       "promoFixed": "Fixed",
       "promoUnlimited": "Unlimited",
       "promoNoExpiry": "No expiry",
-      "promoConfirmDel": "Delete this promo code?"
+      "promoConfirmDel": "Delete this promo code?",
+      "formAuthorName": "Author / Organizer name",
+      "formAuthorPhoto": "Author / Organizer photo",
+      "tabTeam": "Team",
+      "teamTitle": "Team Members",
+      "teamName": "Name",
+      "teamRole": "Position / Role",
+      "teamPhoto": "Photo URL",
+      "teamOrder": "Order",
+      "teamNoData": "No team members",
+      "teamConfirmDel": "Delete this team member?"
   },
   contact: {
       "contactTitle": "Contacts",

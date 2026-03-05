@@ -344,7 +344,17 @@ export const uk = {
       "promoFixed": "Фіксована",
       "promoUnlimited": "Без обмежень",
       "promoNoExpiry": "Безстроково",
-      "promoConfirmDel": "Видалити цей промокод?"
+      "promoConfirmDel": "Видалити цей промокод?",
+      "formAuthorName": "Ім'я автора / організатора",
+      "formAuthorPhoto": "Фото автора / організатора",
+      "tabTeam": "Команда",
+      "teamTitle": "Члени команди",
+      "teamName": "Ім'я",
+      "teamRole": "Посада / Роль",
+      "teamPhoto": "URL фото",
+      "teamOrder": "Порядок",
+      "teamNoData": "Немає членів команди",
+      "teamConfirmDel": "Видалити цього члена команди?"
   },
   contact: {
       "contactTitle": "Контакти",
