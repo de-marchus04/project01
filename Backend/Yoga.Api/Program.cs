@@ -50,6 +50,16 @@ builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
+    options.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "Yoga Platform API",
+        Version = "v1",
+        Description = "REST API for the Yoga.Life online learning platform"
+    });
+
+    var xmlFilename = $"{System.Reflection.Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Name = "Authorization",
@@ -76,18 +86,20 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
-// --- 🔓 ШАГ 1: ДОБАВЛЯЕМ СЕРВИС CORS ---
+// --- CORS: whitelist разрешённых origins ---
+var allowedOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>()
+    ?? Array.Empty<string>();
+
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAll",
-        policy =>
-        {
-            policy.AllowAnyOrigin()  // Разрешаем запросы с любого сайта (localhost:5500 и т.д.)
-                  .AllowAnyMethod()  // Разрешаем любые методы (GET, POST, PUT, DELETE)
-                  .AllowAnyHeader(); // Разрешаем любые заголовки
-        });
+    options.AddPolicy("AllowedOrigins", policy =>
+    {
+        policy.WithOrigins(allowedOrigins)
+              .AllowAnyMethod()
+              .AllowAnyHeader()
+              .AllowCredentials();
+    });
 });
-// ---------------------------------------
 
 builder.Services.AddControllers(options =>
 {
@@ -236,11 +248,9 @@ app.UseStaticFiles();
 
 // app.UseHttpsRedirection(); // ОТКЛЮЧАЕМ НА ВРЕМЯ РАЗРАБОТКИ, ЧТОБЫ ИЗБЕЖАТЬ ПРОБЛЕМ С SSL
 
-// --- 🔓 ШАГ 2: ВКЛЮЧАЕМ CORS ---
-// Важно: UseCors должен идти ДО Authentication/Authorization
-app.UseCors("AllowAll");
+// --- CORS ---
+app.UseCors("AllowedOrigins");
 app.UseRateLimiter();
-// -----------------------------
 
 app.UseAuthentication();
 app.UseAuthorization();

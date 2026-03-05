@@ -26,9 +26,42 @@ namespace Yoga.Api.Controllers
 
         // POST: api/users/register
         [HttpPost("register")]
-        public IActionResult Register()
+        public async Task<IActionResult> Register([FromBody] RegisterRequest request)
         {
-            return StatusCode(403, "Public user registration is disabled. Access is admin-only.");
+            var username = request.Username?.Trim() ?? string.Empty;
+            var password = request.Password ?? string.Empty;
+
+            if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
+                return BadRequest(new { error = "Username and password are required." });
+
+            if (username.Length < 3 || username.Length > 50)
+                return BadRequest(new { error = "Username must be between 3 and 50 characters." });
+
+            if (password.Length < 6)
+                return BadRequest(new { error = "Password must be at least 6 characters." });
+
+            if (await _context.Users.AnyAsync(u => u.Username == username))
+                return BadRequest(new { error = "User already exists." });
+
+            var role = IsAdminUsername(username) ? "ADMIN" : "USER";
+            var passwordHash = BCrypt.Net.BCrypt.HashPassword(password, workFactor: 10);
+
+            var user = new User
+            {
+                Username = username,
+                PasswordHash = passwordHash,
+                FullName = request.FullName ?? string.Empty,
+                Email = request.Email ?? string.Empty
+            };
+
+            _context.Users.Add(user);
+            await _context.SaveChangesAsync();
+
+            return StatusCode(201, new
+            {
+                message = "User created successfully",
+                user = new { username = user.Username, role }
+            });
         }
 
         // POST: api/users/create-admin
@@ -214,9 +247,14 @@ namespace Yoga.Api.Controllers
         {
             if (string.IsNullOrWhiteSpace(storedPasswordHash)) return false;
 
+            // BCrypt hashes start with $2a$, $2b$, or $2y$
+            if (storedPasswordHash.StartsWith("$2"))
+                return BCrypt.Net.BCrypt.Verify(inputPassword, storedPasswordHash);
+
             if (!IsPasswordHashed(storedPasswordHash))
                 return string.Equals(inputPassword, storedPasswordHash, StringComparison.Ordinal);
 
+            // PBKDF2 legacy format
             var parts = storedPasswordHash.Split('$');
             if (parts.Length != 4) return false;
 
@@ -248,6 +286,14 @@ namespace Yoga.Api.Controllers
 
             return configuredAdmins.Contains(username, StringComparer.OrdinalIgnoreCase);
         }
+    }
+
+    public class RegisterRequest
+    {
+        public string Username { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty;
+        public string? FullName { get; set; }
+        public string? Email { get; set; }
     }
 
     public class LoginRequest

@@ -9,8 +9,12 @@ using Yoga.Infrastructure.Features.Courses;
 
 namespace Yoga.Infrastructure.Controllers
 {
+    /// <summary>
+    /// Manages yoga courses: listing, catalog search, and CRUD operations.
+    /// </summary>
     [ApiController]
     [Route("api/[controller]")]
+    [Produces("application/json")]
     public class CoursesController : ControllerBase
     {
         private readonly YogaDbContext _context;
@@ -24,11 +28,19 @@ namespace Yoga.Infrastructure.Controllers
             _memoryCache = memoryCache;
         }
 
+        /// <summary>
+        /// Returns a paginated list of all courses.
+        /// </summary>
+        /// <param name="limit">Maximum number of courses to return (default 100).</param>
+        /// <param name="offset">Number of courses to skip (default 0).</param>
+        /// <returns>List of courses with X-Total-Count header.</returns>
+        /// <response code="200">Courses retrieved successfully.</response>
         [HttpGet]
+        [ProducesResponseType(typeof(IEnumerable<Course>), StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<Course>>> GetCourses([FromQuery] int limit = 100, [FromQuery] int offset = 0)
         {
             var query = _context.Courses.AsQueryable();
-            
+
             var totalCount = await query.CountAsync();
             Response.Headers.Append("X-Total-Count", totalCount.ToString());
 
@@ -39,7 +51,19 @@ namespace Yoga.Infrastructure.Controllers
                 .ToListAsync();
         }
 
+        /// <summary>
+        /// Returns a filtered and paginated course catalog.
+        /// </summary>
+        /// <param name="pageName">Page scope filter (e.g. courses-beginners, courses-back, courses-meditation, courses-women).</param>
+        /// <param name="search">Full-text search query across title and description.</param>
+        /// <param name="sort">Sort order: newest, price-asc, price-desc, title-asc.</param>
+        /// <param name="page">Page number (default 1).</param>
+        /// <param name="pageSize">Items per page, 1-50 (default 6).</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
+        /// <returns>Paginated catalog with items and total count.</returns>
+        /// <response code="200">Catalog retrieved successfully.</response>
         [HttpGet("catalog")]
+        [ProducesResponseType(typeof(CoursesCatalogResponseDto), StatusCodes.Status200OK)]
         public async Task<ActionResult<CoursesCatalogResponseDto>> GetCatalog(
             [FromQuery] string? pageName,
             [FromQuery] string? search,
@@ -60,7 +84,16 @@ namespace Yoga.Infrastructure.Controllers
             return Ok(response);
         }
 
+        /// <summary>
+        /// Returns a single course by its ID.
+        /// </summary>
+        /// <param name="id">Course ID.</param>
+        /// <returns>The course if found.</returns>
+        /// <response code="200">Course found.</response>
+        /// <response code="404">Course not found.</response>
         [HttpGet("{id}")]
+        [ProducesResponseType(typeof(Course), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<Course>> GetCourse(int id)
         {
             var course = await _context.Courses.FindAsync(id);
@@ -73,8 +106,19 @@ namespace Yoga.Infrastructure.Controllers
             return course;
         }
 
+        /// <summary>
+        /// Creates a new course. Requires Admin role.
+        /// </summary>
+        /// <param name="course">Course data.</param>
+        /// <returns>The created course.</returns>
+        /// <response code="201">Course created successfully.</response>
+        /// <response code="401">Not authenticated.</response>
+        /// <response code="403">Not authorized (admin only).</response>
         [HttpPost]
         [Authorize(Roles = "Admin")]
+        [ProducesResponseType(typeof(Course), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<ActionResult<Course>> CreateCourse(Course course)
         {
             _context.Courses.Add(course);
@@ -84,8 +128,19 @@ namespace Yoga.Infrastructure.Controllers
             return CreatedAtAction("GetCourse", new { id = course.Id }, course);
         }
 
+        /// <summary>
+        /// Updates an existing course. Requires Admin role.
+        /// </summary>
+        /// <param name="id">Course ID to update.</param>
+        /// <param name="course">Updated course data (ID must match route).</param>
+        /// <response code="204">Course updated successfully.</response>
+        /// <response code="400">ID mismatch between route and body.</response>
+        /// <response code="404">Course not found.</response>
         [HttpPut("{id}")]
         [Authorize(Roles = "Admin")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdateCourse(int id, Course course)
         {
             if (id != course.Id)
@@ -115,8 +170,16 @@ namespace Yoga.Infrastructure.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Deletes a course. Requires Admin role.
+        /// </summary>
+        /// <param name="id">Course ID to delete.</param>
+        /// <response code="204">Course deleted successfully.</response>
+        /// <response code="404">Course not found.</response>
         [HttpDelete("{id}")]
         [Authorize(Roles = "Admin")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteCourse(int id)
         {
             var course = await _context.Courses.FindAsync(id);
