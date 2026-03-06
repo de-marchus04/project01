@@ -1,3 +1,0 @@
-﻿<Project>
-  <Import Project="../build/Yoga.Api.props" />
-</Project>
