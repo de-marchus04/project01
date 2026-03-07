@@ -84,6 +84,7 @@ model Tour {
   location        String?
   author          String?
   authorPhoto     String?
+  isActive        Boolean  @default(true)
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 }

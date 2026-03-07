@@ -101,19 +101,19 @@ export const Footer = () => {
           </div>
           <div className="col-lg-4">
             <h5 className="mb-3 text-white">{t.footer.subscribe}</h5>
-            <form className="d-flex" onSubmit={handleSubscribe}>
+            <form className="d-flex flex-column flex-sm-row gap-2" onSubmit={handleSubscribe}>
               <input 
                 type="email" 
-                className="form-control rounded-pill me-2" 
+                className="form-control rounded-pill flex-grow-1" 
                 placeholder={t.footer.yourEmail} 
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 disabled={isLoading}
-                style={{ backgroundColor: 'rgba(255,255,255,0.12)', color: '#f5f0eb', borderColor: 'rgba(255,255,255,0.25)' }}
+                style={{ backgroundColor: 'rgba(255,255,255,0.12)', color: '#f5f0eb', borderColor: 'rgba(255,255,255,0.25)', minWidth: 0 }}
               />
               <button 
                 type="submit" 
-                className="btn btn-primary-custom rounded-pill text-white px-4"
+                className="btn btn-primary-custom rounded-pill text-white px-4 flex-shrink-0"
                 disabled={isLoading}
               >
                 {isLoading ? "..." : "OK"}

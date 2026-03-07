@@ -81,9 +81,6 @@ export const PlatformSections = () => {
                     loading="eager"
                   />
                   <div style={overlayStyle}>
-                    <span className="badge rounded-pill mb-2 align-self-start" style={{ backgroundColor: 'var(--color-accent)', color: '#fff', fontSize: '0.75rem' }}>
-                      {getBadge(card.badgeKey)}
-                    </span>
                     <h3 className="fw-bold font-playfair mb-1">{getTitle(card.titleKey)}</h3>
                     <p className="small mb-0" style={{ color: 'rgba(255,255,255,0.5)' }}>{getDesc(card.descKey)}</p>
                   </div>

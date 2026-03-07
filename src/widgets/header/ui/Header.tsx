@@ -298,11 +298,11 @@ export const Header = () => {
             ) : (
               <Link
                 href="/login"
-                className="text-decoration-none"
-                style={{ color: 'var(--color-text)' }}
+                className="icon-pill-btn text-decoration-none d-flex align-items-center justify-content-center rounded-circle"
+                style={{ fontSize: '1.2rem', lineHeight: 1, width: '38px', height: '38px', flexShrink: 0 }}
                 title={t.header.login}
               >
-                <i className="bi bi-door-closed fs-3"></i>
+                <i className="bi bi-door-closed"></i>
               </Link>
             )}
             

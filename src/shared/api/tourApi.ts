@@ -8,8 +8,17 @@ import { Tour } from "@/entities/tour/model/types";
 export async function getTours(): Promise<Tour[]> {
   if (process.env.NEXT_RUNTIME === 'edge') { throw new Error('EDGE RUNTIME DETECTED IN SERVER ACTION'); }
   const items = await prisma.tour.findMany({
+    where: { isActive: true },
     orderBy: { createdAt: 'desc' }
   });
+  return JSON.parse(JSON.stringify(items));
+}
+
+export async function getAllTours(): Promise<Tour[]> {
+  if (process.env.NEXT_RUNTIME === 'edge') { throw new Error('EDGE RUNTIME DETECTED IN SERVER ACTION'); }
+  const session = await auth();
+  if ((session?.user)?.role !== 'ADMIN') throw new Error('Нет доступа');
+  const items = await prisma.tour.findMany({ orderBy: { createdAt: 'desc' } });
   return JSON.parse(JSON.stringify(items));
 }
 
@@ -44,6 +53,7 @@ const updateTourSchema = z.object({
   authorPhoto: z.string().url().optional().nullable().or(z.literal('')),
   fullDescription: z.string().max(50000).optional(),
   features: z.array(z.string()).optional(),
+  isActive: z.boolean().optional(),
 });
 
 export async function addTour(tourData: Omit<Tour, 'id'>): Promise<Tour> {

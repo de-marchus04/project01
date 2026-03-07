@@ -32,6 +32,8 @@ export default function BlogVideos() {
   const tags = Array.from(new Set(videos.map(v => v.tag).filter(Boolean))) as string[];
   const filteredVideos = selectedTag ? videos.filter(v => v.tag === selectedTag) : videos;
 
+  const withRelZero = (url: string) => url.includes('?') ? `${url}&rel=0` : `${url}?rel=0`;
+
   return (
     <main>
       <section 
@@ -113,7 +115,7 @@ export default function BlogVideos() {
                   <h3 className="font-playfair fw-bold">{tStr(selectedVideo.title)}</h3>
                 </div>
                 <div className="ratio ratio-16x9 mb-4 rounded-4 overflow-hidden shadow-sm">
-                  <iframe src={selectedVideo.videoUrl} title={tStr(selectedVideo.title)} allowFullScreen></iframe>
+                  <iframe src={withRelZero(selectedVideo.videoUrl)} title={tStr(selectedVideo.title)} allowFullScreen></iframe>
                 </div>
                 <p className="text-muted lead">{tStr(selectedVideo.description)}</p>
               </div>

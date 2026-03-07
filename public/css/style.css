@@ -1134,3 +1134,20 @@ footer .social-icon:hover {
         transition-duration: 0.01ms !important;
     }
 }
+
+/* ── Mobile touch: card active state ── */
+@media (hover: none) and (pointer: coarse) {
+    .card:active {
+        transform: translateY(-3px) scale(0.98);
+        box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+        transition: transform 0.12s ease, box-shadow 0.12s ease;
+    }
+    .group-hover:active img {
+        transform: scale(1.04);
+    }
+    #courses .card.group-hover:active,
+    #tours .card:active {
+        box-shadow: 0 8px 28px rgba(92,110,79,0.18);
+        transform: translateY(-3px) scale(0.98);
+    }
+}

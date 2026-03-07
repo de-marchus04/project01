@@ -10,5 +10,6 @@ export interface Tour {
   authorPhoto?: string;
   fullDescription?: string;
   features?: string[];
+  isActive?: boolean;
   translations?: any;
 }

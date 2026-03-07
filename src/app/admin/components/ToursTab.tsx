@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useLanguage } from "@/shared/i18n/LanguageContext";
-import { getTours, addTour, updateTour, deleteTour } from "@/shared/api/tourApi";
+import { getAllTours, addTour, updateTour, deleteTour } from "@/shared/api/tourApi";
 import type { Tour } from "@/entities/tour/model/types";
 import { modalService } from "@/shared/ui/Modal/modalService";
 import { formatPrice } from "@/shared/lib/formatPrice";
@@ -24,7 +24,7 @@ export default function ToursTab({ adminProfile, showToast }: Props) {
   useEffect(() => { loadTours(); }, []);
 
   const loadTours = async () => {
-    try { setTours(await getTours()); } catch (e) { console.error(e); }
+    try { setTours(await getAllTours()); } catch (e) { console.error(e); }
   };
 
   const openAddForm = () => { setEditingItem(null); setIsFormOpen(true); };
@@ -51,6 +51,7 @@ export default function ToursTab({ adminProfile, showToast }: Props) {
         price: Number(data.price), imageUrl: data.imageUrl,
         date: data.date, location: data.location,
         author: authorName, authorPhoto,
+        isActive: data.isActive === 'true',
       });
       if (editingItem) await updateTour(editingItem.id, tourData);
       else await addTour(tourData);
@@ -118,6 +119,22 @@ export default function ToursTab({ adminProfile, showToast }: Props) {
                 <label className="form-label">{t.admin.formAuthorPhoto}</label>
                 <input type="text" name="authorPhotoUrl" className="form-control" defaultValue={editingItem?.authorPhoto || ''} placeholder={adminProfile.photoUrl || ''} />
               </div>
+              <div className="col-md-12">
+                <div className="form-check form-switch mt-2">
+                  <input
+                    className="form-check-input"
+                    type="checkbox"
+                    role="switch"
+                    id="tourIsActive"
+                    name="isActive"
+                    value="true"
+                    defaultChecked={editingItem ? editingItem.isActive !== false : true}
+                  />
+                  <label className="form-check-label" htmlFor="tourIsActive">
+                    Активный тур (показывать на сайте)
+                  </label>
+                </div>
+              </div>
               <div className="col-12 mt-4">
                 <button type="submit" className="btn px-4 rounded-pill" style={{ backgroundColor: 'var(--color-primary)', color: '#fff', border: 'none' }} disabled={isSubmitting}>
                   {isSubmitting ? t.admin.formSaving : t.admin.formSave}
@@ -142,12 +159,22 @@ export default function ToursTab({ adminProfile, showToast }: Props) {
           <div className="table-responsive">
             <table className="table table-hover align-middle">
               <thead className="table-light">
-                <tr><th>ID</th><th>{t.admin.colTitle}</th><th>{t.admin.colDates}</th><th>{t.admin.colLocation}</th><th>{t.admin.colPrice}</th><th className="text-end">{t.admin.colActions}</th></tr>
+                <tr><th>ID</th><th>{t.admin.colTitle}</th><th>{t.admin.colDates}</th><th>{t.admin.colLocation}</th><th>{t.admin.colPrice}</th><th>Статус</th><th className="text-end">{t.admin.colActions}</th></tr>
               </thead>
               <tbody>
                 {tours.map(item => (
-                  <tr key={item.id}>
+                  <tr key={item.id} style={{ opacity: item.isActive === false ? 0.5 : 1 }}>
                     <td>{item.id}</td><td>{item.title}</td><td>{item.date}</td><td>{item.location}</td><td>{formatPrice(item.price, lang)}</td>
+                    <td>
+                      <button
+                        className={`badge border-0 rounded-pill px-2 py-1`}
+                        style={{ backgroundColor: item.isActive !== false ? 'var(--bs-success-bg-subtle)' : 'var(--bs-danger-bg-subtle)', color: item.isActive !== false ? 'var(--bs-success-text-emphasis)' : 'var(--bs-danger-text-emphasis)', cursor: 'pointer' }}
+                        onClick={() => updateTour(item.id, { isActive: item.isActive === false }).then(loadTours)}
+                        title="Нажмите для переключения"
+                      >
+                        {item.isActive !== false ? 'Активен' : 'Скрыт'}
+                      </button>
+                    </td>
                     <td className="text-end">
                       <button className="btn btn-sm btn-outline-primary me-2" onClick={() => openEditForm(item)}>{t.admin.btnEdit}</button>
                       <button className="btn btn-sm btn-outline-danger" onClick={() => handleDelete(item.id)}>{t.admin.btnDel}</button>

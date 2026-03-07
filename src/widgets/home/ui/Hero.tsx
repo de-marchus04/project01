@@ -11,7 +11,7 @@ export const Hero = () => {
       className="hero-section d-flex align-items-center justify-content-center position-relative"
       style={{
         minHeight: '100vh',
-        background: "linear-gradient(175deg, rgba(40,52,30,0.60) 0%, rgba(20,28,16,0.78) 100%), url('https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?q=80&w=2020&auto=format&fit=crop') center/cover no-repeat",
+        background: "linear-gradient(175deg, rgba(40,52,30,0.45) 0%, rgba(20,28,16,0.65) 100%), url('https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?q=80&w=2020&auto=format&fit=crop') center/cover no-repeat",
         backgroundAttachment: 'fixed'
       }}
     >
