@@ -43,7 +43,7 @@ export const Hero = () => {
           {t.home.heroSubtitle}
         </p>
         <div className="d-flex gap-3 justify-content-center flex-wrap">
-          <Link href="#courses" className="btn btn-primary-custom rounded-pill px-5 py-3 fw-bold fs-6">
+          <Link href="/courses" className="btn btn-primary-custom rounded-pill px-5 py-3 fw-bold fs-6">
             {t.home.startJourney}
           </Link>
           <Link href="/consultations-private" className="btn btn-outline-light rounded-pill px-5 py-3 fw-bold fs-6">

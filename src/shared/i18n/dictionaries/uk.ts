@@ -13,6 +13,7 @@ export const uk = {
     consultMentorship: "Менторство",
     consultAll: "Всі консультації",
     blog: "Блог",
+    blogAll: "Всі матеріали",
     blogArticles: "Статті",
     blogVideos: "Відео",
     blogPodcasts: "Подкасти",
@@ -363,7 +364,10 @@ export const uk = {
       "settingsAddress": "Адреса",
       "settingsEmail": "Email",
       "settingsPhone": "Телефон",
-      "settingsSaveBtn": "Зберегти налаштування"
+      "settingsSaveBtn": "Зберегти налаштування",
+      "settingsAboutSection": "Сторінка «Про нас»",
+      "settingsYearsExp": "Років досвіду (статистика)",
+      "settingsStudentsCount": "Учнів (статистика)"
   },
   contact: {
       "contactTitle": "Контакти",

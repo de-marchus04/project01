@@ -13,6 +13,7 @@ export const ru = {
     consultMentorship: "Менторство",
     consultAll: "Все консультации",
     blog: "Блог",
+    blogAll: "Все материалы",
     blogArticles: "Статьи",
     blogVideos: "Видео",
     blogPodcasts: "Подкасты",
@@ -353,7 +354,10 @@ export const ru = {
       "settingsAddress": "Адрес",
       "settingsEmail": "Email",
       "settingsPhone": "Телефон",
-      "settingsSaveBtn": "Сохранить настройки"
+      "settingsSaveBtn": "Сохранить настройки",
+      "settingsAboutSection": "Страница «О нас»",
+      "settingsYearsExp": "Лет опыта (статистика)",
+      "settingsStudentsCount": "Учеников (статистика)"
   },
   contact: {
       "contactTitle": "Контакты",

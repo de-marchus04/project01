@@ -5,6 +5,7 @@ import { auth } from "@/auth";
 import { z } from "zod";
 import { headers } from "next/headers";
 import { rateLimit } from "@/shared/lib/rateLimit";
+import { emailService } from "@/shared/api/emailService";
 
 export interface SupportMessage {
   id: string;
@@ -94,6 +95,19 @@ export async function sendMessage(
       status: status
     }
   });
+
+  if (!isBot) {
+    const adminEmail = process.env.ADMIN_NOTIFY_EMAIL;
+    if (adminEmail) {
+      try {
+        await emailService.sendEmail(
+          adminEmail,
+          `[YOGA.LIFE] Новое обращение в поддержку`,
+          `Новое сообщение от ${parsed.data.userName} (${parsed.data.userEmail})\n\nТема: ${parsed.data.questionType}\n\n${parsed.data.message}`
+        );
+      } catch { /* не блокируем основной поток */ }
+    }
+  }
 
   return JSON.parse(JSON.stringify({
     id: newItem.id,

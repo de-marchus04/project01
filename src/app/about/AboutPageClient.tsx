@@ -8,14 +8,21 @@ import { useScrollReveal } from "@/shared/hooks/useScrollReveal";
 import { SectionHeader } from "@/shared/ui/SectionHeader/SectionHeader";
 import { getTeamMembers } from "@/shared/api/teamApi";
 import type { TeamMember } from "@/shared/api/teamApi";
+import { getSiteSettings } from "@/shared/api/siteSettingsApi";
 
 export default function AboutPage() {
   const { t, tStr } = useLanguage();
   const { observe } = useScrollReveal();
   const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
+  const [yearsExp, setYearsExp] = useState("5+");
+  const [studentsCount, setStudentsCount] = useState("10k+");
 
   useEffect(() => {
     getTeamMembers().then(setTeamMembers).catch(() => {});
+    getSiteSettings().then(s => {
+      if (s.yearsExp) setYearsExp(s.yearsExp);
+      if (s.studentsCount) setStudentsCount(s.studentsCount);
+    }).catch(() => {});
   }, []);
 
   return (
@@ -39,11 +46,11 @@ export default function AboutPage() {
               </p>
               <div className="row g-4 mt-2">
                 <div className="col-6">
-                  <h3 className="display-5 fw-bold mb-0" style={{ color: 'var(--color-primary)' }}>5+</h3>
+                  <h3 className="display-5 fw-bold mb-0" style={{ color: 'var(--color-primary)' }}>{yearsExp}</h3>
                   <p className="fw-medium" style={{ color: 'var(--color-text-muted)' }}>{t.home.yearsExp}</p>
                 </div>
                 <div className="col-6">
-                  <h3 className="display-5 fw-bold mb-0" style={{ color: 'var(--color-primary)' }}>10k+</h3>
+                  <h3 className="display-5 fw-bold mb-0" style={{ color: 'var(--color-primary)' }}>{studentsCount}</h3>
                   <p className="fw-medium" style={{ color: 'var(--color-text-muted)' }}>{t.home.studentsCount}</p>
                 </div>
               </div>

@@ -22,11 +22,11 @@ export const metadata: Metadata = {
   openGraph: {
     title: "YOGA.LIFE | Платформа для йоги",
     description: "Онлайн-платформа для практики йоги с лучшими инструкторами мира. Курсы, туры, консультации.",
-    url: "https://yoga.life",
+    url: process.env.NEXT_PUBLIC_SITE_URL || "https://yoga-platform-ruby.vercel.app",
     siteName: "YOGA.LIFE",
     images: [
       {
-        url: "https://images.unsplash.com/photo-1545205597-3d9d02c29597?q=80&w=1200&auto=format&fit=crop",
+        url: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?q=80&w=1200&auto=format&fit=crop",
         width: 1200,
         height: 630,
         alt: "YOGA.LIFE",
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "YOGA.LIFE | Платформа для йоги",
     description: "Онлайн-платформа для практики йоги с лучшими инструкторами мира.",
-    images: ["https://images.unsplash.com/photo-1545205597-3d9d02c29597?q=80&w=1200&auto=format&fit=crop"],
+    images: ["https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?q=80&w=1200&auto=format&fit=crop"],
   },
   icons: {
     icon: "/favicon.svg",

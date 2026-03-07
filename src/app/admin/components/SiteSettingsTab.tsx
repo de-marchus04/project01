@@ -16,6 +16,8 @@ export default function SiteSettingsTab({ showToast }: Props) {
   const [instagram, setInstagram] = useState("");
   const [telegram, setTelegram] = useState("");
   const [youtube, setYoutube] = useState("");
+  const [yearsExp, setYearsExp] = useState("5+");
+  const [studentsCount, setStudentsCount] = useState("10k+");
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
@@ -26,6 +28,8 @@ export default function SiteSettingsTab({ showToast }: Props) {
       setInstagram(s.instagram);
       setTelegram(s.telegram);
       setYoutube(s.youtube);
+      setYearsExp(s.yearsExp || "5+");
+      setStudentsCount(s.studentsCount || "10k+");
     }).catch(console.error);
   }, []);
 
@@ -33,7 +37,7 @@ export default function SiteSettingsTab({ showToast }: Props) {
     e.preventDefault();
     setSaving(true);
     try {
-      const res = await updateSiteSettings({ addressLine, email, phone, instagram, telegram, youtube });
+      const res = await updateSiteSettings({ addressLine, email, phone, instagram, telegram, youtube, yearsExp, studentsCount });
       if (res.success) {
         showToast(t.admin.settingsSaved, 'success');
       } else {
@@ -92,6 +96,18 @@ export default function SiteSettingsTab({ showToast }: Props) {
               <span className="input-group-text"><i className="bi bi-youtube"></i></span>
               <input type="url" className="form-control" style={inputStyle} value={youtube} onChange={e => setYoutube(e.target.value)} placeholder="https://youtube.com/..." />
             </div>
+          </div>
+
+          <div className="col-12 mt-2">
+            <h6 className="fw-semibold text-muted text-uppercase small mb-3" style={{ letterSpacing: '1px' }}>{t.admin.settingsAboutSection}</h6>
+          </div>
+          <div className="col-md-6">
+            <label className="form-label small fw-semibold" style={{ color: 'var(--color-text-muted)' }}>{t.admin.settingsYearsExp}</label>
+            <input type="text" className="form-control" style={inputStyle} value={yearsExp} onChange={e => setYearsExp(e.target.value)} placeholder="5+" />
+          </div>
+          <div className="col-md-6">
+            <label className="form-label small fw-semibold" style={{ color: 'var(--color-text-muted)' }}>{t.admin.settingsStudentsCount}</label>
+            <input type="text" className="form-control" style={inputStyle} value={studentsCount} onChange={e => setStudentsCount(e.target.value)} placeholder="10k+" />
           </div>
 
           <div className="col-12 mt-3">

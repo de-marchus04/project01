@@ -25,6 +25,7 @@ export const getNavigationConfig = (t: any): NavItem[] => [
   {
     label: t.nav.blog,
     children: [
+      { label: t.nav.blogAll, href: "/blog" },
       { label: t.nav.blogArticles, href: "/blog-articles" },
       { label: t.nav.blogVideos, href: "/blog-videos" },
       { label: t.nav.blogPodcasts, href: "/blog-podcasts" },

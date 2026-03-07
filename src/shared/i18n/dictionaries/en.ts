@@ -13,6 +13,7 @@ export const en = {
     consultMentorship: "Mentorship",
     consultAll: "All Consultations",
     blog: "Blog",
+    blogAll: "All Materials",
     blogArticles: "Articles",
     blogVideos: "Videos",
     blogPodcasts: "Podcasts",
@@ -363,7 +364,10 @@ export const en = {
       "settingsAddress": "Address",
       "settingsEmail": "Email",
       "settingsPhone": "Phone",
-      "settingsSaveBtn": "Save Settings"
+      "settingsSaveBtn": "Save Settings",
+      "settingsAboutSection": "About Page",
+      "settingsYearsExp": "Years of experience (stat)",
+      "settingsStudentsCount": "Students (stat)"
   },
   contact: {
       "contactTitle": "Contacts",

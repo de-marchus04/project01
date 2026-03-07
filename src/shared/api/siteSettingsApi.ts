@@ -10,6 +10,8 @@ export interface SiteSettingsData {
   instagram: string;
   telegram: string;
   youtube: string;
+  yearsExp: string;
+  studentsCount: string;
 }
 
 export async function getSiteSettings(): Promise<SiteSettingsData> {
@@ -25,6 +27,8 @@ export async function getSiteSettings(): Promise<SiteSettingsData> {
     instagram: settings.instagram,
     telegram: settings.telegram,
     youtube: settings.youtube,
+    yearsExp: settings.yearsExp,
+    studentsCount: settings.studentsCount,
   };
 }
 
