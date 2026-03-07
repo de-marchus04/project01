@@ -5,8 +5,8 @@ import ConsultationsAllClient from "./ConsultationsAllClient";
 export const revalidate = 3600;
 
 export const metadata: Metadata = {
-  title: 'Все консультации | YOGA.LIFE',
-  description: 'Индивидуальные консультации: частная практика, нутрициология, менторство',
+  title: 'Консультации по йоге | YOGA.LIFE',
+  description: 'Индивидуальные консультации по йоге и оздоровлению: частная практика, нутрициология, йога-менторство и персональная поддержка на пути к здоровью.',
 };
 
 export default async function ConsultationsPage() {

@@ -5,6 +5,8 @@ import GitHubProvider from "next-auth/providers/github"
 import bcrypt from "bcryptjs"
 import { prisma } from "@/shared/lib/prisma"
 import { authConfig } from "./auth.config"
+import { rateLimit } from "@/shared/lib/rateLimit"
+import { headers } from "next/headers"
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   ...authConfig,
@@ -27,6 +29,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         if (!credentials?.username || !credentials?.password) return null
 
         try {
+          const h = await headers();
+          const ip = h.get('x-forwarded-for') || 'unknown';
+          const rl = await rateLimit(`login:${ip}`, { windowMs: 900_000, max: 10 });
+          if (!rl.success) throw new Error('Слишком много попыток входа. Попробуйте через 15 минут.');
+
           const user = await prisma.user.findUnique({
             where: { username: credentials.username as string }
           })
@@ -74,14 +81,24 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
               (profile as any).picture ||
               (profile as any).avatar_url ||
               null;
-            dbUser = await prisma.user.create({
-              data: {
-                email,
-                username,
-                name: (profile as any).name || username,
-                avatar: avatarUrl,
+            try {
+              dbUser = await prisma.user.create({
+                data: {
+                  email,
+                  username,
+                  name: (profile as any).name || username,
+                  avatar: avatarUrl,
+                }
+              });
+            } catch (createErr: any) {
+              // Handle race condition: another request created the same username concurrently
+              if (createErr?.code === 'P2002') {
+                dbUser = await prisma.user.findUnique({ where: { email } }) ||
+                         await prisma.user.findFirst({ where: { username } });
+              } else {
+                throw createErr;
               }
-            });
+            }
           }
           token.id = dbUser.id;
           token.role = dbUser.role;
@@ -89,11 +106,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           token.avatar = dbUser.avatar || (profile as any).picture || (profile as any).avatar_url || null;
         }
       } else if (user) {
-        token.role = (user as any).role;
+        token.role = user.role;
         token.id = user.id;
-        token.avatar = (user as any).avatar;
-        token.username = (user as any).username;
-        token.name = (user as any).name || (user as any).username;
+        token.avatar = user.avatar;
+        token.username = user.username;
+        token.name = user.name || user.username;
       }
       // Re-fetch fresh profile data from DB when session.update() is called
       if (trigger === 'update' && token.username) {
@@ -132,10 +149,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     },
     async session({ session, token }) {
       if (session.user) {
-        (session.user as any).role = token.role;
-        (session.user as any).id = token.id;
-        (session.user as any).avatar = token.avatar;
-        (session.user as any).username = token.username;
+        session.user.role = token.role ?? '';
+        session.user.id = token.id ?? '';
+        session.user.avatar = token.avatar ?? null;
+        session.user.username = token.username ?? '';
         session.user.name = token.name as string;
       }
       return session;

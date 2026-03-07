@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useLanguage } from "@/shared/i18n/LanguageContext";
 import { useEffect, useState } from "react";
 import { Article, Video, Podcast, Recipe } from "@/entities/blog/model/types";
@@ -15,7 +16,7 @@ import { SectionHeader } from "@/shared/ui/SectionHeader/SectionHeader";
 type ContentType = 'articles' | 'videos' | 'podcasts' | 'recipes';
 
 export default function BlogAllClient() {
-  const { t, tStr, lang } = useLanguage() as any;
+  const { t, tStr, lang } = useLanguage();
   const { observe } = useScrollReveal();
   const dateLocale = lang === 'en' ? 'en-US' : lang === 'uk' ? 'uk-UA' : 'ru-RU';
 
@@ -253,10 +254,12 @@ export default function BlogAllClient() {
               </div>
               <div className="modal-body p-0">
                 <div className="position-relative" style={{ height: '400px' }}>
-                  <img
+                  <Image
                     src={selectedArticle.imageUrl || 'https://images.unsplash.com/photo-1545205597-3d9d02c29597?q=80&w=2070&auto=format&fit=crop'}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 600px"
+                    style={{ objectFit: 'cover' }}
                     alt={tStr(selectedArticle.title)}
-                    className="w-100 h-100 object-fit-cover"
                   />
                   <div className="position-absolute bottom-0 start-0 w-100 p-4 p-md-5" style={{ background: 'linear-gradient(transparent, rgba(0,0,0,0.8))' }}>
                     {selectedArticle.tag && (
@@ -269,7 +272,7 @@ export default function BlogAllClient() {
                 <div className="p-4 p-md-5" style={{ backgroundColor: 'var(--color-card-bg)' }}>
                   <div className="d-flex align-items-center mb-5 pb-4 border-bottom">
                     {selectedArticle.authorPhoto ? (
-                      <img src={selectedArticle.authorPhoto} alt={selectedArticle.author || tStr('Автор')} className="rounded-circle object-fit-cover me-3 border" style={{ width: '60px', height: '60px' }} />
+                      <Image width={60} height={60} src={selectedArticle.authorPhoto || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=60'} style={{ objectFit: 'cover', borderRadius: '50%' }} alt={selectedArticle.author || tStr('Автор')} className="me-3 border" />
                     ) : (
                       <div className="rounded-circle d-flex align-items-center justify-content-center me-3 border" style={{ width: '60px', height: '60px', backgroundColor: 'var(--color-surface)' }}>
                         <i className="bi bi-person text-muted fs-3"></i>
@@ -356,8 +359,8 @@ export default function BlogAllClient() {
               </div>
               <div className="modal-body p-0">
                 {selectedRecipe.imageUrl && (
-                  <div className="position-relative" style={{ height: '280px' }}>
-                    <img src={selectedRecipe.imageUrl} alt={tStr(selectedRecipe.title)} className="w-100 h-100 object-fit-cover" />
+                  <div style={{ position: 'relative', height: '300px' }}>
+                    <Image src={selectedRecipe.imageUrl} fill sizes="(max-width: 768px) 100vw, 600px" style={{ objectFit: 'cover' }} alt={tStr(selectedRecipe.title)} />
                   </div>
                 )}
                 <div className="p-4">

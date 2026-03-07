@@ -1,5 +1,6 @@
 import { Recipe } from "../model/types";
 import { useLanguage } from "@/shared/i18n/LanguageContext";
+import Image from "next/image";
 
 interface RecipeCardProps {
   recipe: Recipe;
@@ -11,12 +12,15 @@ export const RecipeCard = ({ recipe }: RecipeCardProps) => {
   const localized_recipe = tData ? tData(recipe) : recipe;
   return (
     <div className="card h-100 shadow-sm border-0 hover-scale-sm transition-all">
-      <img
-        src={localized_recipe.imageUrl || 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?q=80&w=800&auto=format&fit=crop'}
-        className="card-img-top"
-        style={{ height: '200px', objectFit: 'cover' }}
-        alt={tStr(localized_recipe.title)}
-      />
+      <div className="overflow-hidden rounded-top" style={{ position: 'relative', height: '200px' }}>
+        <Image
+          src={localized_recipe.imageUrl || 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?q=80&w=800&auto=format&fit=crop'}
+          fill
+          sizes="(max-width: 768px) 100vw, 400px"
+          style={{ objectFit: 'cover' }}
+          alt={tStr(localized_recipe.title)}
+        />
+      </div>
       <div className="card-body">
         <div className="d-flex justify-content-between align-items-center mb-3">
           <h5 className="card-title font-playfair fw-bold mb-0">{tStr(localized_recipe.title)}</h5>

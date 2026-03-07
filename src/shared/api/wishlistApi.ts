@@ -17,7 +17,7 @@ export interface WishlistItem {
 export async function addToWishlist(itemId: string, itemType: 'COURSE' | 'TOUR' | 'CONSULTATION'): Promise<{ success: boolean; error?: string }> {
   const session = await auth();
   if (!session?.user) return { success: false, error: 'Необходимо войти в аккаунт' };
-  const userId = (session.user as any).id as string;
+  const userId = session.user.id;
   try {
     await prisma.wishlist.create({ data: { userId, itemId, itemType } });
     return { success: true };
@@ -30,7 +30,7 @@ export async function addToWishlist(itemId: string, itemType: 'COURSE' | 'TOUR' 
 export async function removeFromWishlist(itemId: string, itemType: 'COURSE' | 'TOUR' | 'CONSULTATION'): Promise<{ success: boolean }> {
   const session = await auth();
   if (!session?.user) return { success: false };
-  const userId = (session.user as any).id as string;
+  const userId = session.user.id;
   await prisma.wishlist.deleteMany({ where: { userId, itemId, itemType } });
   return { success: true };
 }
@@ -38,7 +38,7 @@ export async function removeFromWishlist(itemId: string, itemType: 'COURSE' | 'T
 export async function isInWishlist(itemId: string, itemType: 'COURSE' | 'TOUR' | 'CONSULTATION'): Promise<boolean> {
   const session = await auth();
   if (!session?.user) return false;
-  const userId = (session.user as any).id as string;
+  const userId = session.user.id;
   const item = await prisma.wishlist.findFirst({ where: { userId, itemId, itemType } });
   return !!item;
 }
@@ -46,7 +46,7 @@ export async function isInWishlist(itemId: string, itemType: 'COURSE' | 'TOUR' |
 export async function getUserWishlist(): Promise<WishlistItem[]> {
   const session = await auth();
   if (!session?.user) return [];
-  const userId = (session.user as any).id as string;
+  const userId = session.user.id;
 
   const wishlistItems = await prisma.wishlist.findMany({
     where: { userId },

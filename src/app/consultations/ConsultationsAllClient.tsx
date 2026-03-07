@@ -20,7 +20,7 @@ const CATEGORIES = [
 type CategoryKey = 'all' | 'private' | 'nutrition' | 'mentorship';
 
 export default function ConsultationsAllClient({ initialData }: { initialData: Consultation[] }) {
-  const { t } = useLanguage() as any;
+  const { t } = useLanguage();
   const { observe } = useScrollReveal();
   const [products, setProducts] = useState<Consultation[]>(initialData || []);
   const [loading, setLoading] = useState(!initialData);

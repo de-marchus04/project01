@@ -8,7 +8,7 @@ export async function POST(request: Request) {
   const isProduction = process.env.NODE_ENV === 'production';
 
   const session = await auth();
-  const isAdmin = (session?.user as any)?.role === "ADMIN";
+  const isAdmin = session?.user?.role === "ADMIN";
 
   const authHeader = request.headers.get("authorization");
   const validSecret = process.env.SEED_SECRET && authHeader === `Bearer ${process.env.SEED_SECRET}`;

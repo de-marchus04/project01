@@ -1,10 +1,12 @@
 "use server";
 
 import { prisma } from "@/shared/lib/prisma";
+import { auth } from "@/auth";
 
 export async function bulkUpdateAuthor(authorName: string, authorPhotoUrl: string, oldAuthorName?: string) {
-  // We'll just update everything that has an author field or lacks one, roughly simulating the old localstorage loop.
-  
+  const session = await auth();
+  if ((session?.user)?.role !== 'ADMIN') throw new Error('Нет доступа');
+
   // Articles
   await prisma.article.updateMany({
     data: { author: authorName, authorPhoto: authorPhotoUrl },

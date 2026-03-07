@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Article } from "@/entities/blog/model/types";
@@ -13,7 +14,7 @@ export default function ArticleDetail() {
   const [article, setArticle] = useState<Article | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const { tData, tStr, lang } = useLanguage() as any;
+  const { tData, tStr, lang } = useLanguage();
   const dateLocale = lang === 'en' ? 'en-US' : lang === 'uk' ? 'uk-UA' : 'ru-RU';
 
   useEffect(() => {
@@ -122,7 +123,7 @@ export default function ArticleDetail() {
                 {(loc_article.author || loc_article.authorPhoto) && (
                   <div className="d-flex align-items-center gap-3 mb-5 p-3 rounded-3" style={{ backgroundColor: 'var(--color-bg)', border: '1px solid var(--color-border)' }}>
                     {loc_article.authorPhoto ? (
-                      <img src={loc_article.authorPhoto} alt={loc_article.author || ''} className="rounded-circle object-fit-cover" style={{ width: '48px', height: '48px' }} />
+                      <Image width={48} height={48} src={loc_article.authorPhoto || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=48'} style={{ objectFit: 'cover', borderRadius: '50%' }} alt={loc_article.author || ''} />
                     ) : (
                       <div className="rounded-circle d-flex align-items-center justify-content-center" style={{ width: '48px', height: '48px', backgroundColor: 'var(--color-primary)', color: '#fff', fontSize: '1.2rem', fontWeight: 600 }}>
                         {(loc_article.author || '?')[0]}
@@ -142,12 +143,9 @@ export default function ArticleDetail() {
                     <>
                       <p className="mb-4">{tStr("Йога — это не просто набор физических упражнений, это целостная система, которая помогает найти баланс между телом и разумом. В современном мире, полном стрессов и суеты, практика йоги становится настоящим спасением для многих людей.")}</p>
                       <p className="mb-4">{tStr("Исследования показывают, что регулярные занятия не только улучшают физическое самочувствие, но и способствуют формированию новых нейронных связей. Это означает, что мы буквально перепрограммируем свой мозг на более спокойное и осознанное восприятие реальности.")}</p>
-                      <img 
-                        src={loc_article.imageUrl} 
-                        alt="Article illustration" 
-                        className="img-fluid rounded-4 my-5 shadow-sm w-100" 
-                        style={{ maxHeight: '400px', objectFit: 'cover' }}
-                      />
+                      <div style={{ position: 'relative', height: '400px' }} className="rounded-4 my-5 shadow-sm overflow-hidden">
+                        <Image src={loc_article.imageUrl} fill sizes="(max-width: 768px) 100vw, 600px" style={{ objectFit: 'cover' }} alt="Article illustration" />
+                      </div>
                       <h3 className="font-playfair mt-4 mb-4 text-dark">{tStr("С чего начать?")}</h3>
                       <p className="mb-4">{tStr("Не пытайтесь изменить все сразу. Начните с малого: 10 минут утренней медитации или короткий комплекс растяжки перед сном. Главное — регулярность. Постепенно ваше тело само попросит большего, и практика станет естественной частью вашей жизни.")}</p>
                       <div className="p-4 rounded-4 shadow-sm mt-5 border-start border-4" style={{ backgroundColor: 'var(--color-card-bg)', borderColor: 'var(--color-accent) !important' }}>

@@ -1,28 +1,24 @@
 "use client";
 
 import { useLanguage } from "@/shared/i18n/LanguageContext";
-import { useEffect, useState } from "react";
-import { getTestimonials, Testimonial } from "@/shared/api/testimonialApi";
 import { useScrollReveal } from "@/shared/hooks/useScrollReveal";
+import type { Testimonial } from "@/shared/api/testimonialApi";
 
-export const Testimonials = () => {
-  const { t, lang, tData } = useLanguage() as any;
-  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
+interface TestimonialsProps {
+  initialTestimonials: Testimonial[];
+}
+
+export const Testimonials = ({ initialTestimonials }: TestimonialsProps) => {
+  const { t, tData } = useLanguage();
   const { observe } = useScrollReveal();
 
-  useEffect(() => {
-    getTestimonials().then(data => {
-      if (data && data.length > 0) {
-        setTestimonials(data.map((item: any) => tData ? tData(item) : item));
-      } else {
-        setTestimonials([
-          { id: '1', name: t.home.review1Name, course: t.home.review1Course, text: t.home.review1Text, createdAt: '' },
-          { id: '2', name: t.home.review2Name, course: t.home.review2Course, text: t.home.review2Text, createdAt: '' },
-          { id: '3', name: t.home.review3Name, course: t.home.review3Course, text: t.home.review3Text, createdAt: '' }
-        ]);
-      }
-    });
-  }, [lang, t, tData]);
+  const testimonials = initialTestimonials.length > 0
+    ? initialTestimonials.map(item => tData ? tData(item) : item)
+    : [
+        { id: '1', name: t.home.review1Name, course: t.home.review1Course, text: t.home.review1Text, createdAt: '' },
+        { id: '2', name: t.home.review2Name, course: t.home.review2Course, text: t.home.review2Text, createdAt: '' },
+        { id: '3', name: t.home.review3Name, course: t.home.review3Course, text: t.home.review3Text, createdAt: '' }
+      ];
 
   return (
     <section className="testimonials-section py-5">

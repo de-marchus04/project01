@@ -1,5 +1,6 @@
 import { Video } from "../model/types";
 import { useLanguage } from "@/shared/i18n/LanguageContext";
+import Image from "next/image";
 
 interface VideoCardProps {
   video: Video;
@@ -21,11 +22,12 @@ export const VideoCard = ({ video }: VideoCardProps) => {
 
   return (
     <div className="card h-100 shadow-sm border-0 hover-scale-sm transition-all">
-      <div className="position-relative">
-        <img
+      <div className="position-relative overflow-hidden rounded-top" style={{ height: '200px' }}>
+        <Image
           src={thumbnail}
-          className="card-img-top"
-          style={{ height: '200px', objectFit: 'cover' }}
+          fill
+          sizes="(max-width: 768px) 100vw, 400px"
+          style={{ objectFit: 'cover' }}
           alt={tStr(localized_video.title)}
         />
         <div className="position-absolute top-50 start-50 translate-middle">

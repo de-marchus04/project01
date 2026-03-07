@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { modalService, ModalOptions } from "./modalService";
 
 export const GlobalModal = () => {
@@ -8,6 +8,7 @@ export const GlobalModal = () => {
   const [options, setOptions] = useState<ModalOptions | null>(null);
   const [inputValue, setInputValue] = useState("");
   const [callback, setCallback] = useState<((result: any) => void) | null>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     modalService.setListener((opts, cb) => {
@@ -21,6 +22,31 @@ export const GlobalModal = () => {
       modalService.removeListener();
     };
   }, []);
+
+  // Focus trap + Escape key handler
+  useEffect(() => {
+    if (!isOpen || !dialogRef.current) return;
+    const el = dialogRef.current;
+    const focusable = el.querySelectorAll<HTMLElement>(
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    );
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    first?.focus();
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') { handleCancel(); return; }
+      if (e.key !== 'Tab') return;
+      if (focusable.length === 0) return;
+      if (e.shiftKey) {
+        if (document.activeElement === first) { e.preventDefault(); last?.focus(); }
+      } else {
+        if (document.activeElement === last) { e.preventDefault(); first?.focus(); }
+      }
+    };
+    document.addEventListener('keydown', onKeyDown);
+    return () => document.removeEventListener('keydown', onKeyDown);
+  }, [isOpen]);
 
   if (!isOpen || !options) return null;
 
@@ -52,19 +78,23 @@ export const GlobalModal = () => {
         className="modal-backdrop fade show" 
         style={{ zIndex: 1050, backgroundColor: 'rgba(62, 66, 58, 0.5)', backdropFilter: 'blur(6px)', animation: 'modalFadeIn 0.25s ease' }}
       ></div>
-      <div 
-        className="modal fade show d-block" 
-        tabIndex={-1} 
-        style={{ zIndex: 1055, animation: 'modalSlideIn 0.25s ease' }} 
+      <div
+        className="modal fade show d-block"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="global-modal-title"
+        tabIndex={-1}
+        ref={dialogRef}
+        style={{ zIndex: 1055, animation: 'modalSlideIn 0.25s ease' }}
         onClick={handleCancel}
       >
         <div className="modal-dialog modal-dialog-centered modal-sm" onClick={(e) => e.stopPropagation()}>
           <div className="modal-content border-0 shadow-lg" style={{ borderRadius: '20px', backgroundColor: 'var(--color-surface)', overflow: 'hidden' }}>
             <div className="modal-header border-0 pb-0 pt-4 px-4 d-flex justify-content-center position-relative">
-              <h5 className="modal-title font-playfair fw-bold text-center w-100" style={{ color: 'var(--color-primary)', fontSize: '1.1rem' }}>
+              <h5 id="global-modal-title" className="modal-title font-playfair fw-bold text-center w-100" style={{ color: 'var(--color-primary)', fontSize: '1.1rem' }}>
                 {options.title || (options.type === 'alert' ? 'Внимание' : 'Подтверждение')}
               </h5>
-              <button type="button" className="btn-close position-absolute end-0 me-3" style={{ top: '1.2rem', opacity: 0.4, filter: 'var(--bs-btn-close-white-filter, none)' }} onClick={handleCancel}></button>
+              <button type="button" className="btn-close position-absolute end-0 me-3" aria-label="Закрыть" style={{ top: '1.2rem', opacity: 0.4, filter: 'var(--bs-btn-close-white-filter, none)' }} onClick={handleCancel}></button>
             </div>
             <div className="modal-body py-3 px-4 text-center">
               <p className="mb-0" style={{ whiteSpace: 'pre-wrap', color: 'var(--color-text-muted)', lineHeight: '1.5', fontSize: '0.9rem' }}>{options.message}</p>

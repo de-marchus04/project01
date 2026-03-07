@@ -1,10 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useLanguage } from "@/shared/i18n/LanguageContext";
 import { useScrollReveal } from "@/shared/hooks/useScrollReveal";
-import { useEffect, useState } from "react";
-import { getTours } from "@/shared/api/tourApi";
 import type { Tour } from "@/entities/tour/model/types";
 
 const FALLBACK_IMAGES = [
@@ -12,16 +11,15 @@ const FALLBACK_IMAGES = [
   "https://images.unsplash.com/photo-1501504905252-473c47e087f8?q=80&w=800",
 ];
 
-export const Tours = () => {
-  const { t, tData } = useLanguage() as any;
+interface ToursProps {
+  initialTours: Tour[];
+}
+
+export const Tours = ({ initialTours }: ToursProps) => {
+  const { t, tData } = useLanguage();
   const { observe } = useScrollReveal();
-  const [tours, setTours] = useState<Tour[]>([]);
 
-  useEffect(() => {
-    getTours().then(data => setTours(data.slice(0, 2))).catch(() => {});
-  }, []);
-
-  const displayTours = tours.map((tour, i) => ({
+  const displayTours = initialTours.slice(0, 2).map((tour, i) => ({
     ...(tData ? tData(tour) : tour),
     imageUrl: tour.imageUrl || FALLBACK_IMAGES[i] || FALLBACK_IMAGES[0],
     href: '/tours',
@@ -65,11 +63,12 @@ export const Tours = () => {
             <div key={card.id} className={`col-lg-6 reveal-up${index > 0 ? ' reveal-delay-1' : ''}`} ref={observe as any}>
               <div className="card border-0 h-100 overflow-hidden">
                 <div className="row g-0 h-100">
-                  <div className="col-md-5">
-                    <img
+                  <div className="col-md-5 position-relative" style={{ minHeight: '250px' }}>
+                    <Image
                       src={card.imageUrl}
-                      className="img-fluid h-100 w-100"
-                      style={{ objectFit: 'cover', minHeight: '250px', borderLeft: '4px solid var(--color-accent)' }}
+                      fill
+                      sizes="(max-width: 768px) 100vw, 300px"
+                      style={{ objectFit: 'cover', borderLeft: '4px solid var(--color-accent)' }}
                       alt={card.title}
                     />
                   </div>

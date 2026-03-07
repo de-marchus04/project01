@@ -3,7 +3,7 @@ import BlogAllClient from './BlogAllClient';
 
 export const metadata: Metadata = {
   title: 'Блог | YOGA.LIFE',
-  description: 'Статьи, видео, подкасты и рецепты для вашей йога-практики',
+  description: 'Блог YOGA.LIFE: статьи, видео, подкасты и рецепты для развития вашей йога-практики, медитации и осознанного образа жизни.',
 };
 
 export default function BlogPage() {

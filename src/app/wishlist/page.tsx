@@ -3,7 +3,7 @@ import WishlistPageClient from './WishlistPageClient';
 
 export const metadata: Metadata = {
   title: 'Избранное | YOGA.LIFE',
-  description: 'Ваш список желаний — сохранённые курсы, консультации и туры',
+  robots: { index: false, follow: false },
 };
 
 export default function WishlistPage() {

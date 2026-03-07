@@ -2,6 +2,7 @@
 
 import { prisma } from "@/shared/lib/prisma";
 import { auth } from "@/auth";
+import { z } from "zod";
 
 export interface TeamMember {
   id: string;
@@ -18,6 +19,20 @@ export async function getTeamMembers(): Promise<TeamMember[]> {
   return JSON.parse(JSON.stringify(members));
 }
 
+const addTeamMemberSchema = z.object({
+  name: z.string().min(1).max(100),
+  role: z.string().min(1).max(100),
+  imageUrl: z.string().url().optional().nullable().or(z.literal('')),
+  sortOrder: z.number().int().min(0).optional(),
+});
+
+const updateTeamMemberSchema = z.object({
+  name: z.string().min(1).max(100).optional(),
+  role: z.string().min(1).max(100).optional(),
+  imageUrl: z.string().url().optional().nullable().or(z.literal('')),
+  sortOrder: z.number().int().min(0).optional(),
+});
+
 export async function addTeamMember(data: {
   name: string;
   role: string;
@@ -25,13 +40,15 @@ export async function addTeamMember(data: {
   sortOrder?: number;
 }): Promise<TeamMember> {
   const session = await auth();
-  if ((session?.user as any)?.role !== 'ADMIN') throw new Error('Access denied');
+  if ((session?.user)?.role !== 'ADMIN') throw new Error('Access denied');
+  const parsed = addTeamMemberSchema.safeParse(data);
+  if (!parsed.success) throw new Error(parsed.error.errors[0]?.message || 'Некорректные данные');
   const member = await prisma.teamMember.create({
     data: {
-      name: data.name,
-      role: data.role,
-      imageUrl: data.imageUrl || null,
-      sortOrder: data.sortOrder ?? 0,
+      name: parsed.data.name,
+      role: parsed.data.role,
+      imageUrl: parsed.data.imageUrl || null,
+      sortOrder: parsed.data.sortOrder ?? 0,
     },
   });
   return JSON.parse(JSON.stringify(member));
@@ -44,16 +61,18 @@ export async function updateTeamMember(id: string, data: {
   sortOrder?: number;
 }): Promise<TeamMember> {
   const session = await auth();
-  if ((session?.user as any)?.role !== 'ADMIN') throw new Error('Access denied');
+  if ((session?.user)?.role !== 'ADMIN') throw new Error('Access denied');
+  const parsed = updateTeamMemberSchema.safeParse(data);
+  if (!parsed.success) throw new Error(parsed.error.errors[0]?.message || 'Некорректные данные');
   const member = await prisma.teamMember.update({
     where: { id },
-    data,
+    data: parsed.data,
   });
   return JSON.parse(JSON.stringify(member));
 }
 
 export async function deleteTeamMember(id: string): Promise<void> {
   const session = await auth();
-  if ((session?.user as any)?.role !== 'ADMIN') throw new Error('Access denied');
+  if ((session?.user)?.role !== 'ADMIN') throw new Error('Access denied');
   await prisma.teamMember.delete({ where: { id } });
 }

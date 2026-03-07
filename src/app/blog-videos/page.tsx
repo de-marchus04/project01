@@ -8,7 +8,7 @@ import { getVideos } from "@/shared/api/blogApi";
 import { HeroSlider } from "@/shared/ui/HeroSlider/HeroSlider";
 
 export default function BlogVideos() {
-  const { t , tStr} = useLanguage() as any;
+  const { t , tStr} = useLanguage();
   const [videos, setVideos] = useState<Video[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedTag, setSelectedTag] = useState<string | null>(null);

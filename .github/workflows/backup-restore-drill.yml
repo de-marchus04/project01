@@ -1,4 +1,7 @@
 name: backup-restore-drill
+# Этот воркфлоу временно отключён — скрипты резервного копирования (Infra/ops/)
+# ещё не настроены в текущей архитектуре (Vercel + Neon).
+# Включите его после подготовки инфраструктурных скриптов.
 
 on:
   schedule:
@@ -7,32 +10,9 @@ on:
 
 jobs:
   drill:
+    if: false
     runs-on: ubuntu-latest
-    services:
-      postgres:
-        image: postgres:15
-        env:
-          POSTGRES_DB: YogaPlatformDb
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd "pg_isready -U postgres -d YogaPlatformDb"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-
     steps:
       - uses: actions/checkout@v4
-      - name: Prepare sample data
-        run: |
-          psql "postgresql://postgres:postgres@localhost:5432/YogaPlatformDb" -v ON_ERROR_STOP=1 -c "CREATE TABLE IF NOT EXISTS drill_probe(id serial primary key, created_at timestamptz default now());"
-          psql "postgresql://postgres:postgres@localhost:5432/YogaPlatformDb" -v ON_ERROR_STOP=1 -c "INSERT INTO drill_probe DEFAULT VALUES;"
-      - name: Run backup
-        run: |
-          chmod +x Infra/ops/backup.sh Infra/ops/restore.sh Infra/ops/drill.sh
-          BACKUP_DIR=./Infra/backups PGHOST=localhost PGPORT=5432 PGUSER=postgres PGPASSWORD=postgres PGDATABASE=YogaPlatformDb bash Infra/ops/backup.sh
-      - name: Run restore drill
-        run: |
-          BACKUP_DIR=./Infra/backups PGHOST=localhost PGPORT=5432 PGUSER=postgres PGPASSWORD=postgres bash Infra/ops/drill.sh
+      - name: Placeholder
+        run: echo "Backup drill not yet configured."

@@ -21,17 +21,17 @@
     --color-warning-subtle: #F5EDD8;
 }
 
-/* Smooth theme transition on all elements */
+/* Smooth theme transition — only on colour-related properties, no !important so component-specific transitions can override */
 *,
 *::before,
 *::after {
-    transition: background-color 0.5s ease, color 0.5s ease, border-color 0.5s ease !important;
+    transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease;
 }
 
-/* But don't override intentional hover/click transitions */
+/* Interactive elements get full transition set */
 button, a, .btn, .nav-link, .card {
-    transition: background-color 0.5s ease, color 0.5s ease, border-color 0.5s ease,
-                transform 0.3s ease, box-shadow 0.3s ease !important;
+    transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease,
+                transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 /* HeroSlider images: opacity MUST animate — not overridden by * rule */

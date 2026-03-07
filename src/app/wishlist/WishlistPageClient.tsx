@@ -11,7 +11,7 @@ import { useScrollReveal } from "@/shared/hooks/useScrollReveal";
 import { SectionHeader } from "@/shared/ui/SectionHeader/SectionHeader";
 
 export default function WishlistPageClient() {
-  const { t, tStr } = useLanguage() as any;
+  const { t, tStr } = useLanguage();
 
   const TYPE_LABEL: Record<string, string> = {
     COURSE: t.search.typeCourse,

@@ -2,6 +2,7 @@
 
 import { prisma } from "@/shared/lib/prisma";
 import { auth } from "@/auth";
+import { z } from "zod";
 import { Tour } from "@/entities/tour/model/types";
 
 export async function getTours(): Promise<Tour[]> {
@@ -19,13 +20,40 @@ export async function getTourById(id: string): Promise<Tour | undefined> {
   return item ? JSON.parse(JSON.stringify(item)) : undefined;
 }
 
+const addTourSchema = z.object({
+  title: z.string().min(1).max(500),
+  description: z.string().min(1).max(500),
+  price: z.number().positive().max(9999999),
+  imageUrl: z.string().url().optional().nullable().or(z.literal('')),
+  date: z.string().min(1).max(200).optional(),
+  location: z.string().min(1).max(200).optional(),
+  author: z.string().max(200).optional(),
+  authorPhoto: z.string().url().optional().nullable().or(z.literal('')),
+  fullDescription: z.string().max(50000).optional(),
+  features: z.array(z.string()).optional(),
+});
+
+const updateTourSchema = z.object({
+  title: z.string().min(1).max(500).optional(),
+  description: z.string().min(1).max(500).optional(),
+  price: z.number().positive().max(9999999).optional(),
+  imageUrl: z.string().url().optional().nullable().or(z.literal('')),
+  date: z.string().max(200).optional(),
+  location: z.string().max(200).optional(),
+  author: z.string().max(200).optional(),
+  authorPhoto: z.string().url().optional().nullable().or(z.literal('')),
+  fullDescription: z.string().max(50000).optional(),
+  features: z.array(z.string()).optional(),
+});
+
 export async function addTour(tourData: Omit<Tour, 'id'>): Promise<Tour> {
   const session = await auth();
-  if ((session?.user as any)?.role !== 'ADMIN') throw new Error('Нет доступа');
-  const { translations, id: _mockId, ...validData } = tourData as any;
+  if ((session?.user)?.role !== 'ADMIN') throw new Error('Нет доступа');
+  const parsed = addTourSchema.safeParse(tourData);
+  if (!parsed.success) throw new Error(parsed.error.errors[0]?.message || 'Некорректные данные');
   const newItem = await prisma.tour.create({
     data: {
-      ...validData,
+      ...parsed.data,
       id: `tour-${Date.now()}`
     } as any
   });
@@ -34,22 +62,24 @@ export async function addTour(tourData: Omit<Tour, 'id'>): Promise<Tour> {
 
 export async function updateTour(id: string, updatedData: Partial<Tour>): Promise<Tour | undefined> {
   const session = await auth();
-  if ((session?.user as any)?.role !== 'ADMIN') throw new Error('Нет доступа');
-  const { translations, id: _id, ...validData } = updatedData as any;
+  if ((session?.user)?.role !== 'ADMIN') throw new Error('Нет доступа');
+  const parsed = updateTourSchema.safeParse(updatedData);
+  if (!parsed.success) throw new Error(parsed.error.errors[0]?.message || 'Некорректные данные');
   const updated = await prisma.tour.update({
     where: { id },
-    data: validData
+    data: parsed.data
   });
   return JSON.parse(JSON.stringify(updated));
 }
 
 export async function deleteTour(id: string): Promise<boolean> {
+  const session = await auth();
+  if ((session?.user)?.role !== 'ADMIN') throw new Error('Нет доступа');
   try {
-    const session = await auth();
-    if ((session?.user as any)?.role !== 'ADMIN') throw new Error('Нет доступа');
     await prisma.tour.delete({ where: { id } });
     return true;
   } catch (e) {
+    console.error('deleteTour error:', e);
     return false;
   }
 }

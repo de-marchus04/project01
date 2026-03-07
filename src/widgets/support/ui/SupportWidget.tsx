@@ -6,7 +6,7 @@ import { getUserMessages, sendMessage, markAsRead, SupportMessage } from "@/shar
 
 export const SupportWidget = () => {
   const { data: session } = useSession();
-  const sessionUser = session?.user as any;
+  const sessionUser = session?.user;
   const userEmail = sessionUser?.email || null;
 
   const [isOpen, setIsOpen] = useState(false);
@@ -34,20 +34,25 @@ export const SupportWidget = () => {
     originalTitle.current = document.title;
     loadMessages();
 
-    const handleCustomUpdate = () => {
-      loadMessages();
-    };
-
+    const handleCustomUpdate = () => { loadMessages(); };
     window.addEventListener('yoga_support_updated', handleCustomUpdate);
-    
-    const interval = setInterval(loadMessages, 3000);
+
+    // Poll infrequently while widget is closed (just for badge updates)
+    const slowInterval = setInterval(loadMessages, 60_000);
 
     return () => {
       window.removeEventListener('yoga_support_updated', handleCustomUpdate);
-      clearInterval(interval);
+      clearInterval(slowInterval);
       document.title = originalTitle.current;
     };
   }, [userEmail]);
+
+  // Faster polling only while the chat window is open
+  useEffect(() => {
+    if (!isOpen) return;
+    const fastInterval = setInterval(loadMessages, 5_000);
+    return () => clearInterval(fastInterval);
+  }, [isOpen, userEmail]);
 
   const toggleWidget = () => {
     setIsOpen(!isOpen);
@@ -83,7 +88,7 @@ export const SupportWidget = () => {
         >
           <div className="card-header text-white d-flex justify-content-between align-items-center p-3" style={{ backgroundColor: 'var(--color-primary)' }}>
             <h6 className="mb-0 fw-bold">Служба поддержки</h6>
-            <button className="btn-close btn-close-white" onClick={toggleWidget}></button>
+            <button className="btn-close btn-close-white" aria-label="Закрыть чат" onClick={toggleWidget}></button>
           </div>
           <div className="card-body p-3" style={{ overflowY: 'auto', backgroundColor: '#f8f9fa' }}>
             {messages.length === 0 ? (
@@ -130,9 +135,11 @@ export const SupportWidget = () => {
       )}
 
       {/* Floating Button */}
-      <button 
+      <button
         onClick={toggleWidget}
         className="btn btn-primary-custom rounded-circle shadow-lg d-flex align-items-center justify-content-center position-relative"
+        aria-label={isOpen ? 'Закрыть чат поддержки' : 'Открыть чат поддержки'}
+        aria-expanded={isOpen}
         style={{ width: '60px', height: '60px', transition: 'transform 0.2s' }}
         onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.1)'}
         onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}

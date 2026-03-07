@@ -5,8 +5,8 @@ import CoursesAllClient from "./CoursesAllClient";
 export const revalidate = 3600;
 
 export const metadata: Metadata = {
-  title: 'Все курсы | YOGA.LIFE',
-  description: 'Полный каталог курсов по йоге: для начинающих, для женщин, медитация, здоровая спина',
+  title: 'Курсы йоги | YOGA.LIFE',
+  description: 'Онлайн-курсы йоги для любого уровня подготовки: йога для начинающих, йога для женщин, медитация и оздоровительные практики для здоровой спины.',
 };
 
 export default async function CoursesPage() {
