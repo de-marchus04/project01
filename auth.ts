@@ -100,6 +100,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
               }
             }
           }
+          if (!dbUser) throw new Error('Failed to find or create user');
           token.id = dbUser.id;
           token.role = dbUser.role;
           token.username = dbUser.username;
@@ -149,10 +150,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     },
     async session({ session, token }) {
       if (session.user) {
-        session.user.role = token.role ?? '';
-        session.user.id = token.id ?? '';
-        session.user.avatar = token.avatar ?? null;
-        session.user.username = token.username ?? '';
+        session.user.role = (token.role ?? '') as string;
+        session.user.id = (token.id ?? '') as string;
+        session.user.avatar = (token.avatar ?? null) as string | null;
+        session.user.username = (token.username ?? '') as string;
         session.user.name = token.name as string;
       }
       return session;

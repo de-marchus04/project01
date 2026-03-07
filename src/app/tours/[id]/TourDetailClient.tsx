@@ -146,7 +146,7 @@ export default function TourDetail() {
                   </div>
                   <ul className="list-unstyled mb-5">
                     {loc_tour.features ? (
-                      (Array.isArray(loc_tour.features) ? loc_tour.features : loc_tour.features.split('\n')).filter((f: string) => f.trim()).map((feat: string, i: number) => (
+                      (Array.isArray(loc_tour.features) ? loc_tour.features : (loc_tour.features as unknown as string).split('\n')).filter((f: string) => f.trim()).map((feat: string, i: number) => (
                         <li key={i} className="mb-3">
                           <i className={`bi bi-${feat.toLowerCase().includes('оплачивается отдельно') || feat.toLowerCase().includes('не включено') ? 'x-circle text-danger' : 'check-circle-fill text-success'} me-3`}></i>
                           <span className={feat.toLowerCase().includes('оплачивается отдельно') || feat.toLowerCase().includes('не включено') ? 'text-muted' : ''}>{feat}</span>

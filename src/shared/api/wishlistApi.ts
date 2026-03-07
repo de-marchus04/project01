@@ -86,5 +86,5 @@ export async function getUserWishlist(): Promise<WishlistItem[]> {
     return { id: item.id, itemId: item.itemId, itemType: item.itemType, createdAt: item.createdAt.toISOString(), title, imageUrl, price, url };
   }));
 
-  return structuredClone(enriched);
+  return JSON.parse(JSON.stringify(enriched));
 }

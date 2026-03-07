@@ -79,6 +79,7 @@ export default function Admin() {
     const role = (session?.user)?.role;
     const username = (session?.user)?.username;
     if (role !== 'ADMIN') { router.push('/profile'); return; }
+    if (!username) return;
     getMyProfile(username).then(profile => {
       if (profile) {
         setAdminProfile({

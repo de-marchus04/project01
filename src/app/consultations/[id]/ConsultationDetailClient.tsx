@@ -65,7 +65,7 @@ export default function CourseDetail() {
   const isNutrition = idStr.startsWith('nutrition');
 
   const localized_course = course ? tData(course) : null;
-  if (error || !course) {
+  if (error || !course || !localized_course) {
     const heroImg = isPrivate
       ? 'https://images.unsplash.com/photo-1515020617130-eca80c7d0753?q=80&w=2070&auto=format&fit=crop'
       : isNutrition

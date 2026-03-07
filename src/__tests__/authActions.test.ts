@@ -17,15 +17,33 @@ jest.mock("bcryptjs", () => ({
   hash: jest.fn(),
 }));
 
+jest.mock("@/auth", () => ({
+  auth: jest.fn(),
+}));
+
+jest.mock("next/headers", () => ({
+  headers: jest.fn().mockResolvedValue({ get: () => "127.0.0.1" }),
+}));
+
+jest.mock("@/shared/lib/rateLimit", () => ({
+  rateLimit: jest.fn().mockResolvedValue({ success: true }),
+}));
+
 import { prisma } from "@/shared/lib/prisma";
 import bcrypt from "bcryptjs";
+import { auth } from "@/auth";
 import { changePassword, updateMyProfile } from "@/shared/api/authActions";
 
 const mockPrisma = prisma as jest.Mocked<typeof prisma>;
 const mockBcrypt = bcrypt as jest.Mocked<typeof bcrypt>;
+const mockAuth = auth as jest.Mock;
 
 describe("changePassword", () => {
-  beforeEach(() => jest.clearAllMocks());
+  beforeEach(() => {
+    jest.clearAllMocks();
+    // Default: authenticated as the user being changed
+    mockAuth.mockResolvedValue({ user: { username: "ghost", role: "USER" } });
+  });
 
   it("returns error if user not found", async () => {
     (mockPrisma.user.findUnique as jest.Mock).mockResolvedValue(null);
@@ -35,6 +53,7 @@ describe("changePassword", () => {
   });
 
   it("returns error if old password doesn't match", async () => {
+    mockAuth.mockResolvedValue({ user: { username: "user", role: "USER" } });
     (mockPrisma.user.findUnique as jest.Mock).mockResolvedValue({ username: "user", passwordHash: "hash" });
     (mockBcrypt.compare as jest.Mock).mockResolvedValue(false);
     const result = await changePassword("user", "wrong", "new");
@@ -43,6 +62,7 @@ describe("changePassword", () => {
   });
 
   it("returns success on valid password change", async () => {
+    mockAuth.mockResolvedValue({ user: { username: "user", role: "USER" } });
     (mockPrisma.user.findUnique as jest.Mock).mockResolvedValue({ username: "user", passwordHash: "hash" });
     (mockBcrypt.compare as jest.Mock).mockResolvedValue(true);
     (mockBcrypt.hash as jest.Mock).mockResolvedValue("newHash");
@@ -56,7 +76,10 @@ describe("changePassword", () => {
 });
 
 describe("updateMyProfile", () => {
-  beforeEach(() => jest.clearAllMocks());
+  beforeEach(() => {
+    jest.clearAllMocks();
+    mockAuth.mockResolvedValue({ user: { username: "user", role: "USER" } });
+  });
 
   it("updates name and email", async () => {
     (mockPrisma.user.update as jest.Mock).mockResolvedValue({});

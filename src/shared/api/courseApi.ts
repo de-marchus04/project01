@@ -37,13 +37,13 @@ async function paginateCourses(
     prisma.course.count({ where }),
   ]);
 
-  return structuredClone({
+  return JSON.parse(JSON.stringify({
     data: courses,
     total,
     page: safePage,
     limit,
     totalPages: Math.ceil(total / limit),
-  });
+  }));
 }
 
 export async function getBeginnersCourses(
@@ -69,7 +69,7 @@ export async function getAllCourses(
 
 export async function getBackCourses(): Promise<Course[]> {
   const courses = await prisma.course.findMany({ where: { category: { startsWith: 'back' } } });
-  return structuredClone(courses);
+  return JSON.parse(JSON.stringify(courses));
 }
 
 export async function getBackCoursesPaginated(
@@ -83,7 +83,7 @@ export async function getBackCoursesPaginated(
 
 export async function getMeditationCourses(): Promise<Course[]> {
   const courses = await prisma.course.findMany({ where: { category: { startsWith: 'meditation' } } });
-  return structuredClone(courses);
+  return JSON.parse(JSON.stringify(courses));
 }
 
 export async function getMeditationCoursesPaginated(
@@ -97,7 +97,7 @@ export async function getMeditationCoursesPaginated(
 
 export async function getWomenCourses(): Promise<Course[]> {
   const courses = await prisma.course.findMany({ where: { category: { startsWith: 'women' } } });
-  return structuredClone(courses);
+  return JSON.parse(JSON.stringify(courses));
 }
 
 export async function getWomenCoursesPaginated(
@@ -111,12 +111,12 @@ export async function getWomenCoursesPaginated(
 
 export async function getCourseById(id: string): Promise<Course | undefined> {
   const course = await prisma.course.findUnique({ where: { id } });
-  return course ? structuredClone(course) : undefined;
+  return course ? JSON.parse(JSON.stringify(course)) : undefined;
 }
 
 export async function getAllAdminCourses(): Promise<Course[]> {
   const courses = await prisma.course.findMany({ orderBy: { createdAt: 'desc' } });
-  return structuredClone(courses);
+  return JSON.parse(JSON.stringify(courses));
 }
 
 const addCourseSchema = z.object({
@@ -148,25 +148,25 @@ export async function addCourse(courseData: Omit<Course, 'id'>, category: string
   const session = await auth();
   if ((session?.user)?.role !== 'ADMIN') throw new Error('Нет доступа');
   const parsedCategory = addCourseCategorySchema.safeParse(category);
-  if (!parsedCategory.success) throw new Error(parsedCategory.error.errors[0]?.message || 'Некорректная категория');
+  if (!parsedCategory.success) throw new Error(parsedCategory.error.issues[0]?.message || 'Некорректная категория');
   const parsed = addCourseSchema.safeParse(courseData);
-  if (!parsed.success) throw new Error(parsed.error.errors[0]?.message || 'Некорректные данные');
+  if (!parsed.success) throw new Error(parsed.error.issues[0]?.message || 'Некорректные данные');
   const newCourse = await prisma.course.create({
     data: { ...parsed.data, category: parsedCategory.data },
   });
-  return structuredClone(newCourse);
+  return JSON.parse(JSON.stringify(newCourse));
 }
 
 export async function updateCourse(id: string, updatedData: Partial<Course>): Promise<Course | undefined> {
   const session = await auth();
   if ((session?.user)?.role !== 'ADMIN') throw new Error('Нет доступа');
   const parsed = updateCourseSchema.safeParse(updatedData);
-  if (!parsed.success) throw new Error(parsed.error.errors[0]?.message || 'Некорректные данные');
+  if (!parsed.success) throw new Error(parsed.error.issues[0]?.message || 'Некорректные данные');
   const updated = await prisma.course.update({
     where: { id },
     data: parsed.data
   });
-  return structuredClone(updated);
+  return JSON.parse(JSON.stringify(updated));
 }
 
 export async function deleteCourse(id: string): Promise<boolean> {

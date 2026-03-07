@@ -516,7 +516,7 @@ export default function Profile() {
                             <div className="card border-0 shadow-sm rounded-3 overflow-hidden h-100" style={{ backgroundColor: 'var(--color-surface)' }}>
                               {item.imageUrl && (
                                 <div style={{ height: '130px', overflow: 'hidden', position: 'relative' }}>
-                                  <Image src={item.imageUrl} fill sizes="(max-width: 768px) 100vw, 600px" style={{ objectFit: 'cover' }} alt={item.title} />
+                                  <Image src={item.imageUrl} fill sizes="(max-width: 768px) 100vw, 600px" style={{ objectFit: 'cover' }} alt={item.title ?? ""} />
                                 </div>
                               )}
                               <div className="card-body p-3">

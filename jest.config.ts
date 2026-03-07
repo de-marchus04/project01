@@ -4,7 +4,7 @@ const config: Config = {
   preset: "ts-jest",
   testEnvironment: "node",
   moduleNameMapper: {
-    "^@/auth$": "<rootDir>/auth",
+    "^@/auth$": "<rootDir>/src/__mocks__/auth-stub.js",
     "^@/(.*)$": "<rootDir>/src/$1",
   },
   transform: {

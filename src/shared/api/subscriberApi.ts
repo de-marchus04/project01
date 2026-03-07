@@ -8,7 +8,7 @@ const emailSchema = z.string().email("Некорректный формат emai
 
 export async function subscribeEmail(email: string): Promise<{ success: boolean; alreadySubscribed?: boolean; error?: string }> {
   const parsed = emailSchema.safeParse(email);
-  if (!parsed.success) return { success: false, error: parsed.error.errors[0]?.message };
+  if (!parsed.success) return { success: false, error: parsed.error.issues[0]?.message };
   try {
     await prisma.subscriber.create({ data: { email: parsed.data } });
     return { success: true };
@@ -22,7 +22,7 @@ export async function subscribeEmail(email: string): Promise<{ success: boolean;
 
 export async function unsubscribeEmail(email: string): Promise<{ success: boolean; error?: string }> {
   const parsed = emailSchema.safeParse(email);
-  if (!parsed.success) return { success: false, error: parsed.error.errors[0]?.message };
+  if (!parsed.success) return { success: false, error: parsed.error.issues[0]?.message };
   try {
     await prisma.subscriber.delete({ where: { email: parsed.data } });
     return { success: true };
@@ -47,7 +47,7 @@ export async function getAllSubscribers(): Promise<Subscriber[]> {
   const session = await auth();
   if ((session?.user)?.role !== 'ADMIN') throw new Error('Access denied');
   const subs = await prisma.subscriber.findMany({ orderBy: { createdAt: 'desc' } });
-  return structuredClone(subs);
+  return JSON.parse(JSON.stringify(subs));
 }
 
 export async function deleteSubscriber(id: string): Promise<boolean> {

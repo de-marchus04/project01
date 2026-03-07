@@ -33,7 +33,7 @@ export async function getItemReviews(itemId: string, itemType: 'COURSE' | 'TOUR'
   const total = reviews.length;
   const average = total > 0 ? reviews.reduce((sum, r) => sum + r.rating, 0) / total : 0;
 
-  return structuredClone({
+  return JSON.parse(JSON.stringify({
     reviews: reviews.map(r => ({
       id: r.id,
       userId: r.userId,
@@ -46,7 +46,7 @@ export async function getItemReviews(itemId: string, itemType: 'COURSE' | 'TOUR'
       createdAt: r.createdAt,
     })),
     stats: { average: Math.round(average * 10) / 10, total, distribution },
-  });
+  }));
 }
 
 export async function getUserReview(itemId: string, itemType: 'COURSE' | 'TOUR' | 'CONSULTATION'): Promise<ReviewData | null> {
@@ -60,7 +60,7 @@ export async function getUserReview(itemId: string, itemType: 'COURSE' | 'TOUR' 
   });
   if (!review) return null;
 
-  return structuredClone({
+  return JSON.parse(JSON.stringify({
     id: review.id,
     userId: review.userId,
     username: review.user.username,
@@ -70,7 +70,7 @@ export async function getUserReview(itemId: string, itemType: 'COURSE' | 'TOUR' 
     rating: review.rating,
     text: review.text,
     createdAt: review.createdAt,
-  });
+  }));
 }
 
 export async function upsertReview(

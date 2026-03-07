@@ -16,7 +16,7 @@ export async function getTeamMembers(): Promise<TeamMember[]> {
   const members = await prisma.teamMember.findMany({
     orderBy: { sortOrder: 'asc' },
   });
-  return structuredClone(members);
+  return JSON.parse(JSON.stringify(members));
 }
 
 const addTeamMemberSchema = z.object({
@@ -42,7 +42,7 @@ export async function addTeamMember(data: {
   const session = await auth();
   if ((session?.user)?.role !== 'ADMIN') throw new Error('Access denied');
   const parsed = addTeamMemberSchema.safeParse(data);
-  if (!parsed.success) throw new Error(parsed.error.errors[0]?.message || 'Некорректные данные');
+  if (!parsed.success) throw new Error(parsed.error.issues[0]?.message || 'Некорректные данные');
   const member = await prisma.teamMember.create({
     data: {
       name: parsed.data.name,
@@ -51,7 +51,7 @@ export async function addTeamMember(data: {
       sortOrder: parsed.data.sortOrder ?? 0,
     },
   });
-  return structuredClone(member);
+  return JSON.parse(JSON.stringify(member));
 }
 
 export async function updateTeamMember(id: string, data: {
@@ -63,12 +63,12 @@ export async function updateTeamMember(id: string, data: {
   const session = await auth();
   if ((session?.user)?.role !== 'ADMIN') throw new Error('Access denied');
   const parsed = updateTeamMemberSchema.safeParse(data);
-  if (!parsed.success) throw new Error(parsed.error.errors[0]?.message || 'Некорректные данные');
+  if (!parsed.success) throw new Error(parsed.error.issues[0]?.message || 'Некорректные данные');
   const member = await prisma.teamMember.update({
     where: { id },
     data: parsed.data,
   });
-  return structuredClone(member);
+  return JSON.parse(JSON.stringify(member));
 }
 
 export async function deleteTeamMember(id: string): Promise<void> {

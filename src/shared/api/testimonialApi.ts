@@ -20,7 +20,7 @@ export interface Testimonial {
 export async function getTestimonials(): Promise<Testimonial[]> {
   if (process.env.NEXT_RUNTIME === 'edge') { throw new Error('EDGE RUNTIME DETECTED IN SERVER ACTION'); }
   const items = await prisma.testimonial.findMany({ orderBy: { createdAt: 'desc' } });
-  return structuredClone(items);
+  return JSON.parse(JSON.stringify(items));
 }
 
 const addTestimonialSchema = z.object({
@@ -38,17 +38,17 @@ const updateTestimonialSchema = z.object({
 export async function addTestimonial(testimonial: Omit<Testimonial, 'id' | 'createdAt'>): Promise<Testimonial> {
   await requireAdmin();
   const parsed = addTestimonialSchema.safeParse(testimonial);
-  if (!parsed.success) throw new Error(parsed.error.errors[0]?.message || 'Некорректные данные');
+  if (!parsed.success) throw new Error(parsed.error.issues[0]?.message || 'Некорректные данные');
   const item = await prisma.testimonial.create({ data: parsed.data });
-  return structuredClone(item);
+  return JSON.parse(JSON.stringify(item));
 }
 
 export async function updateTestimonial(id: string, updates: Partial<Testimonial>): Promise<Testimonial | null> {
   await requireAdmin();
   const parsed = updateTestimonialSchema.safeParse(updates);
-  if (!parsed.success) throw new Error(parsed.error.errors[0]?.message || 'Некорректные данные');
+  if (!parsed.success) throw new Error(parsed.error.issues[0]?.message || 'Некорректные данные');
   const item = await prisma.testimonial.update({ where: { id }, data: parsed.data });
-  return structuredClone(item);
+  return JSON.parse(JSON.stringify(item));
 }
 
 export async function deleteTestimonial(id: string): Promise<boolean> {

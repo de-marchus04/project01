@@ -27,7 +27,7 @@ export async function getOrders(): Promise<Order[]> {
     orderBy: { createdAt: 'desc' }
   });
 
-  return structuredClone(items.map(i => {
+  return JSON.parse(JSON.stringify(items.map(i => {
     // Map to OrderStatus mock structure to keep frontend simple for now
     let mappedStatus = "В обработке";
     if (i.status === 'COMPLETED') mappedStatus = "Принята";
@@ -44,7 +44,7 @@ export async function getOrders(): Promise<Order[]> {
       userId: i.userId || undefined,
       notified: false
     };
-  }));
+  })));
 }
 
 export async function addOrder(
@@ -98,7 +98,7 @@ export async function addOrder(
     }
   });
 
-  return structuredClone({
+  return JSON.parse(JSON.stringify({
     id: newItem.id,
     productName,
     price: newItem.amount,
@@ -108,7 +108,7 @@ export async function addOrder(
     serviceId: newItem.itemId,
     userId: newItem.userId,
     notified: false
-  });
+  }));
 }
 
 export async function updateOrderStatus(id: string, status: string): Promise<Order | undefined> {
@@ -149,7 +149,7 @@ export async function updateOrderStatus(id: string, status: string): Promise<Ord
     }
   }
 
-  return structuredClone({
+  return JSON.parse(JSON.stringify({
     id: updated.id,
     productName: (updated as any).productName || `Товар (${updated.itemType})`,
     price: updated.amount,
@@ -159,7 +159,7 @@ export async function updateOrderStatus(id: string, status: string): Promise<Ord
     serviceId: updated.itemId,
     userId: updated.userId,
     notified: false
-  });
+  }));
 }
 
 export async function deleteOrder(id: string): Promise<boolean> {

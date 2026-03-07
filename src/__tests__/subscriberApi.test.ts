@@ -3,6 +3,8 @@
  * Uses mocked Prisma client.
  */
 
+jest.mock("@/auth", () => ({ auth: jest.fn().mockResolvedValue(null) }));
+
 jest.mock("@/shared/lib/prisma", () => ({
   prisma: {
     subscriber: {

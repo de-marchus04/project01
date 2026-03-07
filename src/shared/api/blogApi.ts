@@ -42,13 +42,13 @@ export async function getArticles(page: number = 1, limit: number = 6, tag?: str
     prisma.article.count({ where })
   ]);
 
-  return structuredClone({
+  return JSON.parse(JSON.stringify({
     data: items,
     total,
     page: safePage,
     limit,
     totalPages: Math.ceil(total / limit)
-  });
+  }));
 }
 
 export async function getArticleTags(): Promise<string[]> {
@@ -61,12 +61,12 @@ export async function getArticleTags(): Promise<string[]> {
 
 export async function getArticleById(id: string): Promise<Article | undefined> {
   const item = await prisma.article.findUnique({ where: { id } });
-  return item ? structuredClone(item) : undefined;
+  return item ? JSON.parse(JSON.stringify(item)) : undefined;
 }
 
 export async function getAllAdminArticles(): Promise<Article[]> {
   const items = await prisma.article.findMany({ orderBy: { createdAt: 'desc' } });
-  return structuredClone(items);
+  return JSON.parse(JSON.stringify(items));
 }
 
 const addArticleSchema = z.object({
@@ -94,18 +94,18 @@ export async function addArticle(article: Omit<Article, 'id' | 'createdAt'>): Pr
   const session = await auth();
   if ((session?.user)?.role !== 'ADMIN') throw new Error('Нет доступа');
   const parsed = addArticleSchema.safeParse(article);
-  if (!parsed.success) throw new Error(parsed.error.errors[0]?.message || 'Некорректные данные');
-  const item = await prisma.article.create({ data: parsed.data });
-  return structuredClone(item);
+  if (!parsed.success) throw new Error(parsed.error.issues[0]?.message || 'Некорректные данные');
+  const item = await prisma.article.create({ data: parsed.data as any });
+  return JSON.parse(JSON.stringify(item));
 }
 
 export async function updateArticle(id: string, updatedData: Partial<Article>): Promise<Article | undefined> {
   const session = await auth();
   if ((session?.user)?.role !== 'ADMIN') throw new Error('Нет доступа');
   const parsed = updateArticleSchema.safeParse(updatedData);
-  if (!parsed.success) throw new Error(parsed.error.errors[0]?.message || 'Некорректные данные');
-  const item = await prisma.article.update({ where: { id }, data: parsed.data });
-  return structuredClone(item);
+  if (!parsed.success) throw new Error(parsed.error.issues[0]?.message || 'Некорректные данные');
+  const item = await prisma.article.update({ where: { id }, data: parsed.data as any });
+  return JSON.parse(JSON.stringify(item));
 }
 
 export async function deleteArticle(id: string): Promise<boolean> {
@@ -120,7 +120,7 @@ export async function deleteArticle(id: string): Promise<boolean> {
 // ----------------- VIDEOS -----------------
 export async function getVideos(): Promise<Video[]> {
   const items = await prisma.video.findMany({ orderBy: { createdAt: 'desc' } });
-  return structuredClone(items);
+  return JSON.parse(JSON.stringify(items));
 }
 
 const addVideoSchema = z.object({
@@ -143,18 +143,18 @@ export async function addVideo(video: Omit<Video, 'id'>): Promise<Video> {
   const session = await auth();
   if ((session?.user)?.role !== 'ADMIN') throw new Error('Нет доступа');
   const parsed = addVideoSchema.safeParse(video);
-  if (!parsed.success) throw new Error(parsed.error.errors[0]?.message || 'Некорректные данные');
-  const item = await prisma.video.create({ data: parsed.data });
-  return structuredClone(item);
+  if (!parsed.success) throw new Error(parsed.error.issues[0]?.message || 'Некорректные данные');
+  const item = await prisma.video.create({ data: parsed.data as any });
+  return JSON.parse(JSON.stringify(item));
 }
 
 export async function updateVideo(id: string, data: Partial<Video>): Promise<Video | undefined> {
   const session = await auth();
   if ((session?.user)?.role !== 'ADMIN') throw new Error('Нет доступа');
   const parsed = updateVideoSchema.safeParse(data);
-  if (!parsed.success) throw new Error(parsed.error.errors[0]?.message || 'Некорректные данные');
-  const item = await prisma.video.update({ where: { id }, data: parsed.data });
-  return structuredClone(item);
+  if (!parsed.success) throw new Error(parsed.error.issues[0]?.message || 'Некорректные данные');
+  const item = await prisma.video.update({ where: { id }, data: parsed.data as any });
+  return JSON.parse(JSON.stringify(item));
 }
 
 export async function deleteVideo(id: string): Promise<boolean> {
@@ -168,7 +168,7 @@ export async function deleteVideo(id: string): Promise<boolean> {
 // ----------------- PODCASTS -----------------
 export async function getPodcasts(): Promise<Podcast[]> {
   const items = await prisma.podcast.findMany({ orderBy: { createdAt: 'desc' } });
-  return structuredClone(items);
+  return JSON.parse(JSON.stringify(items));
 }
 
 const addPodcastSchema = z.object({
@@ -191,18 +191,18 @@ export async function addPodcast(podcast: Omit<Podcast, 'id'>): Promise<Podcast>
   const session = await auth();
   if ((session?.user)?.role !== 'ADMIN') throw new Error('Нет доступа');
   const parsed = addPodcastSchema.safeParse(podcast);
-  if (!parsed.success) throw new Error(parsed.error.errors[0]?.message || 'Некорректные данные');
-  const item = await prisma.podcast.create({ data: parsed.data });
-  return structuredClone(item);
+  if (!parsed.success) throw new Error(parsed.error.issues[0]?.message || 'Некорректные данные');
+  const item = await prisma.podcast.create({ data: parsed.data as any });
+  return JSON.parse(JSON.stringify(item));
 }
 
 export async function updatePodcast(id: string, data: Partial<Podcast>): Promise<Podcast | undefined> {
   const session = await auth();
   if ((session?.user)?.role !== 'ADMIN') throw new Error('Нет доступа');
   const parsed = updatePodcastSchema.safeParse(data);
-  if (!parsed.success) throw new Error(parsed.error.errors[0]?.message || 'Некорректные данные');
-  const item = await prisma.podcast.update({ where: { id }, data: parsed.data });
-  return structuredClone(item);
+  if (!parsed.success) throw new Error(parsed.error.issues[0]?.message || 'Некорректные данные');
+  const item = await prisma.podcast.update({ where: { id }, data: parsed.data as any });
+  return JSON.parse(JSON.stringify(item));
 }
 
 export async function deletePodcast(id: string): Promise<boolean> {
@@ -216,7 +216,7 @@ export async function deletePodcast(id: string): Promise<boolean> {
 // ----------------- RECIPES -----------------
 export async function getRecipes(): Promise<Recipe[]> {
   const items = await prisma.recipe.findMany({ orderBy: { createdAt: 'desc' } });
-  return structuredClone(items);
+  return JSON.parse(JSON.stringify(items));
 }
 
 const addRecipeSchema = z.object({
@@ -241,18 +241,18 @@ export async function addRecipe(recipe: Omit<Recipe, 'id'>): Promise<Recipe> {
   const session = await auth();
   if ((session?.user)?.role !== 'ADMIN') throw new Error('Нет доступа');
   const parsed = addRecipeSchema.safeParse(recipe);
-  if (!parsed.success) throw new Error(parsed.error.errors[0]?.message || 'Некорректные данные');
-  const item = await prisma.recipe.create({ data: parsed.data });
-  return structuredClone(item);
+  if (!parsed.success) throw new Error(parsed.error.issues[0]?.message || 'Некорректные данные');
+  const item = await prisma.recipe.create({ data: parsed.data as any });
+  return JSON.parse(JSON.stringify(item));
 }
 
 export async function updateRecipe(id: string, data: Partial<Recipe>): Promise<Recipe | undefined> {
   const session = await auth();
   if ((session?.user)?.role !== 'ADMIN') throw new Error('Нет доступа');
   const parsed = updateRecipeSchema.safeParse(data);
-  if (!parsed.success) throw new Error(parsed.error.errors[0]?.message || 'Некорректные данные');
-  const item = await prisma.recipe.update({ where: { id }, data: parsed.data });
-  return structuredClone(item);
+  if (!parsed.success) throw new Error(parsed.error.issues[0]?.message || 'Некорректные данные');
+  const item = await prisma.recipe.update({ where: { id }, data: parsed.data as any });
+  return JSON.parse(JSON.stringify(item));
 }
 
 export async function deleteRecipe(id: string): Promise<boolean> {

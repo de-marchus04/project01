@@ -61,7 +61,7 @@ export async function getPromoCodes() {
   const session = await auth();
   if ((session?.user)?.role !== 'ADMIN') throw new Error('Нет доступа');
   const codes = await prisma.promoCode.findMany({ orderBy: { createdAt: 'desc' } });
-  return structuredClone(codes);
+  return JSON.parse(JSON.stringify(codes));
 }
 
 export async function createPromoCode(data: {
@@ -82,7 +82,7 @@ export async function createPromoCode(data: {
       expiresAt: data.expiresAt ? new Date(data.expiresAt) : null,
     }
   });
-  return structuredClone(promo);
+  return JSON.parse(JSON.stringify(promo));
 }
 
 export async function togglePromoCodeActive(id: string, isActive: boolean) {
