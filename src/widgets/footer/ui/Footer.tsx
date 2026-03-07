@@ -1,17 +1,29 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { subscribeEmail } from "@/shared/api/subscriberApi";
 import { emailService } from "@/shared/api/emailService";
 import { sendWelcomeGuide } from "@/shared/api/emailActions";
 import { modalService } from "@/shared/ui/Modal/modalService";
 import { useLanguage } from "@/shared/i18n/LanguageContext";
+import { getSiteSettings } from "@/shared/api/siteSettingsApi";
 
 export const Footer = () => {
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { t } = useLanguage();
+  const [instagram, setInstagram] = useState("https://instagram.com");
+  const [telegram, setTelegram] = useState("https://t.me");
+  const [youtube, setYoutube] = useState("https://youtube.com");
+
+  useEffect(() => {
+    getSiteSettings().then(s => {
+      if (s.instagram) setInstagram(s.instagram);
+      if (s.telegram) setTelegram(s.telegram);
+      if (s.youtube) setYoutube(s.youtube);
+    }).catch(() => {});
+  }, []);
 
   const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -54,17 +66,17 @@ export const Footer = () => {
             <h3 className="font-playfair mb-3 text-white">YOGA.LIFE</h3>
             <p style={{ color: 'rgba(244, 241, 234, 0.7)' }}>{t.footer.description}</p>
             <div className="d-flex gap-3 mt-3">
-              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram"
+              <a href={instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram"
                 style={{ color: 'rgba(244,241,234,0.7)', fontSize: '1.4rem', transition: 'color 0.2s' }}
                 onMouseOver={e => (e.currentTarget.style.color = '#fff')}
                 onMouseOut={e => (e.currentTarget.style.color = 'rgba(244,241,234,0.7)')}
               ><i className="bi bi-instagram"></i></a>
-              <a href="https://t.me" target="_blank" rel="noopener noreferrer" aria-label="Telegram"
+              <a href={telegram} target="_blank" rel="noopener noreferrer" aria-label="Telegram"
                 style={{ color: 'rgba(244,241,234,0.7)', fontSize: '1.4rem', transition: 'color 0.2s' }}
                 onMouseOver={e => (e.currentTarget.style.color = '#fff')}
                 onMouseOut={e => (e.currentTarget.style.color = 'rgba(244,241,234,0.7)')}
               ><i className="bi bi-telegram"></i></a>
-              <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" aria-label="YouTube"
+              <a href={youtube} target="_blank" rel="noopener noreferrer" aria-label="YouTube"
                 style={{ color: 'rgba(244,241,234,0.7)', fontSize: '1.4rem', transition: 'color 0.2s' }}
                 onMouseOver={e => (e.currentTarget.style.color = '#fff')}
                 onMouseOut={e => (e.currentTarget.style.color = 'rgba(244,241,234,0.7)')}

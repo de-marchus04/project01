@@ -5,6 +5,8 @@ import { auth } from "@/auth";
 import bcrypt from "bcryptjs";
 import { headers } from "next/headers";
 import { rateLimit } from "@/shared/lib/rateLimit";
+import { randomBytes } from "crypto";
+import { emailService } from "@/shared/api/emailService";
 
 export interface UserProfile {
   id: string;
@@ -141,5 +143,64 @@ export async function resetPassword(username: string, newPassword: string) {
   } catch (error: any) {
     console.error('resetPassword error:', error);
     return { success: false, error: 'Не удалось сбросить пароль' };
+  }
+}
+
+export async function requestPasswordReset(email: string): Promise<{ success: boolean; error?: string }> {
+  try {
+    const h = await headers();
+    const ip = h.get('x-forwarded-for') || 'unknown';
+    const rl = await rateLimit(`passwordReset:${ip}`, { windowMs: 600_000, max: 5 });
+    if (!rl.success) return { success: true }; // Don't reveal rate limit info
+
+    // Always return success to prevent email enumeration
+    const user = await prisma.user.findFirst({ where: { email: email.toLowerCase().trim() } });
+    if (user) {
+      const token = randomBytes(32).toString('hex');
+      const expiresAt = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
+
+      // Delete any existing tokens for this email
+      await prisma.passwordResetToken.deleteMany({ where: { email: user.email! } });
+      await prisma.passwordResetToken.create({ data: { email: user.email!, token, expiresAt } });
+
+      const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+      await emailService.sendEmail(
+        user.email!,
+        'Сброс пароля — YOGA.LIFE',
+        `Здравствуйте!\n\nДля сброса пароля перейдите по ссылке:\n${siteUrl}/reset-password?token=${token}\n\nСсылка действует 1 час. Если вы не запрашивали сброс пароля, проигнорируйте это письмо.\n\nС уважением, команда YOGA.LIFE`
+      );
+    }
+
+    return { success: true };
+  } catch (error: any) {
+    console.error('requestPasswordReset error:', error);
+    return { success: true }; // Don't leak errors
+  }
+}
+
+export async function confirmPasswordReset(token: string, newPassword: string): Promise<{ success: boolean; error?: string }> {
+  try {
+    if (!newPassword || newPassword.length < 6) {
+      return { success: false, error: 'Пароль должен быть не менее 6 символов' };
+    }
+
+    const resetToken = await prisma.passwordResetToken.findUnique({ where: { token } });
+    if (!resetToken) return { success: false, error: 'Недействительная или истёкшая ссылка' };
+    if (resetToken.expiresAt < new Date()) {
+      await prisma.passwordResetToken.delete({ where: { token } });
+      return { success: false, error: 'Срок действия ссылки истёк. Запросите новую.' };
+    }
+
+    const user = await prisma.user.findFirst({ where: { email: resetToken.email } });
+    if (!user) return { success: false, error: 'Пользователь не найден' };
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    await prisma.user.update({ where: { id: user.id }, data: { passwordHash: hashedPassword } });
+    await prisma.passwordResetToken.deleteMany({ where: { email: resetToken.email } });
+
+    return { success: true };
+  } catch (error: any) {
+    console.error('confirmPasswordReset error:', error);
+    return { success: false, error: 'Произошла ошибка. Попробуйте позже.' };
   }
 }

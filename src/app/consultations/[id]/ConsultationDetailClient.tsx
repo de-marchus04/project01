@@ -10,6 +10,7 @@ import { BuyButton } from "@/shared/ui/BuyButton/BuyButton";
 import { useLanguage } from "@/shared/i18n/LanguageContext";
 import { formatPrice } from "@/shared/lib/formatPrice";
 import ReviewSection from "@/shared/ui/ReviewSection";
+import PromoCodeInput from "@/shared/ui/PromoCodeInput";
 
 export default function CourseDetail() {
   const { t, tData, tStr, lang } = useLanguage();
@@ -18,6 +19,8 @@ export default function CourseDetail() {
   const [course, setCourse] = useState<Consultation | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [promoPrice, setPromoPrice] = useState<number | null>(null);
+  const [promoCodeId, setPromoCodeId] = useState<string | null>(null);
 
   useEffect(() => {
     async function loadCourse() {
@@ -232,12 +235,27 @@ export default function CourseDetail() {
                   </div>
                   <hr className="my-4" />
                   <div className="text-center">
-                    <span className="d-block fs-3 fw-bold mb-3" style={{ color: 'var(--color-text)' }}>{formatPrice(localized_course.price, lang)}</span>
+                    {promoPrice !== null ? (
+                      <div className="mb-3">
+                        <span className="text-muted text-decoration-line-through fs-5 me-2">{formatPrice(localized_course.price, lang)}</span>
+                        <span className="fs-3 fw-bold" style={{ color: 'var(--color-primary)' }}>{formatPrice(promoPrice, lang)}</span>
+                      </div>
+                    ) : (
+                      <span className="d-block fs-3 fw-bold mb-3" style={{ color: 'var(--color-text)' }}>{formatPrice(localized_course.price, lang)}</span>
+                    )}
+                    <PromoCodeInput
+                      originalPrice={localized_course.price}
+                      onApply={(finalPrice, codeId) => { setPromoPrice(finalPrice); setPromoCodeId(codeId); }}
+                      onClear={() => { setPromoPrice(null); setPromoCodeId(null); }}
+                    />
                     <BuyButton
                       title={localized_course.title}
-                      price={localized_course.price}
+                      price={promoPrice ?? localized_course.price}
+                      serviceId={localized_course.id}
+                      itemType="CONSULTATION"
+                      promoCodeId={promoCodeId ?? undefined}
                       label={t.courseDetail.enroll}
-                      className="btn btn-primary-custom w-100 rounded-pill py-3 fw-bold"
+                      className="btn btn-primary-custom w-100 rounded-pill py-3 fw-bold mt-3"
                     />
                   </div>
                 </div>

@@ -32,7 +32,7 @@ export const metadata: Metadata = {
         alt: "YOGA.LIFE",
       },
     ],
-    locale: "ru_RU",
+    locale: process.env.NEXT_PUBLIC_OG_LOCALE || "uk_UA",
     type: "website",
   },
   twitter: {

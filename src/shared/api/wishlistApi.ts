@@ -53,38 +53,57 @@ export async function getUserWishlist(): Promise<WishlistItem[]> {
     orderBy: { createdAt: 'desc' }
   });
 
-  const enriched = await Promise.all(wishlistItems.map(async (item) => {
+  if (wishlistItems.length === 0) return [];
+
+  // Group by item type to avoid N+1 queries
+  const courseIds = wishlistItems.filter(i => i.itemType === 'COURSE').map(i => i.itemId);
+  const consultationIds = wishlistItems.filter(i => i.itemType === 'CONSULTATION').map(i => i.itemId);
+  const tourIds = wishlistItems.filter(i => i.itemType === 'TOUR').map(i => i.itemId);
+
+  const [courses, consultations, tours] = await Promise.all([
+    courseIds.length > 0
+      ? prisma.course.findMany({ where: { id: { in: courseIds } }, select: { id: true, title: true, imageUrl: true, price: true } })
+      : [],
+    consultationIds.length > 0
+      ? prisma.consultation.findMany({ where: { id: { in: consultationIds } }, select: { id: true, title: true, imageUrl: true, price: true } })
+      : [],
+    tourIds.length > 0
+      ? prisma.tour.findMany({ where: { id: { in: tourIds } }, select: { id: true, title: true, imageUrl: true, price: true } })
+      : [],
+  ]);
+
+  const courseMap = new Map(courses.map(c => [c.id, c]));
+  const consultationMap = new Map(consultations.map(c => [c.id, c]));
+  const tourMap = new Map(tours.map(t => [t.id, t]));
+
+  const enriched = wishlistItems.map(item => {
     let title = '';
     let imageUrl: string | null = null;
     let price: number | undefined;
     let url = '';
 
-    try {
-      if (item.itemType === 'COURSE') {
-        const course = await prisma.course.findUnique({ where: { id: item.itemId }, select: { title: true, imageUrl: true, price: true } });
-        title = course?.title || '';
-        imageUrl = course?.imageUrl ?? null;
-        price = course?.price;
-        url = `/courses/${item.itemId}`;
-      } else if (item.itemType === 'CONSULTATION') {
-        const cons = await prisma.consultation.findUnique({ where: { id: item.itemId }, select: { title: true, imageUrl: true, price: true } });
-        title = cons?.title || '';
-        imageUrl = cons?.imageUrl ?? null;
-        price = cons?.price;
-        url = `/consultations/${item.itemId}`;
-      } else if (item.itemType === 'TOUR') {
-        const tour = await prisma.tour.findUnique({ where: { id: item.itemId }, select: { title: true, imageUrl: true, price: true } });
-        title = tour?.title || '';
-        imageUrl = tour?.imageUrl ?? null;
-        price = tour?.price;
-        url = `/tours/${item.itemId}`;
-      }
-    } catch (e) {
-      console.error('getUserWishlist enrichment error:', e);
+    if (item.itemType === 'COURSE') {
+      const d = courseMap.get(item.itemId);
+      title = d?.title || '';
+      imageUrl = d?.imageUrl ?? null;
+      price = d?.price;
+      url = `/courses/${item.itemId}`;
+    } else if (item.itemType === 'CONSULTATION') {
+      const d = consultationMap.get(item.itemId);
+      title = d?.title || '';
+      imageUrl = d?.imageUrl ?? null;
+      price = d?.price;
+      url = `/consultations/${item.itemId}`;
+    } else if (item.itemType === 'TOUR') {
+      const d = tourMap.get(item.itemId);
+      title = d?.title || '';
+      imageUrl = d?.imageUrl ?? null;
+      price = d?.price;
+      url = `/tours/${item.itemId}`;
     }
 
     return { id: item.id, itemId: item.itemId, itemType: item.itemType, createdAt: item.createdAt.toISOString(), title, imageUrl, price, url };
-  }));
+  });
 
   return JSON.parse(JSON.stringify(enriched));
 }

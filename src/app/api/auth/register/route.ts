@@ -3,28 +3,7 @@ import { NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
 import { prisma } from '@/shared/lib/prisma';
 import { z } from 'zod';
-
-// Rate limiter: max 5 registrations per IP per 10 minutes.
-// NOTE: In-memory store resets between serverless cold starts.
-// For stricter rate limiting in production, use Vercel KV or Upstash Redis.
-const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
-const RATE_LIMIT_MAX = 5;
-const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;
-
-function checkRateLimit(ip: string): boolean {
-  const now = Date.now();
-  const entry = rateLimitMap.get(ip);
-
-  if (!entry || now > entry.resetAt) {
-    rateLimitMap.set(ip, { count: 1, resetAt: now + RATE_LIMIT_WINDOW_MS });
-    return true;
-  }
-
-  if (entry.count >= RATE_LIMIT_MAX) return false;
-
-  entry.count += 1;
-  return true;
-}
+import { rateLimit } from '@/shared/lib/rateLimit';
 
 const registerSchema = z.object({
   username: z
@@ -41,7 +20,8 @@ const registerSchema = z.object({
 export async function POST(req: Request) {
   try {
     const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
-    if (!checkRateLimit(ip)) {
+    const rl = await rateLimit(`register:${ip}`, { windowMs: 600_000, max: 5 });
+    if (!rl.success) {
       return NextResponse.json(
         { error: 'Слишком много попыток регистрации. Попробуйте позже.' },
         { status: 429 }
@@ -49,7 +29,6 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json();
-
     const parsed = registerSchema.safeParse(body);
     if (!parsed.success) {
       const message = parsed.error.issues[0]?.message || 'Неверные данные';
@@ -57,22 +36,19 @@ export async function POST(req: Request) {
     }
 
     const { username: un, password: pw } = parsed.data;
-
     const existingUser = await prisma.user.findUnique({ where: { username: un } });
-
     if (existingUser) {
       return NextResponse.json({ error: 'Пользователь уже существует' }, { status: 400 });
     }
 
     const passwordHash = await bcrypt.hash(pw, 10);
-
     const user = await prisma.user.create({
       data: { username: un, passwordHash, role: 'USER' }
     });
 
-    return NextResponse.json({ 
-      message: 'User created successfully', 
-      user: { username: user.username, role: user.role } 
+    return NextResponse.json({
+      message: 'User created successfully',
+      user: { username: user.username, role: user.role }
     }, { status: 201 });
   } catch (error) {
     return NextResponse.json({ error: 'Внутренняя ошибка сервера' }, { status: 500 });

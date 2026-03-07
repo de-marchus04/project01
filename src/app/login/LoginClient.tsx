@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { authApi } from "@/shared/api/authApi";
-import { resetPassword } from "@/shared/api/authActions";
+import { requestPasswordReset } from "@/shared/api/authActions";
 import { useLanguage } from "@/shared/i18n/LanguageContext";
 import { useTheme } from "@/shared/i18n/ThemeContext";
 import { signIn, getSession } from "next-auth/react";
@@ -16,6 +16,7 @@ export default function Login() {
   const [isForgotPasswordMode, setIsForgotPasswordMode] = useState(false);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [forgotEmail, setForgotEmail] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -66,12 +67,12 @@ export default function Login() {
 
     try {
       if (isForgotPasswordMode) {
-        const res = await resetPassword(username, password);
+        const res = await requestPasswordReset(forgotEmail);
         if (res.success) {
           setError(null);
           await modalService.alert('', t.login.forgotSuccess);
           setIsForgotPasswordMode(false);
-          setPassword("");
+          setForgotEmail("");
         } else {
           setError(res.error || t.login.forgotError);
         }
@@ -157,37 +158,57 @@ export default function Login() {
                   )}
 
                   <form onSubmit={handleAuth}>
-                    <div className="mb-3">
-                      <label className="form-label fw-bold small text-uppercase" style={{ letterSpacing: '1px', color: 'var(--color-text-muted)' }}>
-                        {t.login.usernameLabel}
-                      </label>
-                      <input
-                        type="text"
-                        className="form-control form-control-lg"
-                        style={{ border: '1px solid var(--color-border)', borderRadius: '12px', backgroundColor: 'var(--color-surface)', color: 'var(--color-text)' }}
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                        placeholder={t.login.usernamePlaceholder}
-                        required
-                        disabled={loading || isLocked}
-                      />
-                    </div>
+                    {isForgotPasswordMode ? (
+                      <div className="mb-4">
+                        <label className="form-label fw-bold small text-uppercase" style={{ letterSpacing: '1px', color: 'var(--color-text-muted)' }}>
+                          {t.login.forgotEmailLabel}
+                        </label>
+                        <input
+                          type="email"
+                          className="form-control form-control-lg"
+                          style={{ border: '1px solid var(--color-border)', borderRadius: '12px', backgroundColor: 'var(--color-surface)', color: 'var(--color-text)' }}
+                          value={forgotEmail}
+                          onChange={(e) => setForgotEmail(e.target.value)}
+                          placeholder="your@email.com"
+                          required
+                          disabled={loading}
+                        />
+                      </div>
+                    ) : (
+                      <>
+                        <div className="mb-3">
+                          <label className="form-label fw-bold small text-uppercase" style={{ letterSpacing: '1px', color: 'var(--color-text-muted)' }}>
+                            {t.login.usernameLabel}
+                          </label>
+                          <input
+                            type="text"
+                            className="form-control form-control-lg"
+                            style={{ border: '1px solid var(--color-border)', borderRadius: '12px', backgroundColor: 'var(--color-surface)', color: 'var(--color-text)' }}
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            placeholder={t.login.usernamePlaceholder}
+                            required
+                            disabled={loading || isLocked}
+                          />
+                        </div>
 
-                    <div className="mb-4">
-                      <label className="form-label fw-bold small text-uppercase" style={{ letterSpacing: '1px', color: 'var(--color-text-muted)' }}>
-                        {isForgotPasswordMode ? t.login.forgotPassLabel : t.login.passwordLabel}
-                      </label>
-                      <input
-                        type="password"
-                        className="form-control form-control-lg"
-                        style={{ border: '1px solid var(--color-border)', borderRadius: '12px', backgroundColor: 'var(--color-surface)', color: 'var(--color-text)' }}
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        placeholder={t.login.passwordPlaceholder}
-                        required
-                        disabled={loading || isLocked}
-                      />
-                    </div>
+                        <div className="mb-4">
+                          <label className="form-label fw-bold small text-uppercase" style={{ letterSpacing: '1px', color: 'var(--color-text-muted)' }}>
+                            {t.login.passwordLabel}
+                          </label>
+                          <input
+                            type="password"
+                            className="form-control form-control-lg"
+                            style={{ border: '1px solid var(--color-border)', borderRadius: '12px', backgroundColor: 'var(--color-surface)', color: 'var(--color-text)' }}
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            placeholder={t.login.passwordPlaceholder}
+                            required
+                            disabled={loading || isLocked}
+                          />
+                        </div>
+                      </>
+                    )}
 
                     <button
                       type="submit"

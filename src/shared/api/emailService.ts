@@ -32,7 +32,7 @@ export const emailService = {
     await emailService.sendEmail(
       email,
       "Ваш бесплатный гайд по медитации от YOGA.LIFE",
-      "Здравствуйте!\n\nСпасибо за подписку. Ваш бесплатный гайд по медитации:\nhttps://yoga.life/guide\n\nС уважением, команда YOGA.LIFE"
+      `Здравствуйте!\n\nСпасибо за подписку. Ваш бесплатный гайд по медитации:\n${process.env.NEXT_PUBLIC_SITE_URL || 'https://yoga.life'}/guide\n\nС уважением, команда YOGA.LIFE`
     );
   },
 };

@@ -13,7 +13,7 @@ export interface SupportMessage {
   userEmail: string;
   questionType: string;
   message: string;
-  status: 'new' | 'replied' | 'bot_answered';
+  status: 'new' | 'replied' | 'in_progress' | 'bot_answered';
   reply?: string;
   createdAt: string | Date;
   readByUser: boolean;
@@ -32,7 +32,7 @@ export async function getMessages(): Promise<SupportMessage[]> {
     userEmail: i.email,
     questionType: i.subject,
     message: i.message,
-    status: i.status === 'NEW' ? 'new' : i.status === 'CLOSED' ? 'replied' : 'new',
+    status: i.status === 'NEW' ? 'new' : i.status === 'CLOSED' ? 'replied' : i.status === 'IN_PROGRESS' ? 'in_progress' : 'new',
     createdAt: i.createdAt,
     readByUser: i.readByUser ?? false
   }))));
@@ -55,7 +55,7 @@ export async function getUserMessages(email: string): Promise<SupportMessage[]> 
     userEmail: i.email,
     questionType: i.subject,
     message: i.message,
-    status: i.status === 'NEW' ? 'new' : i.status === 'CLOSED' ? 'replied' : 'new',
+    status: i.status === 'NEW' ? 'new' : i.status === 'CLOSED' ? 'replied' : i.status === 'IN_PROGRESS' ? 'in_progress' : 'new',
     createdAt: i.createdAt,
     readByUser: i.readByUser ?? false
   }))));

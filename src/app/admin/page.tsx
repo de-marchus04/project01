@@ -23,6 +23,7 @@ import MediaTab from "./components/MediaTab";
 import FaqsTab from "./components/FaqsTab";
 import TestimonialsTab from "./components/TestimonialsTab";
 import TeamTab from "./components/TeamTab";
+import SiteSettingsTab from "./components/SiteSettingsTab";
 import ProfileTab from "./components/ProfileTab";
 
 type AdminProfile = { name: string; email: string; phone: string; photoUrl: string };
@@ -186,6 +187,10 @@ export default function Admin() {
 
           {activeTab === 'teamPane' && (
             <TeamTab showToast={showToast} />
+          )}
+
+          {activeTab === 'settingsPane' && (
+            <SiteSettingsTab showToast={showToast} />
           )}
 
           {activeTab === 'profilePane' && (

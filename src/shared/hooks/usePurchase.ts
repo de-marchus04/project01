@@ -11,7 +11,7 @@ export const usePurchase = () => {
   const { data: session } = useSession();
   const sessionUser = session?.user;
 
-  const buyProduct = async (title: string, price: number) => {
+  const buyProduct = async (title: string, price: number, serviceId?: string, itemType?: 'COURSE' | 'CONSULTATION' | 'TOUR', promoCodeId?: string) => {
     let customerName = tStr("Гость");
     let userId: string | undefined;
 
@@ -22,7 +22,7 @@ export const usePurchase = () => {
         tStr("ОК"),
         tStr("Отмена")
       );
-      
+
       if (wantToLogin) {
         router.push('/login');
         return;
@@ -32,11 +32,11 @@ export const usePurchase = () => {
           tStr("Введите ваше имя и телефон/email для связи:"),
           tStr("Имя, телефон или email")
         );
-        
+
         if (contactInfo === null) {
           return;
         }
-        
+
         if (contactInfo.trim() === "") {
           await modalService.alert(tStr("Внимание"), tStr("Запись отменена. Контактные данные обязательны."));
           return;
@@ -49,7 +49,7 @@ export const usePurchase = () => {
     }
 
     try {
-      await addOrder(title, price, customerName, undefined, userId);
+      await addOrder(title, price, customerName, serviceId, userId, itemType || 'COURSE', promoCodeId);
       
       if (session) {
         const goToProfile = await modalService.confirm(

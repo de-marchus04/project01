@@ -42,6 +42,7 @@ export default function AdminSidebar({
     ['faqsPane',         t.admin.tabFaq,           'bi-question-circle'],
     ['testimonialsPane', t.admin.tabTestimonials,  'bi-star'],
     ['teamPane',         t.admin.tabTeam,          'bi-people'],
+    ['settingsPane',     t.admin.tabSettings,      'bi-gear'],
     ['profilePane',      t.admin.tabProfile,       'bi-person-gear'],
   ];
 

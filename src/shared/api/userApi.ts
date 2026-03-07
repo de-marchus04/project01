@@ -21,18 +21,14 @@ export async function getOrders(): Promise<Order[]> {
   const session = await auth();
   if ((session?.user)?.role !== 'ADMIN') throw new Error('Нет доступа');
   const items = await prisma.order.findMany({
-    include: {
-      user: true
-    },
+    include: { user: true },
     orderBy: { createdAt: 'desc' }
   });
 
   return JSON.parse(JSON.stringify(items.map(i => {
-    // Map to OrderStatus mock structure to keep frontend simple for now
     let mappedStatus = "В обработке";
     if (i.status === 'COMPLETED') mappedStatus = "Принята";
     if (i.status === 'CANCELLED') mappedStatus = "Отклонена";
-    
     return {
       id: i.id,
       productName: i.productName || `Товар (${i.itemType})`,
@@ -42,7 +38,7 @@ export async function getOrders(): Promise<Order[]> {
       customerName: i.user ? i.user.username : (i.guestName || 'Гость'),
       serviceId: i.itemId,
       userId: i.userId || undefined,
-      notified: false
+      notified: i.notified
     };
   })));
 }
@@ -53,12 +49,12 @@ export async function addOrder(
   customerName: string = "Гость",
   serviceId?: string,
   username?: string,
-  itemType: 'COURSE' | 'CONSULTATION' | 'TOUR' = 'COURSE'
+  itemType: 'COURSE' | 'CONSULTATION' | 'TOUR' = 'COURSE',
+  promoCodeId?: string
 ): Promise<Order> {
-  // Require authentication — guests may still place orders but must be identifiable
   const session = await auth();
 
-  // Server-side price verification: look up the real price from DB
+  // Server-side price verification
   let verifiedPrice = clientPrice;
   if (serviceId && serviceId !== 'unknown') {
     try {
@@ -72,8 +68,25 @@ export async function addOrder(
       }
       if (dbItem) verifiedPrice = dbItem.price;
     } catch {
-      // If price lookup fails, reject the order rather than using client price
       throw new Error('Не удалось проверить стоимость товара');
+    }
+  }
+
+  // Server-side promo code validation and discount application
+  if (promoCodeId) {
+    try {
+      const promo = await prisma.promoCode.findUnique({ where: { id: promoCodeId } });
+      if (promo && promo.isActive &&
+          (!promo.expiresAt || promo.expiresAt > new Date()) &&
+          (promo.maxUses === null || promo.usedCount < promo.maxUses)) {
+        if (promo.discountType === 'PERCENT') {
+          verifiedPrice = Math.round(verifiedPrice * (1 - promo.discountValue / 100) * 100) / 100;
+        } else {
+          verifiedPrice = Math.max(0, Math.round((verifiedPrice - promo.discountValue) * 100) / 100);
+        }
+      }
+    } catch (e) {
+      console.warn('[addOrder] Promo code lookup failed:', e);
     }
   }
 
@@ -98,6 +111,15 @@ export async function addOrder(
     }
   });
 
+  // Increment promo code usage counter after order is created
+  if (promoCodeId) {
+    try {
+      await prisma.promoCode.update({ where: { id: promoCodeId }, data: { usedCount: { increment: 1 } } });
+    } catch (e) {
+      console.warn('[addOrder] Failed to increment promo code usage:', e);
+    }
+  }
+
   return JSON.parse(JSON.stringify({
     id: newItem.id,
     productName,
@@ -107,7 +129,7 @@ export async function addOrder(
     customerName,
     serviceId: newItem.itemId,
     userId: newItem.userId,
-    notified: false
+    notified: newItem.notified
   }));
 }
 
@@ -121,9 +143,7 @@ export async function updateOrderStatus(id: string, status: string): Promise<Ord
   const updated = await prisma.order.update({
     where: { id },
     data: { status: mappedStatus },
-    include: {
-      user: true
-    }
+    include: { user: true }
   });
 
   // Send status notification email
@@ -149,6 +169,43 @@ export async function updateOrderStatus(id: string, status: string): Promise<Ord
     }
   }
 
+  // Auto-generate promo code milestones (3 completed, then every 10)
+  if (mappedStatus === 'COMPLETED' && updated.userId) {
+    try {
+      const completedCount = await prisma.order.count({
+        where: { userId: updated.userId, status: 'COMPLETED' }
+      });
+      if (completedCount === 3 || (completedCount > 3 && (completedCount - 3) % 10 === 0)) {
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        let promoCode = '';
+        for (let i = 0; i < 8; i++) {
+          promoCode += chars[Math.floor(Math.random() * chars.length)];
+        }
+        const existing = await prisma.promoCode.findUnique({ where: { code: promoCode } });
+        if (!existing) {
+          const expiresAt = new Date();
+          expiresAt.setDate(expiresAt.getDate() + 90);
+          await prisma.promoCode.create({
+            data: { code: promoCode, discountType: 'PERCENT', discountValue: 10, maxUses: 1, expiresAt, isActive: true }
+          });
+          if (userEmail) {
+            try {
+              await emailService.sendEmail(
+                userEmail,
+                `Ваш подарочный промокод от YOGA.LIFE`,
+                `Здравствуйте!\n\nВы оформили ${completedCount} заявки на наши услуги. В знак благодарности дарим вам промокод на скидку 10%:\n\n${promoCode}\n\nПромокод действует 90 дней.\n\nС уважением, команда YOGA.LIFE`
+              );
+            } catch (e) {
+              console.warn('[userApi] Promo email failed:', e);
+            }
+          }
+        }
+      }
+    } catch (e) {
+      console.warn('[userApi] Auto-promo generation failed:', e);
+    }
+  }
+
   return JSON.parse(JSON.stringify({
     id: updated.id,
     productName: (updated as any).productName || `Товар (${updated.itemType})`,
@@ -158,7 +215,7 @@ export async function updateOrderStatus(id: string, status: string): Promise<Ord
     customerName: updated.user ? updated.user.username : 'Гость',
     serviceId: updated.itemId,
     userId: updated.userId,
-    notified: false
+    notified: updated.notified
   }));
 }
 
@@ -175,5 +232,7 @@ export async function deleteOrder(id: string): Promise<boolean> {
 }
 
 export async function markOrderAsNotified(id: string): Promise<void> {
-  // Mock noop for now
+  const session = await auth();
+  if ((session?.user)?.role !== 'ADMIN') throw new Error('Нет доступа');
+  await prisma.order.update({ where: { id }, data: { notified: true } });
 }

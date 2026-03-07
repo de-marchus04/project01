@@ -10,9 +10,12 @@ interface BuyButtonProps {
   label?: string;
   className?: string;
   style?: React.CSSProperties;
+  serviceId?: string;
+  itemType?: 'COURSE' | 'CONSULTATION' | 'TOUR';
+  promoCodeId?: string;
 }
 
-export const BuyButton = ({ title, price, label, className, style }: BuyButtonProps) => {
+export const BuyButton = ({ title, price, label, className, style, serviceId, itemType, promoCodeId }: BuyButtonProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const { buyProduct } = usePurchase();
   const { tStr } = useLanguage();
@@ -20,7 +23,7 @@ export const BuyButton = ({ title, price, label, className, style }: BuyButtonPr
   const handleClick = async () => {
     setIsLoading(true);
     try {
-      await buyProduct(title, price);
+      await buyProduct(title, price, serviceId, itemType, promoCodeId);
     } finally {
       setIsLoading(false);
     }

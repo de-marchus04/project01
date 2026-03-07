@@ -10,11 +10,14 @@ import { BuyButton } from "@/shared/ui/BuyButton/BuyButton";
 import { useLanguage } from "@/shared/i18n/LanguageContext";
 import { formatPrice } from "@/shared/lib/formatPrice";
 import ReviewSection from "@/shared/ui/ReviewSection";
+import PromoCodeInput from "@/shared/ui/PromoCodeInput";
 
 export default function TourDetail() {
   const params = useParams();
   const [tour, setTour] = useState<Tour | null>(null);
   const [loading, setLoading] = useState(true);
+  const [promoPrice, setPromoPrice] = useState<number | null>(null);
+  const [promoCodeId, setPromoCodeId] = useState<string | null>(null);
   const { lang, tData, tStr } = useLanguage();
 
   useEffect(() => {
@@ -142,7 +145,14 @@ export default function TourDetail() {
                   <h3 className="font-playfair fw-bold mb-4">{tStr("Бронирование места")}</h3>
                   <div className="d-flex justify-content-between align-items-center mb-4 pb-4 border-bottom">
                     <span className="text-muted">{tStr("Стоимость участия")}</span>
-                    <span className="fs-3 fw-bold text-primary-custom">{formatPrice(loc_tour.price, lang)}</span>
+                    {promoPrice !== null ? (
+                      <div className="text-end">
+                        <span className="text-muted text-decoration-line-through fs-5 me-2">{formatPrice(loc_tour.price, lang)}</span>
+                        <span className="fs-3 fw-bold text-primary-custom">{formatPrice(promoPrice, lang)}</span>
+                      </div>
+                    ) : (
+                      <span className="fs-3 fw-bold text-primary-custom">{formatPrice(loc_tour.price, lang)}</span>
+                    )}
                   </div>
                   <ul className="list-unstyled mb-5">
                     {loc_tour.features ? (
@@ -161,11 +171,19 @@ export default function TourDetail() {
                       </>
                     )}
                   </ul>
+                  <PromoCodeInput
+                    originalPrice={loc_tour.price}
+                    onApply={(finalPrice, codeId) => { setPromoPrice(finalPrice); setPromoCodeId(codeId); }}
+                    onClear={() => { setPromoPrice(null); setPromoCodeId(null); }}
+                  />
                   <BuyButton
                     title={loc_tour.title}
-                    price={loc_tour.price}
+                    price={promoPrice ?? loc_tour.price}
+                    serviceId={loc_tour.id}
+                    itemType="TOUR"
+                    promoCodeId={promoCodeId ?? undefined}
                     label={tStr("Забронировать место")}
-                    className="btn btn-primary-custom w-100 rounded-pill py-3 fw-bold fs-5"
+                    className="btn btn-primary-custom w-100 rounded-pill py-3 fw-bold fs-5 mt-3"
                   />
                   <p className="text-center text-muted small mt-3 mb-0">{tStr("Количество мест строго ограничено")}</p>
                 </div>

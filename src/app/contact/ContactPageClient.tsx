@@ -8,12 +8,25 @@ import { useLanguage } from "@/shared/i18n/LanguageContext";
 import { HeroSlider } from "@/shared/ui/HeroSlider/HeroSlider";
 import { useScrollReveal } from "@/shared/hooks/useScrollReveal";
 import { SectionHeader } from "@/shared/ui/SectionHeader/SectionHeader";
+import { getSiteSettings } from "@/shared/api/siteSettingsApi";
 
 export default function ContactPage() {
   const { t } = useLanguage();
   const { observe } = useScrollReveal();
   const { data: session } = useSession();
   const sessionUser = session?.user;
+
+  const [displayAddress, setDisplayAddress] = useState(t.contact.addressValue);
+  const [displayEmail, setDisplayEmail] = useState(t.contact.emailValue);
+  const [displayPhone, setDisplayPhone] = useState(t.contact.phoneValue);
+
+  useEffect(() => {
+    getSiteSettings().then(s => {
+      if (s.addressLine) setDisplayAddress(s.addressLine);
+      if (s.email) setDisplayEmail(s.email);
+      if (s.phone) setDisplayPhone(s.phone);
+    }).catch(() => {});
+  }, []);
 
   const PREDEFINED_QUESTIONS = [
     t.contact.q1,
@@ -123,7 +136,7 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h5 className="mb-1" style={{ color: 'var(--color-text)' }}>{t.contact.addressTitle}</h5>
-                    <p className="mb-0" style={{ color: 'var(--color-text-muted)' }}>{t.contact.addressValue}</p>
+                    <p className="mb-0" style={{ color: 'var(--color-text-muted)' }}>{displayAddress}</p>
                   </div>
                 </div>
 
@@ -133,7 +146,7 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h5 className="mb-1" style={{ color: 'var(--color-text)' }}>Email</h5>
-                    <p className="mb-0" style={{ color: 'var(--color-text-muted)' }}>{t.contact.emailValue}</p>
+                    <p className="mb-0" style={{ color: 'var(--color-text-muted)' }}>{displayEmail}</p>
                   </div>
                 </div>
 
@@ -143,7 +156,7 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h5 className="mb-1" style={{ color: 'var(--color-text)' }}>{t.contact.phoneTitle}</h5>
-                    <p className="mb-0" style={{ color: 'var(--color-text-muted)' }}>{t.contact.phoneValue}</p>
+                    <p className="mb-0" style={{ color: 'var(--color-text-muted)' }}>{displayPhone}</p>
                   </div>
                 </div>
               </div>

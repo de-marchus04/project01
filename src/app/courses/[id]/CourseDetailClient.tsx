@@ -21,6 +21,7 @@ export default function CourseDetail() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [promoPrice, setPromoPrice] = useState<number | null>(null);
+  const [promoCodeId, setPromoCodeId] = useState<string | null>(null);
 
   useEffect(() => {
     async function loadCourse() {
@@ -227,12 +228,15 @@ export default function CourseDetail() {
                     )}
                     <PromoCodeInput
                       originalPrice={localized_course.price}
-                      onApply={(finalPrice) => setPromoPrice(finalPrice)}
-                      onClear={() => setPromoPrice(null)}
+                      onApply={(finalPrice, codeId) => { setPromoPrice(finalPrice); setPromoCodeId(codeId); }}
+                      onClear={() => { setPromoPrice(null); setPromoCodeId(null); }}
                     />
                     <BuyButton
                       title={localized_course.title}
                       price={promoPrice ?? localized_course.price}
+                      serviceId={localized_course.id}
+                      itemType="COURSE"
+                      promoCodeId={promoCodeId ?? undefined}
                       label={t.courseDetail.enroll}
                       className="btn btn-primary-custom w-100 rounded-pill py-3 fw-bold mt-3"
                     />
