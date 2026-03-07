@@ -14,8 +14,6 @@ export default function OrdersTab({ showToast, onOrdersLoaded }: Props) {
   const { lang, t } = useLanguage();
   const [orders, setOrders] = useState<Order[]>([]);
 
-  useEffect(() => { loadOrders(); }, []);
-
   const loadOrders = async () => {
     try {
       const data = await getOrders();
@@ -23,6 +21,8 @@ export default function OrdersTab({ showToast, onOrdersLoaded }: Props) {
       onOrdersLoaded(data);
     } catch (e) { console.error(e); }
   };
+
+  useEffect(() => { loadOrders(); }, []);
 
   const translateStatus = (s: string) => {
     if (s === 'В обработке') return t.admin.statusProcessing;

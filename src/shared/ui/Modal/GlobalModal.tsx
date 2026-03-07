@@ -23,6 +23,28 @@ export const GlobalModal = () => {
     };
   }, []);
 
+  const handleConfirm = () => {
+    setIsOpen(false);
+    if (callback) {
+      if (options?.type === 'prompt') {
+        callback(inputValue);
+      } else {
+        callback(true);
+      }
+    }
+  };
+
+  const handleCancel = () => {
+    setIsOpen(false);
+    if (callback) {
+      if (options?.type === 'prompt') {
+        callback(null);
+      } else {
+        callback(false);
+      }
+    }
+  };
+
   // Focus trap + Escape key handler
   useEffect(() => {
     if (!isOpen || !dialogRef.current) return;
@@ -49,28 +71,6 @@ export const GlobalModal = () => {
   }, [isOpen]);
 
   if (!isOpen || !options) return null;
-
-  const handleConfirm = () => {
-    setIsOpen(false);
-    if (callback) {
-      if (options.type === 'prompt') {
-        callback(inputValue);
-      } else {
-        callback(true);
-      }
-    }
-  };
-
-  const handleCancel = () => {
-    setIsOpen(false);
-    if (callback) {
-      if (options.type === 'prompt') {
-        callback(null);
-      } else {
-        callback(false);
-      }
-    }
-  };
 
   return (
     <>

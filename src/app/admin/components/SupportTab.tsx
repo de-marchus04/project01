@@ -11,11 +11,11 @@ export default function SupportTab({ showToast }: Props) {
   const [supportMessages, setSupportMessages] = useState<SupportMessage[]>([]);
   const [replyText, setReplyText] = useState<{ [key: string]: string }>({});
 
-  useEffect(() => { loadMessages(); }, []);
-
   const loadMessages = async () => {
     try { setSupportMessages(await getMessages()); } catch (e) { console.error(e); }
   };
+
+  useEffect(() => { loadMessages(); }, []);
 
   return (
     <section className="card border-0 p-4" style={{ borderRadius: '16px', boxShadow: '0 4px 20px rgba(0,0,0,0.05)' }}>

@@ -11,11 +11,11 @@ export default function SubscribersTab({ showToast }: Props) {
   const { t } = useLanguage();
   const [subscribers, setSubscribers] = useState<Subscriber[]>([]);
 
-  useEffect(() => { loadSubscribers(); }, []);
-
   const loadSubscribers = async () => {
     try { setSubscribers(await getAllSubscribers()); } catch (e) { console.error(e); }
   };
+
+  useEffect(() => { loadSubscribers(); }, []);
 
   return (
     <section className="card border-0 p-4" style={{ borderRadius: '16px', boxShadow: '0 4px 20px rgba(0,0,0,0.05)' }}>

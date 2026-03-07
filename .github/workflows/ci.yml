@@ -66,4 +66,4 @@ jobs:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/YogaPlatformDb
           AUTH_SECRET: test-secret-for-ci
           AUTH_URL: http://localhost:3000
-        run: npx prisma generate && next build
+        run: npm run build

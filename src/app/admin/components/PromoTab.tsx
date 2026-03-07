@@ -15,11 +15,11 @@ export default function PromoTab({ showToast }: Props) {
   const [promoForm, setPromoForm] = useState(defaultForm);
   const [isPromoFormOpen, setIsPromoFormOpen] = useState(false);
 
-  useEffect(() => { loadPromoCodes(); }, []);
-
   const loadPromoCodes = async () => {
     try { setPromoCodes(await getPromoCodes()); } catch (e) { console.error(e); }
   };
+
+  useEffect(() => { loadPromoCodes(); }, []);
 
   const handleCreate = async () => {
     if (!promoForm.code) return;

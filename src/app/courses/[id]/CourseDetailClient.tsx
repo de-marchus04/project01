@@ -84,9 +84,9 @@ export default function CourseDetail() {
               <i className="bi bi-journal-x fs-1 mb-4 d-block" style={{ color: 'var(--color-primary)' }}></i>
               <h4 className="font-playfair fw-bold mb-3" style={{ color: 'var(--color-text)' }}>{t.courseDetail.notFound}</h4>
               <p className="text-muted mb-4">{t.programs.allCoursesDesc}</p>
-              <a href="/courses" className="btn rounded-pill px-5 py-2 fw-semibold me-2 mb-2" style={{ backgroundColor: 'var(--color-primary)', color: '#fff', border: 'none' }}>
+              <Link href="/courses" className="btn rounded-pill px-5 py-2 fw-semibold me-2 mb-2" style={{ backgroundColor: 'var(--color-primary)', color: '#fff', border: 'none' }}>
                 {t.programs.allCategories}
-              </a>
+              </Link>
               <button onClick={() => router.back()} className="btn btn-outline-secondary rounded-pill px-4 py-2 mb-2">
                 {t.courseDetail.goBack}
               </button>
