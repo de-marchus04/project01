@@ -19,7 +19,7 @@ async function requireAdmin(): Promise<void> {
 export async function getFAQs(): Promise<FAQ[]> {
   if (process.env.NEXT_RUNTIME === 'edge') { throw new Error('EDGE RUNTIME DETECTED IN SERVER ACTION'); }
   const items = await prisma.fAQ.findMany({ orderBy: { createdAt: 'desc' } });
-  return JSON.parse(JSON.stringify(items));
+  return structuredClone(items);
 }
 
 const addFAQSchema = z.object({
@@ -37,7 +37,7 @@ export async function addFAQ(faq: Omit<FAQ, 'id'>): Promise<FAQ> {
   const parsed = addFAQSchema.safeParse(faq);
   if (!parsed.success) throw new Error(parsed.error.errors[0]?.message || 'Некорректные данные');
   const item = await prisma.fAQ.create({ data: parsed.data });
-  return JSON.parse(JSON.stringify(item));
+  return structuredClone(item);
 }
 
 export async function updateFAQ(id: string, updatedData: Partial<FAQ>): Promise<FAQ | null> {
@@ -45,7 +45,7 @@ export async function updateFAQ(id: string, updatedData: Partial<FAQ>): Promise<
   const parsed = updateFAQSchema.safeParse(updatedData);
   if (!parsed.success) throw new Error(parsed.error.errors[0]?.message || 'Некорректные данные');
   const item = await prisma.fAQ.update({ where: { id }, data: parsed.data });
-  return JSON.parse(JSON.stringify(item));
+  return structuredClone(item);
 }
 
 export async function deleteFAQ(id: string): Promise<boolean> {

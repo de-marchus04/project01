@@ -16,7 +16,7 @@ export async function getTeamMembers(): Promise<TeamMember[]> {
   const members = await prisma.teamMember.findMany({
     orderBy: { sortOrder: 'asc' },
   });
-  return JSON.parse(JSON.stringify(members));
+  return structuredClone(members);
 }
 
 const addTeamMemberSchema = z.object({
@@ -51,7 +51,7 @@ export async function addTeamMember(data: {
       sortOrder: parsed.data.sortOrder ?? 0,
     },
   });
-  return JSON.parse(JSON.stringify(member));
+  return structuredClone(member);
 }
 
 export async function updateTeamMember(id: string, data: {
@@ -68,7 +68,7 @@ export async function updateTeamMember(id: string, data: {
     where: { id },
     data: parsed.data,
   });
-  return JSON.parse(JSON.stringify(member));
+  return structuredClone(member);
 }
 
 export async function deleteTeamMember(id: string): Promise<void> {

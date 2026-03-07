@@ -65,7 +65,7 @@ export default function RootLayout({
         <Providers>
           <LanguageProvider>
             <ThemeProvider>
-            <div id="main-content" style={{ transition: 'transform 0.4s ease', minHeight: '100vh', backgroundColor: 'var(--color-bg)', position: 'relative', zIndex: 1, boxShadow: '-5px 0 15px rgba(0,0,0,0.05)' }}>
+            <div id="main-content">
               <Header />
               <LockoutTimer />
               <GlobalModal />

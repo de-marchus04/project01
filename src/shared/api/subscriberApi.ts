@@ -47,7 +47,7 @@ export async function getAllSubscribers(): Promise<Subscriber[]> {
   const session = await auth();
   if ((session?.user)?.role !== 'ADMIN') throw new Error('Access denied');
   const subs = await prisma.subscriber.findMany({ orderBy: { createdAt: 'desc' } });
-  return JSON.parse(JSON.stringify(subs));
+  return structuredClone(subs);
 }
 
 export async function deleteSubscriber(id: string): Promise<boolean> {
