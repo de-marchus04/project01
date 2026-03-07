@@ -1,6 +1,13 @@
 "use server";
 
 import { prisma } from "@/shared/lib/prisma";
+import { auth } from "@/auth";
+import { z } from "zod";
+
+async function requireAdmin(): Promise<void> {
+  const session = await auth();
+  if ((session?.user)?.role !== 'ADMIN') throw new Error('Нет доступа');
+}
 
 export interface Testimonial {
   id: string;
@@ -16,19 +23,36 @@ export async function getTestimonials(): Promise<Testimonial[]> {
   return JSON.parse(JSON.stringify(items));
 }
 
+const addTestimonialSchema = z.object({
+  name: z.string().min(1).max(100),
+  course: z.string().min(1).max(200),
+  text: z.string().min(1).max(2000),
+});
+
+const updateTestimonialSchema = z.object({
+  name: z.string().min(1).max(100).optional(),
+  course: z.string().min(1).max(200).optional(),
+  text: z.string().min(1).max(2000).optional(),
+});
+
 export async function addTestimonial(testimonial: Omit<Testimonial, 'id' | 'createdAt'>): Promise<Testimonial> {
-  const { id: _mockId, createdAt: _ca, ...validData } = testimonial as any;
-  const item = await prisma.testimonial.create({ data: validData });
+  await requireAdmin();
+  const parsed = addTestimonialSchema.safeParse(testimonial);
+  if (!parsed.success) throw new Error(parsed.error.errors[0]?.message || 'Некорректные данные');
+  const item = await prisma.testimonial.create({ data: parsed.data });
   return JSON.parse(JSON.stringify(item));
 }
 
 export async function updateTestimonial(id: string, updates: Partial<Testimonial>): Promise<Testimonial | null> {
-  const { id: _id, createdAt: _ca, ...validData } = updates as any;
-  const item = await prisma.testimonial.update({ where: { id }, data: validData });
+  await requireAdmin();
+  const parsed = updateTestimonialSchema.safeParse(updates);
+  if (!parsed.success) throw new Error(parsed.error.errors[0]?.message || 'Некорректные данные');
+  const item = await prisma.testimonial.update({ where: { id }, data: parsed.data });
   return JSON.parse(JSON.stringify(item));
 }
 
 export async function deleteTestimonial(id: string): Promise<boolean> {
+  await requireAdmin();
   try {
     await prisma.testimonial.delete({ where: { id } });
     return true;

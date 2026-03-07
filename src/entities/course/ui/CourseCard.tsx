@@ -12,7 +12,7 @@ interface CourseCardProps {
 }
 
 export const CourseCard = ({ course, onBuy, type }: CourseCardProps) => {
-  const { lang, tData , tStr} = useLanguage() as any;
+  const { lang, tData , tStr} = useLanguage();
 
   const localized_course = tData ? tData(course) : course;
   const isConsultation = type === 'consultation' || /^(private|nutrition|mentorship)/.test(localized_course.category || localized_course.id);

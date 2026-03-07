@@ -10,7 +10,7 @@ import { useScrollReveal } from "@/shared/hooks/useScrollReveal";
 import { SectionHeader } from "@/shared/ui/SectionHeader/SectionHeader";
 
 export default function ConsultationsNutritionClient({ initialData }: { initialData: any }) {
-  const { t } = useLanguage() as any;
+  const { t } = useLanguage();
   const { observe } = useScrollReveal();
   const [products, setProducts] = useState(initialData || []);
   const [loading, setLoading] = useState(!initialData);

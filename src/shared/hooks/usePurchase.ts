@@ -7,9 +7,9 @@ import { modalService } from "../ui/Modal/modalService";
 
 export const usePurchase = () => {
   const router = useRouter();
-  const { tStr } = useLanguage() as any;
+  const { tStr } = useLanguage();
   const { data: session } = useSession();
-  const sessionUser = session?.user as any;
+  const sessionUser = session?.user;
 
   const buyProduct = async (title: string, price: number) => {
     let customerName = tStr("Гость");

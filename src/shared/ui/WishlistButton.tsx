@@ -13,7 +13,7 @@ interface WishlistButtonProps {
 
 export function WishlistButton({ itemId, itemType, size = 'md' }: WishlistButtonProps) {
   const { data: session } = useSession();
-  const { tStr } = useLanguage() as any;
+  const { tStr } = useLanguage();
   const [inWishlist, setInWishlist] = useState(false);
   const [isPending, startTransition] = useTransition();
 

@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useLanguage } from "@/shared/i18n/LanguageContext";
 import { useEffect, useState } from "react";
 import { Recipe } from "@/entities/blog/model/types";
@@ -8,7 +9,7 @@ import { getRecipes } from "@/shared/api/blogApi";
 import { HeroSlider } from "@/shared/ui/HeroSlider/HeroSlider";
 
 export default function BlogRecipes() {
-  const { t , tStr} = useLanguage() as any;
+  const { t , tStr} = useLanguage();
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
@@ -109,7 +110,9 @@ export default function BlogRecipes() {
               </div>
               <div className="row g-0">
                 <div className="col-md-5">
-                  <img src={selectedRecipe.imageUrl} alt={tStr(selectedRecipe.title)} className="img-fluid h-100 w-100 object-fit-cover" style={{ minHeight: '300px' }} />
+                  <div style={{ position: 'relative', height: '300px', minHeight: '300px' }}>
+                    <Image src={selectedRecipe.imageUrl} fill sizes="(max-width: 768px) 100vw, 600px" style={{ objectFit: 'cover' }} alt={tStr(selectedRecipe.title)} />
+                  </div>
                 </div>
                 <div className="col-md-7">
                   <div className="modal-body p-4 p-md-5">

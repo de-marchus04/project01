@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useLanguage } from "@/shared/i18n/LanguageContext";
@@ -22,7 +23,7 @@ function ResultCard({ item, typeLabel }: { item: SearchResult; typeLabel: string
       >
         {item.imageUrl && (
           <div style={{ height: '140px', overflow: 'hidden', position: 'relative' }}>
-            <img src={item.imageUrl} alt={item.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            <Image src={item.imageUrl} fill sizes="(max-width: 768px) 100vw, 600px" style={{ objectFit: 'cover' }} alt={item.title} />
           </div>
         )}
         <div className="card-body p-3">

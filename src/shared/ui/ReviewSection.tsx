@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useState, useEffect, useTransition } from "react";
 import { useSession } from "next-auth/react";
 import { getItemReviews, getUserReview, upsertReview, deleteReview, ReviewData, ReviewStats } from "@/shared/api/reviewApi";
@@ -19,19 +20,59 @@ function StarRating({ value, onChange, readOnly = false, size = 'md' }: {
   const [hover, setHover] = useState(0);
   const fontSize = size === 'sm' ? '1rem' : size === 'lg' ? '1.8rem' : '1.4rem';
 
-  return (
-    <div className="d-flex gap-1" style={{ cursor: readOnly ? 'default' : 'pointer' }}>
-      {[1, 2, 3, 4, 5].map(star => {
-        const filled = (readOnly ? value : (hover || value)) >= star;
-        return (
+  if (readOnly) {
+    return (
+      <div
+        className="d-flex gap-1"
+        role="img"
+        aria-label={`${value} из 5 звёзд`}
+      >
+        {[1, 2, 3, 4, 5].map(star => (
           <i
             key={star}
-            className={`bi ${filled ? 'bi-star-fill' : 'bi-star'}`}
-            style={{ fontSize, color: filled ? '#f5a623' : '#ccc', transition: 'color 0.1s' }}
-            onMouseEnter={() => !readOnly && setHover(star)}
-            onMouseLeave={() => !readOnly && setHover(0)}
-            onClick={() => !readOnly && onChange && onChange(star)}
-          ></i>
+            className={`bi ${value >= star ? 'bi-star-fill' : 'bi-star'}`}
+            style={{ fontSize, color: value >= star ? '#f5a623' : '#ccc', transition: 'color 0.1s' }}
+            aria-hidden="true"
+          />
+        ))}
+      </div>
+    );
+  }
+
+  return (
+    <div
+      className="d-flex gap-1"
+      role="radiogroup"
+      aria-label="Оценка"
+      onKeyDown={(e) => {
+        if (!onChange) return;
+        if (e.key === 'ArrowRight' || e.key === 'ArrowUp') {
+          e.preventDefault();
+          onChange(Math.min(5, value + 1));
+        } else if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') {
+          e.preventDefault();
+          onChange(Math.max(1, value - 1));
+        }
+      }}
+    >
+      {[1, 2, 3, 4, 5].map(star => {
+        const filled = (hover || value) >= star;
+        const label = star === 1 ? '1 звезда' : star < 5 ? `${star} звезды` : '5 звёзд';
+        return (
+          <button
+            key={star}
+            type="button"
+            role="radio"
+            aria-checked={value === star}
+            aria-label={label}
+            className="border-0 bg-transparent p-0"
+            style={{ fontSize, color: filled ? '#f5a623' : '#ccc', cursor: 'pointer', transition: 'color 0.1s', lineHeight: 1 }}
+            onMouseEnter={() => setHover(star)}
+            onMouseLeave={() => setHover(0)}
+            onClick={() => onChange && onChange(star)}
+          >
+            <i className={`bi ${filled ? 'bi-star-fill' : 'bi-star'}`} aria-hidden="true" />
+          </button>
         );
       })}
     </div>
@@ -40,7 +81,7 @@ function StarRating({ value, onChange, readOnly = false, size = 'md' }: {
 
 export default function ReviewSection({ itemId, itemType }: ReviewSectionProps) {
   const { data: session } = useSession();
-  const { tStr, lang } = useLanguage() as any;
+  const { tStr, lang } = useLanguage();
   const [reviews, setReviews] = useState<ReviewData[]>([]);
   const [stats, setStats] = useState<ReviewStats>({ average: 0, total: 0, distribution: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 } });
   const [myReview, setMyReview] = useState<ReviewData | null>(null);
@@ -194,7 +235,7 @@ export default function ReviewSection({ itemId, itemType }: ReviewSectionProps) 
               <div key={review.id} className="card border-0 shadow-sm rounded-3 p-4" style={{ backgroundColor: 'var(--color-card-bg)' }}>
                 <div className="d-flex align-items-center gap-3 mb-2">
                   {review.avatar ? (
-                    <img src={review.avatar} alt={review.username} style={{ width: '36px', height: '36px', borderRadius: '50%', objectFit: 'cover' }} />
+                    <Image src={review.avatar} width={36} height={36} style={{ objectFit: 'cover', borderRadius: '50%' }} alt={review.username} />
                   ) : (
                     <div style={{ width: '36px', height: '36px', borderRadius: '50%', background: 'var(--color-secondary)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold' }}>
                       {review.username[0]?.toUpperCase()}

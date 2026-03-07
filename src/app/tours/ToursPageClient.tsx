@@ -11,7 +11,7 @@ import { useScrollReveal } from "@/shared/hooks/useScrollReveal";
 import { SectionHeader } from "@/shared/ui/SectionHeader/SectionHeader";
 
 export default function ToursPageClient({ initialData }: { initialData: any }) {
-  const { t, tData, tStr, lang } = useLanguage() as any;
+  const { t, tData, tStr, lang } = useLanguage();
   const { observe } = useScrollReveal();
   const [tours, setTours] = useState<Tour[]>([]);
   const [loading, setLoading] = useState(!initialData);

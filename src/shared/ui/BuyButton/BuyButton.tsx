@@ -15,7 +15,7 @@ interface BuyButtonProps {
 export const BuyButton = ({ title, price, label, className, style }: BuyButtonProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const { buyProduct } = usePurchase();
-  const { tStr } = useLanguage() as any;
+  const { tStr } = useLanguage();
 
   const handleClick = async () => {
     setIsLoading(true);

@@ -1,6 +1,7 @@
 "use server";
 
 import { prisma } from "@/shared/lib/prisma";
+import { auth } from "@/auth";
 import { emailService } from "@/shared/api/emailService";
 
 export interface Order {
@@ -17,6 +18,8 @@ export interface Order {
 
 export async function getOrders(): Promise<Order[]> {
   if (process.env.NEXT_RUNTIME === 'edge') { throw new Error('EDGE RUNTIME DETECTED IN SERVER ACTION'); }
+  const session = await auth();
+  if ((session?.user)?.role !== 'ADMIN') throw new Error('Нет доступа');
   const items = await prisma.order.findMany({
     include: {
       user: true
@@ -44,11 +47,42 @@ export async function getOrders(): Promise<Order[]> {
   })));
 }
 
-export async function addOrder(productName: string, price: number, customerName: string = "Гость", serviceId?: string, username?: string): Promise<Order> {
-  // Resolve real user id from username if provided
+export async function addOrder(
+  productName: string,
+  clientPrice: number,
+  customerName: string = "Гость",
+  serviceId?: string,
+  username?: string,
+  itemType: 'COURSE' | 'CONSULTATION' | 'TOUR' = 'COURSE'
+): Promise<Order> {
+  // Require authentication — guests may still place orders but must be identifiable
+  const session = await auth();
+
+  // Server-side price verification: look up the real price from DB
+  let verifiedPrice = clientPrice;
+  if (serviceId && serviceId !== 'unknown') {
+    try {
+      let dbItem: { price: number } | null = null;
+      if (itemType === 'COURSE') {
+        dbItem = await prisma.course.findUnique({ where: { id: serviceId }, select: { price: true } });
+      } else if (itemType === 'CONSULTATION') {
+        dbItem = await prisma.consultation.findUnique({ where: { id: serviceId }, select: { price: true } });
+      } else if (itemType === 'TOUR') {
+        dbItem = await prisma.tour.findUnique({ where: { id: serviceId }, select: { price: true } });
+      }
+      if (dbItem) verifiedPrice = dbItem.price;
+    } catch {
+      // If price lookup fails, reject the order rather than using client price
+      throw new Error('Не удалось проверить стоимость товара');
+    }
+  }
+
+  // Resolve real user id
   let resolvedUserId: string | null = null;
-  if (username) {
-    const user = await prisma.user.findFirst({ where: { username: username } });
+  const sessionUsername = (session?.user)?.username;
+  const effectiveUsername = username || sessionUsername;
+  if (effectiveUsername) {
+    const user = await prisma.user.findFirst({ where: { username: effectiveUsername } });
     resolvedUserId = user?.id ?? null;
   }
 
@@ -58,8 +92,8 @@ export async function addOrder(productName: string, price: number, customerName:
       guestName: resolvedUserId ? null : customerName,
       productName,
       itemId: serviceId || 'unknown',
-      itemType: 'COURSE',
-      amount: price,
+      itemType,
+      amount: verifiedPrice,
       status: 'PENDING'
     }
   });
@@ -78,6 +112,8 @@ export async function addOrder(productName: string, price: number, customerName:
 }
 
 export async function updateOrderStatus(id: string, status: string): Promise<Order | undefined> {
+  const session = await auth();
+  if ((session?.user)?.role !== 'ADMIN') throw new Error('Нет доступа');
   let mappedStatus: any = 'PENDING';
   if (status === 'Принята' || status === 'Завершен' || status === 'Активен') mappedStatus = 'COMPLETED';
   if (status === 'Отклонена') mappedStatus = 'CANCELLED';
@@ -127,6 +163,8 @@ export async function updateOrderStatus(id: string, status: string): Promise<Ord
 }
 
 export async function deleteOrder(id: string): Promise<boolean> {
+  const session = await auth();
+  if ((session?.user)?.role !== 'ADMIN') throw new Error('Нет доступа');
   try {
     await prisma.order.delete({ where: { id } });
     return true;

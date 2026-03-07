@@ -11,7 +11,7 @@ import { useScrollReveal } from "@/shared/hooks/useScrollReveal";
 export const Newsletter = () => {
   const { t } = useLanguage();
   const { data: session } = useSession();
-  const sessionUser = session?.user as any;
+  const sessionUser = session?.user;
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isSubscribed, setIsSubscribed] = useState(false);

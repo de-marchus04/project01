@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { getTourById } from "@/shared/api/tourApi";
@@ -14,7 +15,7 @@ export default function TourDetail() {
   const params = useParams();
   const [tour, setTour] = useState<Tour | null>(null);
   const [loading, setLoading] = useState(true);
-  const { lang, tData, tStr } = useLanguage() as any;
+  const { lang, tData, tStr } = useLanguage();
 
   useEffect(() => {
     async function loadTour() {
@@ -123,7 +124,7 @@ export default function TourDetail() {
               <div className="mt-4 p-3 rounded-3 shadow-sm d-inline-block" style={{ backgroundColor: 'var(--color-bg)' }}>
                 <div className="d-flex align-items-center gap-3">
                   {loc_tour.authorPhoto ? (
-                    <img src={loc_tour.authorPhoto} alt={loc_tour.author || tStr("Организатор")} className="rounded-circle object-fit-cover" style={{ width: '40px', height: '40px' }} />
+                    <Image width={40} height={40} src={loc_tour.authorPhoto || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=40'} style={{ objectFit: 'cover', borderRadius: '50%' }} alt={loc_tour.author || tStr("Организатор")} />
                   ) : (
                     <i className="bi bi-person-circle fs-3 text-primary-custom"></i>
                   )}

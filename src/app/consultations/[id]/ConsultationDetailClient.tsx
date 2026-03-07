@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import type { Consultation } from "@/entities/consultation/model/types";
@@ -11,7 +12,7 @@ import { formatPrice } from "@/shared/lib/formatPrice";
 import ReviewSection from "@/shared/ui/ReviewSection";
 
 export default function CourseDetail() {
-  const { t, tData, tStr, lang } = useLanguage() as any;
+  const { t, tData, tStr, lang } = useLanguage();
   const params = useParams();
   const router = useRouter();
   const [course, setCourse] = useState<Consultation | null>(null);
@@ -220,7 +221,7 @@ export default function CourseDetail() {
                   </div>
                   <div className="d-flex align-items-center gap-3 mb-4 text-muted">
                     {localized_course.authorPhoto ? (
-                      <img src={localized_course.authorPhoto} alt={localized_course.author || t.courseDetail.authorLabel} className="rounded-circle object-fit-cover" style={{ width: '24px', height: '24px' }} />
+                      <Image width={24} height={24} src={localized_course.authorPhoto || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=24'} style={{ objectFit: 'cover', borderRadius: '50%' }} alt={localized_course.author || t.courseDetail.authorLabel} />
                     ) : (
                       <i className="bi bi-person fs-5"></i>
                     )}

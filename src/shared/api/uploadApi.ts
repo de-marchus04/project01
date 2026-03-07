@@ -10,6 +10,16 @@ cloudinary.config({
 });
 
 export async function uploadImageToCloud(base64Image: string): Promise<string> {
+  const session = await auth();
+  if ((session?.user)?.role !== 'ADMIN') throw new Error('Нет доступа');
+
+  // Validate: only allow image data URIs or HTTPS URLs
+  if (base64Image.startsWith('data:')) {
+    if (!base64Image.startsWith('data:image/')) throw new Error('Разрешены только изображения');
+    // Limit base64 payload to ~8MB (raw bytes before encoding)
+    if (base64Image.length > 11_000_000) throw new Error('Файл слишком большой (максимум 8 МБ)');
+  }
+
   const isConfigured = process.env.CLOUDINARY_URL || process.env.CLOUDINARY_CLOUD_NAME;
 
   if (!isConfigured) {
@@ -41,7 +51,7 @@ export interface CloudImage {
 
 export async function getCloudImages(): Promise<CloudImage[]> {
   const session = await auth();
-  if ((session?.user as any)?.role !== 'ADMIN') throw new Error('Access denied');
+  if ((session?.user)?.role !== 'ADMIN') throw new Error('Access denied');
 
   const isConfigured = process.env.CLOUDINARY_URL || process.env.CLOUDINARY_CLOUD_NAME;
   if (!isConfigured) return [];
@@ -70,7 +80,7 @@ export async function getCloudImages(): Promise<CloudImage[]> {
 
 export async function deleteCloudImage(publicId: string): Promise<boolean> {
   const session = await auth();
-  if ((session?.user as any)?.role !== 'ADMIN') throw new Error('Access denied');
+  if ((session?.user)?.role !== 'ADMIN') throw new Error('Access denied');
 
   try {
     await cloudinary.uploader.destroy(publicId);

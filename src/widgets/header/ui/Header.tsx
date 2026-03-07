@@ -1,11 +1,11 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
 import { getNavigationConfig } from "@/shared/config/navigation";
-import { useReminders } from "@/shared/hooks/useReminders";
 import { createPortal } from "react-dom";
 import { useLanguage } from "@/shared/i18n/LanguageContext";
 import { useTheme } from "@/shared/i18n/ThemeContext";
@@ -14,7 +14,7 @@ import { getMyProfile } from "@/shared/api/authActions";
 export const Header = () => {
   const { data: session, status } = useSession();
   const isAuth = status === "authenticated";
-  const sessionUser = session?.user as any;
+  const sessionUser = session?.user;
   const isAdmin = sessionUser?.role === "ADMIN";
 
   const [freshProfile, setFreshProfile] = useState<{ name?: string | null; avatar?: string | null } | null>(null);
@@ -27,8 +27,6 @@ export const Header = () => {
   const { lang, setLang, t } = useLanguage();
   const { theme, toggleTheme } = useTheme();
   const navConfig = getNavigationConfig(t);
-
-  useReminders();
 
   // Fetch fresh profile from DB on mount and when profile_updated event fires
   // This bypasses the JWT cookie (which can't store large base64 avatars)
@@ -181,7 +179,7 @@ export const Header = () => {
           <div style={{ borderRadius: '16px', backgroundColor: 'rgba(140,154,129,0.08)', padding: '14px 16px' }}>
             <div className="d-flex align-items-center gap-3 mb-3">
               {userPhoto && (userPhoto.startsWith('http') || userPhoto.startsWith('data:image')) ? (
-                <img src={userPhoto} alt={username} className="rounded-circle object-fit-cover" style={{ width: '48px', height: '48px', border: '2px solid var(--color-primary)' }} onError={(e) => { e.currentTarget.style.display = 'none'; }} />
+                <Image width={48} height={48} src={userPhoto || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=48'} alt={username} style={{ objectFit: 'cover', borderRadius: '50%', border: '2px solid var(--color-primary)' }} onError={(e) => { e.currentTarget.style.display = 'none'; }} />
               ) : (
                 <div className="rounded-circle d-flex align-items-center justify-content-center" style={{ width: '48px', height: '48px', flexShrink: 0, backgroundColor: 'var(--color-secondary)', border: '2px solid var(--color-primary)' }}>
                   <i className="bi bi-person" style={{ color: 'var(--color-primary)', fontSize: '1.4rem' }}></i>
@@ -242,9 +240,11 @@ export const Header = () => {
           
           {/* Left Side: Hamburger + Door + Logo */}
           <div className="d-flex align-items-center gap-3">
-            <button 
-              className="btn btn-link p-0 border-0 me-2 menu-toggle-btn" 
+            <button
+              className="btn btn-link p-0 border-0 me-2 menu-toggle-btn"
               onClick={toggleMenu}
+              aria-label={isMenuOpen ? 'Закрыть меню' : 'Открыть меню'}
+              aria-expanded={isMenuOpen}
               style={{ outline: 'none', color: 'var(--color-text)' }}
             >
               <i className={`bi ${isMenuOpen ? 'bi-x-lg' : 'bi-list'} fs-1`}></i>
@@ -259,11 +259,13 @@ export const Header = () => {
                   title={isAdmin ? t.header.admin : t.header.profile}
                 >
                   {userPhoto && (userPhoto.startsWith('http') || userPhoto.startsWith('data:image')) ? (
-                    <img
-                      src={userPhoto}
+                    <Image
+                      width={34}
+                      height={34}
+                      src={userPhoto || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=34'}
                       alt={username}
-                      className="rounded-circle object-fit-cover flex-shrink-0"
-                      style={{ width: '34px', height: '34px', border: '2px solid var(--color-primary)' }}
+                      className="flex-shrink-0"
+                      style={{ objectFit: 'cover', borderRadius: '50%', border: '2px solid var(--color-primary)' }}
                       onError={(e) => { e.currentTarget.style.display = 'none'; }}
                     />
                   ) : (
@@ -286,6 +288,7 @@ export const Header = () => {
                 <button
                   onClick={handleLogout}
                   className="btn btn-link p-0 border-0"
+                  aria-label={t.header?.logout || 'Выйти'}
                   style={{ color: 'var(--color-text-muted)', lineHeight: 1 }}
                   title={t.header?.logout || 'Выйти'}
                 >
@@ -328,6 +331,7 @@ export const Header = () => {
             <button
               onClick={toggleTheme}
               className="icon-pill-btn rounded-circle d-flex align-items-center justify-content-center"
+              aria-label={theme === 'dark' ? 'Включить светлую тему' : 'Включить тёмную тему'}
               style={{ fontSize: '1.2rem', lineHeight: 1, width: '38px', height: '38px', flexShrink: 0, cursor: 'pointer' }}
               title={theme === 'dark' ? 'Светлая тема' : 'Темная тема'}
             >
@@ -337,22 +341,28 @@ export const Header = () => {
               <button
                 className="btn btn-sm border-0 fw-bold px-2 py-0"
                 onClick={() => setLang('ru')}
+                aria-label="Русский язык"
+                aria-pressed={lang === 'ru'}
                 style={{ fontSize: '0.85rem', color: lang === 'ru' ? 'var(--color-primary)' : 'var(--color-text-muted)' }}
               >
                 RU
               </button>
-              <span className="opacity-50 mx-1" style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)' }}>|</span>
+              <span className="opacity-50 mx-1" style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)' }} aria-hidden="true">|</span>
               <button
                 className="btn btn-sm border-0 fw-bold px-2 py-0"
                 onClick={() => setLang('uk')}
+                aria-label="Українська мова"
+                aria-pressed={lang === 'uk'}
                 style={{ fontSize: '0.85rem', color: lang === 'uk' ? 'var(--color-primary)' : 'var(--color-text-muted)' }}
               >
                 UA
               </button>
-              <span className="opacity-50 mx-1" style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)' }}>|</span>
+              <span className="opacity-50 mx-1" style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)' }} aria-hidden="true">|</span>
               <button
                 className="btn btn-sm border-0 fw-bold px-2 py-0"
                 onClick={() => setLang('en')}
+                aria-label="English language"
+                aria-pressed={lang === 'en'}
                 style={{ fontSize: '0.85rem', color: lang === 'en' ? 'var(--color-primary)' : 'var(--color-text-muted)' }}
               >
                 ENG

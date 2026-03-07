@@ -8,7 +8,7 @@ import { getPodcasts } from "@/shared/api/blogApi";
 import { HeroSlider } from "@/shared/ui/HeroSlider/HeroSlider";
 
 export default function BlogPodcasts() {
-  const { t , tStr} = useLanguage() as any;
+  const { t , tStr} = useLanguage();
   const [podcasts, setPodcasts] = useState<Podcast[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedTag, setSelectedTag] = useState<string | null>(null);

@@ -7,7 +7,7 @@ interface ArticleCardProps {
 }
 
 export const ArticleCard = ({ article }: ArticleCardProps) => {
-  const { tData, tStr, lang } = useLanguage() as any;
+  const { tData, tStr, lang } = useLanguage();
 
   const localized_article = tData ? tData(article) : article;
   const dateLocale = lang === 'en' ? 'en-US' : lang === 'uk' ? 'uk-UA' : 'ru-RU';

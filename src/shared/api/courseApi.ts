@@ -1,11 +1,12 @@
 "use server";
 import { prisma } from "@/shared/lib/prisma";
 import { auth } from "@/auth";
+import { z } from "zod";
 import { Course } from "@/entities/course/model/types";
 import { PaginatedResponse } from "./blogApi";
 
 export async function getBeginnersCourses(
-  page: number = 1, 
+  page: number = 1,
   limit: number = 6,
   searchQuery: string = '',
   sortBy: string = 'default'
@@ -207,15 +208,43 @@ export async function getAllAdminCourses(): Promise<Course[]> {
   return JSON.parse(JSON.stringify(courses));
 }
 
+const addCourseSchema = z.object({
+  title: z.string().min(1).max(500),
+  description: z.string().min(1).max(500),
+  price: z.number().positive().max(999999),
+  imageUrl: z.string().url().optional().nullable().or(z.literal('')),
+  author: z.string().max(200).optional(),
+  authorPhoto: z.string().url().optional().nullable().or(z.literal('')),
+  fullDescription: z.string().max(50000).optional(),
+  features: z.array(z.string()).optional(),
+});
+
+const addCourseCategorySchema = z.string().min(1).max(100);
+
+const updateCourseSchema = z.object({
+  title: z.string().min(1).max(500).optional(),
+  description: z.string().min(1).max(500).optional(),
+  price: z.number().positive().max(999999).optional(),
+  imageUrl: z.string().url().optional().nullable().or(z.literal('')),
+  author: z.string().max(200).optional(),
+  authorPhoto: z.string().url().optional().nullable().or(z.literal('')),
+  fullDescription: z.string().max(50000).optional(),
+  features: z.array(z.string()).optional(),
+  category: z.string().min(1).max(100).optional(),
+});
+
 export async function addCourse(courseData: Omit<Course, 'id'>, category: string): Promise<Course> {
   const session = await auth();
-  if ((session?.user as any)?.role !== 'ADMIN') throw new Error('Нет доступа');
-  const { translations, ...validData } = courseData as any;
+  if ((session?.user)?.role !== 'ADMIN') throw new Error('Нет доступа');
+  const parsedCategory = addCourseCategorySchema.safeParse(category);
+  if (!parsedCategory.success) throw new Error(parsedCategory.error.errors[0]?.message || 'Некорректная категория');
+  const parsed = addCourseSchema.safeParse(courseData);
+  if (!parsed.success) throw new Error(parsed.error.errors[0]?.message || 'Некорректные данные');
   const newCourse = await prisma.course.create({
     data: {
-      ...validData,
-      category: category,
-      id: `${category}-${Date.now()}`
+      ...parsed.data,
+      category: parsedCategory.data,
+      id: `${parsedCategory.data}-${Date.now()}`
     } as any
   });
   return JSON.parse(JSON.stringify(newCourse));
@@ -223,22 +252,24 @@ export async function addCourse(courseData: Omit<Course, 'id'>, category: string
 
 export async function updateCourse(id: string, updatedData: Partial<Course>): Promise<Course | undefined> {
   const session = await auth();
-  if ((session?.user as any)?.role !== 'ADMIN') throw new Error('Нет доступа');
-  const { translations, id: _, ...validData } = updatedData as any;
+  if ((session?.user)?.role !== 'ADMIN') throw new Error('Нет доступа');
+  const parsed = updateCourseSchema.safeParse(updatedData);
+  if (!parsed.success) throw new Error(parsed.error.errors[0]?.message || 'Некорректные данные');
   const updated = await prisma.course.update({
     where: { id },
-    data: validData
+    data: parsed.data
   });
   return JSON.parse(JSON.stringify(updated));
 }
 
 export async function deleteCourse(id: string): Promise<boolean> {
+  const session = await auth();
+  if ((session?.user)?.role !== 'ADMIN') throw new Error('Нет доступа');
   try {
-    const session = await auth();
-    if ((session?.user as any)?.role !== 'ADMIN') throw new Error('Нет доступа');
     await prisma.course.delete({ where: { id } });
     return true;
   } catch (e) {
+    console.error('deleteCourse error:', e);
     return false;
   }
 }

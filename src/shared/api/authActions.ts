@@ -18,6 +18,12 @@ export interface UserProfile {
 
 export async function getMyProfile(username: string): Promise<UserProfile | null> {
   try {
+    const session = await auth();
+    const sessionUser = session?.user;
+    // Allow: own profile OR admin can fetch any profile
+    if (!session?.user || (sessionUser?.username !== username && sessionUser?.role !== 'ADMIN')) {
+      return null;
+    }
     const user = await prisma.user.findUnique({
       where: { username },
       select: { id: true, username: true, name: true, email: true, phone: true, avatar: true, role: true }
@@ -35,7 +41,7 @@ export async function updateMyProfile(
 ): Promise<{ success: boolean; error?: string }> {
   try {
     const session = await auth();
-    const sessionUsername = (session?.user as any)?.username;
+    const sessionUsername = (session?.user)?.username;
     if (!session?.user || sessionUsername !== username) {
       return { success: false, error: 'Нет доступа' };
     }
@@ -59,11 +65,11 @@ export async function changePassword(username: string, oldPassword: string, newP
   try {
     const h = await headers();
     const ip = h.get('x-forwarded-for') || 'unknown';
-    const rl = rateLimit(`changePwd:${ip}`, { windowMs: 600_000, max: 5 });
+    const rl = await rateLimit(`changePwd:${ip}`, { windowMs: 600_000, max: 5 });
     if (!rl.success) return { success: false, error: 'Слишком много запросов. Попробуйте позже.' };
 
     const session = await auth();
-    const sessionUsername = (session?.user as any)?.username;
+    const sessionUsername = (session?.user)?.username;
     if (!session?.user || sessionUsername !== username) {
       return { success: false, error: 'Нет доступа' };
     }
@@ -103,11 +109,11 @@ export async function resetPassword(username: string, newPassword: string) {
   try {
     const h = await headers();
     const ip = h.get('x-forwarded-for') || 'unknown';
-    const rl = rateLimit(`resetPwd:${ip}`, { windowMs: 600_000, max: 5 });
+    const rl = await rateLimit(`resetPwd:${ip}`, { windowMs: 600_000, max: 5 });
     if (!rl.success) return { success: false, error: 'Слишком много запросов. Попробуйте позже.' };
 
     const session = await auth();
-    const sessionUser = session?.user as any;
+    const sessionUser = session?.user;
     if (!session?.user || sessionUser?.role !== 'ADMIN') {
       return { success: false, error: 'Только администратор может сбросить пароль' };
     }

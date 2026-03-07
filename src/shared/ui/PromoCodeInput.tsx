@@ -11,7 +11,7 @@ interface PromoCodeInputProps {
 }
 
 export default function PromoCodeInput({ originalPrice, onApply, onClear }: PromoCodeInputProps) {
-  const { tStr } = useLanguage() as any;
+  const { tStr } = useLanguage();
   const [code, setCode] = useState('');
   const [result, setResult] = useState<PromoResult | null>(null);
   const [isPending, startTransition] = useTransition();

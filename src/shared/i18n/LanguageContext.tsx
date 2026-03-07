@@ -28,6 +28,7 @@ export const LanguageProvider = ({ children }: { children: React.ReactNode }) =>
     const savedLang = localStorage.getItem('yoga_lang') as Language;
     if (savedLang && dictionaries[savedLang]) {
       setLangState(savedLang);
+      document.documentElement.lang = savedLang;
     }
   }, []);
 
@@ -91,6 +92,7 @@ export const LanguageProvider = ({ children }: { children: React.ReactNode }) =>
     setTimeout(() => {
       setLangState(newLang);
       localStorage.setItem('yoga_lang', newLang);
+      document.documentElement.lang = newLang;
     }, 410);
     // Remove overlay after animation ends
     overlay.addEventListener('animationend', () => overlay.remove(), { once: true });
