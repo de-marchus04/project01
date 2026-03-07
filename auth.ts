@@ -51,10 +51,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             id: user.id,
             name: user.name || user.username,
             email: user.email,
-            role: user.role,
+            role: user.role as string,
             avatar: user.avatar,
             username: user.username,
-          } as any
+          }
         } catch (e) {
           console.error('Auth error:', e);
           return null;

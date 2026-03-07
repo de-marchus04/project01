@@ -10,42 +10,42 @@ export async function getConsultationById(id: string): Promise<Consultation | un
   const consultation = await prisma.consultation.findUnique({
     where: { id }
   });
-  return consultation ? JSON.parse(JSON.stringify(consultation)) : undefined;
+  return consultation ? structuredClone(consultation) : undefined;
 }
 
 export async function getPrivateConsultations(): Promise<Consultation[]> {
   const items = await prisma.consultation.findMany({
     where: { category: { startsWith: 'private' } }
   });
-  return JSON.parse(JSON.stringify(items));
+  return structuredClone(items);
 }
 
 export async function getNutritionConsultations(): Promise<Consultation[]> {
   const items = await prisma.consultation.findMany({
     where: { category: { startsWith: 'nutrition' } }
   });
-  return JSON.parse(JSON.stringify(items));
+  return structuredClone(items);
 }
 
 export async function getMentorshipConsultations(): Promise<Consultation[]> {
   const items = await prisma.consultation.findMany({
     where: { category: { startsWith: 'mentorship' } }
   });
-  return JSON.parse(JSON.stringify(items));
+  return structuredClone(items);
 }
 
 export async function getAllAdminConsultations(): Promise<Consultation[]> {
   const items = await prisma.consultation.findMany({
     orderBy: { createdAt: 'desc' }
   });
-  return JSON.parse(JSON.stringify(items));
+  return structuredClone(items);
 }
 
 export async function getAllConsultations(): Promise<Consultation[]> {
   const items = await prisma.consultation.findMany({
     orderBy: { createdAt: 'desc' }
   });
-  return JSON.parse(JSON.stringify(items));
+  return structuredClone(items);
 }
 
 const addConsultationSchema = z.object({
@@ -85,10 +85,10 @@ export async function addConsultation(consultationData: Omit<Consultation, 'id'>
     data: {
       ...parsed.data,
       category: parsedCategory.data,
-      id: `${parsedCategory.data}-${Date.now()}`
-    } as any
+      
+    }
   });
-  return JSON.parse(JSON.stringify(newItem));
+  return structuredClone(newItem);
 }
 
 export async function updateConsultation(id: string, updatedData: Partial<Consultation>): Promise<Consultation | undefined> {
@@ -100,7 +100,7 @@ export async function updateConsultation(id: string, updatedData: Partial<Consul
     where: { id },
     data: parsed.data
   });
-  return JSON.parse(JSON.stringify(updated));
+  return structuredClone(updated);
 }
 
 export async function deleteConsultation(id: string): Promise<boolean> {

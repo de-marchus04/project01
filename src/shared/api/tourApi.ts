@@ -10,14 +10,14 @@ export async function getTours(): Promise<Tour[]> {
   const items = await prisma.tour.findMany({
     orderBy: { createdAt: 'desc' }
   });
-  return JSON.parse(JSON.stringify(items));
+  return structuredClone(items);
 }
 
 export async function getTourById(id: string): Promise<Tour | undefined> {
   const item = await prisma.tour.findUnique({
     where: { id }
   });
-  return item ? JSON.parse(JSON.stringify(item)) : undefined;
+  return item ? structuredClone(item) : undefined;
 }
 
 const addTourSchema = z.object({
@@ -54,10 +54,10 @@ export async function addTour(tourData: Omit<Tour, 'id'>): Promise<Tour> {
   const newItem = await prisma.tour.create({
     data: {
       ...parsed.data,
-      id: `tour-${Date.now()}`
-    } as any
+      
+    }
   });
-  return JSON.parse(JSON.stringify(newItem));
+  return structuredClone(newItem);
 }
 
 export async function updateTour(id: string, updatedData: Partial<Tour>): Promise<Tour | undefined> {
@@ -69,7 +69,7 @@ export async function updateTour(id: string, updatedData: Partial<Tour>): Promis
     where: { id },
     data: parsed.data
   });
-  return JSON.parse(JSON.stringify(updated));
+  return structuredClone(updated);
 }
 
 export async function deleteTour(id: string): Promise<boolean> {

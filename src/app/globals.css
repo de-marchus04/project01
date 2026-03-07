@@ -1,4 +1,12 @@
-/* Navigation Grid Hover Effects */
+/* Main content wrapper */
+#main-content {
+  transition: transform 0.4s ease;
+  min-height: 100vh;
+  background-color: var(--color-bg);
+  position: relative;
+  z-index: 1;
+  box-shadow: -5px 0 15px rgba(0, 0, 0, 0.05);
+}
 .group-hover:hover .hover-scale-img {
   transform: scale(1.05);
 }

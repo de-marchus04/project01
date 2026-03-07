@@ -20,7 +20,7 @@ export interface Testimonial {
 export async function getTestimonials(): Promise<Testimonial[]> {
   if (process.env.NEXT_RUNTIME === 'edge') { throw new Error('EDGE RUNTIME DETECTED IN SERVER ACTION'); }
   const items = await prisma.testimonial.findMany({ orderBy: { createdAt: 'desc' } });
-  return JSON.parse(JSON.stringify(items));
+  return structuredClone(items);
 }
 
 const addTestimonialSchema = z.object({
@@ -40,7 +40,7 @@ export async function addTestimonial(testimonial: Omit<Testimonial, 'id' | 'crea
   const parsed = addTestimonialSchema.safeParse(testimonial);
   if (!parsed.success) throw new Error(parsed.error.errors[0]?.message || 'Некорректные данные');
   const item = await prisma.testimonial.create({ data: parsed.data });
-  return JSON.parse(JSON.stringify(item));
+  return structuredClone(item);
 }
 
 export async function updateTestimonial(id: string, updates: Partial<Testimonial>): Promise<Testimonial | null> {
@@ -48,7 +48,7 @@ export async function updateTestimonial(id: string, updates: Partial<Testimonial
   const parsed = updateTestimonialSchema.safeParse(updates);
   if (!parsed.success) throw new Error(parsed.error.errors[0]?.message || 'Некорректные данные');
   const item = await prisma.testimonial.update({ where: { id }, data: parsed.data });
-  return JSON.parse(JSON.stringify(item));
+  return structuredClone(item);
 }
 
 export async function deleteTestimonial(id: string): Promise<boolean> {

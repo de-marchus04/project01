@@ -2,8 +2,49 @@
 import { prisma } from "@/shared/lib/prisma";
 import { auth } from "@/auth";
 import { z } from "zod";
+import { Prisma } from "@prisma/client";
 import { Course } from "@/entities/course/model/types";
 import { PaginatedResponse } from "./blogApi";
+
+// Shared helper — eliminates duplicated pagination logic across category functions
+async function paginateCourses(
+  baseWhere: Prisma.CourseWhereInput,
+  page: number,
+  limit: number,
+  searchQuery: string,
+  sortBy: string
+): Promise<PaginatedResponse<Course>> {
+  if (process.env.NEXT_RUNTIME === 'edge') { throw new Error('EDGE RUNTIME DETECTED IN SERVER ACTION'); }
+
+  const where: Prisma.CourseWhereInput = { ...baseWhere };
+  if (searchQuery) {
+    const q = searchQuery.toLowerCase();
+    where.OR = [
+      { title: { contains: q, mode: 'insensitive' } },
+      { description: { contains: q, mode: 'insensitive' } },
+    ];
+  }
+
+  const orderBy: Prisma.CourseOrderByWithRelationInput =
+    sortBy === 'price_asc' ? { price: 'asc' } :
+    sortBy === 'price_desc' ? { price: 'desc' } : {};
+
+  const safePage = Math.max(1, page);
+  const skip = (safePage - 1) * limit;
+
+  const [courses, total] = await Promise.all([
+    prisma.course.findMany({ where, orderBy, skip, take: limit }),
+    prisma.course.count({ where }),
+  ]);
+
+  return structuredClone({
+    data: courses,
+    total,
+    page: safePage,
+    limit,
+    totalPages: Math.ceil(total / limit),
+  });
+}
 
 export async function getBeginnersCourses(
   page: number = 1,
@@ -11,46 +52,7 @@ export async function getBeginnersCourses(
   searchQuery: string = '',
   sortBy: string = 'default'
 ): Promise<PaginatedResponse<Course>> {
-  if (process.env.NEXT_RUNTIME === 'edge') { throw new Error('EDGE RUNTIME DETECTED IN SERVER ACTION'); }
-  const whereClause: any = {
-    category: { startsWith: 'beginners' }
-  };
-
-  if (searchQuery) {
-    const lowerQuery = searchQuery.toLowerCase();
-    whereClause.OR = [
-      { title: { contains: lowerQuery, mode: 'insensitive' } },
-      { description: { contains: lowerQuery, mode: 'insensitive' } }
-    ];
-  }
-
-  let orderByClause: any = {};
-  if (sortBy === 'price_asc') {
-    orderByClause = { price: 'asc' };
-  } else if (sortBy === 'price_desc') {
-    orderByClause = { price: 'desc' };
-  }
-
-  const safePage = Math.max(1, page);
-  const skip = (safePage - 1) * limit;
-
-  const [courses, total] = await Promise.all([
-    prisma.course.findMany({
-      where: whereClause,
-      orderBy: orderByClause,
-      skip,
-      take: limit,
-    }),
-    prisma.course.count({ where: whereClause })
-  ]);
-
-  return JSON.parse(JSON.stringify({
-    data: courses,
-    total,
-    page: safePage,
-    limit,
-    totalPages: Math.ceil(total / limit)
-  }));
+  return paginateCourses({ category: { startsWith: 'beginners' } }, page, limit, searchQuery, sortBy);
 }
 
 export async function getAllCourses(
@@ -60,55 +62,14 @@ export async function getAllCourses(
   sortBy: string = 'default',
   category: string = 'all'
 ): Promise<PaginatedResponse<Course>> {
-  if (process.env.NEXT_RUNTIME === 'edge') { throw new Error('EDGE RUNTIME DETECTED IN SERVER ACTION'); }
-  const whereClause: any = {};
-
-  if (category && category !== 'all') {
-    whereClause.category = { startsWith: category };
-  }
-
-  if (searchQuery) {
-    const lowerQuery = searchQuery.toLowerCase();
-    whereClause.OR = [
-      { title: { contains: lowerQuery, mode: 'insensitive' } },
-      { description: { contains: lowerQuery, mode: 'insensitive' } }
-    ];
-  }
-
-  let orderByClause: any = {};
-  if (sortBy === 'price_asc') {
-    orderByClause = { price: 'asc' };
-  } else if (sortBy === 'price_desc') {
-    orderByClause = { price: 'desc' };
-  }
-
-  const safePage = Math.max(1, page);
-  const skip = (safePage - 1) * limit;
-
-  const [courses, total] = await Promise.all([
-    prisma.course.findMany({
-      where: whereClause,
-      orderBy: orderByClause,
-      skip,
-      take: limit,
-    }),
-    prisma.course.count({ where: whereClause })
-  ]);
-
-  return JSON.parse(JSON.stringify({
-    data: courses,
-    total,
-    page: safePage,
-    limit,
-    totalPages: Math.ceil(total / limit)
-  }));
+  const baseWhere: Prisma.CourseWhereInput =
+    category && category !== 'all' ? { category: { startsWith: category } } : {};
+  return paginateCourses(baseWhere, page, limit, searchQuery, sortBy);
 }
 
 export async function getBackCourses(): Promise<Course[]> {
-  const courses = await prisma.course.findMany({
-    where: { category: { startsWith: 'back' } }
-  });
-  return JSON.parse(JSON.stringify(courses));
+  const courses = await prisma.course.findMany({ where: { category: { startsWith: 'back' } } });
+  return structuredClone(courses);
 }
 
 export async function getBackCoursesPaginated(
@@ -117,28 +78,12 @@ export async function getBackCoursesPaginated(
   searchQuery: string = '',
   sortBy: string = 'default'
 ): Promise<PaginatedResponse<Course>> {
-  if (process.env.NEXT_RUNTIME === 'edge') { throw new Error('EDGE RUNTIME DETECTED IN SERVER ACTION'); }
-  const whereClause: any = { category: { startsWith: 'back' } };
-  if (searchQuery) {
-    const q = searchQuery.toLowerCase();
-    whereClause.OR = [{ title: { contains: q, mode: 'insensitive' } }, { description: { contains: q, mode: 'insensitive' } }];
-  }
-  let orderByClause: any = {};
-  if (sortBy === 'price_asc') orderByClause = { price: 'asc' };
-  else if (sortBy === 'price_desc') orderByClause = { price: 'desc' };
-  const safePage = Math.max(1, page);
-  const [courses, total] = await Promise.all([
-    prisma.course.findMany({ where: whereClause, orderBy: orderByClause, skip: (safePage - 1) * limit, take: limit }),
-    prisma.course.count({ where: whereClause })
-  ]);
-  return JSON.parse(JSON.stringify({ data: courses, total, page: safePage, limit, totalPages: Math.ceil(total / limit) }));
+  return paginateCourses({ category: { startsWith: 'back' } }, page, limit, searchQuery, sortBy);
 }
 
 export async function getMeditationCourses(): Promise<Course[]> {
-  const courses = await prisma.course.findMany({
-    where: { category: { startsWith: 'meditation' } }
-  });
-  return JSON.parse(JSON.stringify(courses));
+  const courses = await prisma.course.findMany({ where: { category: { startsWith: 'meditation' } } });
+  return structuredClone(courses);
 }
 
 export async function getMeditationCoursesPaginated(
@@ -147,28 +92,12 @@ export async function getMeditationCoursesPaginated(
   searchQuery: string = '',
   sortBy: string = 'default'
 ): Promise<PaginatedResponse<Course>> {
-  if (process.env.NEXT_RUNTIME === 'edge') { throw new Error('EDGE RUNTIME DETECTED IN SERVER ACTION'); }
-  const whereClause: any = { category: { startsWith: 'meditation' } };
-  if (searchQuery) {
-    const q = searchQuery.toLowerCase();
-    whereClause.OR = [{ title: { contains: q, mode: 'insensitive' } }, { description: { contains: q, mode: 'insensitive' } }];
-  }
-  let orderByClause: any = {};
-  if (sortBy === 'price_asc') orderByClause = { price: 'asc' };
-  else if (sortBy === 'price_desc') orderByClause = { price: 'desc' };
-  const safePage = Math.max(1, page);
-  const [courses, total] = await Promise.all([
-    prisma.course.findMany({ where: whereClause, orderBy: orderByClause, skip: (safePage - 1) * limit, take: limit }),
-    prisma.course.count({ where: whereClause })
-  ]);
-  return JSON.parse(JSON.stringify({ data: courses, total, page: safePage, limit, totalPages: Math.ceil(total / limit) }));
+  return paginateCourses({ category: { startsWith: 'meditation' } }, page, limit, searchQuery, sortBy);
 }
 
 export async function getWomenCourses(): Promise<Course[]> {
-  const courses = await prisma.course.findMany({
-    where: { category: { startsWith: 'women' } }
-  });
-  return JSON.parse(JSON.stringify(courses));
+  const courses = await prisma.course.findMany({ where: { category: { startsWith: 'women' } } });
+  return structuredClone(courses);
 }
 
 export async function getWomenCoursesPaginated(
@@ -177,35 +106,17 @@ export async function getWomenCoursesPaginated(
   searchQuery: string = '',
   sortBy: string = 'default'
 ): Promise<PaginatedResponse<Course>> {
-  if (process.env.NEXT_RUNTIME === 'edge') { throw new Error('EDGE RUNTIME DETECTED IN SERVER ACTION'); }
-  const whereClause: any = { category: { startsWith: 'women' } };
-  if (searchQuery) {
-    const q = searchQuery.toLowerCase();
-    whereClause.OR = [{ title: { contains: q, mode: 'insensitive' } }, { description: { contains: q, mode: 'insensitive' } }];
-  }
-  let orderByClause: any = {};
-  if (sortBy === 'price_asc') orderByClause = { price: 'asc' };
-  else if (sortBy === 'price_desc') orderByClause = { price: 'desc' };
-  const safePage = Math.max(1, page);
-  const [courses, total] = await Promise.all([
-    prisma.course.findMany({ where: whereClause, orderBy: orderByClause, skip: (safePage - 1) * limit, take: limit }),
-    prisma.course.count({ where: whereClause })
-  ]);
-  return JSON.parse(JSON.stringify({ data: courses, total, page: safePage, limit, totalPages: Math.ceil(total / limit) }));
+  return paginateCourses({ category: { startsWith: 'women' } }, page, limit, searchQuery, sortBy);
 }
 
 export async function getCourseById(id: string): Promise<Course | undefined> {
-  const course = await prisma.course.findUnique({
-    where: { id }
-  });
-  return course ? JSON.parse(JSON.stringify(course)) : undefined;
+  const course = await prisma.course.findUnique({ where: { id } });
+  return course ? structuredClone(course) : undefined;
 }
 
 export async function getAllAdminCourses(): Promise<Course[]> {
-  const courses = await prisma.course.findMany({
-    orderBy: { createdAt: 'desc' }
-  });
-  return JSON.parse(JSON.stringify(courses));
+  const courses = await prisma.course.findMany({ orderBy: { createdAt: 'desc' } });
+  return structuredClone(courses);
 }
 
 const addCourseSchema = z.object({
@@ -241,13 +152,9 @@ export async function addCourse(courseData: Omit<Course, 'id'>, category: string
   const parsed = addCourseSchema.safeParse(courseData);
   if (!parsed.success) throw new Error(parsed.error.errors[0]?.message || 'Некорректные данные');
   const newCourse = await prisma.course.create({
-    data: {
-      ...parsed.data,
-      category: parsedCategory.data,
-      id: `${parsedCategory.data}-${Date.now()}`
-    } as any
+    data: { ...parsed.data, category: parsedCategory.data },
   });
-  return JSON.parse(JSON.stringify(newCourse));
+  return structuredClone(newCourse);
 }
 
 export async function updateCourse(id: string, updatedData: Partial<Course>): Promise<Course | undefined> {
@@ -259,7 +166,7 @@ export async function updateCourse(id: string, updatedData: Partial<Course>): Pr
     where: { id },
     data: parsed.data
   });
-  return JSON.parse(JSON.stringify(updated));
+  return structuredClone(updated);
 }
 
 export async function deleteCourse(id: string): Promise<boolean> {

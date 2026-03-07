@@ -26,7 +26,7 @@ export async function getMessages(): Promise<SupportMessage[]> {
   const items = await prisma.supportTicket.findMany({ orderBy: { createdAt: 'desc' } });
 
   // Transform DB mapping
-  return JSON.parse(JSON.stringify(items.map((i: any) => ({
+  return structuredClone(items.map((i: any) => ({
     id: i.id,
     userName: i.name,
     userEmail: i.email,
@@ -35,7 +35,7 @@ export async function getMessages(): Promise<SupportMessage[]> {
     status: i.status === 'NEW' ? 'new' : i.status === 'CLOSED' ? 'replied' : 'new',
     createdAt: i.createdAt,
     readByUser: i.readByUser ?? false
-  }))));
+  })));
 }
 
 export async function getUserMessages(email: string): Promise<SupportMessage[]> {
@@ -49,7 +49,7 @@ export async function getUserMessages(email: string): Promise<SupportMessage[]> 
     orderBy: { createdAt: 'desc' }
   });
 
-  return JSON.parse(JSON.stringify(items.map((i: any) => ({
+  return structuredClone(items.map((i: any) => ({
     id: i.id,
     userName: i.name,
     userEmail: i.email,
@@ -58,7 +58,7 @@ export async function getUserMessages(email: string): Promise<SupportMessage[]> 
     status: i.status === 'NEW' ? 'new' : i.status === 'CLOSED' ? 'replied' : 'new',
     createdAt: i.createdAt,
     readByUser: i.readByUser ?? false
-  }))));
+  })));
 }
 
 const sendMessageSchema = z.object({
@@ -95,7 +95,7 @@ export async function sendMessage(
     }
   });
 
-  return JSON.parse(JSON.stringify({
+  return structuredClone({
     id: newItem.id,
     userName: newItem.name,
     userEmail: newItem.email,
@@ -104,7 +104,7 @@ export async function sendMessage(
     status: isBot ? 'bot_answered' : 'new',
     createdAt: newItem.createdAt,
     readByUser: false
-  }));
+  });
 }
 
 export async function replyToMessage(id: string, replyText: string): Promise<void> {

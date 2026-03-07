@@ -4,6 +4,7 @@ const config: Config = {
   preset: "ts-jest",
   testEnvironment: "node",
   moduleNameMapper: {
+    "^@/auth$": "<rootDir>/auth",
     "^@/(.*)$": "<rootDir>/src/$1",
   },
   transform: {
