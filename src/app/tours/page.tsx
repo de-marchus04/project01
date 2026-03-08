@@ -10,6 +10,6 @@ export const metadata: Metadata = {
 };
 
 export default async function ToursPagePage() {
-  const initialData = await getTours();
+  const initialData = await getTours().catch(() => []);
   return <ToursPageClient initialData={initialData} />;
 }

@@ -5,8 +5,6 @@ import CoursesBeginnersClient from "./CoursesBeginnersClient";
 export const revalidate = 3600;
 
 export default async function CoursesBeginnersPage() {
-  // Выполняем 1 запрос к БД для сборки статической страницы на сервере
-  const initialData = await getBeginnersCourses(1, 6, '', 'default');
-
+  const initialData = await getBeginnersCourses(1, 6, '', 'default').catch(() => ({ data: [], total: 0, page: 1, limit: 6, totalPages: 0 }));
   return <CoursesBeginnersClient initialData={initialData} />;
 }

@@ -10,6 +10,6 @@ export const metadata: Metadata = {
 };
 
 export default async function ConsultationsPage() {
-  const initialData = await getAllConsultations();
+  const initialData = await getAllConsultations().catch(() => []);
   return <ConsultationsAllClient initialData={initialData} />;
 }

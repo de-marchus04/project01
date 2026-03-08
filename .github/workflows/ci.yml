@@ -68,7 +68,6 @@ jobs:
           AUTH_URL: http://localhost:3000
           GOOGLE_CLIENT_ID: ci-dummy
           GOOGLE_CLIENT_SECRET: ci-dummy
-          GITHUB_ID: ci-dummy
-          GITHUB_SECRET: ci-dummy
           NEXT_PUBLIC_SITE_URL: http://localhost:3000
+          NEXT_TELEMETRY_DISABLED: 1
         run: npm run build

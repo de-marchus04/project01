@@ -53,8 +53,7 @@ export const usePurchase = () => {
     const preferredDate = await modalService.prompt(
       tStr("Желаемая дата/время"),
       tStr("Укажите предпочтительную дату и время занятия (необязательно)"),
-      tStr("Например: 15 января, 10:00"),
-      true
+      tStr("Например: 15 января, 10:00")
     );
     if (preferredDate?.trim()) notes = preferredDate.trim();
 

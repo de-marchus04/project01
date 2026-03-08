@@ -10,6 +10,6 @@ export const metadata: Metadata = {
 };
 
 export default async function CoursesPage() {
-  const initialData = await getAllCourses(1, 9, '', 'default', 'all');
+  const initialData = await getAllCourses(1, 9, '', 'default', 'all').catch(() => ({ data: [], total: 0, page: 1, limit: 9, totalPages: 0 }));
   return <CoursesAllClient initialData={initialData} />;
 }
