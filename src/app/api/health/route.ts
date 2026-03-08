@@ -7,6 +7,10 @@ export async function GET() {
 
   // Check AUTH_SECRET
   checks.authSecret = process.env.AUTH_SECRET ? 'set' : 'MISSING';
+  checks.authUrl = process.env.AUTH_URL || 'NOT SET';
+  checks.nextauthUrl = process.env.NEXTAUTH_URL || 'NOT SET';
+  checks.authTrustHost = process.env.AUTH_TRUST_HOST || 'NOT SET';
+  checks.vercelUrl = process.env.VERCEL_URL || 'NOT SET';
 
   // Check DATABASE_URL
   checks.databaseUrl = process.env.DATABASE_URL ? 'set' : 'MISSING';
