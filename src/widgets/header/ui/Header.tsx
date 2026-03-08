@@ -8,7 +8,7 @@ import { useSession, signOut } from 'next-auth/react';
 import { getNavigationConfig } from '@/shared/config/navigation';
 import { createPortal } from 'react-dom';
 import { useLanguage } from '@/shared/i18n/LanguageContext';
-import { useTheme } from '@/shared/i18n/ThemeContext';
+import { useTheme } from '@/shared/context/ThemeContext';
 import { getMyProfile } from '@/shared/api/authActions';
 
 export const Header = () => {

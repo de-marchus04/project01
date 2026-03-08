@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useLanguage } from '@/shared/i18n/LanguageContext';
-import { useTheme } from '@/shared/i18n/ThemeContext';
+import { useTheme } from '@/shared/context/ThemeContext';
 import { getMyProfile } from '@/shared/api/authActions';
 import { Order } from '@/shared/api/userApi';
 import { useSession, signOut } from 'next-auth/react';

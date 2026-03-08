@@ -3,7 +3,7 @@
 import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { confirmPasswordReset } from '@/shared/api/authActions';
-import { useTheme } from '@/shared/i18n/ThemeContext';
+import { useTheme } from '@/shared/context/ThemeContext';
 
 function ResetPasswordForm() {
   const router = useRouter();

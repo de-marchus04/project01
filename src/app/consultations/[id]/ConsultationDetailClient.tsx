@@ -9,8 +9,8 @@ import Link from 'next/link';
 import { BuyButton } from '@/shared/ui/BuyButton/BuyButton';
 import { useLanguage } from '@/shared/i18n/LanguageContext';
 import { formatPrice } from '@/shared/lib/formatPrice';
-import ReviewSection from '@/shared/ui/ReviewSection';
-import PromoCodeInput from '@/shared/ui/PromoCodeInput';
+import ReviewSection from '@/shared/ui/ReviewSection/ReviewSection';
+import PromoCodeInput from '@/shared/ui/PromoCodeInput/PromoCodeInput';
 
 export default function CourseDetail() {
   const { t, tData, tStr, lang } = useLanguage();

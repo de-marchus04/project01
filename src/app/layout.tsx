@@ -10,7 +10,7 @@ import { LockoutTimer } from '@/widgets/lockout/ui/LockoutTimer';
 import { GlobalModal } from '@/shared/ui/Modal/GlobalModal';
 import { SupportWidget } from '@/widgets/support/ui/SupportWidget';
 import { LanguageProvider } from '@/shared/i18n/LanguageContext';
-import { ThemeProvider } from '@/shared/i18n/ThemeContext';
+import { ThemeProvider } from '@/shared/context/ThemeContext';
 import { Providers } from './providers';
 import { WebVitals } from './web-vitals';
 

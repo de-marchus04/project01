@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import { Article } from '@/entities/blog/model/types';
 import { ArticleCard } from '@/entities/blog/ui/ArticleCard';
 import { getArticleTags, getArticles } from '@/shared/api/blogApi';
-import { Pagination } from '@/shared/ui/Pagination';
+import { Pagination } from '@/shared/ui/Pagination/Pagination';
 import { HeroSlider } from '@/shared/ui/HeroSlider/HeroSlider';
 
 export default function BlogArticles() {

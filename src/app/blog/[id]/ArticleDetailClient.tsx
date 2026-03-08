@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import CommentSection from '@/shared/ui/CommentSection';
+import CommentSection from '@/shared/ui/CommentSection/CommentSection';
 import { Article } from '@/entities/blog/model/types';
 import { getArticleById } from '@/shared/api/blogApi';
 import Link from 'next/link';

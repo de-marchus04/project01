@@ -3,7 +3,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useLanguage } from '@/shared/i18n/LanguageContext';
 import { formatPrice } from '@/shared/lib/formatPrice';
-import { WishlistButton } from '@/shared/ui/WishlistButton';
+import { WishlistButton } from '@/shared/ui/WishlistButton/WishlistButton';
 
 interface CourseCardProps {
   course: Course & { category?: string };

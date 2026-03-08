@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { authApi } from '@/shared/api/authApi';
 import { requestPasswordReset } from '@/shared/api/authActions';
 import { useLanguage } from '@/shared/i18n/LanguageContext';
-import { useTheme } from '@/shared/i18n/ThemeContext';
+import { useTheme } from '@/shared/context/ThemeContext';
 import { signIn, getSession } from 'next-auth/react';
 import { modalService } from '@/shared/ui/Modal/modalService';
 

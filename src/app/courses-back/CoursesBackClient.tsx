@@ -6,7 +6,7 @@ import { Course } from '@/entities/course/model/types';
 import { CourseCard } from '@/entities/course/ui/CourseCard';
 import { usePurchase } from '@/shared/hooks/usePurchase';
 import { getBackCoursesPaginated } from '@/shared/api/courseApi';
-import { Pagination } from '@/shared/ui/Pagination';
+import { Pagination } from '@/shared/ui/Pagination/Pagination';
 import { HeroSlider } from '@/shared/ui/HeroSlider/HeroSlider';
 import { PaginatedResponse } from '@/shared/api/blogApi';
 import { useScrollReveal } from '@/shared/hooks/useScrollReveal';
