@@ -7,6 +7,11 @@ export const revalidate = 3600;
 export const metadata: Metadata = {
   title: 'Курсы йоги | YOGA.LIFE',
   description: 'Онлайн-курсы йоги для любого уровня подготовки: йога для начинающих, йога для женщин, медитация и оздоровительные практики для здоровой спины.',
+  openGraph: {
+    title: 'Курсы йоги | YOGA.LIFE',
+    description: 'Онлайн-курсы йоги для любого уровня подготовки.',
+    type: 'website',
+  },
 };
 
 export default async function CoursesPage() {

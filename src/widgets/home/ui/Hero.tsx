@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useLanguage } from "@/shared/i18n/LanguageContext";
+import { HeroSlider } from "@/shared/ui/HeroSlider/HeroSlider";
 
 export const Hero = () => {
   const { t } = useLanguage();
@@ -11,10 +12,29 @@ export const Hero = () => {
       className="hero-section d-flex align-items-center justify-content-center position-relative"
       style={{
         minHeight: '100vh',
-        background: "linear-gradient(175deg, rgba(40,52,30,0.45) 0%, rgba(20,28,16,0.65) 100%), url('https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?q=80&w=2020&auto=format&fit=crop') center/cover no-repeat",
-        backgroundAttachment: 'fixed'
+        position: 'relative',
+        overflow: 'hidden',
       }}
     >
+      {/* Background slideshow */}
+      <div style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
+        <HeroSlider
+          pageKey="home"
+          images={[
+            'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?q=80&w=2020&auto=format&fit=crop',
+          ]}
+          showOverlay={false}
+        />
+      </div>
+      {/* Dark gradient overlay */}
+      <div
+        style={{
+          position: 'absolute',
+          inset: 0,
+          background: 'linear-gradient(175deg, rgba(40,52,30,0.45) 0%, rgba(20,28,16,0.65) 100%)',
+          zIndex: 1,
+        }}
+      />
       <div className="container text-center text-white position-relative z-2">
         <span
           className="badge rounded-pill px-3 py-2 mb-4 fw-normal d-inline-block"

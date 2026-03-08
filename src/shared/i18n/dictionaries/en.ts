@@ -120,6 +120,11 @@ export const en = {
     newsletterBtn: "Get the guide",
     newsletterSending: "Sending...",
     newsletterSpam: "We don't send spam. You can unsubscribe at any time.",
+    newsletterWarningEmpty: "Please enter your email address.",
+    newsletterWarningInvalid: "Invalid email format.",
+    newsletterSuccessAlready: "The guide has been sent to your email! (You are already our subscriber).",
+    newsletterSuccessNew: "The guide has been sent to your email! You have also been successfully subscribed to our updates and retreat announcements.",
+    newsletterError: "An error occurred while processing your request. Please try again later.",
     testimonialsBadge: "Reviews",
     testimonialsTitle: "Stories of our students",
     review1Text: "The 'Healthy Back' course literally saved me after long hours of working at the computer. The pain went away after two weeks of regular practice.",
@@ -659,5 +664,19 @@ programs: {
       "privacyH3": "3. Information Protection",
       "privacyP3": "We use modern encryption and data protection methods to prevent unauthorized access to your personal information.",
       "updated": "Last updated: February 28, 2026"
+  },
+  pagination: {
+    prev: "Previous",
+    next: "Next"
+  },
+  notFoundPage: {
+    title: "Page not found",
+    description: "Sorry, the requested page does not exist.",
+    backHome: "Go to homepage"
+  },
+  errorPage: {
+    title: "Something went wrong",
+    defaultMessage: "An unexpected error occurred",
+    retry: "Try again"
   }
 };

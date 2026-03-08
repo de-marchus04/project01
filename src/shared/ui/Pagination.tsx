@@ -1,4 +1,5 @@
 import React from 'react';
+import { useLanguage } from '@/shared/i18n/LanguageContext';
 
 interface PaginationProps {
   currentPage: number;
@@ -7,6 +8,7 @@ interface PaginationProps {
 }
 
 export const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages, onPageChange }) => {
+  const { t } = useLanguage();
   if (totalPages <= 1) return null;
 
   const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
@@ -21,7 +23,7 @@ export const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages,
             disabled={currentPage === 1}
             style={{ color: 'var(--color-primary)', borderColor: 'var(--color-border)' }}
           >
-            Назад
+            {t.pagination.prev}
           </button>
         </li>
         
@@ -48,7 +50,7 @@ export const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages,
             disabled={currentPage === totalPages}
             style={{ color: 'var(--color-primary)', borderColor: 'var(--color-border)' }}
           >
-            Вперед
+            {t.pagination.next}
           </button>
         </li>
       </ul>

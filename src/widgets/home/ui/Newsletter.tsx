@@ -28,12 +28,12 @@ export const Newsletter = () => {
     e.preventDefault();
 
     if (!email.trim()) {
-      modalService.alert("Внимание", "Пожалуйста, введите email адрес.");
+      modalService.alert(t.footer.warningTitle, t.home.newsletterWarningEmpty);
       return;
     }
 
     if (!emailService.isValidFormat(email)) {
-      await modalService.alert("Внимание", "Неверный формат email адреса.");
+      await modalService.alert(t.footer.warningTitle, t.home.newsletterWarningInvalid);
       return;
     }
 
@@ -43,15 +43,15 @@ export const Newsletter = () => {
       await emailService.sendWelcomeGuide(email);
 
       if (result.alreadySubscribed) {
-        await modalService.alert("Успешно!", "Гайд отправлен на вашу почту! (Вы уже являетесь нашим подписчиком).");
+        await modalService.alert(t.footer.successTitle, t.home.newsletterSuccessAlready);
       } else {
-        await modalService.alert("Успешно!", "Гайд отправлен на вашу почту! Вы также успешно подписаны на наши обновления и анонсы ретритов.");
+        await modalService.alert(t.footer.successTitle, t.home.newsletterSuccessNew);
         setIsSubscribed(true);
       }
 
       setEmail("");
     } catch (error) {
-      modalService.alert("Ошибка", "Произошла ошибка при обработке запроса. Попробуйте позже.");
+      modalService.alert(t.footer.errorTitle, t.home.newsletterError);
     } finally {
       setIsLoading(false);
     }

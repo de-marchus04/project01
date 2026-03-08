@@ -88,7 +88,7 @@ export const Footer = () => {
             <ul className="list-unstyled">
               <li><Link href="/courses" className="text-decoration-none" style={{ color: 'rgba(244, 241, 234, 0.7)' }}>{t.nav.courses}</Link></li>
               <li><Link href="/tours" className="text-decoration-none" style={{ color: 'rgba(244, 241, 234, 0.7)' }}>{t.nav.tours}</Link></li>
-              <li><Link href="/consultations-private" className="text-decoration-none" style={{ color: 'rgba(244, 241, 234, 0.7)' }}>{t.nav.consultations}</Link></li>
+              <li><Link href="/consultations" className="text-decoration-none" style={{ color: 'rgba(244, 241, 234, 0.7)' }}>{t.nav.consultations}</Link></li>
             </ul>
           </div>
           <div className="col-lg-2 col-6">

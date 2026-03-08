@@ -7,6 +7,11 @@ export const revalidate = 3600;
 export const metadata: Metadata = {
   title: 'Йога-туры | YOGA.LIFE',
   description: 'Йога-туры и ретриты по всему миру: уединённые практики, медитации на природе и оздоровительные программы для тела и разума.',
+  openGraph: {
+    title: 'Йога-туры | YOGA.LIFE',
+    description: 'Йога-туры и ретриты по всему миру.',
+    type: 'website',
+  },
 };
 
 export default async function ToursPagePage() {

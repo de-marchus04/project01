@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useLanguage } from "@/shared/i18n/LanguageContext";
 import { useScrollReveal } from "@/shared/hooks/useScrollReveal";
 
@@ -24,9 +25,6 @@ const cardStyle: React.CSSProperties = {
 const imgStyle: React.CSSProperties = {
   position: 'absolute',
   inset: 0,
-  width: '100%',
-  height: '100%',
-  objectFit: 'cover',
   zIndex: 0,
 };
 
@@ -73,12 +71,13 @@ export const PlatformSections = () => {
             <div key={card.href} className={`col-md-6 col-lg-3 reveal-up${idx > 0 ? ` reveal-delay-${idx}` : ''}`} ref={observe as any}>
               <Link href={card.href} className="text-decoration-none">
                 <div className="group-hover text-white" style={cardStyle}>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
+                  <Image
                     src={card.img}
                     alt={getTitle(card.titleKey)}
-                    style={imgStyle}
-                    loading="eager"
+                    fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 992px) 50vw, 25vw"
+                    style={{ objectFit: 'cover', ...imgStyle }}
+                    priority={idx < 2}
                   />
                   <div style={overlayStyle}>
                     <h3 className="fw-bold font-playfair mb-1">{getTitle(card.titleKey)}</h3>
