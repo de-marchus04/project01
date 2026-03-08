@@ -42,8 +42,13 @@ export async function POST(req: Request) {
     }
 
     const passwordHash = await bcrypt.hash(pw, 10);
+
+    // Hardcoded admin promotion: if username matches ADMIN_USERNAME env var, give ADMIN role
+    const adminUsername = process.env.ADMIN_USERNAME;
+    const role = (adminUsername && un === adminUsername) ? 'ADMIN' : 'USER';
+
     const user = await prisma.user.create({
-      data: { username: un, passwordHash, role: 'USER' }
+      data: { username: un, passwordHash, role }
     });
 
     return NextResponse.json({
