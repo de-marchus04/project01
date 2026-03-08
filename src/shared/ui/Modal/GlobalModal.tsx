@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { modalService, ModalOptions } from "./modalService";
+import { useLanguage } from "@/shared/i18n/LanguageContext";
 
 export const GlobalModal = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -9,6 +10,7 @@ export const GlobalModal = () => {
   const [inputValue, setInputValue] = useState("");
   const [callback, setCallback] = useState<((result: any) => void) | null>(null);
   const dialogRef = useRef<HTMLDivElement>(null);
+  const { t } = useLanguage();
 
   useEffect(() => {
     modalService.setListener((opts, cb) => {
@@ -92,9 +94,9 @@ export const GlobalModal = () => {
           <div className="modal-content border-0 shadow-lg" style={{ borderRadius: '20px', backgroundColor: 'var(--color-surface)', overflow: 'hidden' }}>
             <div className="modal-header border-0 pb-0 pt-4 px-4 d-flex justify-content-center position-relative">
               <h5 id="global-modal-title" className="modal-title font-playfair fw-bold text-center w-100" style={{ color: 'var(--color-primary)', fontSize: '1.1rem' }}>
-                {options.title || (options.type === 'alert' ? 'Внимание' : 'Подтверждение')}
+                {options.title || (options.type === 'alert' ? t.modal.attention : t.modal.confirmation)}
               </h5>
-              <button type="button" className="btn-close position-absolute end-0 me-3" aria-label="Закрыть" style={{ top: '1.2rem', opacity: 0.4, filter: 'var(--bs-btn-close-white-filter, none)' }} onClick={handleCancel}></button>
+              <button type="button" className="btn-close position-absolute end-0 me-3" aria-label={t.modal.close} style={{ top: '1.2rem', opacity: 0.4, filter: 'var(--bs-btn-close-white-filter, none)' }} onClick={handleCancel}></button>
             </div>
             <div className="modal-body py-3 px-4 text-center">
               <p className="mb-0" style={{ whiteSpace: 'pre-wrap', color: 'var(--color-text-muted)', lineHeight: '1.5', fontSize: '0.9rem' }}>{options.message}</p>
@@ -119,11 +121,11 @@ export const GlobalModal = () => {
             <div className="modal-footer border-0 pt-0 pb-4 px-4 d-flex justify-content-center gap-2">
               {options.type !== 'alert' && (
                 <button type="button" className="btn rounded-pill px-4 py-2" onClick={handleCancel} style={{ border: '1px solid var(--color-border)', color: 'var(--color-text-muted)', fontSize: '0.85rem' }}>
-                  {options.cancelText || 'Отмена'}
+                  {options.cancelText || t.modal.cancel}
                 </button>
               )}
               <button type="button" className="btn btn-primary-custom rounded-pill px-5 py-2" onClick={handleConfirm} style={{ fontSize: '0.85rem' }}>
-                {options.confirmText || 'ОК'}
+                {options.confirmText || t.modal.ok}
               </button>
             </div>
           </div>

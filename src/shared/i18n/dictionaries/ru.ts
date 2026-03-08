@@ -379,7 +379,10 @@ export const ru = {
       "slideshowUploading": "Загрузка...",
       "slideshowUpload": "Загрузить фото",
       "slideshowSaveOrder": "Сохранить порядок",
-      "slideshowPageKeys": "Страница"
+      "slideshowPageKeys": "Страница",
+      "slideshowVideoHint": "Поддерживаются прямые ссылки на MP4/WebM видео",
+      "slideshowDefaultHint": "Пока нет слайдов — на странице отображаются изображения по умолчанию",
+      "slideshowHidden": "Скрыт"
   },
   contact: {
       "contactTitle": "Контакты",
@@ -411,6 +414,7 @@ export const ru = {
       "alertErrorTitle": "Ошибка",
       "alertErrorMsg": "Не удалось отправить сообщение. Попробуйте позже.",
       "alertAttention": "Внимание",
+      "alertInvalidEmail": "Введите корректный email адрес",
       "q1": "Как проходит онлайн-обучение?",
       "q2": "Можно ли заморозить курс?",
       "q3": "Что брать с собой на ретрит?",
@@ -668,5 +672,12 @@ programs: {
     title: "Что-то пошло не так",
     defaultMessage: "Произошла непредвиденная ошибка",
     retry: "Попробовать снова"
+  },
+  modal: {
+    attention: "Внимание",
+    confirmation: "Подтверждение",
+    close: "Закрыть",
+    cancel: "Отмена",
+    ok: "ОК"
   }
 };

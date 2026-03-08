@@ -25,9 +25,9 @@ export default function OrdersTab({ showToast, onOrdersLoaded }: Props) {
   useEffect(() => { loadOrders(); }, []);
 
   const translateStatus = (s: string) => {
-    if (s === 'В обработке') return t.admin.statusProcessing;
-    if (s === 'Принята') return t.admin.statusAccepted;
-    if (s === 'Отклонена') return t.admin.statusRejected;
+    if (s === 'PENDING') return t.admin.statusProcessing;
+    if (s === 'COMPLETED') return t.admin.statusAccepted;
+    if (s === 'CANCELLED') return t.admin.statusRejected;
     return s;
   };
 
@@ -71,7 +71,7 @@ export default function OrdersTab({ showToast, onOrdersLoaded }: Props) {
                 <td>{order.productName}</td>
                 <td>{formatPrice(order.price, lang)}</td>
                 <td>
-                  <span className={`badge ${order.status === 'Принята' ? 'bg-success' : order.status === 'Отклонена' ? 'bg-danger' : 'bg-warning text-dark'}`}>
+                  <span className={`badge ${order.status === 'COMPLETED' ? 'bg-success' : order.status === 'CANCELLED' ? 'bg-danger' : 'bg-warning text-dark'}`}>
                     {translateStatus(order.status)}
                   </span>
                 </td>
@@ -81,11 +81,11 @@ export default function OrdersTab({ showToast, onOrdersLoaded }: Props) {
                     value={order.status}
                     onChange={(e) => handleStatusChange(order.id, e.target.value)}
                   >
-                    <option value="В обработке">{t.admin.statusProcessing}</option>
-                    <option value="Принята">{t.admin.statusAcceptLabel}</option>
-                    <option value="Отклонена">{t.admin.statusRejectLabel}</option>
+                    <option value="PENDING">{t.admin.statusProcessing}</option>
+                    <option value="COMPLETED">{t.admin.statusAcceptLabel}</option>
+                    <option value="CANCELLED">{t.admin.statusRejectLabel}</option>
                   </select>
-                  {(order.status === 'Принята' || order.status === 'Отклонена') && (
+                  {(order.status === 'COMPLETED' || order.status === 'CANCELLED') && (
                     <button
                       className="btn btn-sm btn-outline-danger border-0"
                       onClick={() => handleDeleteOrder(order.id)}

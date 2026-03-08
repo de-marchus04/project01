@@ -389,7 +389,10 @@ export const uk = {
       "slideshowUploading": "Завантаження...",
       "slideshowUpload": "Завантажити фото",
       "slideshowSaveOrder": "Зберегти порядок",
-      "slideshowPageKeys": "Сторінка"
+      "slideshowPageKeys": "Сторінка",
+      "slideshowVideoHint": "Підтримуються прямі посилання на MP4/WebM відео",
+      "slideshowDefaultHint": "Ще немає слайдів — на сторінці відображаються зображення за замовчуванням",
+      "slideshowHidden": "Приховано"
   },
   contact: {
       "contactTitle": "Контакти",
@@ -421,6 +424,7 @@ export const uk = {
       "alertErrorTitle": "Помилка",
       "alertErrorMsg": "Не вдалося надіслати повідомлення. Спробуйте пізніше.",
       "alertAttention": "Увага",
+      "alertInvalidEmail": "Введіть коректну email адресу",
       "q1": "Як проходить онлайн-навчання?",
       "q2": "Чи можна заморозити курс?",
       "q3": "Що брати з собою на ретрит?",
@@ -678,5 +682,12 @@ programs: {
     title: "Щось пішло не так",
     defaultMessage: "Сталася непередбачена помилка",
     retry: "Спробувати знову"
+  },
+  modal: {
+    attention: "Увага",
+    confirmation: "Підтвердження",
+    close: "Закрити",
+    cancel: "Скасувати",
+    ok: "ОК"
   }
 };

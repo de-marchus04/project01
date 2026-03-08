@@ -7,6 +7,11 @@ export async function POST(request: Request) {
   // In production, only allow seeding with a valid Bearer token (no UI access)
   const isProduction = process.env.NODE_ENV === 'production';
 
+  // Completely block seed endpoint in production if SEED_SECRET is not configured
+  if (isProduction && !process.env.SEED_SECRET) {
+    return NextResponse.json({ error: "Seed endpoint is disabled in production" }, { status: 403 });
+  }
+
   const session = await auth();
   const isAdmin = session?.user?.role === "ADMIN";
 

@@ -218,7 +218,7 @@ export default function SlideshowTab({ showToast }: Props) {
             </button>
           </div>
           <p className="small mt-2 mb-0" style={{ color: "var(--color-text-muted)" }}>
-            Поддерживаются прямые ссылки на MP4/WebM видео
+            {t.admin.slideshowVideoHint}
           </p>
         </div>
       )}
@@ -233,7 +233,7 @@ export default function SlideshowTab({ showToast }: Props) {
           <i className="bi bi-images" style={{ fontSize: "3rem", opacity: 0.3 }}></i>
           <p className="mt-3">{t.admin.slideshowNoSlides}</p>
           <p className="small opacity-50">
-            Пока нет пользовательских слайдов — на странице отображаются изображения по умолчанию
+            {t.admin.slideshowDefaultHint}
           </p>
         </div>
       ) : (
@@ -299,7 +299,7 @@ export default function SlideshowTab({ showToast }: Props) {
                       onClick={() => handleToggleActive(slide)}
                     >
                       <i className={`bi ${slide.active ? "bi-eye" : "bi-eye-slash"} me-1`}></i>
-                      {slide.active ? t.admin.slideshowActive : "Скрыт"}
+                      {slide.active ? t.admin.slideshowActive : t.admin.slideshowHidden}
                     </button>
                     <button
                       className="btn btn-sm rounded-pill"

@@ -58,8 +58,8 @@ export default function Admin() {
     const serviceCounts: Record<string, number> = {};
 
     orders.forEach(order => {
-      if (order.status === 'Принята') earned += order.price;
-      if (order.status === 'В обработке') newReqs++;
+      if (order.status === 'COMPLETED') earned += order.price;
+      if (order.status === 'PENDING') newReqs++;
       if (order.productName) {
         serviceCounts[order.productName] = (serviceCounts[order.productName] || 0) + 1;
       }

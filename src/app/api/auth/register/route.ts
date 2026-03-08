@@ -8,13 +8,13 @@ import { rateLimit } from '@/shared/lib/rateLimit';
 const registerSchema = z.object({
   username: z
     .string()
-    .min(3, "Логин должен содержать минимум 3 символа")
-    .max(32, "Логин не должен превышать 32 символа")
-    .regex(/^[a-zA-Z0-9_]+$/, "Логин может содержать только буквы, цифры и _"),
+    .min(3, "USERNAME_TOO_SHORT")
+    .max(32, "USERNAME_TOO_LONG")
+    .regex(/^[a-zA-Z0-9_]+$/, "USERNAME_INVALID_CHARS"),
   password: z
     .string()
-    .min(6, "Пароль должен содержать минимум 6 символов")
-    .max(72, "Пароль не должен превышать 72 символа"),
+    .min(6, "PASSWORD_TOO_SHORT")
+    .max(72, "PASSWORD_TOO_LONG"),
 });
 
 export async function POST(req: Request) {
@@ -23,7 +23,7 @@ export async function POST(req: Request) {
     const rl = await rateLimit(`register:${ip}`, { windowMs: 600_000, max: 5 });
     if (!rl.success) {
       return NextResponse.json(
-        { error: 'Слишком много попыток регистрации. Попробуйте позже.' },
+        { error: 'RATE_LIMIT' },
         { status: 429 }
       );
     }
@@ -31,14 +31,14 @@ export async function POST(req: Request) {
     const body = await req.json();
     const parsed = registerSchema.safeParse(body);
     if (!parsed.success) {
-      const message = parsed.error.issues[0]?.message || 'Неверные данные';
+      const message = parsed.error.issues[0]?.message || 'INVALID_DATA';
       return NextResponse.json({ error: message }, { status: 400 });
     }
 
     const { username: un, password: pw } = parsed.data;
     const existingUser = await prisma.user.findUnique({ where: { username: un } });
     if (existingUser) {
-      return NextResponse.json({ error: 'Пользователь уже существует' }, { status: 400 });
+      return NextResponse.json({ error: 'USER_EXISTS' }, { status: 400 });
     }
 
     const passwordHash = await bcrypt.hash(pw, 10);
@@ -56,6 +56,6 @@ export async function POST(req: Request) {
       user: { username: user.username, role: user.role }
     }, { status: 201 });
   } catch (error) {
-    return NextResponse.json({ error: 'Внутренняя ошибка сервера' }, { status: 500 });
+    return NextResponse.json({ error: 'SERVER_ERROR' }, { status: 500 });
   }
 }

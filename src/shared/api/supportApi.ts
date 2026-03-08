@@ -23,7 +23,7 @@ export interface SupportMessage {
 export async function getMessages(): Promise<SupportMessage[]> {
   if (process.env.NEXT_RUNTIME === 'edge') { throw new Error('EDGE RUNTIME DETECTED IN SERVER ACTION'); }
   const session = await auth();
-  if ((session?.user)?.role !== 'ADMIN') throw new Error('Нет доступа');
+  if ((session?.user)?.role !== 'ADMIN') throw new Error('ACCESS_DENIED');
   const items = await prisma.supportTicket.findMany({ orderBy: { createdAt: 'desc' } });
 
   // Transform DB mapping
@@ -42,9 +42,9 @@ export async function getMessages(): Promise<SupportMessage[]> {
 export async function getUserMessages(email: string): Promise<SupportMessage[]> {
   const session = await auth();
   const sessionUser = session?.user;
-  if (!session?.user) throw new Error('Необходима авторизация');
+  if (!session?.user) throw new Error('AUTH_REQUIRED');
   // Users may only read their own messages; admins may read any
-  if (sessionUser?.role !== 'ADMIN' && sessionUser?.email !== email) throw new Error('Нет доступа');
+  if (sessionUser?.role !== 'ADMIN' && sessionUser?.email !== email) throw new Error('ACCESS_DENIED');
   const items = await prisma.supportTicket.findMany({
     where: { email },
     orderBy: { createdAt: 'desc' }
@@ -79,10 +79,10 @@ export async function sendMessage(
   const h = await headers();
   const ip = h.get('x-forwarded-for') || 'unknown';
   const rl = await rateLimit(`support:${ip}`, { windowMs: 600_000, max: 10 });
-  if (!rl.success) throw new Error('Слишком много запросов. Попробуйте позже.');
+  if (!rl.success) throw new Error('RATE_LIMIT');
 
   const parsed = sendMessageSchema.safeParse({ userName, userEmail, questionType, message });
-  if (!parsed.success) throw new Error(parsed.error.issues[0]?.message || 'Некорректные данные');
+  if (!parsed.success) throw new Error(parsed.error.issues[0]?.message || 'INVALID_DATA');
 
   const status = isBot ? 'CLOSED' : 'NEW';
 
@@ -123,7 +123,7 @@ export async function sendMessage(
 
 export async function replyToMessage(id: string, replyText: string): Promise<void> {
   const session = await auth();
-  if ((session?.user)?.role !== 'ADMIN') throw new Error('Нет доступа');
+  if ((session?.user)?.role !== 'ADMIN') throw new Error('ACCESS_DENIED');
   await prisma.supportTicket.update({
     where: { id },
     data: { status: 'CLOSED', reply: replyText }
@@ -143,7 +143,7 @@ export async function markAsRead(id: string): Promise<void> {
 
 export async function deleteMessage(id: string): Promise<void> {
   const session = await auth();
-  if ((session?.user)?.role !== 'ADMIN') throw new Error('Нет доступа');
+  if ((session?.user)?.role !== 'ADMIN') throw new Error('ACCESS_DENIED');
   try {
     await prisma.supportTicket.delete({ where: { id } });
   } catch (e) {

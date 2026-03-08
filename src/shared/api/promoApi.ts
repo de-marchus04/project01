@@ -13,14 +13,14 @@ export interface PromoResult {
 }
 
 export async function validatePromoCode(code: string, originalPrice: number): Promise<PromoResult> {
-  if (!code.trim()) return { valid: false, error: 'Введите промокод' };
+  if (!code.trim()) return { valid: false, error: 'PROMO_EMPTY' };
 
   const promo = await prisma.promoCode.findUnique({ where: { code: code.toUpperCase() } });
 
-  if (!promo) return { valid: false, error: 'Промокод не найден' };
-  if (!promo.isActive) return { valid: false, error: 'Промокод неактивен' };
-  if (promo.expiresAt && promo.expiresAt < new Date()) return { valid: false, error: 'Срок действия промокода истёк' };
-  if (promo.maxUses !== null && promo.usedCount >= promo.maxUses) return { valid: false, error: 'Промокод исчерпан' };
+  if (!promo) return { valid: false, error: 'PROMO_NOT_FOUND' };
+  if (!promo.isActive) return { valid: false, error: 'PROMO_INACTIVE' };
+  if (promo.expiresAt && promo.expiresAt < new Date()) return { valid: false, error: 'PROMO_EXPIRED' };
+  if (promo.maxUses !== null && promo.usedCount >= promo.maxUses) return { valid: false, error: 'PROMO_EXHAUSTED' };
 
   let finalPrice = originalPrice;
   if (promo.discountType === 'PERCENT') {
@@ -41,14 +41,14 @@ export async function validatePromoCode(code: string, originalPrice: number): Pr
 
 export async function applyPromoCode(codeId: string): Promise<void> {
   const session = await auth();
-  if (!session?.user) throw new Error('Необходима авторизация');
+  if (!session?.user) throw new Error('AUTH_REQUIRED');
 
   // Re-validate the promo code is still active before incrementing
   const promo = await prisma.promoCode.findUnique({ where: { id: codeId } });
-  if (!promo) throw new Error('Промокод не найден');
-  if (!promo.isActive) throw new Error('Промокод неактивен');
-  if (promo.expiresAt && promo.expiresAt < new Date()) throw new Error('Срок действия промокода истёк');
-  if (promo.maxUses !== null && promo.usedCount >= promo.maxUses) throw new Error('Промокод исчерпан');
+  if (!promo) throw new Error('PROMO_NOT_FOUND');
+  if (!promo.isActive) throw new Error('PROMO_INACTIVE');
+  if (promo.expiresAt && promo.expiresAt < new Date()) throw new Error('PROMO_EXPIRED');
+  if (promo.maxUses !== null && promo.usedCount >= promo.maxUses) throw new Error('PROMO_EXHAUSTED');
 
   await prisma.promoCode.update({
     where: { id: codeId },
@@ -59,7 +59,7 @@ export async function applyPromoCode(codeId: string): Promise<void> {
 // Admin CRUD
 export async function getPromoCodes() {
   const session = await auth();
-  if ((session?.user)?.role !== 'ADMIN') throw new Error('Нет доступа');
+  if ((session?.user)?.role !== 'ADMIN') throw new Error('ACCESS_DENIED');
   const codes = await prisma.promoCode.findMany({ orderBy: { createdAt: 'desc' } });
   return JSON.parse(JSON.stringify(codes));
 }
@@ -72,7 +72,7 @@ export async function createPromoCode(data: {
   expiresAt?: string;
 }) {
   const session = await auth();
-  if ((session?.user)?.role !== 'ADMIN') throw new Error('Нет доступа');
+  if ((session?.user)?.role !== 'ADMIN') throw new Error('ACCESS_DENIED');
   const promo = await prisma.promoCode.create({
     data: {
       code: data.code.toUpperCase(),
@@ -87,12 +87,12 @@ export async function createPromoCode(data: {
 
 export async function togglePromoCodeActive(id: string, isActive: boolean) {
   const session = await auth();
-  if ((session?.user)?.role !== 'ADMIN') throw new Error('Нет доступа');
+  if ((session?.user)?.role !== 'ADMIN') throw new Error('ACCESS_DENIED');
   await prisma.promoCode.update({ where: { id }, data: { isActive } });
 }
 
 export async function deletePromoCode(id: string) {
   const session = await auth();
-  if ((session?.user)?.role !== 'ADMIN') throw new Error('Нет доступа');
+  if ((session?.user)?.role !== 'ADMIN') throw new Error('ACCESS_DENIED');
   await prisma.promoCode.delete({ where: { id } });
 }

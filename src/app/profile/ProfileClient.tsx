@@ -39,12 +39,9 @@ export default function Profile() {
   );
 
   const translateOrderStatus = (s: string) => {
-    if (s === 'В обработке') return t.profile.orderStatusProcessing;
-    if (s === 'Принята') return t.profile.orderStatusAccepted;
-    if (s === 'Отклонена') return t.profile.orderStatusRejected;
-    if (s === 'Активен') return t.profile.orderStatusActive;
-    if (s === 'Отменен') return t.profile.orderStatusCancelled;
-    if (s === 'Завершен') return t.profile.orderStatusDone;
+    if (s === 'PENDING') return t.profile.orderStatusProcessing;
+    if (s === 'COMPLETED') return t.profile.orderStatusAccepted;
+    if (s === 'CANCELLED') return t.profile.orderStatusRejected;
     return s;
   };
 
@@ -90,8 +87,8 @@ export default function Profile() {
         setOrders(data);
 
         data.forEach(async order => {
-          if ((order.status === 'Принята' || order.status === 'Отклонена') && !order.notified) {
-            if (order.status === 'Принята') {
+          if ((order.status === 'COMPLETED' || order.status === 'CANCELLED') && !order.notified) {
+            if (order.status === 'COMPLETED') {
               showToast(t.profile.alertAccepted.replace("{product}", `"${order.productName}"`), 'success');
             } else {
               showToast(t.profile.alertRejected.replace("{product}", `"${order.productName}"`), 'error');
@@ -240,15 +237,14 @@ export default function Profile() {
 
     return orders.map(order => {
       const isCourse = !order.productName.toLowerCase().includes('консультация') && !order.productName.toLowerCase().includes('тур');
-      const isAccepted = order.status === 'Принята' || order.status === 'Активен';
-      const isRejected = order.status === 'Отклонена' || order.status === 'Отменен';
-      const isDone = order.status === 'Завершен';
+      const isAccepted = order.status === 'COMPLETED';
+      const isRejected = order.status === 'CANCELLED';
 
       return (
         <div key={order.id} className="col-md-6 col-lg-4">
           <div className="card h-100 shadow-sm border-0" style={{ borderRadius: '16px', backgroundColor: 'var(--color-card-bg)' }}>
             <div className="card-header border-bottom-0 pt-4 pb-0 d-flex justify-content-between align-items-center" style={{ backgroundColor: 'transparent' }}>
-              <span className={`badge ${isAccepted ? 'bg-success' : isRejected ? 'bg-danger' : isDone ? 'bg-secondary' : 'bg-warning text-dark'} rounded-pill px-3 py-2`}>
+              <span className={`badge ${isAccepted ? 'bg-success' : isRejected ? 'bg-danger' : 'bg-warning text-dark'} rounded-pill px-3 py-2`}>
                 {translateOrderStatus(order.status)}
               </span>
               <span className="badge rounded-pill px-3 py-2" style={{ backgroundColor: 'var(--color-surface)', color: 'var(--color-text)', border: '1px solid var(--color-border)' }}>
@@ -263,9 +259,9 @@ export default function Profile() {
               </p>
               <button
                 className="btn btn-outline-primary-custom w-100 rounded-pill fw-bold"
-                disabled={order.status === 'В обработке' || order.status === 'Отклонена'}
+                disabled={order.status === 'PENDING' || order.status === 'CANCELLED'}
               >
-                {order.status === 'В обработке' ? t.profile.btnWaitConfirm : order.status === 'Отклонена' ? t.profile.btnRejected : isCourse ? t.profile.btnContinueCourse : t.profile.btnRecordDetails}
+                {order.status === 'PENDING' ? t.profile.btnWaitConfirm : order.status === 'CANCELLED' ? t.profile.btnRejected : isCourse ? t.profile.btnContinueCourse : t.profile.btnRecordDetails}
               </button>
             </div>
           </div>

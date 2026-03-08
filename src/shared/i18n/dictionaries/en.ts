@@ -389,7 +389,10 @@ export const en = {
       "slideshowUploading": "Uploading...",
       "slideshowUpload": "Upload photo",
       "slideshowSaveOrder": "Save order",
-      "slideshowPageKeys": "Page"
+      "slideshowPageKeys": "Page",
+      "slideshowVideoHint": "Direct links to MP4/WebM videos are supported",
+      "slideshowDefaultHint": "No slides yet — default images are displayed on the page",
+      "slideshowHidden": "Hidden"
   },
   contact: {
       "contactTitle": "Contacts",
@@ -421,6 +424,7 @@ export const en = {
       "alertErrorTitle": "Error",
       "alertErrorMsg": "Failed to send message. Please try again later.",
       "alertAttention": "Attention",
+      "alertInvalidEmail": "Please enter a valid email address",
       "q1": "How does online training work?",
       "q2": "Can I freeze the course?",
       "q3": "What to bring to the retreat?",
@@ -678,5 +682,12 @@ programs: {
     title: "Something went wrong",
     defaultMessage: "An unexpected error occurred",
     retry: "Try again"
+  },
+  modal: {
+    attention: "Attention",
+    confirmation: "Confirmation",
+    close: "Close",
+    cancel: "Cancel",
+    ok: "OK"
   }
 };

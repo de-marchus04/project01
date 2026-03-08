@@ -8,7 +8,7 @@ export interface Order {
   id: string;
   productName: string;
   price: number;
-  status: string; // 'В обработке', 'Принята', 'Отклонена', 'Активен', 'Завершен'
+  status: string; // 'PENDING', 'COMPLETED', 'CANCELLED'
   date: string;
   customerName?: string;
   serviceId?: string;
@@ -20,23 +20,23 @@ export interface Order {
 export async function getOrders(): Promise<Order[]> {
   if (process.env.NEXT_RUNTIME === 'edge') { throw new Error('EDGE RUNTIME DETECTED IN SERVER ACTION'); }
   const session = await auth();
-  if ((session?.user)?.role !== 'ADMIN') throw new Error('Нет доступа');
+  if ((session?.user)?.role !== 'ADMIN') throw new Error('ACCESS_DENIED');
   const items = await prisma.order.findMany({
     include: { user: true },
     orderBy: { createdAt: 'desc' }
   });
 
   return JSON.parse(JSON.stringify(items.map(i => {
-    let mappedStatus = "В обработке";
-    if (i.status === 'COMPLETED') mappedStatus = "Принята";
-    if (i.status === 'CANCELLED') mappedStatus = "Отклонена";
+    let mappedStatus = "PENDING";
+    if (i.status === 'COMPLETED') mappedStatus = "COMPLETED";
+    if (i.status === 'CANCELLED') mappedStatus = "CANCELLED";
     return {
       id: i.id,
-      productName: i.productName || `Товар (${i.itemType})`,
+      productName: i.productName || `Product (${i.itemType})`,
       price: i.amount,
       status: mappedStatus,
       date: new Date(i.createdAt).toISOString().split('T')[0],
-      customerName: i.user ? i.user.username : (i.guestName || 'Гость'),
+      customerName: i.user ? i.user.username : (i.guestName || 'Guest'),
       serviceId: i.itemId,
       userId: i.userId || undefined,
       notified: i.notified
@@ -47,7 +47,7 @@ export async function getOrders(): Promise<Order[]> {
 export async function addOrder(
   productName: string,
   clientPrice: number,
-  customerName: string = "Гость",
+  customerName: string = "Guest",
   serviceId?: string,
   username?: string,
   itemType: 'COURSE' | 'CONSULTATION' | 'TOUR' = 'COURSE',
@@ -70,7 +70,7 @@ export async function addOrder(
       }
       if (dbItem) verifiedPrice = dbItem.price;
     } catch {
-      throw new Error('Не удалось проверить стоимость товара');
+      throw new Error('PRICE_VERIFY_FAILED');
     }
   }
 
@@ -124,17 +124,18 @@ export async function addOrder(
   }
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://yoga-platform-ruby.vercel.app';
-  const notesLine = notes ? `\n\nЖелаемая дата/время: ${notes}` : '';
 
   // Email confirmation to customer
   if (resolvedUserId) {
     try {
       const userRecord = await prisma.user.findUnique({ where: { id: resolvedUserId }, select: { email: true } });
       if (userRecord?.email) {
-        await emailService.sendEmail(
+        await emailService.sendOrderConfirmation(
           userRecord.email,
-          `Ваша заявка «${productName}» принята — YOGA.LIFE`,
-          `Здравствуйте!\n\nСпасибо за запись!\n\nМы получили вашу заявку на «${productName}» на сумму ${verifiedPrice} ₴.${notesLine}\n\nМенеджер свяжется с вами в ближайшее время для подтверждения.\n\nОтследить статус заявки: ${siteUrl}/profile\n\nС уважением, команда YOGA.LIFE`
+          productName,
+          verifiedPrice,
+          notes,
+          `${siteUrl}/profile`
         );
       }
     } catch (e) {
@@ -146,11 +147,14 @@ export async function addOrder(
   const adminEmail = process.env.ADMIN_NOTIFY_EMAIL;
   if (adminEmail) {
     try {
-      const buyer = resolvedUserId ? customerName : `${customerName} (гость)`;
-      await emailService.sendEmail(
+      const buyer = resolvedUserId ? customerName : `${customerName} (guest)`;
+      await emailService.sendAdminOrderNotification(
         adminEmail,
-        `Новая заявка: «${productName}» — YOGA.LIFE`,
-        `Новая заявка на платформе!\n\nПродукт: ${productName}\nКлиент: ${buyer}\nСумма: ${verifiedPrice} ₴${notesLine}\n\nУправление заявками: ${siteUrl}/admin`
+        productName,
+        buyer,
+        verifiedPrice,
+        notes,
+        `${siteUrl}/admin`
       );
     } catch (e) {
       console.warn('[addOrder] Admin notification email failed:', e);
@@ -161,7 +165,7 @@ export async function addOrder(
     id: newItem.id,
     productName,
     price: newItem.amount,
-    status: "В обработке",
+    status: "PENDING",
     date: new Date(newItem.createdAt).toISOString().split('T')[0],
     customerName,
     serviceId: newItem.itemId,
@@ -173,10 +177,10 @@ export async function addOrder(
 
 export async function updateOrderStatus(id: string, status: string): Promise<Order | undefined> {
   const session = await auth();
-  if ((session?.user)?.role !== 'ADMIN') throw new Error('Нет доступа');
+  if ((session?.user)?.role !== 'ADMIN') throw new Error('ACCESS_DENIED');
   let mappedStatus: any = 'PENDING';
-  if (status === 'Принята' || status === 'Завершен' || status === 'Активен') mappedStatus = 'COMPLETED';
-  if (status === 'Отклонена') mappedStatus = 'CANCELLED';
+  if (status === 'COMPLETED' || status === 'Принята' || status === 'Завершен' || status === 'Активен') mappedStatus = 'COMPLETED';
+  if (status === 'CANCELLED' || status === 'Отклонена') mappedStatus = 'CANCELLED';
 
   const updated = await prisma.order.update({
     where: { id },
@@ -186,21 +190,11 @@ export async function updateOrderStatus(id: string, status: string): Promise<Ord
 
   // Send status notification email
   const userEmail = (updated as any).user?.email;
-  const productName = (updated as any).productName || `Товар (${updated.itemType})`;
+  const productName = (updated as any).productName || `Product (${updated.itemType})`;
   if (userEmail) {
     try {
-      if (mappedStatus === 'COMPLETED') {
-        await emailService.sendEmail(
-          userEmail,
-          `Статус вашей заявки «${productName}» — YOGA.LIFE`,
-          `Здравствуйте!\n\nВаша заявка на «${productName}» принята. Менеджер свяжется с вами в ближайшее время.\n\nС уважением, команда YOGA.LIFE`
-        );
-      } else if (mappedStatus === 'CANCELLED') {
-        await emailService.sendEmail(
-          userEmail,
-          `Статус вашей заявки «${productName}» — YOGA.LIFE`,
-          `Здравствуйте!\n\nВаша заявка на «${productName}» была отклонена. Если у вас есть вопросы, свяжитесь с нами.\n\nС уважением, команда YOGA.LIFE`
-        );
+      if (mappedStatus === 'COMPLETED' || mappedStatus === 'CANCELLED') {
+        await emailService.sendOrderStatusUpdate(userEmail, productName, mappedStatus === 'COMPLETED');
       }
     } catch (e) {
       console.warn('[userApi] Email notification failed:', e);
@@ -228,11 +222,7 @@ export async function updateOrderStatus(id: string, status: string): Promise<Ord
           });
           if (userEmail) {
             try {
-              await emailService.sendEmail(
-                userEmail,
-                `Ваш подарочный промокод от YOGA.LIFE`,
-                `Здравствуйте!\n\nВы оформили ${completedCount} заявки на наши услуги. В знак благодарности дарим вам промокод на скидку 10%:\n\n${promoCode}\n\nПромокод действует 90 дней.\n\nС уважением, команда YOGA.LIFE`
-              );
+              await emailService.sendPromoCodeEmail(userEmail, promoCode, completedCount);
             } catch (e) {
               console.warn('[userApi] Promo email failed:', e);
             }
@@ -246,11 +236,11 @@ export async function updateOrderStatus(id: string, status: string): Promise<Ord
 
   return JSON.parse(JSON.stringify({
     id: updated.id,
-    productName: (updated as any).productName || `Товар (${updated.itemType})`,
+    productName: (updated as any).productName || `Product (${updated.itemType})`,
     price: updated.amount,
     status,
     date: new Date(updated.createdAt).toISOString().split('T')[0],
-    customerName: updated.user ? updated.user.username : 'Гость',
+    customerName: updated.user ? updated.user.username : 'Guest',
     serviceId: updated.itemId,
     userId: updated.userId,
     notified: updated.notified
@@ -259,7 +249,7 @@ export async function updateOrderStatus(id: string, status: string): Promise<Ord
 
 export async function deleteOrder(id: string): Promise<boolean> {
   const session = await auth();
-  if ((session?.user)?.role !== 'ADMIN') throw new Error('Нет доступа');
+  if ((session?.user)?.role !== 'ADMIN') throw new Error('ACCESS_DENIED');
   try {
     await prisma.order.delete({ where: { id } });
     return true;
@@ -271,7 +261,7 @@ export async function deleteOrder(id: string): Promise<boolean> {
 
 export async function markOrderAsNotified(id: string): Promise<void> {
   const session = await auth();
-  if ((session?.user)?.role !== 'ADMIN') throw new Error('Нет доступа');
+  if ((session?.user)?.role !== 'ADMIN') throw new Error('ACCESS_DENIED');
   await prisma.order.update({ where: { id }, data: { notified: true } });
 }
 
@@ -279,7 +269,7 @@ export async function markOrderAsNotified(id: string): Promise<void> {
 export async function getMyOrders(): Promise<Order[]> {
   if (process.env.NEXT_RUNTIME === 'edge') { throw new Error('EDGE RUNTIME DETECTED IN SERVER ACTION'); }
   const session = await auth();
-  if (!session?.user) throw new Error('Не авторизован');
+  if (!session?.user) throw new Error('AUTH_REQUIRED');
   const username = (session.user as any).username;
   const user = await prisma.user.findFirst({ where: { username } });
   if (!user) return [];
@@ -289,9 +279,9 @@ export async function getMyOrders(): Promise<Order[]> {
   });
   return JSON.parse(JSON.stringify(items.map(i => ({
     id: i.id,
-    productName: i.productName || `Товар (${i.itemType})`,
+    productName: i.productName || `Product (${i.itemType})`,
     price: i.amount,
-    status: i.status === 'COMPLETED' ? 'Принята' : i.status === 'CANCELLED' ? 'Отклонена' : 'В обработке',
+    status: i.status === 'COMPLETED' ? 'COMPLETED' : i.status === 'CANCELLED' ? 'CANCELLED' : 'PENDING',
     date: new Date(i.createdAt).toISOString().split('T')[0],
     customerName: username,
     serviceId: i.itemId,
@@ -304,12 +294,12 @@ export async function getMyOrders(): Promise<Order[]> {
 // For authenticated users: mark their own order as notified
 export async function markMyOrderAsNotified(id: string): Promise<void> {
   const session = await auth();
-  if (!session?.user) throw new Error('Не авторизован');
+  if (!session?.user) throw new Error('AUTH_REQUIRED');
   const username = (session.user as any).username;
   const user = await prisma.user.findFirst({ where: { username } });
-  if (!user) throw new Error('Пользователь не найден');
+  if (!user) throw new Error('USER_NOT_FOUND');
   // Only allow marking orders that belong to this user
   const order = await prisma.order.findFirst({ where: { id, userId: user.id } });
-  if (!order) throw new Error('Заявка не найдена');
+  if (!order) throw new Error('ORDER_NOT_FOUND');
   await prisma.order.update({ where: { id }, data: { notified: true } });
 }
