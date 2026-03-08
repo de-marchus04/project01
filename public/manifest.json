@@ -1,0 +1,19 @@
+{
+  "name": "YOGA.LIFE — Платформа для йоги",
+  "short_name": "YOGA.LIFE",
+  "description": "Онлайн-платформа для практики йоги с лучшими инструкторами мира",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f6f7f9",
+  "theme_color": "#7c3aed",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "categories": ["health", "fitness", "lifestyle"]
+}
