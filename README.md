@@ -16,9 +16,12 @@
 | Email | Resend |
 | Загрузка изображений | Cloudinary |
 | Деплой | Vercel (Frankfurt) |
-| Тестирование | Jest |
+| Тестирование | Jest (unit), Playwright (E2E) |
 | Валидация | Zod |
 | i18n | 3 языка: RU / UA / EN (кастомный контекст) |
+| Мониторинг | Sentry (ошибки), Web Vitals → GA4 |
+| Code Quality | ESLint, Prettier, Husky + lint-staged |
+| Анализ | @next/bundle-analyzer |
 
 ---
 
@@ -54,16 +57,22 @@ YogaPlatform/
 │   │   └── tour/             # Типы туров
 │   ├── shared/               # Переиспользуемый код
 │   │   ├── api/              # Server Actions и API-функции
+│   │   │   └── __tests__/    # Unit-тесты API (Jest)
+│   │   ├── context/          # Контексты (ThemeContext)
 │   │   ├── i18n/             # Языковой контекст и словари (ru/uk/en)
-│   │   ├── ui/               # Общие UI-компоненты (Modal, Pagination, BuyButton, ...)
-│   │   ├── lib/              # Утилиты (prisma-клиент, formatPrice, rateLimit, env)
+│   │   ├── ui/               # Общие UI-компоненты (Modal/, Pagination/, BuyButton/, ...)
+│   │   ├── lib/              # Утилиты (prisma, formatPrice, rateLimit, env)
 │   │   ├── hooks/            # Кастомные хуки
 │   │   └── config/           # Конфигурация навигации
-│   └── __tests__/            # Jest-тесты
+│   └── types/                # Глобальные TypeScript-декларации
+├── e2e/                      # Playwright E2E-тесты
 ├── auth.ts                   # Конфигурация NextAuth
 ├── middleware.ts             # Edge-middleware (защита роутов)
-├── next.config.ts
-├── jest.config.ts
+├── instrumentation.ts        # Sentry instrumentation
+├── sentry.*.config.ts        # Sentry (client / server / edge)
+├── next.config.ts            # Next.js + Bundle Analyzer + Sentry
+├── jest.config.ts            # Jest конфигурация
+├── playwright.config.ts      # Playwright конфигурация
 └── package.json
 ```
 
@@ -175,7 +184,8 @@ UPSTASH_REDIS_REST_TOKEN=
 npm test
 ```
 
-Тесты написаны на Jest и находятся в `src/__tests__/`.
+- **Unit-тесты** (Jest) — `src/shared/api/__tests__/` и `src/app/api/auth/register/__tests__/`
+- **E2E-тесты** (Playwright) — `e2e/smoke.spec.ts`
 
 ---
 
@@ -183,8 +193,8 @@ npm test
 
 GitHub Actions запускаются при пуше в `main` и при открытии Pull Request:
 
-- `lint` — проверка кода (`npm run lint`)
-- `test` — запуск тестов (`npm test`)
+- `lint` — проверка кода (`npm run lint`) + форматирование (`npm run format:check`)
+- `test` — запуск unit-тестов (`npm test`)
 - `build` — сборка проекта с PostgreSQL-сервисом (`npm run build`)
 
 Конфигурация: `.github/workflows/ci.yml`
