@@ -50,7 +50,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default withSentryConfig(withBundleAnalyzer(nextConfig), {
-  silent: true,
-  disableLogger: true,
-});
+export default withBundleAnalyzer(nextConfig);
