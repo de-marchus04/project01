@@ -66,4 +66,9 @@ jobs:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/YogaPlatformDb
           AUTH_SECRET: test-secret-for-ci
           AUTH_URL: http://localhost:3000
+          GOOGLE_CLIENT_ID: ci-dummy
+          GOOGLE_CLIENT_SECRET: ci-dummy
+          GITHUB_ID: ci-dummy
+          GITHUB_SECRET: ci-dummy
+          NEXT_PUBLIC_SITE_URL: http://localhost:3000
         run: npm run build

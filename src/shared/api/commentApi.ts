@@ -3,6 +3,7 @@
 import { prisma } from "@/shared/lib/prisma";
 import { rateLimit } from "@/shared/lib/rateLimit";
 import { auth } from "@/auth";
+import { headers } from "next/headers";
 
 export interface Comment {
   id: string;
@@ -37,10 +38,10 @@ export async function addComment(
   if (name.length > 100) throw new Error('Имя слишком длинное');
   if (text.length > 2000) throw new Error('Текст комментария слишком длинный');
 
-  const { headers } = await import('next/headers');
   const hdrs = await headers();
   const ip = hdrs.get('x-forwarded-for') ?? hdrs.get('x-real-ip') ?? 'unknown';
-  await rateLimit(`comment:${ip}`, { windowMs: 60_000, max: 5 });
+  const rl = await rateLimit(`comment:${ip}`, { windowMs: 60_000, max: 5 });
+  if (!rl.success) throw new Error('Слишком много комментариев. Попробуйте позже.');
 
   const created = await prisma.comment.create({
     data: {

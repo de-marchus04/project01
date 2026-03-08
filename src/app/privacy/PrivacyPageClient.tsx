@@ -1,7 +1,5 @@
 'use client';
 
-import { useLanguage } from '@/shared/i18n/LanguageContext';
-
 const sections = [
   {
     title: 'Збір інформації',
