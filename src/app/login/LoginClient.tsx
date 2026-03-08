@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { authApi } from '@/shared/api/authApi';
 import { requestPasswordReset } from '@/shared/api/authActions';
 import { useLanguage } from '@/shared/i18n/LanguageContext';
@@ -20,7 +20,16 @@ export default function Login() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [timeLeft, setTimeLeft] = useState('');
+
+  // Show error from NextAuth redirect (e.g. OAuth failure)
+  useEffect(() => {
+    const authError = searchParams.get('error');
+    if (authError) {
+      setError(t.login.errGeneric);
+    }
+  }, [searchParams, t.login.errGeneric]);
 
   // Rate Limiting (lock after 3 wrong attempts)
   const [attempts, setAttempts] = useState(0);
