@@ -327,3 +327,24 @@ model SiteSettings {
   studentsCount String   @default("10k+")
   updatedAt     DateTime @updatedAt
 }
+
+// -----------------------------------------------------------------------------
+// Слайды для героических секций страниц (управляются в админ-панели)
+// -----------------------------------------------------------------------------
+enum SlideMediaType {
+  IMAGE
+  VIDEO
+}
+
+model PageSlide {
+  id        String         @id @default(cuid())
+  pageKey   String         // "blog", "courses", "courses-beginners", "tours", etc.
+  url       String         // URL изображения или видео
+  mediaType SlideMediaType @default(IMAGE)
+  title     String?
+  sortOrder Int            @default(0)
+  active    Boolean        @default(true)
+  createdAt DateTime       @default(now())
+
+  @@index([pageKey, active])
+}

@@ -33,7 +33,7 @@ const sections = [
 
 export default function PrivacyPageClient() {
   return (
-    <main style={{ background: 'var(--color-bg)', minHeight: '60vh' }}>
+    <main style={{ background: 'var(--color-bg)', minHeight: '60vh', paddingTop: '80px' }}>
       <section className="py-5">
         <div className="container">
           <div className="row justify-content-center">

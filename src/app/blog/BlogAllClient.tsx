@@ -108,7 +108,7 @@ export default function BlogAllClient() {
         className="hero-section page-hero d-flex align-items-center text-center text-white position-relative"
         style={{ height: '60vh', minHeight: '500px', overflow: 'hidden' }}
       >
-        <HeroSlider images={[
+        <HeroSlider pageKey="blog" images={[
           "https://images.unsplash.com/photo-1544367563-12123d8965bf?q=80&w=2070&auto=format&fit=crop",
           "https://images.unsplash.com/photo-1599447421405-0753f5d1a5ca?q=80&w=2070&auto=format&fit=crop",
           "https://images.unsplash.com/photo-1575052814086-f385e2e2ad1b?q=80&w=2070&auto=format&fit=crop",

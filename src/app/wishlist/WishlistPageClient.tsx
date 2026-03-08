@@ -58,7 +58,7 @@ export default function WishlistPageClient() {
         className="hero-section page-hero d-flex align-items-center text-center text-white position-relative"
         style={{ height: '55vh', minHeight: '440px', overflow: 'hidden' }}
       >
-        <HeroSlider images={[
+        <HeroSlider pageKey="wishlist" images={[
           "https://images.unsplash.com/photo-1544367563-12123d8965bf?q=80&w=2070&auto=format&fit=crop",
           "https://images.unsplash.com/photo-1506126613408-eca07ce68773?q=80&w=2000&auto=format&fit=crop",
           "https://images.unsplash.com/photo-1599447421405-0753f5d1a5ca?q=80&w=2070&auto=format&fit=crop",
