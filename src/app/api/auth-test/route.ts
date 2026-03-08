@@ -2,16 +2,12 @@ export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 
 import { NextResponse } from 'next/server';
+import { handlers } from '@/auth';
 
-export async function GET() {
+export async function GET(req: Request) {
   try {
-    const authModule = await import('@/auth');
-    return NextResponse.json({
-      ok: true,
-      hasHandlers: !!authModule.handlers,
-      hasAuth: !!authModule.auth,
-      exports: Object.keys(authModule),
-    });
+    const resp = await handlers.GET(req);
+    return resp;
   } catch (e: any) {
     return NextResponse.json(
       {
