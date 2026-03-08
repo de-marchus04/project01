@@ -11,10 +11,10 @@ import { SectionHeader } from "@/shared/ui/SectionHeader/SectionHeader";
 import { Consultation } from "@/entities/consultation/model/types";
 
 const CATEGORIES = [
-  { key: 'all', label: null },
-  { key: 'private', labelKey: 'consultPrivate' },
-  { key: 'nutrition', labelKey: 'consultNutrition' },
-  { key: 'mentorship', labelKey: 'consultMentorship' },
+  { key: 'all', label: null, icon: 'bi-grid' },
+  { key: 'private', labelKey: 'consultPrivate', icon: 'bi-person' },
+  { key: 'nutrition', labelKey: 'consultNutrition', icon: 'bi-apple' },
+  { key: 'mentorship', labelKey: 'consultMentorship', icon: 'bi-mortarboard' },
 ] as const;
 
 type CategoryKey = 'all' | 'private' | 'nutrition' | 'mentorship';
@@ -105,12 +105,16 @@ export default function ConsultationsAllClient({ initialData }: { initialData: C
 
           {/* Category Tabs */}
           <div className="d-flex flex-wrap gap-2 justify-content-center mb-4 reveal-up" ref={observe as any}>
-            {CATEGORIES.map(({ key }) => (
+            {CATEGORIES.map(({ key, icon }) => (
               <button
                 key={key}
-                className={`btn rounded-pill px-4 ${activeCategory === key ? 'btn-primary' : 'btn-outline-secondary'}`}
+                className="btn rounded-pill px-4 py-2 d-flex align-items-center gap-2"
+                style={activeCategory === key
+                  ? { backgroundColor: 'var(--color-primary)', color: '#fff', border: '1px solid var(--color-primary)' }
+                  : { backgroundColor: 'transparent', color: 'var(--color-text)', border: '1px solid var(--color-border)' }}
                 onClick={() => setActiveCategory(key)}
               >
+                <i className={`bi ${icon}`}></i>
                 {categoryLabel(key)}
               </button>
             ))}

@@ -14,11 +14,11 @@ import { useScrollReveal } from "@/shared/hooks/useScrollReveal";
 import { SectionHeader } from "@/shared/ui/SectionHeader/SectionHeader";
 
 const CATEGORIES = [
-  { key: 'all', labelKey: 'all' },
-  { key: 'beginners', labelKey: 'beginners' },
-  { key: 'women', labelKey: 'women' },
-  { key: 'meditation', labelKey: 'meditation' },
-  { key: 'back', labelKey: 'back' },
+  { key: 'all', labelKey: 'all', icon: 'bi-grid' },
+  { key: 'beginners', labelKey: 'beginners', icon: 'bi-stars' },
+  { key: 'women', labelKey: 'women', icon: 'bi-heart' },
+  { key: 'meditation', labelKey: 'meditation', icon: 'bi-flower1' },
+  { key: 'back', labelKey: 'back', icon: 'bi-person-standing' },
 ] as const;
 
 type CategoryKey = typeof CATEGORIES[number]['key'];
@@ -134,12 +134,16 @@ export default function CoursesAllClient({ initialData }: { initialData: Paginat
 
           {/* Category Tabs */}
           <div className="d-flex flex-wrap gap-2 justify-content-center mb-4 reveal-up" ref={observe as any}>
-            {CATEGORIES.map(({ key }) => (
+            {CATEGORIES.map(({ key, icon }) => (
               <button
                 key={key}
-                className={`btn rounded-pill px-4 ${activeCategory === key ? 'btn-primary' : 'btn-outline-secondary'}`}
+                className="btn rounded-pill px-4 py-2 d-flex align-items-center gap-2"
+                style={activeCategory === key
+                  ? { backgroundColor: 'var(--color-primary)', color: '#fff', border: '1px solid var(--color-primary)' }
+                  : { backgroundColor: 'transparent', color: 'var(--color-text)', border: '1px solid var(--color-border)' }}
                 onClick={() => handleCategoryChange(key)}
               >
+                <i className={`bi ${icon}`}></i>
                 {categoryLabel(key)}
               </button>
             ))}
