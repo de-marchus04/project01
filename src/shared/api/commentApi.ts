@@ -1,8 +1,8 @@
 'use server';
 
-import prisma from "@/shared/lib/prisma";
+import { prisma } from "@/shared/lib/prisma";
 import { rateLimit } from "@/shared/lib/rateLimit";
-import { auth } from "@/app/api/auth/[...nextauth]/auth";
+import { auth } from "@/auth";
 
 export interface Comment {
   id: string;
@@ -17,7 +17,7 @@ export async function getComments(articleId: string): Promise<Comment[]> {
     where: { articleId },
     orderBy: { createdAt: 'asc' }
   });
-  return items.map(c => ({
+  return items.map((c: typeof items[number]) => ({
     id: c.id,
     articleId: c.articleId,
     name: c.name,
