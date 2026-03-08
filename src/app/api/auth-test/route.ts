@@ -6,7 +6,7 @@ import { handlers } from '@/auth';
 
 export async function GET(req: Request) {
   try {
-    const resp = await handlers.GET(req);
+    const resp = await handlers.GET(req as any);
     return resp;
   } catch (e: any) {
     return NextResponse.json(
