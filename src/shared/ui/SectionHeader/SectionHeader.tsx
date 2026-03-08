@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 interface SectionHeaderProps {
   badge?: string;
@@ -9,10 +9,7 @@ interface SectionHeaderProps {
 
 export function SectionHeader({ badge, title, subtitle, observe }: SectionHeaderProps) {
   return (
-    <div
-      className="text-center mb-5 reveal-up"
-      ref={observe as any}
-    >
+    <div className="text-center mb-5 reveal-up" ref={observe as any}>
       <svg
         width="60"
         height="24"

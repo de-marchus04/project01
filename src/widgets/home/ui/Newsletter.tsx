@@ -1,18 +1,18 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import { useSession } from "next-auth/react";
-import { useLanguage } from "@/shared/i18n/LanguageContext";
-import { emailService } from "@/shared/api/emailService";
-import { subscribeEmail, checkSubscription } from "@/shared/api/subscriberApi";
-import { modalService } from "@/shared/ui/Modal/modalService";
-import { useScrollReveal } from "@/shared/hooks/useScrollReveal";
+import { useState, useEffect } from 'react';
+import { useSession } from 'next-auth/react';
+import { useLanguage } from '@/shared/i18n/LanguageContext';
+import { emailService } from '@/shared/api/emailService';
+import { subscribeEmail, checkSubscription } from '@/shared/api/subscriberApi';
+import { modalService } from '@/shared/ui/Modal/modalService';
+import { useScrollReveal } from '@/shared/hooks/useScrollReveal';
 
 export const Newsletter = () => {
   const { t } = useLanguage();
   const { data: session } = useSession();
   const sessionUser = session?.user;
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isSubscribed, setIsSubscribed] = useState(false);
   const { observe } = useScrollReveal();
@@ -49,7 +49,7 @@ export const Newsletter = () => {
         setIsSubscribed(true);
       }
 
-      setEmail("");
+      setEmail('');
     } catch (error) {
       modalService.alert(t.footer.errorTitle, t.home.newsletterError);
     } finally {
@@ -72,7 +72,7 @@ export const Newsletter = () => {
         `,
         color: '#fff',
         position: 'relative',
-        overflow: 'hidden'
+        overflow: 'hidden',
       }}
     >
       {/* Плавающий лист — декоративный элемент */}
@@ -84,7 +84,7 @@ export const Newsletter = () => {
           right: '5%',
           top: '10%',
           opacity: 0.1,
-          pointerEvents: 'none'
+          pointerEvents: 'none',
         }}
       >
         <svg width="120" height="180" viewBox="0 0 120 180" fill="none">
@@ -92,9 +92,9 @@ export const Newsletter = () => {
             d="M60,170 C60,170 10,120 10,70 C10,40 35,10 60,10 C85,10 110,40 110,70 C110,120 60,170 60,170 Z"
             fill="white"
           />
-          <path d="M60,170 L60,10" stroke="white" strokeWidth="1.5" opacity="0.6"/>
-          <path d="M60,80 Q30,65 15,50" stroke="white" strokeWidth="1" opacity="0.5"/>
-          <path d="M60,100 Q90,85 105,70" stroke="white" strokeWidth="1" opacity="0.5"/>
+          <path d="M60,170 L60,10" stroke="white" strokeWidth="1.5" opacity="0.6" />
+          <path d="M60,80 Q30,65 15,50" stroke="white" strokeWidth="1" opacity="0.5" />
+          <path d="M60,100 Q90,85 105,70" stroke="white" strokeWidth="1" opacity="0.5" />
         </svg>
       </div>
 
@@ -123,7 +123,7 @@ export const Newsletter = () => {
                   backgroundColor: 'var(--color-newsletter-input)',
                   color: '#f5f0eb',
                   caretColor: '#f5f0eb',
-                  backdropFilter: 'blur(4px)'
+                  backdropFilter: 'blur(4px)',
                 }}
               />
               <button
@@ -142,4 +142,4 @@ export const Newsletter = () => {
       </div>
     </section>
   );
-}
+};

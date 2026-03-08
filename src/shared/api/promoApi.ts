@@ -1,7 +1,7 @@
-"use server";
+'use server';
 
-import { prisma } from "@/shared/lib/prisma";
-import { auth } from "@/auth";
+import { prisma } from '@/shared/lib/prisma';
+import { auth } from '@/auth';
 
 export interface PromoResult {
   valid: boolean;
@@ -52,14 +52,14 @@ export async function applyPromoCode(codeId: string): Promise<void> {
 
   await prisma.promoCode.update({
     where: { id: codeId },
-    data: { usedCount: { increment: 1 } }
+    data: { usedCount: { increment: 1 } },
   });
 }
 
 // Admin CRUD
 export async function getPromoCodes() {
   const session = await auth();
-  if ((session?.user)?.role !== 'ADMIN') throw new Error('ACCESS_DENIED');
+  if (session?.user?.role !== 'ADMIN') throw new Error('ACCESS_DENIED');
   const codes = await prisma.promoCode.findMany({ orderBy: { createdAt: 'desc' } });
   return JSON.parse(JSON.stringify(codes));
 }
@@ -72,7 +72,7 @@ export async function createPromoCode(data: {
   expiresAt?: string;
 }) {
   const session = await auth();
-  if ((session?.user)?.role !== 'ADMIN') throw new Error('ACCESS_DENIED');
+  if (session?.user?.role !== 'ADMIN') throw new Error('ACCESS_DENIED');
   const promo = await prisma.promoCode.create({
     data: {
       code: data.code.toUpperCase(),
@@ -80,19 +80,19 @@ export async function createPromoCode(data: {
       discountValue: data.discountValue,
       maxUses: data.maxUses || null,
       expiresAt: data.expiresAt ? new Date(data.expiresAt) : null,
-    }
+    },
   });
   return JSON.parse(JSON.stringify(promo));
 }
 
 export async function togglePromoCodeActive(id: string, isActive: boolean) {
   const session = await auth();
-  if ((session?.user)?.role !== 'ADMIN') throw new Error('ACCESS_DENIED');
+  if (session?.user?.role !== 'ADMIN') throw new Error('ACCESS_DENIED');
   await prisma.promoCode.update({ where: { id }, data: { isActive } });
 }
 
 export async function deletePromoCode(id: string) {
   const session = await auth();
-  if ((session?.user)?.role !== 'ADMIN') throw new Error('ACCESS_DENIED');
+  if (session?.user?.role !== 'ADMIN') throw new Error('ACCESS_DENIED');
   await prisma.promoCode.delete({ where: { id } });
 }

@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { usePurchase } from "@/shared/hooks/usePurchase";
-import { useLanguage } from "@/shared/i18n/LanguageContext";
+import { useState } from 'react';
+import { usePurchase } from '@/shared/hooks/usePurchase';
+import { useLanguage } from '@/shared/i18n/LanguageContext';
 
 interface BuyButtonProps {
   title: string;
@@ -15,7 +15,16 @@ interface BuyButtonProps {
   promoCodeId?: string;
 }
 
-export const BuyButton = ({ title, price, label, className, style, serviceId, itemType, promoCodeId }: BuyButtonProps) => {
+export const BuyButton = ({
+  title,
+  price,
+  label,
+  className,
+  style,
+  serviceId,
+  itemType,
+  promoCodeId,
+}: BuyButtonProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const { buyProduct } = usePurchase();
   const { tStr } = useLanguage();
@@ -33,16 +42,16 @@ export const BuyButton = ({ title, price, label, className, style, serviceId, it
     <button
       onClick={handleClick}
       disabled={isLoading}
-      className={className ?? "btn btn-primary-custom w-100 rounded-pill py-3 fw-bold fs-5"}
+      className={className ?? 'btn btn-primary-custom w-100 rounded-pill py-3 fw-bold fs-5'}
       style={style}
     >
       {isLoading ? (
         <>
           <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-          {tStr("Загрузка...")}
+          {tStr('Загрузка...')}
         </>
       ) : (
-        label ?? tStr("Записаться")
+        (label ?? tStr('Записаться'))
       )}
     </button>
   );

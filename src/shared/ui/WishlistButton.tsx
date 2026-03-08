@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { useState, useEffect, useTransition } from "react";
-import { useSession } from "next-auth/react";
-import { addToWishlist, removeFromWishlist, isInWishlist } from "@/shared/api/wishlistApi";
-import { useLanguage } from "@/shared/i18n/LanguageContext";
+import { useState, useEffect, useTransition } from 'react';
+import { useSession } from 'next-auth/react';
+import { addToWishlist, removeFromWishlist, isInWishlist } from '@/shared/api/wishlistApi';
+import { useLanguage } from '@/shared/i18n/LanguageContext';
 
 interface WishlistButtonProps {
   itemId: string;
@@ -41,7 +41,11 @@ export function WishlistButton({ itemId, itemType, size = 'md' }: WishlistButton
 
   return (
     <button
-      onClick={(e) => { e.preventDefault(); e.stopPropagation(); toggle(); }}
+      onClick={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        toggle();
+      }}
       disabled={isPending}
       title={inWishlist ? tStr('Удалить из избранного') : tStr('Добавить в избранное')}
       style={{

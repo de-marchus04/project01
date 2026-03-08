@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
-import { getPrivateConsultations } from "@/shared/api/consultationApi";
-import ConsultationsPrivateClient from "./ConsultationsPrivateClient";
+import { getPrivateConsultations } from '@/shared/api/consultationApi';
+import ConsultationsPrivateClient from './ConsultationsPrivateClient';
 
 export const revalidate = 3600;
 

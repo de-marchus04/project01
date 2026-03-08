@@ -1,9 +1,9 @@
 'use server';
 
-import { prisma } from "@/shared/lib/prisma";
-import { rateLimit } from "@/shared/lib/rateLimit";
-import { auth } from "@/auth";
-import { headers } from "next/headers";
+import { prisma } from '@/shared/lib/prisma';
+import { rateLimit } from '@/shared/lib/rateLimit';
+import { auth } from '@/auth';
+import { headers } from 'next/headers';
 
 export interface Comment {
   id: string;
@@ -16,22 +16,18 @@ export interface Comment {
 export async function getComments(articleId: string): Promise<Comment[]> {
   const items = await prisma.comment.findMany({
     where: { articleId },
-    orderBy: { createdAt: 'asc' }
+    orderBy: { createdAt: 'asc' },
   });
-  return items.map((c: typeof items[number]) => ({
+  return items.map((c: (typeof items)[number]) => ({
     id: c.id,
     articleId: c.articleId,
     name: c.name,
     text: c.text,
-    createdAt: new Date(c.createdAt).toISOString()
+    createdAt: new Date(c.createdAt).toISOString(),
   }));
 }
 
-export async function addComment(
-  articleId: string,
-  name: string,
-  text: string
-): Promise<Comment> {
+export async function addComment(articleId: string, name: string, text: string): Promise<Comment> {
   if (!articleId || !name?.trim() || !text?.trim()) {
     throw new Error('Все поля обязательны');
   }
@@ -47,8 +43,8 @@ export async function addComment(
     data: {
       articleId,
       name: name.trim(),
-      text: text.trim()
-    }
+      text: text.trim(),
+    },
   });
 
   return {
@@ -56,7 +52,7 @@ export async function addComment(
     articleId: created.articleId,
     name: created.name,
     text: created.text,
-    createdAt: new Date(created.createdAt).toISOString()
+    createdAt: new Date(created.createdAt).toISOString(),
   };
 }
 

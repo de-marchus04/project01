@@ -1,26 +1,26 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { authApi } from "@/shared/api/authApi";
-import { requestPasswordReset } from "@/shared/api/authActions";
-import { useLanguage } from "@/shared/i18n/LanguageContext";
-import { useTheme } from "@/shared/i18n/ThemeContext";
-import { signIn, getSession } from "next-auth/react";
-import { modalService } from "@/shared/ui/Modal/modalService";
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { authApi } from '@/shared/api/authApi';
+import { requestPasswordReset } from '@/shared/api/authActions';
+import { useLanguage } from '@/shared/i18n/LanguageContext';
+import { useTheme } from '@/shared/i18n/ThemeContext';
+import { signIn, getSession } from 'next-auth/react';
+import { modalService } from '@/shared/ui/Modal/modalService';
 
 export default function Login() {
   const { t } = useLanguage();
   const { theme } = useTheme();
   const [isRegisterMode, setIsRegisterMode] = useState(false);
   const [isForgotPasswordMode, setIsForgotPasswordMode] = useState(false);
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [forgotEmail, setForgotEmail] = useState("");
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [forgotEmail, setForgotEmail] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const [timeLeft, setTimeLeft] = useState("");
+  const [timeLeft, setTimeLeft] = useState('');
 
   // Rate Limiting (lock after 3 wrong attempts)
   const [attempts, setAttempts] = useState(0);
@@ -72,7 +72,7 @@ export default function Login() {
           setError(null);
           await modalService.alert('', t.login.forgotSuccess);
           setIsForgotPasswordMode(false);
-          setForgotEmail("");
+          setForgotEmail('');
         } else {
           setError(res.error || t.login.forgotError);
         }
@@ -82,12 +82,18 @@ export default function Login() {
       if (isRegisterMode) {
         await authApi.register(username, password);
         const res = await signIn('credentials', { redirect: false, username, password });
-        if (res?.error) { setError(res.error); return; }
+        if (res?.error) {
+          setError(res.error);
+          return;
+        }
         const session = await getSession();
-        router.push((session?.user)?.role === 'ADMIN' ? '/admin' : '/profile');
+        router.push(session?.user?.role === 'ADMIN' ? '/admin' : '/profile');
       } else {
         const res = await signIn('credentials', { redirect: false, username, password });
-        if (res?.error) { handleFailedAttempt(); return; }
+        if (res?.error) {
+          handleFailedAttempt();
+          return;
+        }
         localStorage.removeItem('yoga_login_attempts');
         const loginSession = await getSession();
         router.push((loginSession?.user as any)?.role === 'ADMIN' ? '/admin' : '/profile');
@@ -107,7 +113,7 @@ export default function Login() {
         setLockUntil(null);
         localStorage.removeItem('yoga_login_attempts');
         setAttempts(0);
-        setTimeLeft("");
+        setTimeLeft('');
         clearInterval(interval);
       } else {
         const diff = lockUntil - now;
@@ -134,11 +140,30 @@ export default function Login() {
 
   return (
     <main>
-      <section style={{ minHeight: "100vh", paddingTop: "120px", paddingBottom: "50px", background: "url('https://images.unsplash.com/photo-1545205597-3d9d02c29597?q=80&w=2070&auto=format&fit=crop') center/cover", display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <section
+        style={{
+          minHeight: '100vh',
+          paddingTop: '120px',
+          paddingBottom: '50px',
+          background:
+            "url('https://images.unsplash.com/photo-1545205597-3d9d02c29597?q=80&w=2070&auto=format&fit=crop') center/cover",
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
         <div className="container mt-5">
           <div className="row justify-content-center">
             <div className="col-md-6 col-lg-5">
-              <div className="card shadow-lg overflow-hidden" style={{ background: cardBg, backdropFilter: 'blur(10px)', border: '1px solid rgba(140, 154, 129, 0.2)', borderRadius: '24px' }}>
+              <div
+                className="card shadow-lg overflow-hidden"
+                style={{
+                  background: cardBg,
+                  backdropFilter: 'blur(10px)',
+                  border: '1px solid rgba(140, 154, 129, 0.2)',
+                  borderRadius: '24px',
+                }}
+              >
                 <div className="card-body p-5">
                   <div className="text-center mb-4">
                     <h2 className="font-playfair text-primary-custom">{getTitle()}</h2>
@@ -160,13 +185,21 @@ export default function Login() {
                   <form onSubmit={handleAuth}>
                     {isForgotPasswordMode ? (
                       <div className="mb-4">
-                        <label className="form-label fw-bold small text-uppercase" style={{ letterSpacing: '1px', color: 'var(--color-text-muted)' }}>
+                        <label
+                          className="form-label fw-bold small text-uppercase"
+                          style={{ letterSpacing: '1px', color: 'var(--color-text-muted)' }}
+                        >
                           {t.login.forgotEmailLabel}
                         </label>
                         <input
                           type="email"
                           className="form-control form-control-lg"
-                          style={{ border: '1px solid var(--color-border)', borderRadius: '12px', backgroundColor: 'var(--color-surface)', color: 'var(--color-text)' }}
+                          style={{
+                            border: '1px solid var(--color-border)',
+                            borderRadius: '12px',
+                            backgroundColor: 'var(--color-surface)',
+                            color: 'var(--color-text)',
+                          }}
                           value={forgotEmail}
                           onChange={(e) => setForgotEmail(e.target.value)}
                           placeholder="your@email.com"
@@ -177,13 +210,21 @@ export default function Login() {
                     ) : (
                       <>
                         <div className="mb-3">
-                          <label className="form-label fw-bold small text-uppercase" style={{ letterSpacing: '1px', color: 'var(--color-text-muted)' }}>
+                          <label
+                            className="form-label fw-bold small text-uppercase"
+                            style={{ letterSpacing: '1px', color: 'var(--color-text-muted)' }}
+                          >
                             {t.login.usernameLabel}
                           </label>
                           <input
                             type="text"
                             className="form-control form-control-lg"
-                            style={{ border: '1px solid var(--color-border)', borderRadius: '12px', backgroundColor: 'var(--color-surface)', color: 'var(--color-text)' }}
+                            style={{
+                              border: '1px solid var(--color-border)',
+                              borderRadius: '12px',
+                              backgroundColor: 'var(--color-surface)',
+                              color: 'var(--color-text)',
+                            }}
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
                             placeholder={t.login.usernamePlaceholder}
@@ -193,13 +234,21 @@ export default function Login() {
                         </div>
 
                         <div className="mb-4">
-                          <label className="form-label fw-bold small text-uppercase" style={{ letterSpacing: '1px', color: 'var(--color-text-muted)' }}>
+                          <label
+                            className="form-label fw-bold small text-uppercase"
+                            style={{ letterSpacing: '1px', color: 'var(--color-text-muted)' }}
+                          >
                             {t.login.passwordLabel}
                           </label>
                           <input
                             type="password"
                             className="form-control form-control-lg"
-                            style={{ border: '1px solid var(--color-border)', borderRadius: '12px', backgroundColor: 'var(--color-surface)', color: 'var(--color-text)' }}
+                            style={{
+                              border: '1px solid var(--color-border)',
+                              borderRadius: '12px',
+                              backgroundColor: 'var(--color-surface)',
+                              color: 'var(--color-text)',
+                            }}
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             placeholder={t.login.passwordPlaceholder}
@@ -218,11 +267,19 @@ export default function Login() {
                     >
                       {loading ? (
                         <>
-                          <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                          <span
+                            className="spinner-border spinner-border-sm me-2"
+                            role="status"
+                            aria-hidden="true"
+                          ></span>
                           {t.common.loading}
                         </>
+                      ) : isForgotPasswordMode ? (
+                        t.login.forgotBtn
+                      ) : isRegisterMode ? (
+                        t.login.regBtn
                       ) : (
-                        isForgotPasswordMode ? t.login.forgotBtn : (isRegisterMode ? t.login.regBtn : t.login.loginBtn)
+                        t.login.loginBtn
                       )}
                     </button>
                   </form>
@@ -233,7 +290,10 @@ export default function Login() {
                         type="button"
                         className="btn btn-link small"
                         style={{ color: 'var(--color-text-muted)' }}
-                        onClick={() => { setIsForgotPasswordMode(true); setError(null); }}
+                        onClick={() => {
+                          setIsForgotPasswordMode(true);
+                          setError(null);
+                        }}
                       >
                         {t.login.forgotPass}
                       </button>

@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { ru } from './dictionaries/ru';
@@ -32,29 +32,46 @@ export const LanguageProvider = ({ children }: { children: React.ReactNode }) =>
     }
   }, []);
 
-
   const tStr = (str: string): string => {
-    if (!str || lang === "ru") return str;
+    if (!str || lang === 'ru') return str;
     let result = str;
     if (mockTranslations[str] && (mockTranslations[str] as any)[lang]) {
       result = (mockTranslations[str] as any)[lang];
     }
-    
+
     if (result.includes('(Админ сайта)')) {
-       const translatedAdmin = (mockTranslations['Админ сайта'] as any)?.[lang] || 'Site Admin';
-       result = result.replace('(Админ сайта)', `(${translatedAdmin})`);
+      const translatedAdmin = (mockTranslations['Админ сайта'] as any)?.[lang] || 'Site Admin';
+      result = result.replace('(Админ сайта)', `(${translatedAdmin})`);
     }
-    
+
     return result;
   };
 
   const tData = <T extends Record<string, any>>(obj: T): T => {
     if (!obj || typeof obj !== 'object') return obj;
-    
+
     let newObj: any = { ...obj };
-    
+
     if (lang !== 'ru') {
-      const keys = ['title', 'description', 'subtitle', 'content', 'fullDescription', 'location', 'question', 'answer', 'date', 'tag', 'duration', 'category', 'author', 'text', 'name', 'course', 'features'];
+      const keys = [
+        'title',
+        'description',
+        'subtitle',
+        'content',
+        'fullDescription',
+        'location',
+        'question',
+        'answer',
+        'date',
+        'tag',
+        'duration',
+        'category',
+        'author',
+        'text',
+        'name',
+        'course',
+        'features',
+      ];
       for (const key of keys) {
         const val = newObj[key];
         if (typeof val === 'string') {
@@ -78,12 +95,10 @@ export const LanguageProvider = ({ children }: { children: React.ReactNode }) =>
     if (obj.translations && obj.translations[lang]) {
       newObj = { ...newObj, ...obj.translations[lang] };
     }
-    
+
     return newObj as T;
   };
 
-
-  
   const setLang = (newLang: Language) => {
     const overlay = document.createElement('div');
     overlay.className = 'lang-switch-overlay';

@@ -1,4 +1,4 @@
-export const dynamic = "force-dynamic";
+export const dynamic = 'force-dynamic';
 import { NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
 import { prisma } from '@/shared/lib/prisma';
@@ -8,13 +8,10 @@ import { rateLimit } from '@/shared/lib/rateLimit';
 const registerSchema = z.object({
   username: z
     .string()
-    .min(3, "USERNAME_TOO_SHORT")
-    .max(32, "USERNAME_TOO_LONG")
-    .regex(/^[a-zA-Z0-9_]+$/, "USERNAME_INVALID_CHARS"),
-  password: z
-    .string()
-    .min(6, "PASSWORD_TOO_SHORT")
-    .max(72, "PASSWORD_TOO_LONG"),
+    .min(3, 'USERNAME_TOO_SHORT')
+    .max(32, 'USERNAME_TOO_LONG')
+    .regex(/^[a-zA-Z0-9_]+$/, 'USERNAME_INVALID_CHARS'),
+  password: z.string().min(6, 'PASSWORD_TOO_SHORT').max(72, 'PASSWORD_TOO_LONG'),
 });
 
 export async function POST(req: Request) {
@@ -22,10 +19,7 @@ export async function POST(req: Request) {
     const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
     const rl = await rateLimit(`register:${ip}`, { windowMs: 600_000, max: 5 });
     if (!rl.success) {
-      return NextResponse.json(
-        { error: 'RATE_LIMIT' },
-        { status: 429 }
-      );
+      return NextResponse.json({ error: 'RATE_LIMIT' }, { status: 429 });
     }
 
     const body = await req.json();
@@ -45,16 +39,19 @@ export async function POST(req: Request) {
 
     // Hardcoded admin promotion: if username matches ADMIN_USERNAME env var, give ADMIN role
     const adminUsername = process.env.ADMIN_USERNAME;
-    const role = (adminUsername && un === adminUsername) ? 'ADMIN' : 'USER';
+    const role = adminUsername && un === adminUsername ? 'ADMIN' : 'USER';
 
     const user = await prisma.user.create({
-      data: { username: un, passwordHash, role }
+      data: { username: un, passwordHash, role },
     });
 
-    return NextResponse.json({
-      message: 'User created successfully',
-      user: { username: user.username, role: user.role }
-    }, { status: 201 });
+    return NextResponse.json(
+      {
+        message: 'User created successfully',
+        user: { username: user.username, role: user.role },
+      },
+      { status: 201 },
+    );
   } catch (error) {
     return NextResponse.json({ error: 'SERVER_ERROR' }, { status: 500 });
   }

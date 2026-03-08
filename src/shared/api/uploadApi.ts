@@ -1,17 +1,17 @@
-"use server";
+'use server';
 import { v2 as cloudinary } from 'cloudinary';
-import { auth } from "@/auth";
+import { auth } from '@/auth';
 
 // Configure explicitly or rely on CLOUDINARY_URL in .env
 cloudinary.config({
   cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET
+  api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
 export async function uploadImageToCloud(base64Image: string): Promise<string> {
   const session = await auth();
-  if ((session?.user)?.role !== 'ADMIN') throw new Error('Нет доступа');
+  if (session?.user?.role !== 'ADMIN') throw new Error('Нет доступа');
 
   // Validate: only allow image data URIs or HTTPS URLs
   if (base64Image.startsWith('data:')) {
@@ -23,19 +23,21 @@ export async function uploadImageToCloud(base64Image: string): Promise<string> {
   const isConfigured = process.env.CLOUDINARY_URL || process.env.CLOUDINARY_CLOUD_NAME;
 
   if (!isConfigured) {
-    console.warn("⚠️ Настройте реквизиты Cloudinary (CLOUDINARY_URL) в .env! Пока что сохраняем Base64 в БД (не рекомендуется для продакшена).");
+    console.warn(
+      '⚠️ Настройте реквизиты Cloudinary (CLOUDINARY_URL) в .env! Пока что сохраняем Base64 в БД (не рекомендуется для продакшена).',
+    );
     return base64Image; // Fallback to storing base64 so dev mode doesn't break
   }
 
   try {
     const result = await cloudinary.uploader.upload(base64Image, {
-      folder: "yoga-platform",
-      resource_type: "auto",
+      folder: 'yoga-platform',
+      resource_type: 'auto',
     });
     return result.secure_url;
   } catch (error) {
-    console.error("Cloudinary Upload Error:", error);
-    throw new Error("Failed to upload image to cloud storage");
+    console.error('Cloudinary Upload Error:', error);
+    throw new Error('Failed to upload image to cloud storage');
   }
 }
 
@@ -51,7 +53,7 @@ export interface CloudImage {
 
 export async function getCloudImages(): Promise<CloudImage[]> {
   const session = await auth();
-  if ((session?.user)?.role !== 'ADMIN') throw new Error('Access denied');
+  if (session?.user?.role !== 'ADMIN') throw new Error('Access denied');
 
   const isConfigured = process.env.CLOUDINARY_URL || process.env.CLOUDINARY_CLOUD_NAME;
   if (!isConfigured) return [];
@@ -73,20 +75,20 @@ export async function getCloudImages(): Promise<CloudImage[]> {
       created_at: r.created_at,
     }));
   } catch (error) {
-    console.error("Cloudinary list error:", error);
+    console.error('Cloudinary list error:', error);
     return [];
   }
 }
 
 export async function deleteCloudImage(publicId: string): Promise<boolean> {
   const session = await auth();
-  if ((session?.user)?.role !== 'ADMIN') throw new Error('Access denied');
+  if (session?.user?.role !== 'ADMIN') throw new Error('Access denied');
 
   try {
     await cloudinary.uploader.destroy(publicId);
     return true;
   } catch (error) {
-    console.error("Cloudinary delete error:", error);
+    console.error('Cloudinary delete error:', error);
     return false;
   }
 }

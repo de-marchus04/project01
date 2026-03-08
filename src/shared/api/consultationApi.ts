@@ -1,49 +1,51 @@
-"use server";
+'use server';
 
-import { prisma } from "@/shared/lib/prisma";
-import { auth } from "@/auth";
-import { z } from "zod";
-import { Consultation } from "@/entities/consultation/model/types";
+import { prisma } from '@/shared/lib/prisma';
+import { auth } from '@/auth';
+import { z } from 'zod';
+import { Consultation } from '@/entities/consultation/model/types';
 
 export async function getConsultationById(id: string): Promise<Consultation | undefined> {
-  if (process.env.NEXT_RUNTIME === 'edge') { throw new Error('EDGE RUNTIME DETECTED IN SERVER ACTION'); }
+  if (process.env.NEXT_RUNTIME === 'edge') {
+    throw new Error('EDGE RUNTIME DETECTED IN SERVER ACTION');
+  }
   const consultation = await prisma.consultation.findUnique({
-    where: { id }
+    where: { id },
   });
   return consultation ? JSON.parse(JSON.stringify(consultation)) : undefined;
 }
 
 export async function getPrivateConsultations(): Promise<Consultation[]> {
   const items = await prisma.consultation.findMany({
-    where: { category: { startsWith: 'private' } }
+    where: { category: { startsWith: 'private' } },
   });
   return JSON.parse(JSON.stringify(items));
 }
 
 export async function getNutritionConsultations(): Promise<Consultation[]> {
   const items = await prisma.consultation.findMany({
-    where: { category: { startsWith: 'nutrition' } }
+    where: { category: { startsWith: 'nutrition' } },
   });
   return JSON.parse(JSON.stringify(items));
 }
 
 export async function getMentorshipConsultations(): Promise<Consultation[]> {
   const items = await prisma.consultation.findMany({
-    where: { category: { startsWith: 'mentorship' } }
+    where: { category: { startsWith: 'mentorship' } },
   });
   return JSON.parse(JSON.stringify(items));
 }
 
 export async function getAllAdminConsultations(): Promise<Consultation[]> {
   const items = await prisma.consultation.findMany({
-    orderBy: { createdAt: 'desc' }
+    orderBy: { createdAt: 'desc' },
   });
   return JSON.parse(JSON.stringify(items));
 }
 
 export async function getAllConsultations(): Promise<Consultation[]> {
   const items = await prisma.consultation.findMany({
-    orderBy: { createdAt: 'desc' }
+    orderBy: { createdAt: 'desc' },
   });
   return JSON.parse(JSON.stringify(items));
 }
@@ -74,9 +76,12 @@ const updateConsultationSchema = z.object({
   category: z.string().max(100).optional(),
 });
 
-export async function addConsultation(consultationData: Omit<Consultation, 'id'>, category: string): Promise<Consultation> {
+export async function addConsultation(
+  consultationData: Omit<Consultation, 'id'>,
+  category: string,
+): Promise<Consultation> {
   const session = await auth();
-  if ((session?.user)?.role !== 'ADMIN') throw new Error('Нет доступа');
+  if (session?.user?.role !== 'ADMIN') throw new Error('Нет доступа');
   const parsedCategory = addConsultationCategorySchema.safeParse(category);
   if (!parsedCategory.success) throw new Error(parsedCategory.error.issues[0]?.message || 'Некорректная категория');
   const parsed = addConsultationSchema.safeParse(consultationData);
@@ -85,27 +90,29 @@ export async function addConsultation(consultationData: Omit<Consultation, 'id'>
     data: {
       ...parsed.data,
       category: parsedCategory.data,
-      
-    }
+    },
   });
   return JSON.parse(JSON.stringify(newItem));
 }
 
-export async function updateConsultation(id: string, updatedData: Partial<Consultation>): Promise<Consultation | undefined> {
+export async function updateConsultation(
+  id: string,
+  updatedData: Partial<Consultation>,
+): Promise<Consultation | undefined> {
   const session = await auth();
-  if ((session?.user)?.role !== 'ADMIN') throw new Error('Нет доступа');
+  if (session?.user?.role !== 'ADMIN') throw new Error('Нет доступа');
   const parsed = updateConsultationSchema.safeParse(updatedData);
   if (!parsed.success) throw new Error(parsed.error.issues[0]?.message || 'Некорректные данные');
   const updated = await prisma.consultation.update({
     where: { id },
-    data: parsed.data
+    data: parsed.data,
   });
   return JSON.parse(JSON.stringify(updated));
 }
 
 export async function deleteConsultation(id: string): Promise<boolean> {
   const session = await auth();
-  if ((session?.user)?.role !== 'ADMIN') throw new Error('Нет доступа');
+  if (session?.user?.role !== 'ADMIN') throw new Error('Нет доступа');
   try {
     await prisma.consultation.delete({ where: { id } });
     return true;

@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useEffect, useRef, useCallback } from "react";
+import { useEffect, useRef, useCallback } from 'react';
 
 interface ScrollRevealOptions {
   threshold?: number;
@@ -9,11 +9,7 @@ interface ScrollRevealOptions {
 }
 
 export const useScrollReveal = (options: ScrollRevealOptions = {}) => {
-  const {
-    threshold = 0.12,
-    rootMargin = "0px 0px -40px 0px",
-    once = true,
-  } = options;
+  const { threshold = 0.12, rootMargin = '0px 0px -40px 0px', once = true } = options;
 
   const observerRef = useRef<IntersectionObserver | null>(null);
   const elementsRef = useRef<Set<Element>>(new Set());
@@ -29,17 +25,17 @@ export const useScrollReveal = (options: ScrollRevealOptions = {}) => {
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            entry.target.classList.add("reveal-visible");
+            entry.target.classList.add('reveal-visible');
             if (once) {
               observerRef.current?.unobserve(entry.target);
               elementsRef.current.delete(entry.target);
             }
           } else if (!once) {
-            entry.target.classList.remove("reveal-visible");
+            entry.target.classList.remove('reveal-visible');
           }
         });
       },
-      { threshold, rootMargin }
+      { threshold, rootMargin },
     );
 
     elementsRef.current.forEach((el) => {

@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import { useLanguage } from "@/shared/i18n/LanguageContext";
-import { HeroSlider } from "@/shared/ui/HeroSlider/HeroSlider";
+import Link from 'next/link';
+import { useLanguage } from '@/shared/i18n/LanguageContext';
+import { HeroSlider } from '@/shared/ui/HeroSlider/HeroSlider';
 
 export const Hero = () => {
   const { t } = useLanguage();
@@ -20,9 +20,7 @@ export const Hero = () => {
       <div style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
         <HeroSlider
           pageKey="home"
-          images={[
-            'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?q=80&w=2020&auto=format&fit=crop',
-          ]}
+          images={['https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?q=80&w=2020&auto=format&fit=crop']}
           showOverlay={false}
         />
       </div>
@@ -43,7 +41,7 @@ export const Hero = () => {
             color: 'var(--color-accent)',
             letterSpacing: '2px',
             fontSize: '0.78rem',
-            border: '1px solid rgba(196,113,74,0.3)'
+            border: '1px solid rgba(196,113,74,0.3)',
           }}
         >
           {t.home.heroBadge}
@@ -54,12 +52,15 @@ export const Hero = () => {
             textShadow: '0 4px 30px rgba(20,18,14,0.5)',
             fontSize: 'clamp(2.8rem, 7vw, 5.5rem)',
             letterSpacing: '-1px',
-            lineHeight: '1.08'
+            lineHeight: '1.08',
           }}
         >
           {t.home.heroTitle}
         </h1>
-        <p className="lead mb-5 font-montserrat mx-auto" style={{ maxWidth: '700px', textShadow: '0 2px 15px rgba(0,0,0,0.3)' }}>
+        <p
+          className="lead mb-5 font-montserrat mx-auto"
+          style={{ maxWidth: '700px', textShadow: '0 2px 15px rgba(0,0,0,0.3)' }}
+        >
           {t.home.heroSubtitle}
         </p>
         <div className="d-flex gap-3 justify-content-center flex-wrap">
@@ -90,7 +91,7 @@ export const Hero = () => {
           left: 0,
           width: '100%',
           lineHeight: 0,
-          overflow: 'hidden'
+          overflow: 'hidden',
         }}
       >
         <svg
@@ -98,10 +99,7 @@ export const Hero = () => {
           preserveAspectRatio="none"
           style={{ display: 'block', width: '100%', height: '80px' }}
         >
-          <path
-            d="M0,40 C240,80 480,0 720,40 C960,80 1200,10 1440,40 L1440,80 L0,80 Z"
-            fill="var(--color-surface)"
-          />
+          <path d="M0,40 C240,80 480,0 720,40 C960,80 1200,10 1440,40 L1440,80 L0,80 Z" fill="var(--color-surface)" />
         </svg>
       </div>
     </header>

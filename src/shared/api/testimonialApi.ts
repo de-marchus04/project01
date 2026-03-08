@@ -1,12 +1,12 @@
-"use server";
+'use server';
 
-import { prisma } from "@/shared/lib/prisma";
-import { auth } from "@/auth";
-import { z } from "zod";
+import { prisma } from '@/shared/lib/prisma';
+import { auth } from '@/auth';
+import { z } from 'zod';
 
 async function requireAdmin(): Promise<void> {
   const session = await auth();
-  if ((session?.user)?.role !== 'ADMIN') throw new Error('Нет доступа');
+  if (session?.user?.role !== 'ADMIN') throw new Error('Нет доступа');
 }
 
 export interface Testimonial {
@@ -18,7 +18,9 @@ export interface Testimonial {
 }
 
 export async function getTestimonials(): Promise<Testimonial[]> {
-  if (process.env.NEXT_RUNTIME === 'edge') { throw new Error('EDGE RUNTIME DETECTED IN SERVER ACTION'); }
+  if (process.env.NEXT_RUNTIME === 'edge') {
+    throw new Error('EDGE RUNTIME DETECTED IN SERVER ACTION');
+  }
   const items = await prisma.testimonial.findMany({ orderBy: { createdAt: 'desc' } });
   return JSON.parse(JSON.stringify(items));
 }

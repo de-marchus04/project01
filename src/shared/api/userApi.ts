@@ -1,8 +1,8 @@
-"use server";
+'use server';
 
-import { prisma } from "@/shared/lib/prisma";
-import { auth } from "@/auth";
-import { emailService } from "@/shared/api/emailService";
+import { prisma } from '@/shared/lib/prisma';
+import { auth } from '@/auth';
+import { emailService } from '@/shared/api/emailService';
 
 export interface Order {
   id: string;
@@ -18,41 +18,47 @@ export interface Order {
 }
 
 export async function getOrders(): Promise<Order[]> {
-  if (process.env.NEXT_RUNTIME === 'edge') { throw new Error('EDGE RUNTIME DETECTED IN SERVER ACTION'); }
+  if (process.env.NEXT_RUNTIME === 'edge') {
+    throw new Error('EDGE RUNTIME DETECTED IN SERVER ACTION');
+  }
   const session = await auth();
-  if ((session?.user)?.role !== 'ADMIN') throw new Error('ACCESS_DENIED');
+  if (session?.user?.role !== 'ADMIN') throw new Error('ACCESS_DENIED');
   const items = await prisma.order.findMany({
     include: { user: true },
-    orderBy: { createdAt: 'desc' }
+    orderBy: { createdAt: 'desc' },
   });
 
-  return JSON.parse(JSON.stringify(items.map(i => {
-    let mappedStatus = "PENDING";
-    if (i.status === 'COMPLETED') mappedStatus = "COMPLETED";
-    if (i.status === 'CANCELLED') mappedStatus = "CANCELLED";
-    return {
-      id: i.id,
-      productName: i.productName || `Product (${i.itemType})`,
-      price: i.amount,
-      status: mappedStatus,
-      date: new Date(i.createdAt).toISOString().split('T')[0],
-      customerName: i.user ? i.user.username : (i.guestName || 'Guest'),
-      serviceId: i.itemId,
-      userId: i.userId || undefined,
-      notified: i.notified
-    };
-  })));
+  return JSON.parse(
+    JSON.stringify(
+      items.map((i) => {
+        let mappedStatus = 'PENDING';
+        if (i.status === 'COMPLETED') mappedStatus = 'COMPLETED';
+        if (i.status === 'CANCELLED') mappedStatus = 'CANCELLED';
+        return {
+          id: i.id,
+          productName: i.productName || `Product (${i.itemType})`,
+          price: i.amount,
+          status: mappedStatus,
+          date: new Date(i.createdAt).toISOString().split('T')[0],
+          customerName: i.user ? i.user.username : i.guestName || 'Guest',
+          serviceId: i.itemId,
+          userId: i.userId || undefined,
+          notified: i.notified,
+        };
+      }),
+    ),
+  );
 }
 
 export async function addOrder(
   productName: string,
   clientPrice: number,
-  customerName: string = "Guest",
+  customerName: string = 'Guest',
   serviceId?: string,
   username?: string,
   itemType: 'COURSE' | 'CONSULTATION' | 'TOUR' = 'COURSE',
   promoCodeId?: string,
-  notes?: string
+  notes?: string,
 ): Promise<Order> {
   const session = await auth();
 
@@ -78,9 +84,12 @@ export async function addOrder(
   if (promoCodeId) {
     try {
       const promo = await prisma.promoCode.findUnique({ where: { id: promoCodeId } });
-      if (promo && promo.isActive &&
-          (!promo.expiresAt || promo.expiresAt > new Date()) &&
-          (promo.maxUses === null || promo.usedCount < promo.maxUses)) {
+      if (
+        promo &&
+        promo.isActive &&
+        (!promo.expiresAt || promo.expiresAt > new Date()) &&
+        (promo.maxUses === null || promo.usedCount < promo.maxUses)
+      ) {
         if (promo.discountType === 'PERCENT') {
           verifiedPrice = Math.round(verifiedPrice * (1 - promo.discountValue / 100) * 100) / 100;
         } else {
@@ -94,7 +103,7 @@ export async function addOrder(
 
   // Resolve real user id
   let resolvedUserId: string | null = null;
-  const sessionUsername = (session?.user)?.username;
+  const sessionUsername = session?.user?.username;
   const effectiveUsername = username || sessionUsername;
   if (effectiveUsername) {
     const user = await prisma.user.findFirst({ where: { username: effectiveUsername } });
@@ -110,8 +119,8 @@ export async function addOrder(
       itemType,
       amount: verifiedPrice,
       status: 'PENDING',
-      ...(notes ? { notes } : {})
-    }
+      ...(notes ? { notes } : {}),
+    },
   });
 
   // Increment promo code usage counter after order is created
@@ -135,7 +144,7 @@ export async function addOrder(
           productName,
           verifiedPrice,
           notes,
-          `${siteUrl}/profile`
+          `${siteUrl}/profile`,
         );
       }
     } catch (e) {
@@ -154,38 +163,41 @@ export async function addOrder(
         buyer,
         verifiedPrice,
         notes,
-        `${siteUrl}/admin`
+        `${siteUrl}/admin`,
       );
     } catch (e) {
       console.warn('[addOrder] Admin notification email failed:', e);
     }
   }
 
-  return JSON.parse(JSON.stringify({
-    id: newItem.id,
-    productName,
-    price: newItem.amount,
-    status: "PENDING",
-    date: new Date(newItem.createdAt).toISOString().split('T')[0],
-    customerName,
-    serviceId: newItem.itemId,
-    userId: newItem.userId,
-    notified: newItem.notified,
-    notes: (newItem as any).notes
-  }));
+  return JSON.parse(
+    JSON.stringify({
+      id: newItem.id,
+      productName,
+      price: newItem.amount,
+      status: 'PENDING',
+      date: new Date(newItem.createdAt).toISOString().split('T')[0],
+      customerName,
+      serviceId: newItem.itemId,
+      userId: newItem.userId,
+      notified: newItem.notified,
+      notes: (newItem as any).notes,
+    }),
+  );
 }
 
 export async function updateOrderStatus(id: string, status: string): Promise<Order | undefined> {
   const session = await auth();
-  if ((session?.user)?.role !== 'ADMIN') throw new Error('ACCESS_DENIED');
+  if (session?.user?.role !== 'ADMIN') throw new Error('ACCESS_DENIED');
   let mappedStatus: any = 'PENDING';
-  if (status === 'COMPLETED' || status === 'Принята' || status === 'Завершен' || status === 'Активен') mappedStatus = 'COMPLETED';
+  if (status === 'COMPLETED' || status === 'Принята' || status === 'Завершен' || status === 'Активен')
+    mappedStatus = 'COMPLETED';
   if (status === 'CANCELLED' || status === 'Отклонена') mappedStatus = 'CANCELLED';
 
   const updated = await prisma.order.update({
     where: { id },
     data: { status: mappedStatus },
-    include: { user: true }
+    include: { user: true },
   });
 
   // Send status notification email
@@ -205,7 +217,7 @@ export async function updateOrderStatus(id: string, status: string): Promise<Ord
   if (mappedStatus === 'COMPLETED' && updated.userId) {
     try {
       const completedCount = await prisma.order.count({
-        where: { userId: updated.userId, status: 'COMPLETED' }
+        where: { userId: updated.userId, status: 'COMPLETED' },
       });
       if (completedCount === 3 || (completedCount > 3 && (completedCount - 3) % 10 === 0)) {
         const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -218,7 +230,14 @@ export async function updateOrderStatus(id: string, status: string): Promise<Ord
           const expiresAt = new Date();
           expiresAt.setDate(expiresAt.getDate() + 90);
           await prisma.promoCode.create({
-            data: { code: promoCode, discountType: 'PERCENT', discountValue: 10, maxUses: 1, expiresAt, isActive: true }
+            data: {
+              code: promoCode,
+              discountType: 'PERCENT',
+              discountValue: 10,
+              maxUses: 1,
+              expiresAt,
+              isActive: true,
+            },
           });
           if (userEmail) {
             try {
@@ -234,22 +253,24 @@ export async function updateOrderStatus(id: string, status: string): Promise<Ord
     }
   }
 
-  return JSON.parse(JSON.stringify({
-    id: updated.id,
-    productName: (updated as any).productName || `Product (${updated.itemType})`,
-    price: updated.amount,
-    status,
-    date: new Date(updated.createdAt).toISOString().split('T')[0],
-    customerName: updated.user ? updated.user.username : 'Guest',
-    serviceId: updated.itemId,
-    userId: updated.userId,
-    notified: updated.notified
-  }));
+  return JSON.parse(
+    JSON.stringify({
+      id: updated.id,
+      productName: (updated as any).productName || `Product (${updated.itemType})`,
+      price: updated.amount,
+      status,
+      date: new Date(updated.createdAt).toISOString().split('T')[0],
+      customerName: updated.user ? updated.user.username : 'Guest',
+      serviceId: updated.itemId,
+      userId: updated.userId,
+      notified: updated.notified,
+    }),
+  );
 }
 
 export async function deleteOrder(id: string): Promise<boolean> {
   const session = await auth();
-  if ((session?.user)?.role !== 'ADMIN') throw new Error('ACCESS_DENIED');
+  if (session?.user?.role !== 'ADMIN') throw new Error('ACCESS_DENIED');
   try {
     await prisma.order.delete({ where: { id } });
     return true;
@@ -261,13 +282,15 @@ export async function deleteOrder(id: string): Promise<boolean> {
 
 export async function markOrderAsNotified(id: string): Promise<void> {
   const session = await auth();
-  if ((session?.user)?.role !== 'ADMIN') throw new Error('ACCESS_DENIED');
+  if (session?.user?.role !== 'ADMIN') throw new Error('ACCESS_DENIED');
   await prisma.order.update({ where: { id }, data: { notified: true } });
 }
 
 // For authenticated users: get their own orders
 export async function getMyOrders(): Promise<Order[]> {
-  if (process.env.NEXT_RUNTIME === 'edge') { throw new Error('EDGE RUNTIME DETECTED IN SERVER ACTION'); }
+  if (process.env.NEXT_RUNTIME === 'edge') {
+    throw new Error('EDGE RUNTIME DETECTED IN SERVER ACTION');
+  }
   const session = await auth();
   if (!session?.user) throw new Error('AUTH_REQUIRED');
   const username = (session.user as any).username;
@@ -275,20 +298,24 @@ export async function getMyOrders(): Promise<Order[]> {
   if (!user) return [];
   const items = await prisma.order.findMany({
     where: { userId: user.id },
-    orderBy: { createdAt: 'desc' }
+    orderBy: { createdAt: 'desc' },
   });
-  return JSON.parse(JSON.stringify(items.map(i => ({
-    id: i.id,
-    productName: i.productName || `Product (${i.itemType})`,
-    price: i.amount,
-    status: i.status === 'COMPLETED' ? 'COMPLETED' : i.status === 'CANCELLED' ? 'CANCELLED' : 'PENDING',
-    date: new Date(i.createdAt).toISOString().split('T')[0],
-    customerName: username,
-    serviceId: i.itemId,
-    userId: i.userId ?? undefined,
-    notified: i.notified,
-    notes: (i as any).notes ?? undefined
-  }))));
+  return JSON.parse(
+    JSON.stringify(
+      items.map((i) => ({
+        id: i.id,
+        productName: i.productName || `Product (${i.itemType})`,
+        price: i.amount,
+        status: i.status === 'COMPLETED' ? 'COMPLETED' : i.status === 'CANCELLED' ? 'CANCELLED' : 'PENDING',
+        date: new Date(i.createdAt).toISOString().split('T')[0],
+        customerName: username,
+        serviceId: i.itemId,
+        userId: i.userId ?? undefined,
+        notified: i.notified,
+        notes: (i as any).notes ?? undefined,
+      })),
+    ),
+  );
 }
 
 // For authenticated users: mark their own order as notified

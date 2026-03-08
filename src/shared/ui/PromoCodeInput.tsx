@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { useState, useTransition } from "react";
-import { validatePromoCode, PromoResult } from "@/shared/api/promoApi";
-import { useLanguage } from "@/shared/i18n/LanguageContext";
+import { useState, useTransition } from 'react';
+import { validatePromoCode, PromoResult } from '@/shared/api/promoApi';
+import { useLanguage } from '@/shared/i18n/LanguageContext';
 
 interface PromoCodeInputProps {
   originalPrice: number;
@@ -40,11 +40,11 @@ export default function PromoCodeInput({ originalPrice, onApply, onClear }: Prom
           <input
             type="text"
             className="form-control rounded-start-pill"
-            placeholder={tStr("Промокод")}
+            placeholder={tStr('Промокод')}
             value={code}
-            onChange={e => setCode(e.target.value.toUpperCase())}
+            onChange={(e) => setCode(e.target.value.toUpperCase())}
             style={{ letterSpacing: '1px' }}
-            onKeyDown={e => e.key === 'Enter' && handleApply()}
+            onKeyDown={(e) => e.key === 'Enter' && handleApply()}
           />
           <button
             className="btn btn-outline-secondary rounded-end-pill"
@@ -52,7 +52,7 @@ export default function PromoCodeInput({ originalPrice, onApply, onClear }: Prom
             onClick={handleApply}
             disabled={isPending || !code.trim()}
           >
-            {isPending ? <span className="spinner-border spinner-border-sm"></span> : tStr("Применить")}
+            {isPending ? <span className="spinner-border spinner-border-sm"></span> : tStr('Применить')}
           </button>
         </div>
       ) : (
@@ -61,9 +61,7 @@ export default function PromoCodeInput({ originalPrice, onApply, onClear }: Prom
             <i className="bi bi-tag-fill text-success me-2"></i>
             <strong className="text-success">{code}</strong>
             <span className="text-muted small ms-2">
-              {result.discountType === 'PERCENT'
-                ? `−${result.discountValue}%`
-                : `−${result.discountValue} ₴`}
+              {result.discountType === 'PERCENT' ? `−${result.discountValue}%` : `−${result.discountValue} ₴`}
             </span>
           </div>
           <button className="btn btn-sm btn-link text-danger p-0" onClick={handleClear}>
@@ -74,7 +72,8 @@ export default function PromoCodeInput({ originalPrice, onApply, onClear }: Prom
 
       {result && !result.valid && (
         <div className="text-danger small mt-1">
-          <i className="bi bi-exclamation-circle me-1"></i>{result.error}
+          <i className="bi bi-exclamation-circle me-1"></i>
+          {result.error}
         </div>
       )}
     </div>

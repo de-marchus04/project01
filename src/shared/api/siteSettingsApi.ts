@@ -1,7 +1,7 @@
-"use server";
+'use server';
 
-import { prisma } from "@/shared/lib/prisma";
-import { auth } from "@/auth";
+import { prisma } from '@/shared/lib/prisma';
+import { auth } from '@/auth';
 
 export interface SiteSettingsData {
   addressLine: string;
@@ -16,8 +16,8 @@ export interface SiteSettingsData {
 
 export async function getSiteSettings(): Promise<SiteSettingsData> {
   const settings = await prisma.siteSettings.upsert({
-    where: { id: "singleton" },
-    create: { id: "singleton" },
+    where: { id: 'singleton' },
+    create: { id: 'singleton' },
     update: {},
   });
   return {
@@ -32,13 +32,15 @@ export async function getSiteSettings(): Promise<SiteSettingsData> {
   };
 }
 
-export async function updateSiteSettings(data: Partial<SiteSettingsData>): Promise<{ success: boolean; error?: string }> {
+export async function updateSiteSettings(
+  data: Partial<SiteSettingsData>,
+): Promise<{ success: boolean; error?: string }> {
   try {
     const session = await auth();
-    if ((session?.user)?.role !== 'ADMIN') return { success: false, error: 'Нет доступа' };
+    if (session?.user?.role !== 'ADMIN') return { success: false, error: 'Нет доступа' };
     await prisma.siteSettings.upsert({
-      where: { id: "singleton" },
-      create: { id: "singleton", ...data },
+      where: { id: 'singleton' },
+      create: { id: 'singleton', ...data },
       update: data,
     });
     return { success: true };

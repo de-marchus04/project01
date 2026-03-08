@@ -1,12 +1,12 @@
-"use server";
+'use server';
 
-import { prisma } from "@/shared/lib/prisma";
-import { auth } from "@/auth";
-import bcrypt from "bcryptjs";
-import { headers } from "next/headers";
-import { rateLimit } from "@/shared/lib/rateLimit";
-import { randomBytes } from "crypto";
-import { emailService } from "@/shared/api/emailService";
+import { prisma } from '@/shared/lib/prisma';
+import { auth } from '@/auth';
+import bcrypt from 'bcryptjs';
+import { headers } from 'next/headers';
+import { rateLimit } from '@/shared/lib/rateLimit';
+import { randomBytes } from 'crypto';
+import { emailService } from '@/shared/api/emailService';
 
 export interface UserProfile {
   id: string;
@@ -28,7 +28,7 @@ export async function getMyProfile(username: string): Promise<UserProfile | null
     }
     const user = await prisma.user.findUnique({
       where: { username },
-      select: { id: true, username: true, name: true, email: true, phone: true, avatar: true, role: true }
+      select: { id: true, username: true, name: true, email: true, phone: true, avatar: true, role: true },
     });
     if (!user) return null;
     return { ...user, role: user.role as string };
@@ -39,11 +39,11 @@ export async function getMyProfile(username: string): Promise<UserProfile | null
 
 export async function updateMyProfile(
   username: string,
-  data: { name?: string; email?: string; phone?: string; avatar?: string }
+  data: { name?: string; email?: string; phone?: string; avatar?: string },
 ): Promise<{ success: boolean; error?: string }> {
   try {
     const session = await auth();
-    const sessionUsername = (session?.user)?.username;
+    const sessionUsername = session?.user?.username;
     if (!session?.user || sessionUsername !== username) {
       return { success: false, error: 'ACCESS_DENIED' };
     }
@@ -54,7 +54,7 @@ export async function updateMyProfile(
         ...(data.email !== undefined && { email: data.email || null }),
         ...(data.phone !== undefined && { phone: data.phone || null }),
         ...(data.avatar !== undefined && { avatar: data.avatar }),
-      }
+      },
     });
     return { success: true };
   } catch (error: any) {
@@ -71,33 +71,33 @@ export async function changePassword(username: string, oldPassword: string, newP
     if (!rl.success) return { success: false, error: 'RATE_LIMIT' };
 
     const session = await auth();
-    const sessionUsername = (session?.user)?.username;
+    const sessionUsername = session?.user?.username;
     if (!session?.user || sessionUsername !== username) {
       return { success: false, error: 'ACCESS_DENIED' };
     }
     const user = await prisma.user.findUnique({
-      where: { username }
+      where: { username },
     });
 
     if (!user) {
-      return { success: false, error: "USER_NOT_FOUND" };
+      return { success: false, error: 'USER_NOT_FOUND' };
     }
 
     if (!user.passwordHash) {
-      return { success: false, error: "PASSWORD_NOT_SET" };
+      return { success: false, error: 'PASSWORD_NOT_SET' };
     }
 
     const passwordsMatch = await bcrypt.compare(oldPassword, user.passwordHash);
 
     if (!passwordsMatch) {
-      return { success: false, error: "WRONG_PASSWORD" };
+      return { success: false, error: 'WRONG_PASSWORD' };
     }
 
     const hashedNewPassword = await bcrypt.hash(newPassword, 10);
 
     await prisma.user.update({
       where: { username },
-      data: { passwordHash: hashedNewPassword }
+      data: { passwordHash: hashedNewPassword },
     });
 
     return { success: true };
@@ -125,18 +125,18 @@ export async function resetPassword(username: string, newPassword: string) {
     }
 
     const user = await prisma.user.findUnique({
-      where: { username }
+      where: { username },
     });
 
     if (!user) {
-      return { success: false, error: "USER_NOT_FOUND" };
+      return { success: false, error: 'USER_NOT_FOUND' };
     }
 
     const hashedNewPassword = await bcrypt.hash(newPassword, 10);
 
     await prisma.user.update({
       where: { username },
-      data: { passwordHash: hashedNewPassword }
+      data: { passwordHash: hashedNewPassword },
     });
 
     return { success: true };
@@ -174,7 +174,10 @@ export async function requestPasswordReset(email: string): Promise<{ success: bo
   }
 }
 
-export async function confirmPasswordReset(token: string, newPassword: string): Promise<{ success: boolean; error?: string }> {
+export async function confirmPasswordReset(
+  token: string,
+  newPassword: string,
+): Promise<{ success: boolean; error?: string }> {
   try {
     if (!newPassword || newPassword.length < 6) {
       return { success: false, error: 'PASSWORD_TOO_SHORT' };

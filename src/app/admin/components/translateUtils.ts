@@ -2,7 +2,7 @@ export const translateText = async (text: string, toLang: string): Promise<strin
   if (!text || typeof text !== 'string') return text;
   try {
     const res = await fetch(
-      `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=ru|${toLang}`
+      `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=ru|${toLang}`,
     );
     const data = await res.json();
     if (data?.responseData?.translatedText) {
@@ -16,8 +16,15 @@ export const translateText = async (text: string, toLang: string): Promise<strin
 
 export const translateObjectFields = async (obj: any): Promise<any> => {
   const fieldsToTranslate = [
-    'title', 'description', 'subtitle', 'content',
-    'fullDescription', 'features', 'question', 'answer', 'location',
+    'title',
+    'description',
+    'subtitle',
+    'content',
+    'fullDescription',
+    'features',
+    'question',
+    'answer',
+    'location',
   ];
   const translations: any = { en: {}, uk: {} };
   let hasText = false;

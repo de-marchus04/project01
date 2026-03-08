@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { useState, useEffect, useRef } from "react";
-import { usePathname } from "next/navigation";
+import { useState, useEffect, useRef } from 'react';
+import { usePathname } from 'next/navigation';
 
 export const LockoutTimer = () => {
   const [lockUntil, setLockUntil] = useState<number | null>(null);
@@ -72,7 +72,7 @@ export const LockoutTimer = () => {
       startX: clientX,
       startY: clientY,
       initialX: position.x,
-      initialY: position.y
+      initialY: position.y,
     };
   };
 
@@ -80,13 +80,13 @@ export const LockoutTimer = () => {
     if (!isDragging || !dragRef.current) return;
     const clientX = 'touches' in e ? e.touches[0].clientX : (e as MouseEvent).clientX;
     const clientY = 'touches' in e ? e.touches[0].clientY : (e as MouseEvent).clientY;
-    
+
     const dx = clientX - dragRef.current.startX;
     const dy = clientY - dragRef.current.startY;
-    
+
     setPosition({
       x: dragRef.current.initialX + dx,
-      y: dragRef.current.initialY + dy
+      y: dragRef.current.initialY + dy,
     });
   };
 
@@ -123,7 +123,7 @@ export const LockoutTimer = () => {
   };
 
   return (
-    <div 
+    <div
       style={{
         position: 'fixed',
         left: `${position.x}px`,
@@ -141,7 +141,7 @@ export const LockoutTimer = () => {
         userSelect: 'none',
         fontWeight: 'bold',
         transition: isDragging ? 'none' : 'background-color 0.3s ease',
-        touchAction: 'none'
+        touchAction: 'none',
       }}
       onMouseDown={handleMouseDown}
       onTouchStart={handleMouseDown}
@@ -149,7 +149,7 @@ export const LockoutTimer = () => {
       <i className={`bi ${isUnlocked ? 'bi-unlock-fill' : 'bi-lock-fill'}`} style={{ fontSize: '1.2rem' }}></i>
       <span>{isUnlocked ? 'Доступ открыт' : formatTime(timeLeft)}</span>
       {isUnlocked && (
-        <button 
+        <button
           onClick={(e) => {
             e.stopPropagation();
             setLockUntil(null);

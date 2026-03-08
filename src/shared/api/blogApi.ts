@@ -1,10 +1,10 @@
-"use server";
+'use server';
 
-import { prisma } from "@/shared/lib/prisma";
-import { auth } from "@/auth";
-import { z } from "zod";
-import { Prisma } from "@prisma/client";
-import { Article, Video, Podcast, Recipe } from "@/entities/blog/model/types";
+import { prisma } from '@/shared/lib/prisma';
+import { auth } from '@/auth';
+import { z } from 'zod';
+import { Prisma } from '@prisma/client';
+import { Article, Video, Podcast, Recipe } from '@/entities/blog/model/types';
 
 export interface PaginatedResponse<T> {
   data: T[];
@@ -15,8 +15,15 @@ export interface PaginatedResponse<T> {
 }
 
 // ----------------- ARTICLES -----------------
-export async function getArticles(page: number = 1, limit: number = 6, tag?: string | null, searchQuery?: string): Promise<PaginatedResponse<Article>> {
-  if (process.env.NEXT_RUNTIME === 'edge') { throw new Error('EDGE RUNTIME DETECTED IN SERVER ACTION'); }
+export async function getArticles(
+  page: number = 1,
+  limit: number = 6,
+  tag?: string | null,
+  searchQuery?: string,
+): Promise<PaginatedResponse<Article>> {
+  if (process.env.NEXT_RUNTIME === 'edge') {
+    throw new Error('EDGE RUNTIME DETECTED IN SERVER ACTION');
+  }
   const where: Prisma.ArticleWhereInput = {};
   if (tag) {
     where.tag = tag;
@@ -26,7 +33,7 @@ export async function getArticles(page: number = 1, limit: number = 6, tag?: str
     where.OR = [
       { title: { contains: query, mode: 'insensitive' } },
       { subtitle: { contains: query, mode: 'insensitive' } },
-      { content: { contains: query, mode: 'insensitive' } }
+      { content: { contains: query, mode: 'insensitive' } },
     ];
   }
 
@@ -37,26 +44,28 @@ export async function getArticles(page: number = 1, limit: number = 6, tag?: str
       where,
       skip,
       take: limit,
-      orderBy: { createdAt: 'desc' }
+      orderBy: { createdAt: 'desc' },
     }),
-    prisma.article.count({ where })
+    prisma.article.count({ where }),
   ]);
 
-  return JSON.parse(JSON.stringify({
-    data: items,
-    total,
-    page: safePage,
-    limit,
-    totalPages: Math.ceil(total / limit)
-  }));
+  return JSON.parse(
+    JSON.stringify({
+      data: items,
+      total,
+      page: safePage,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    }),
+  );
 }
 
 export async function getArticleTags(): Promise<string[]> {
   const items = await prisma.article.findMany({
     select: { tag: true },
-    distinct: ['tag']
+    distinct: ['tag'],
   });
-  return items.map(i => i.tag).filter(Boolean) as string[];
+  return items.map((i) => i.tag).filter(Boolean) as string[];
 }
 
 export async function getArticleById(id: string): Promise<Article | undefined> {
@@ -92,7 +101,7 @@ const updateArticleSchema = z.object({
 
 export async function addArticle(article: Omit<Article, 'id' | 'createdAt'>): Promise<Article> {
   const session = await auth();
-  if ((session?.user)?.role !== 'ADMIN') throw new Error('Нет доступа');
+  if (session?.user?.role !== 'ADMIN') throw new Error('Нет доступа');
   const parsed = addArticleSchema.safeParse(article);
   if (!parsed.success) throw new Error(parsed.error.issues[0]?.message || 'Некорректные данные');
   const item = await prisma.article.create({ data: parsed.data as any });
@@ -101,7 +110,7 @@ export async function addArticle(article: Omit<Article, 'id' | 'createdAt'>): Pr
 
 export async function updateArticle(id: string, updatedData: Partial<Article>): Promise<Article | undefined> {
   const session = await auth();
-  if ((session?.user)?.role !== 'ADMIN') throw new Error('Нет доступа');
+  if (session?.user?.role !== 'ADMIN') throw new Error('Нет доступа');
   const parsed = updateArticleSchema.safeParse(updatedData);
   if (!parsed.success) throw new Error(parsed.error.issues[0]?.message || 'Некорректные данные');
   const item = await prisma.article.update({ where: { id }, data: parsed.data as any });
@@ -110,11 +119,14 @@ export async function updateArticle(id: string, updatedData: Partial<Article>): 
 
 export async function deleteArticle(id: string): Promise<boolean> {
   const session = await auth();
-  if ((session?.user)?.role !== 'ADMIN') throw new Error('Нет доступа');
+  if (session?.user?.role !== 'ADMIN') throw new Error('Нет доступа');
   try {
     await prisma.article.delete({ where: { id } });
     return true;
-  } catch (e) { console.error('deleteArticle error:', e); return false; }
+  } catch (e) {
+    console.error('deleteArticle error:', e);
+    return false;
+  }
 }
 
 // ----------------- VIDEOS -----------------
@@ -141,7 +153,7 @@ const updateVideoSchema = z.object({
 
 export async function addVideo(video: Omit<Video, 'id'>): Promise<Video> {
   const session = await auth();
-  if ((session?.user)?.role !== 'ADMIN') throw new Error('Нет доступа');
+  if (session?.user?.role !== 'ADMIN') throw new Error('Нет доступа');
   const parsed = addVideoSchema.safeParse(video);
   if (!parsed.success) throw new Error(parsed.error.issues[0]?.message || 'Некорректные данные');
   const item = await prisma.video.create({ data: parsed.data as any });
@@ -150,7 +162,7 @@ export async function addVideo(video: Omit<Video, 'id'>): Promise<Video> {
 
 export async function updateVideo(id: string, data: Partial<Video>): Promise<Video | undefined> {
   const session = await auth();
-  if ((session?.user)?.role !== 'ADMIN') throw new Error('Нет доступа');
+  if (session?.user?.role !== 'ADMIN') throw new Error('Нет доступа');
   const parsed = updateVideoSchema.safeParse(data);
   if (!parsed.success) throw new Error(parsed.error.issues[0]?.message || 'Некорректные данные');
   const item = await prisma.video.update({ where: { id }, data: parsed.data as any });
@@ -159,10 +171,14 @@ export async function updateVideo(id: string, data: Partial<Video>): Promise<Vid
 
 export async function deleteVideo(id: string): Promise<boolean> {
   const session = await auth();
-  if ((session?.user)?.role !== 'ADMIN') throw new Error('Нет доступа');
+  if (session?.user?.role !== 'ADMIN') throw new Error('Нет доступа');
   try {
-    await prisma.video.delete({ where: { id } }); return true;
-  } catch (e) { console.error('deleteVideo error:', e); return false; }
+    await prisma.video.delete({ where: { id } });
+    return true;
+  } catch (e) {
+    console.error('deleteVideo error:', e);
+    return false;
+  }
 }
 
 // ----------------- PODCASTS -----------------
@@ -189,7 +205,7 @@ const updatePodcastSchema = z.object({
 
 export async function addPodcast(podcast: Omit<Podcast, 'id'>): Promise<Podcast> {
   const session = await auth();
-  if ((session?.user)?.role !== 'ADMIN') throw new Error('Нет доступа');
+  if (session?.user?.role !== 'ADMIN') throw new Error('Нет доступа');
   const parsed = addPodcastSchema.safeParse(podcast);
   if (!parsed.success) throw new Error(parsed.error.issues[0]?.message || 'Некорректные данные');
   const item = await prisma.podcast.create({ data: parsed.data as any });
@@ -198,7 +214,7 @@ export async function addPodcast(podcast: Omit<Podcast, 'id'>): Promise<Podcast>
 
 export async function updatePodcast(id: string, data: Partial<Podcast>): Promise<Podcast | undefined> {
   const session = await auth();
-  if ((session?.user)?.role !== 'ADMIN') throw new Error('Нет доступа');
+  if (session?.user?.role !== 'ADMIN') throw new Error('Нет доступа');
   const parsed = updatePodcastSchema.safeParse(data);
   if (!parsed.success) throw new Error(parsed.error.issues[0]?.message || 'Некорректные данные');
   const item = await prisma.podcast.update({ where: { id }, data: parsed.data as any });
@@ -207,10 +223,14 @@ export async function updatePodcast(id: string, data: Partial<Podcast>): Promise
 
 export async function deletePodcast(id: string): Promise<boolean> {
   const session = await auth();
-  if ((session?.user)?.role !== 'ADMIN') throw new Error('Нет доступа');
+  if (session?.user?.role !== 'ADMIN') throw new Error('Нет доступа');
   try {
-    await prisma.podcast.delete({ where: { id } }); return true;
-  } catch (e) { console.error('deletePodcast error:', e); return false; }
+    await prisma.podcast.delete({ where: { id } });
+    return true;
+  } catch (e) {
+    console.error('deletePodcast error:', e);
+    return false;
+  }
 }
 
 // ----------------- RECIPES -----------------
@@ -239,7 +259,7 @@ const updateRecipeSchema = z.object({
 
 export async function addRecipe(recipe: Omit<Recipe, 'id'>): Promise<Recipe> {
   const session = await auth();
-  if ((session?.user)?.role !== 'ADMIN') throw new Error('Нет доступа');
+  if (session?.user?.role !== 'ADMIN') throw new Error('Нет доступа');
   const parsed = addRecipeSchema.safeParse(recipe);
   if (!parsed.success) throw new Error(parsed.error.issues[0]?.message || 'Некорректные данные');
   const item = await prisma.recipe.create({ data: parsed.data as any });
@@ -248,7 +268,7 @@ export async function addRecipe(recipe: Omit<Recipe, 'id'>): Promise<Recipe> {
 
 export async function updateRecipe(id: string, data: Partial<Recipe>): Promise<Recipe | undefined> {
   const session = await auth();
-  if ((session?.user)?.role !== 'ADMIN') throw new Error('Нет доступа');
+  if (session?.user?.role !== 'ADMIN') throw new Error('Нет доступа');
   const parsed = updateRecipeSchema.safeParse(data);
   if (!parsed.success) throw new Error(parsed.error.issues[0]?.message || 'Некорректные данные');
   const item = await prisma.recipe.update({ where: { id }, data: parsed.data as any });
@@ -257,8 +277,12 @@ export async function updateRecipe(id: string, data: Partial<Recipe>): Promise<R
 
 export async function deleteRecipe(id: string): Promise<boolean> {
   const session = await auth();
-  if ((session?.user)?.role !== 'ADMIN') throw new Error('Нет доступа');
+  if (session?.user?.role !== 'ADMIN') throw new Error('Нет доступа');
   try {
-    await prisma.recipe.delete({ where: { id } }); return true;
-  } catch (e) { console.error('deleteRecipe error:', e); return false; }
+    await prisma.recipe.delete({ where: { id } });
+    return true;
+  } catch (e) {
+    console.error('deleteRecipe error:', e);
+    return false;
+  }
 }

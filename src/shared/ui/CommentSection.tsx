@@ -26,7 +26,7 @@ export default function CommentSection({ articleId }: Props) {
     startTransition(async () => {
       try {
         const comment = await addComment(articleId, name, text);
-        setComments(prev => [...prev, comment]);
+        setComments((prev) => [...prev, comment]);
         setName('');
         setText('');
         setSuccess(true);
@@ -42,22 +42,24 @@ export default function CommentSection({ articleId }: Props) {
         Комментарии ({comments.length})
       </h3>
 
-      {comments.length === 0 && (
-        <p className="text-muted mb-4">Будьте первым, кто оставит комментарий!</p>
-      )}
+      {comments.length === 0 && <p className="text-muted mb-4">Будьте первым, кто оставит комментарий!</p>}
 
-      {comments.map(c => (
+      {comments.map((c) => (
         <div key={c.id} className="card mb-3" style={{ border: '1px solid var(--color-border)' }}>
           <div className="card-body">
             <div className="d-flex justify-content-between align-items-center mb-2">
               <strong style={{ color: 'var(--color-primary)' }}>{c.name}</strong>
               <small className="text-muted">
                 {new Date(c.createdAt).toLocaleDateString('ru-RU', {
-                  day: '2-digit', month: 'long', year: 'numeric'
+                  day: '2-digit',
+                  month: 'long',
+                  year: 'numeric',
                 })}
               </small>
             </div>
-            <p className="mb-0" style={{ whiteSpace: 'pre-wrap' }}>{c.text}</p>
+            <p className="mb-0" style={{ whiteSpace: 'pre-wrap' }}>
+              {c.text}
+            </p>
           </div>
         </div>
       ))}
@@ -72,7 +74,7 @@ export default function CommentSection({ articleId }: Props) {
                 type="text"
                 className="form-control"
                 value={name}
-                onChange={e => setName(e.target.value)}
+                onChange={(e) => setName(e.target.value)}
                 required
                 maxLength={100}
                 disabled={isPending}
@@ -84,7 +86,7 @@ export default function CommentSection({ articleId }: Props) {
                 className="form-control"
                 rows={4}
                 value={text}
-                onChange={e => setText(e.target.value)}
+                onChange={(e) => setText(e.target.value)}
                 required
                 maxLength={2000}
                 disabled={isPending}

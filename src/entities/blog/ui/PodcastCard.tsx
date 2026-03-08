@@ -1,5 +1,5 @@
-import { Podcast } from "../model/types";
-import { useLanguage } from "@/shared/i18n/LanguageContext";
+import { Podcast } from '../model/types';
+import { useLanguage } from '@/shared/i18n/LanguageContext';
 
 interface PodcastCardProps {
   podcast: Podcast;
@@ -11,7 +11,10 @@ export const PodcastCard = ({ podcast }: PodcastCardProps) => {
   const localized_podcast = tData ? tData(podcast) : podcast;
   return (
     <div className="card shadow-sm border-0 p-4 d-flex flex-md-row align-items-center gap-4">
-      <div className="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0" style={{ width: '80px', height: '80px', backgroundColor: 'var(--color-primary)' }}>
+      <div
+        className="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0"
+        style={{ width: '80px', height: '80px', backgroundColor: 'var(--color-primary)' }}
+      >
         <i className="bi bi-mic-fill text-white fs-1"></i>
       </div>
       <div className="flex-grow-1 text-center text-md-start">
@@ -20,7 +23,12 @@ export const PodcastCard = ({ podcast }: PodcastCardProps) => {
       </div>
       <div className="d-flex flex-column align-items-center align-items-md-end gap-2">
         <span className="badge bg-light text-dark border">{localized_podcast.duration}</span>
-        <button className="btn rounded-pill btn-sm px-4" style={{ backgroundColor: 'var(--color-primary)', color: '#fff', border: 'none' }}>{tStr("Слушать")}</button>
+        <button
+          className="btn rounded-pill btn-sm px-4"
+          style={{ backgroundColor: 'var(--color-primary)', color: '#fff', border: 'none' }}
+        >
+          {tStr('Слушать')}
+        </button>
       </div>
     </div>
   );

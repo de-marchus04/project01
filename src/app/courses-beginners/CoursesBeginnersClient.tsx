@@ -1,17 +1,17 @@
-"use client";
+'use client';
 
-import { useLanguage } from "@/shared/i18n/LanguageContext";
-import { useEffect, useState, useRef } from "react";
-import Link from "next/link";
-import { Course } from "@/entities/course/model/types";
-import { CourseCard } from "@/entities/course/ui/CourseCard";
-import { usePurchase } from "@/shared/hooks/usePurchase";
-import { getBeginnersCourses } from "@/shared/api/courseApi";
-import { Pagination } from "@/shared/ui/Pagination";
-import { HeroSlider } from "@/shared/ui/HeroSlider/HeroSlider";
-import { PaginatedResponse } from "@/shared/api/blogApi";
-import { useScrollReveal } from "@/shared/hooks/useScrollReveal";
-import { SectionHeader } from "@/shared/ui/SectionHeader/SectionHeader";
+import { useLanguage } from '@/shared/i18n/LanguageContext';
+import { useEffect, useState, useRef } from 'react';
+import Link from 'next/link';
+import { Course } from '@/entities/course/model/types';
+import { CourseCard } from '@/entities/course/ui/CourseCard';
+import { usePurchase } from '@/shared/hooks/usePurchase';
+import { getBeginnersCourses } from '@/shared/api/courseApi';
+import { Pagination } from '@/shared/ui/Pagination';
+import { HeroSlider } from '@/shared/ui/HeroSlider/HeroSlider';
+import { PaginatedResponse } from '@/shared/api/blogApi';
+import { useScrollReveal } from '@/shared/hooks/useScrollReveal';
+import { SectionHeader } from '@/shared/ui/SectionHeader/SectionHeader';
 
 export default function CoursesBeginnersClient({ initialData }: { initialData: PaginatedResponse<Course> }) {
   const { t } = useLanguage();
@@ -71,27 +71,35 @@ export default function CoursesBeginnersClient({ initialData }: { initialData: P
         className="hero-section page-hero d-flex align-items-center text-center text-white position-relative"
         style={{ height: '60vh', minHeight: '500px', overflow: 'hidden' }}
       >
-        <HeroSlider pageKey="courses-beginners" images={[
-          "https://images.unsplash.com/photo-1599447421405-0753f5d1a5ca?q=80&w=2070&auto=format&fit=crop",
-          "https://images.unsplash.com/photo-1599901860904-17e6ed7083a0?q=80&w=2000&auto=format&fit=crop",
-          "https://images.unsplash.com/photo-1575052814086-f385e2e2ad1b?q=80&w=2070&auto=format&fit=crop",
-          "https://images.unsplash.com/photo-1506126613408-eca07ce68773?q=80&w=2000&auto=format&fit=crop",
-        ]} />
+        <HeroSlider
+          pageKey="courses-beginners"
+          images={[
+            'https://images.unsplash.com/photo-1599447421405-0753f5d1a5ca?q=80&w=2070&auto=format&fit=crop',
+            'https://images.unsplash.com/photo-1599901860904-17e6ed7083a0?q=80&w=2000&auto=format&fit=crop',
+            'https://images.unsplash.com/photo-1575052814086-f385e2e2ad1b?q=80&w=2070&auto=format&fit=crop',
+            'https://images.unsplash.com/photo-1506126613408-eca07ce68773?q=80&w=2000&auto=format&fit=crop',
+          ]}
+        />
         <div className="container position-relative z-2">
-          <span className="text-uppercase mb-3 d-block small fw-bold" style={{ letterSpacing: '2px', color: 'var(--color-secondary)' }}>{t.programs.labelCourse}</span>
-          <h1 className="display-3 font-playfair mb-4" style={{ textShadow: '0 4px 15px rgba(0,0,0,0.2)' }}>{t.programs.heroBeginnersTitle}</h1>
-          <p className="lead mb-5 col-lg-8 mx-auto fw-light" style={{ textShadow: '0 2px 10px rgba(0,0,0,0.2)' }}>{t.programs.heroBeginnersDesc}</p>
+          <span
+            className="text-uppercase mb-3 d-block small fw-bold"
+            style={{ letterSpacing: '2px', color: 'var(--color-secondary)' }}
+          >
+            {t.programs.labelCourse}
+          </span>
+          <h1 className="display-3 font-playfair mb-4" style={{ textShadow: '0 4px 15px rgba(0,0,0,0.2)' }}>
+            {t.programs.heroBeginnersTitle}
+          </h1>
+          <p className="lead mb-5 col-lg-8 mx-auto fw-light" style={{ textShadow: '0 2px 10px rgba(0,0,0,0.2)' }}>
+            {t.programs.heroBeginnersDesc}
+          </p>
         </div>
       </section>
 
       {/* CONTENT SECTION */}
       <section id="courses-content" className="py-5" style={{ backgroundColor: 'var(--color-bg)' }}>
         <div className="container py-5">
-          <SectionHeader
-            badge={t.programs.labelCourse}
-            title={t.programs.availablePrograms}
-            observe={observe}
-          />
+          <SectionHeader badge={t.programs.labelCourse} title={t.programs.availablePrograms} observe={observe} />
 
           {/* Search and Filter */}
           <div className="row mb-4 justify-content-center reveal-up" ref={observe as any}>
@@ -132,27 +140,27 @@ export default function CoursesBeginnersClient({ initialData }: { initialData: P
               </div>
             )}
 
-            {error && (
-              <div className="alert alert-warning text-center">{error}</div>
-            )}
+            {error && <div className="alert alert-warning text-center">{error}</div>}
 
             {!loading && !error && products.length === 0 && (
               <p className="text-center text-muted">{t.programs.noProducts}</p>
             )}
 
-            {!loading && !error && products.map((product, idx) => (
-              <div key={product.id} className={`col-md-6 col-lg-4 reveal-up reveal-delay-${idx % 3}`} ref={observe as any}>
-                <CourseCard course={product} onBuy={buyProduct} />
-              </div>
-            ))}
+            {!loading &&
+              !error &&
+              products.map((product, idx) => (
+                <div
+                  key={product.id}
+                  className={`col-md-6 col-lg-4 reveal-up reveal-delay-${idx % 3}`}
+                  ref={observe as any}
+                >
+                  <CourseCard course={product} onBuy={buyProduct} />
+                </div>
+              ))}
           </div>
 
           {!loading && !error && (
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={handlePageChange}
-            />
+            <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
           )}
         </div>
       </section>

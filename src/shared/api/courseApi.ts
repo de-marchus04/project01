@@ -1,10 +1,10 @@
-"use server";
-import { prisma } from "@/shared/lib/prisma";
-import { auth } from "@/auth";
-import { z } from "zod";
-import { Prisma } from "@prisma/client";
-import { Course } from "@/entities/course/model/types";
-import { PaginatedResponse } from "./blogApi";
+'use server';
+import { prisma } from '@/shared/lib/prisma';
+import { auth } from '@/auth';
+import { z } from 'zod';
+import { Prisma } from '@prisma/client';
+import { Course } from '@/entities/course/model/types';
+import { PaginatedResponse } from './blogApi';
 
 // Shared helper — eliminates duplicated pagination logic across category functions
 async function paginateCourses(
@@ -12,22 +12,20 @@ async function paginateCourses(
   page: number,
   limit: number,
   searchQuery: string,
-  sortBy: string
+  sortBy: string,
 ): Promise<PaginatedResponse<Course>> {
-  if (process.env.NEXT_RUNTIME === 'edge') { throw new Error('EDGE RUNTIME DETECTED IN SERVER ACTION'); }
+  if (process.env.NEXT_RUNTIME === 'edge') {
+    throw new Error('EDGE RUNTIME DETECTED IN SERVER ACTION');
+  }
 
   const where: Prisma.CourseWhereInput = { ...baseWhere };
   if (searchQuery) {
     const q = searchQuery.toLowerCase();
-    where.OR = [
-      { title: { contains: q, mode: 'insensitive' } },
-      { description: { contains: q, mode: 'insensitive' } },
-    ];
+    where.OR = [{ title: { contains: q, mode: 'insensitive' } }, { description: { contains: q, mode: 'insensitive' } }];
   }
 
   const orderBy: Prisma.CourseOrderByWithRelationInput =
-    sortBy === 'price_asc' ? { price: 'asc' } :
-    sortBy === 'price_desc' ? { price: 'desc' } : {};
+    sortBy === 'price_asc' ? { price: 'asc' } : sortBy === 'price_desc' ? { price: 'desc' } : {};
 
   const safePage = Math.max(1, page);
   const skip = (safePage - 1) * limit;
@@ -37,20 +35,22 @@ async function paginateCourses(
     prisma.course.count({ where }),
   ]);
 
-  return JSON.parse(JSON.stringify({
-    data: courses,
-    total,
-    page: safePage,
-    limit,
-    totalPages: Math.ceil(total / limit),
-  }));
+  return JSON.parse(
+    JSON.stringify({
+      data: courses,
+      total,
+      page: safePage,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    }),
+  );
 }
 
 export async function getBeginnersCourses(
   page: number = 1,
   limit: number = 6,
   searchQuery: string = '',
-  sortBy: string = 'default'
+  sortBy: string = 'default',
 ): Promise<PaginatedResponse<Course>> {
   return paginateCourses({ category: { startsWith: 'beginners' } }, page, limit, searchQuery, sortBy);
 }
@@ -60,7 +60,7 @@ export async function getAllCourses(
   limit: number = 9,
   searchQuery: string = '',
   sortBy: string = 'default',
-  category: string = 'all'
+  category: string = 'all',
 ): Promise<PaginatedResponse<Course>> {
   const baseWhere: Prisma.CourseWhereInput =
     category && category !== 'all' ? { category: { startsWith: category } } : {};
@@ -76,7 +76,7 @@ export async function getBackCoursesPaginated(
   page: number = 1,
   limit: number = 6,
   searchQuery: string = '',
-  sortBy: string = 'default'
+  sortBy: string = 'default',
 ): Promise<PaginatedResponse<Course>> {
   return paginateCourses({ category: { startsWith: 'back' } }, page, limit, searchQuery, sortBy);
 }
@@ -90,7 +90,7 @@ export async function getMeditationCoursesPaginated(
   page: number = 1,
   limit: number = 6,
   searchQuery: string = '',
-  sortBy: string = 'default'
+  sortBy: string = 'default',
 ): Promise<PaginatedResponse<Course>> {
   return paginateCourses({ category: { startsWith: 'meditation' } }, page, limit, searchQuery, sortBy);
 }
@@ -104,7 +104,7 @@ export async function getWomenCoursesPaginated(
   page: number = 1,
   limit: number = 6,
   searchQuery: string = '',
-  sortBy: string = 'default'
+  sortBy: string = 'default',
 ): Promise<PaginatedResponse<Course>> {
   return paginateCourses({ category: { startsWith: 'women' } }, page, limit, searchQuery, sortBy);
 }
@@ -146,7 +146,7 @@ const updateCourseSchema = z.object({
 
 export async function addCourse(courseData: Omit<Course, 'id'>, category: string): Promise<Course> {
   const session = await auth();
-  if ((session?.user)?.role !== 'ADMIN') throw new Error('Нет доступа');
+  if (session?.user?.role !== 'ADMIN') throw new Error('Нет доступа');
   const parsedCategory = addCourseCategorySchema.safeParse(category);
   if (!parsedCategory.success) throw new Error(parsedCategory.error.issues[0]?.message || 'Некорректная категория');
   const parsed = addCourseSchema.safeParse(courseData);
@@ -159,19 +159,19 @@ export async function addCourse(courseData: Omit<Course, 'id'>, category: string
 
 export async function updateCourse(id: string, updatedData: Partial<Course>): Promise<Course | undefined> {
   const session = await auth();
-  if ((session?.user)?.role !== 'ADMIN') throw new Error('Нет доступа');
+  if (session?.user?.role !== 'ADMIN') throw new Error('Нет доступа');
   const parsed = updateCourseSchema.safeParse(updatedData);
   if (!parsed.success) throw new Error(parsed.error.issues[0]?.message || 'Некорректные данные');
   const updated = await prisma.course.update({
     where: { id },
-    data: parsed.data
+    data: parsed.data,
   });
   return JSON.parse(JSON.stringify(updated));
 }
 
 export async function deleteCourse(id: string): Promise<boolean> {
   const session = await auth();
-  if ((session?.user)?.role !== 'ADMIN') throw new Error('Нет доступа');
+  if (session?.user?.role !== 'ADMIN') throw new Error('Нет доступа');
   try {
     await prisma.course.delete({ where: { id } });
     return true;

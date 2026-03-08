@@ -15,7 +15,13 @@ export const Skeleton: React.FC<SkeletonProps> = ({
 }) => (
   <div
     className={`placeholder-glow ${className}`}
-    style={{ width, height, borderRadius, backgroundColor: 'var(--color-border, #e0e0e0)', animation: 'placeholder-glow 2s ease-in-out infinite' }}
+    style={{
+      width,
+      height,
+      borderRadius,
+      backgroundColor: 'var(--color-border, #e0e0e0)',
+      animation: 'placeholder-glow 2s ease-in-out infinite',
+    }}
   >
     <span className="placeholder w-100 h-100" style={{ borderRadius, display: 'block' }} />
   </div>

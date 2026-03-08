@@ -17,8 +17,8 @@ export const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages,
     <nav aria-label="Page navigation" className="mt-5">
       <ul className="pagination justify-content-center">
         <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
-          <button 
-            className="page-link" 
+          <button
+            className="page-link"
             onClick={() => onPageChange(currentPage - 1)}
             disabled={currentPage === 1}
             style={{ color: 'var(--color-primary)', borderColor: 'var(--color-border)' }}
@@ -26,16 +26,16 @@ export const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages,
             {t.pagination.prev}
           </button>
         </li>
-        
-        {pages.map(page => (
+
+        {pages.map((page) => (
           <li key={page} className={`page-item ${currentPage === page ? 'active' : ''}`}>
-            <button 
-              className="page-link" 
+            <button
+              className="page-link"
               onClick={() => onPageChange(page)}
-              style={{ 
+              style={{
                 backgroundColor: currentPage === page ? 'var(--color-primary)' : 'transparent',
                 borderColor: 'var(--color-border)',
-                color: currentPage === page ? 'white' : 'var(--color-primary)'
+                color: currentPage === page ? 'white' : 'var(--color-primary)',
               }}
             >
               {page}
@@ -44,8 +44,8 @@ export const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages,
         ))}
 
         <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
-          <button 
-            className="page-link" 
+          <button
+            className="page-link"
             onClick={() => onPageChange(currentPage + 1)}
             disabled={currentPage === totalPages}
             style={{ color: 'var(--color-primary)', borderColor: 'var(--color-border)' }}

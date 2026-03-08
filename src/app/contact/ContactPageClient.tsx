@@ -1,14 +1,14 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import { useSession } from "next-auth/react";
-import { sendMessage } from "@/shared/api/supportApi";
-import { modalService } from "@/shared/ui/Modal/modalService";
-import { useLanguage } from "@/shared/i18n/LanguageContext";
-import { HeroSlider } from "@/shared/ui/HeroSlider/HeroSlider";
-import { useScrollReveal } from "@/shared/hooks/useScrollReveal";
-import { SectionHeader } from "@/shared/ui/SectionHeader/SectionHeader";
-import { getSiteSettings } from "@/shared/api/siteSettingsApi";
+import { useState, useEffect } from 'react';
+import { useSession } from 'next-auth/react';
+import { sendMessage } from '@/shared/api/supportApi';
+import { modalService } from '@/shared/ui/Modal/modalService';
+import { useLanguage } from '@/shared/i18n/LanguageContext';
+import { HeroSlider } from '@/shared/ui/HeroSlider/HeroSlider';
+import { useScrollReveal } from '@/shared/hooks/useScrollReveal';
+import { SectionHeader } from '@/shared/ui/SectionHeader/SectionHeader';
+import { getSiteSettings } from '@/shared/api/siteSettingsApi';
 
 export default function ContactPage() {
   const { t } = useLanguage();
@@ -21,11 +21,13 @@ export default function ContactPage() {
   const [displayPhone, setDisplayPhone] = useState(t.contact.phoneValue);
 
   useEffect(() => {
-    getSiteSettings().then(s => {
-      if (s.addressLine) setDisplayAddress(s.addressLine);
-      if (s.email) setDisplayEmail(s.email);
-      if (s.phone) setDisplayPhone(s.phone);
-    }).catch(() => {});
+    getSiteSettings()
+      .then((s) => {
+        if (s.addressLine) setDisplayAddress(s.addressLine);
+        if (s.email) setDisplayEmail(s.email);
+        if (s.phone) setDisplayPhone(s.phone);
+      })
+      .catch(() => {});
   }, []);
 
   const PREDEFINED_QUESTIONS = [
@@ -35,12 +37,12 @@ export default function ContactPage() {
     t.contact.q4,
     t.contact.q5,
     t.contact.q6,
-    t.contact.qCustom
+    t.contact.qCustom,
   ];
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
   const [questionType, setQuestionType] = useState(t.contact.q1);
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
@@ -60,7 +62,8 @@ export default function ContactPage() {
       return;
     }
 
-    const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*\.[a-zA-Z]{2,}$/;
+    const emailRegex =
+      /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*\.[a-zA-Z]{2,}$/;
     if (!emailRegex.test(email.trim())) {
       modalService.alert(t.contact.alertAttention, t.contact.alertInvalidEmail);
       return;
@@ -74,13 +77,7 @@ export default function ContactPage() {
 
     setIsSubmitting(true);
     try {
-      await sendMessage(
-        name,
-        email,
-        questionType,
-        isCustom ? message : questionType,
-        !isCustom
-      );
+      await sendMessage(name, email, questionType, isCustom ? message : questionType, !isCustom);
 
       if (isCustom) {
         await modalService.alert(t.contact.alertSuccessTitle, t.contact.alertSuccessMsg);
@@ -88,7 +85,7 @@ export default function ContactPage() {
         await modalService.alert(t.contact.alertBotTitle, t.contact.alertBotMsg);
       }
 
-      if (isCustom) setMessage("");
+      if (isCustom) setMessage('');
       setQuestionType(t.contact.q1);
     } catch (error) {
       modalService.alert(t.contact.alertErrorTitle, t.contact.alertErrorMsg);
@@ -104,59 +101,93 @@ export default function ContactPage() {
         className="hero-section page-hero d-flex align-items-center text-center text-white position-relative"
         style={{ height: '60vh', minHeight: '500px', overflow: 'hidden' }}
       >
-        <HeroSlider pageKey="contact" images={[
-          "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?q=80&w=2020&auto=format&fit=crop",
-          "https://images.unsplash.com/photo-1506126613408-eca07ce68773?q=80&w=2000&auto=format&fit=crop",
-          "https://images.unsplash.com/photo-1518611012118-696072aa579a?q=80&w=2000&auto=format&fit=crop",
-          "https://images.unsplash.com/photo-1575052814086-f385e2e2ad1b?q=80&w=2070&auto=format&fit=crop",
-        ]} />
+        <HeroSlider
+          pageKey="contact"
+          images={[
+            'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?q=80&w=2020&auto=format&fit=crop',
+            'https://images.unsplash.com/photo-1506126613408-eca07ce68773?q=80&w=2000&auto=format&fit=crop',
+            'https://images.unsplash.com/photo-1518611012118-696072aa579a?q=80&w=2000&auto=format&fit=crop',
+            'https://images.unsplash.com/photo-1575052814086-f385e2e2ad1b?q=80&w=2070&auto=format&fit=crop',
+          ]}
+        />
         <div className="container position-relative z-2">
-          <span className="text-uppercase mb-3 d-block small fw-bold" style={{ letterSpacing: '2px', color: 'var(--color-secondary)' }}>{t.contact.contactTitle}</span>
-          <h1 className="display-3 font-playfair mb-4" style={{ textShadow: '0 4px 15px rgba(0,0,0,0.2)' }}>{t.contact.contactTitle}</h1>
-          <p className="lead col-lg-8 mx-auto fw-light" style={{ textShadow: '0 2px 10px rgba(0,0,0,0.2)' }}>{t.contact.contactSubtitle}</p>
+          <span
+            className="text-uppercase mb-3 d-block small fw-bold"
+            style={{ letterSpacing: '2px', color: 'var(--color-secondary)' }}
+          >
+            {t.contact.contactTitle}
+          </span>
+          <h1 className="display-3 font-playfair mb-4" style={{ textShadow: '0 4px 15px rgba(0,0,0,0.2)' }}>
+            {t.contact.contactTitle}
+          </h1>
+          <p className="lead col-lg-8 mx-auto fw-light" style={{ textShadow: '0 2px 10px rgba(0,0,0,0.2)' }}>
+            {t.contact.contactSubtitle}
+          </p>
         </div>
       </section>
 
       <div className="container py-5">
-        <SectionHeader
-          badge={t.contact.contactTitle}
-          title={t.contact.sendMessage}
-          observe={observe}
-        />
+        <SectionHeader badge={t.contact.contactTitle} title={t.contact.sendMessage} observe={observe} />
 
         <div className="row justify-content-center g-5">
           <div className="col-lg-5 reveal-up" ref={observe as any}>
-            <div className="card border-0 shadow-sm rounded-4 h-100" style={{ backgroundColor: 'var(--color-surface)' }}>
+            <div
+              className="card border-0 shadow-sm rounded-4 h-100"
+              style={{ backgroundColor: 'var(--color-surface)' }}
+            >
               <div className="card-body p-5">
-                <h3 className="h4 font-playfair fw-bold mb-4" style={{ color: 'var(--color-text)' }}>{t.contact.contactUs}</h3>
+                <h3 className="h4 font-playfair fw-bold mb-4" style={{ color: 'var(--color-text)' }}>
+                  {t.contact.contactUs}
+                </h3>
 
                 <div className="d-flex align-items-center mb-4">
-                  <div className="p-3 rounded-circle me-3 d-flex align-items-center justify-content-center" style={{ backgroundColor: 'rgba(193, 166, 141, 0.15)', width: '50px', height: '50px' }}>
+                  <div
+                    className="p-3 rounded-circle me-3 d-flex align-items-center justify-content-center"
+                    style={{ backgroundColor: 'rgba(193, 166, 141, 0.15)', width: '50px', height: '50px' }}
+                  >
                     <i className="bi bi-geo-alt fs-4" style={{ color: 'var(--color-primary)' }}></i>
                   </div>
                   <div>
-                    <h5 className="mb-1" style={{ color: 'var(--color-text)' }}>{t.contact.addressTitle}</h5>
-                    <p className="mb-0" style={{ color: 'var(--color-text-muted)' }}>{displayAddress}</p>
+                    <h5 className="mb-1" style={{ color: 'var(--color-text)' }}>
+                      {t.contact.addressTitle}
+                    </h5>
+                    <p className="mb-0" style={{ color: 'var(--color-text-muted)' }}>
+                      {displayAddress}
+                    </p>
                   </div>
                 </div>
 
                 <div className="d-flex align-items-center mb-4">
-                  <div className="p-3 rounded-circle me-3 d-flex align-items-center justify-content-center" style={{ backgroundColor: 'rgba(193, 166, 141, 0.15)', width: '50px', height: '50px' }}>
+                  <div
+                    className="p-3 rounded-circle me-3 d-flex align-items-center justify-content-center"
+                    style={{ backgroundColor: 'rgba(193, 166, 141, 0.15)', width: '50px', height: '50px' }}
+                  >
                     <i className="bi bi-envelope fs-4" style={{ color: 'var(--color-primary)' }}></i>
                   </div>
                   <div>
-                    <h5 className="mb-1" style={{ color: 'var(--color-text)' }}>Email</h5>
-                    <p className="mb-0" style={{ color: 'var(--color-text-muted)' }}>{displayEmail}</p>
+                    <h5 className="mb-1" style={{ color: 'var(--color-text)' }}>
+                      Email
+                    </h5>
+                    <p className="mb-0" style={{ color: 'var(--color-text-muted)' }}>
+                      {displayEmail}
+                    </p>
                   </div>
                 </div>
 
                 <div className="d-flex align-items-center">
-                  <div className="p-3 rounded-circle me-3 d-flex align-items-center justify-content-center" style={{ backgroundColor: 'rgba(193, 166, 141, 0.15)', width: '50px', height: '50px' }}>
+                  <div
+                    className="p-3 rounded-circle me-3 d-flex align-items-center justify-content-center"
+                    style={{ backgroundColor: 'rgba(193, 166, 141, 0.15)', width: '50px', height: '50px' }}
+                  >
                     <i className="bi bi-telephone fs-4" style={{ color: 'var(--color-primary)' }}></i>
                   </div>
                   <div>
-                    <h5 className="mb-1" style={{ color: 'var(--color-text)' }}>{t.contact.phoneTitle}</h5>
-                    <p className="mb-0" style={{ color: 'var(--color-text-muted)' }}>{displayPhone}</p>
+                    <h5 className="mb-1" style={{ color: 'var(--color-text)' }}>
+                      {t.contact.phoneTitle}
+                    </h5>
+                    <p className="mb-0" style={{ color: 'var(--color-text-muted)' }}>
+                      {displayPhone}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -166,11 +197,15 @@ export default function ContactPage() {
           <div className="col-lg-7 reveal-up reveal-delay-1" ref={observe as any}>
             <div className="card border-0 shadow-sm rounded-4" style={{ backgroundColor: 'var(--color-surface)' }}>
               <div className="card-body p-5">
-                <h3 className="h4 font-playfair fw-bold mb-4" style={{ color: 'var(--color-text)' }}>{t.contact.sendMessage}</h3>
+                <h3 className="h4 font-playfair fw-bold mb-4" style={{ color: 'var(--color-text)' }}>
+                  {t.contact.sendMessage}
+                </h3>
                 <form onSubmit={handleSubmit}>
                   <div className="row g-3">
                     <div className="col-md-6">
-                      <label className="form-label" style={{ color: 'var(--color-text-muted)' }}>{t.contact.yourName}</label>
+                      <label className="form-label" style={{ color: 'var(--color-text-muted)' }}>
+                        {t.contact.yourName}
+                      </label>
                       <input
                         type="text"
                         className="form-control rounded-pill px-4"
@@ -182,7 +217,9 @@ export default function ContactPage() {
                       />
                     </div>
                     <div className="col-md-6">
-                      <label className="form-label" style={{ color: 'var(--color-text-muted)' }}>Email</label>
+                      <label className="form-label" style={{ color: 'var(--color-text-muted)' }}>
+                        Email
+                      </label>
                       <input
                         type="email"
                         className="form-control rounded-pill px-4"
@@ -195,7 +232,9 @@ export default function ContactPage() {
                     </div>
 
                     <div className="col-12">
-                      <label className="form-label" style={{ color: 'var(--color-text-muted)' }}>{t.contact.subject}</label>
+                      <label className="form-label" style={{ color: 'var(--color-text-muted)' }}>
+                        {t.contact.subject}
+                      </label>
                       <select
                         className="form-select rounded-pill px-4"
                         value={questionType}
@@ -203,14 +242,18 @@ export default function ContactPage() {
                         style={{ borderColor: 'rgba(193, 166, 141, 0.3)', cursor: 'pointer' }}
                       >
                         {PREDEFINED_QUESTIONS.map((q, i) => (
-                          <option key={i} value={q}>{q}</option>
+                          <option key={i} value={q}>
+                            {q}
+                          </option>
                         ))}
                       </select>
                     </div>
 
                     {questionType === t.contact.qCustom && (
                       <div className="col-12">
-                        <label className="form-label" style={{ color: 'var(--color-text-muted)' }}>{t.contact.messageLabel}</label>
+                        <label className="form-label" style={{ color: 'var(--color-text-muted)' }}>
+                          {t.contact.messageLabel}
+                        </label>
                         <textarea
                           className="form-control rounded-4 p-3"
                           rows={5}
@@ -255,16 +298,29 @@ export default function ContactPage() {
                 { q: t.contact.q1, a: t.contact.a1 },
                 { q: t.contact.q2, a: t.contact.a2 },
                 { q: t.contact.q3, a: t.contact.a3 },
-                { q: t.contact.q4, a: t.contact.a4 }
+                { q: t.contact.q4, a: t.contact.a4 },
               ].map((faq, i) => (
-                <div className="accordion-item border-0 mb-3 shadow-sm rounded-4 overflow-hidden reveal-up" key={i} ref={observe as any}>
+                <div
+                  className="accordion-item border-0 mb-3 shadow-sm rounded-4 overflow-hidden reveal-up"
+                  key={i}
+                  ref={observe as any}
+                >
                   <h2 className="accordion-header">
-                    <button className="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target={`#faq${i}`} style={{ backgroundColor: 'var(--color-surface)', color: 'var(--color-text)' }}>
+                    <button
+                      className="accordion-button collapsed fw-bold"
+                      type="button"
+                      data-bs-toggle="collapse"
+                      data-bs-target={`#faq${i}`}
+                      style={{ backgroundColor: 'var(--color-surface)', color: 'var(--color-text)' }}
+                    >
                       {faq.q}
                     </button>
                   </h2>
                   <div id={`faq${i}`} className="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-                    <div className="accordion-body" style={{ backgroundColor: 'var(--color-surface)', color: 'var(--color-text-muted)' }}>
+                    <div
+                      className="accordion-body"
+                      style={{ backgroundColor: 'var(--color-surface)', color: 'var(--color-text-muted)' }}
+                    >
                       {faq.a}
                     </div>
                   </div>

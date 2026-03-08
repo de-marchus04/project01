@@ -1,5 +1,5 @@
-import { Metadata } from "next";
-import { getArticleById } from "@/shared/api/blogApi";
+import { Metadata } from 'next';
+import { getArticleById } from '@/shared/api/blogApi';
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -11,10 +11,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const resolvedParams = await params;
     const article = await getArticleById(resolvedParams.id);
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://yoga-platform-ruby.vercel.app';
-    
+
     if (!article) {
       return {
-        title: "Статья не найдена | Блог YOGA.LIFE",
+        title: 'Статья не найдена | Блог YOGA.LIFE',
       };
     }
 
@@ -29,12 +29,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         description: article.subtitle.substring(0, 160),
         url: `${siteUrl}/blog/${resolvedParams.id}`,
         images: [article.imageUrl],
-        type: "article",
+        type: 'article',
       },
     };
   } catch (error) {
     return {
-      title: "Статья | Блог YOGA.LIFE",
+      title: 'Статья | Блог YOGA.LIFE',
     };
   }
 }

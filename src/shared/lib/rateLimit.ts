@@ -3,18 +3,17 @@
 // ---------------------------------------------------------------------------
 const _store = new Map<string, { count: number; resetAt: number }>();
 
-setInterval(() => {
-  const now = Date.now();
-  for (const [key, val] of _store) {
-    if (val.resetAt < now) _store.delete(key);
-  }
-}, 5 * 60 * 1000);
+setInterval(
+  () => {
+    const now = Date.now();
+    for (const [key, val] of _store) {
+      if (val.resetAt < now) _store.delete(key);
+    }
+  },
+  5 * 60 * 1000,
+);
 
-function _rateLimitInMemory(
-  key: string,
-  windowMs: number,
-  max: number,
-): { success: boolean; remaining: number } {
+function _rateLimitInMemory(key: string, windowMs: number, max: number): { success: boolean; remaining: number } {
   const now = Date.now();
   const entry = _store.get(key);
   if (!entry || entry.resetAt < now) {

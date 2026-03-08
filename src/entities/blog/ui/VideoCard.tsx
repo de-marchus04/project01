@@ -1,6 +1,6 @@
-import { Video } from "../model/types";
-import { useLanguage } from "@/shared/i18n/LanguageContext";
-import Image from "next/image";
+import { Video } from '../model/types';
+import { useLanguage } from '@/shared/i18n/LanguageContext';
+import Image from 'next/image';
 
 interface VideoCardProps {
   video: Video;
@@ -18,7 +18,7 @@ export const VideoCard = ({ video }: VideoCardProps) => {
   const thumbnail =
     getYoutubeThumbnail(localized_video.videoUrl) ||
     localized_video.thumbnailUrl ||
-    "https://images.unsplash.com/photo-1575052814086-f385e2e2ad1b?q=80&w=600&auto=format&fit=crop";
+    'https://images.unsplash.com/photo-1575052814086-f385e2e2ad1b?q=80&w=600&auto=format&fit=crop';
 
   return (
     <div className="card h-100 shadow-sm border-0 hover-scale-sm transition-all">

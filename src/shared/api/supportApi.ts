@@ -1,11 +1,11 @@
-"use server";
+'use server';
 
-import { prisma } from "@/shared/lib/prisma";
-import { auth } from "@/auth";
-import { z } from "zod";
-import { headers } from "next/headers";
-import { rateLimit } from "@/shared/lib/rateLimit";
-import { emailService } from "@/shared/api/emailService";
+import { prisma } from '@/shared/lib/prisma';
+import { auth } from '@/auth';
+import { z } from 'zod';
+import { headers } from 'next/headers';
+import { rateLimit } from '@/shared/lib/rateLimit';
+import { emailService } from '@/shared/api/emailService';
 
 export interface SupportMessage {
   id: string;
@@ -21,22 +21,35 @@ export interface SupportMessage {
 }
 
 export async function getMessages(): Promise<SupportMessage[]> {
-  if (process.env.NEXT_RUNTIME === 'edge') { throw new Error('EDGE RUNTIME DETECTED IN SERVER ACTION'); }
+  if (process.env.NEXT_RUNTIME === 'edge') {
+    throw new Error('EDGE RUNTIME DETECTED IN SERVER ACTION');
+  }
   const session = await auth();
-  if ((session?.user)?.role !== 'ADMIN') throw new Error('ACCESS_DENIED');
+  if (session?.user?.role !== 'ADMIN') throw new Error('ACCESS_DENIED');
   const items = await prisma.supportTicket.findMany({ orderBy: { createdAt: 'desc' } });
 
   // Transform DB mapping
-  return JSON.parse(JSON.stringify(items.map((i: any) => ({
-    id: i.id,
-    userName: i.name,
-    userEmail: i.email,
-    questionType: i.subject,
-    message: i.message,
-    status: i.status === 'NEW' ? 'new' : i.status === 'CLOSED' ? 'replied' : i.status === 'IN_PROGRESS' ? 'in_progress' : 'new',
-    createdAt: i.createdAt,
-    readByUser: i.readByUser ?? false
-  }))));
+  return JSON.parse(
+    JSON.stringify(
+      items.map((i: any) => ({
+        id: i.id,
+        userName: i.name,
+        userEmail: i.email,
+        questionType: i.subject,
+        message: i.message,
+        status:
+          i.status === 'NEW'
+            ? 'new'
+            : i.status === 'CLOSED'
+              ? 'replied'
+              : i.status === 'IN_PROGRESS'
+                ? 'in_progress'
+                : 'new',
+        createdAt: i.createdAt,
+        readByUser: i.readByUser ?? false,
+      })),
+    ),
+  );
 }
 
 export async function getUserMessages(email: string): Promise<SupportMessage[]> {
@@ -47,19 +60,30 @@ export async function getUserMessages(email: string): Promise<SupportMessage[]> 
   if (sessionUser?.role !== 'ADMIN' && sessionUser?.email !== email) throw new Error('ACCESS_DENIED');
   const items = await prisma.supportTicket.findMany({
     where: { email },
-    orderBy: { createdAt: 'desc' }
+    orderBy: { createdAt: 'desc' },
   });
 
-  return JSON.parse(JSON.stringify(items.map((i: any) => ({
-    id: i.id,
-    userName: i.name,
-    userEmail: i.email,
-    questionType: i.subject,
-    message: i.message,
-    status: i.status === 'NEW' ? 'new' : i.status === 'CLOSED' ? 'replied' : i.status === 'IN_PROGRESS' ? 'in_progress' : 'new',
-    createdAt: i.createdAt,
-    readByUser: i.readByUser ?? false
-  }))));
+  return JSON.parse(
+    JSON.stringify(
+      items.map((i: any) => ({
+        id: i.id,
+        userName: i.name,
+        userEmail: i.email,
+        questionType: i.subject,
+        message: i.message,
+        status:
+          i.status === 'NEW'
+            ? 'new'
+            : i.status === 'CLOSED'
+              ? 'replied'
+              : i.status === 'IN_PROGRESS'
+                ? 'in_progress'
+                : 'new',
+        createdAt: i.createdAt,
+        readByUser: i.readByUser ?? false,
+      })),
+    ),
+  );
 }
 
 const sendMessageSchema = z.object({
@@ -74,7 +98,7 @@ export async function sendMessage(
   userEmail: string,
   questionType: string,
   message: string,
-  isBot: boolean = false
+  isBot: boolean = false,
 ): Promise<SupportMessage> {
   const h = await headers();
   const ip = h.get('x-forwarded-for') || 'unknown';
@@ -92,8 +116,8 @@ export async function sendMessage(
       email: parsed.data.userEmail,
       subject: parsed.data.questionType,
       message: parsed.data.message,
-      status: status
-    }
+      status: status,
+    },
   });
 
   if (!isBot) {
@@ -103,30 +127,34 @@ export async function sendMessage(
         await emailService.sendEmail(
           adminEmail,
           `[YOGA.LIFE] Новое обращение в поддержку`,
-          `Новое сообщение от ${parsed.data.userName} (${parsed.data.userEmail})\n\nТема: ${parsed.data.questionType}\n\n${parsed.data.message}`
+          `Новое сообщение от ${parsed.data.userName} (${parsed.data.userEmail})\n\nТема: ${parsed.data.questionType}\n\n${parsed.data.message}`,
         );
-      } catch { /* не блокируем основной поток */ }
+      } catch {
+        /* не блокируем основной поток */
+      }
     }
   }
 
-  return JSON.parse(JSON.stringify({
-    id: newItem.id,
-    userName: newItem.name,
-    userEmail: newItem.email,
-    questionType: newItem.subject,
-    message: newItem.message,
-    status: isBot ? 'bot_answered' : 'new',
-    createdAt: newItem.createdAt,
-    readByUser: false
-  }));
+  return JSON.parse(
+    JSON.stringify({
+      id: newItem.id,
+      userName: newItem.name,
+      userEmail: newItem.email,
+      questionType: newItem.subject,
+      message: newItem.message,
+      status: isBot ? 'bot_answered' : 'new',
+      createdAt: newItem.createdAt,
+      readByUser: false,
+    }),
+  );
 }
 
 export async function replyToMessage(id: string, replyText: string): Promise<void> {
   const session = await auth();
-  if ((session?.user)?.role !== 'ADMIN') throw new Error('ACCESS_DENIED');
+  if (session?.user?.role !== 'ADMIN') throw new Error('ACCESS_DENIED');
   await prisma.supportTicket.update({
     where: { id },
-    data: { status: 'CLOSED', reply: replyText }
+    data: { status: 'CLOSED', reply: replyText },
   });
 }
 
@@ -134,7 +162,7 @@ export async function markAsRead(id: string): Promise<void> {
   try {
     await prisma.supportTicket.update({
       where: { id },
-      data: { readByUser: true }
+      data: { readByUser: true },
     });
   } catch (e) {
     console.error('markAsRead error:', e);
@@ -143,7 +171,7 @@ export async function markAsRead(id: string): Promise<void> {
 
 export async function deleteMessage(id: string): Promise<void> {
   const session = await auth();
-  if ((session?.user)?.role !== 'ADMIN') throw new Error('ACCESS_DENIED');
+  if (session?.user?.role !== 'ADMIN') throw new Error('ACCESS_DENIED');
   try {
     await prisma.supportTicket.delete({ where: { id } });
   } catch (e) {

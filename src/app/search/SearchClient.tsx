@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import Image from "next/image";
-import { useState, useEffect, useRef } from "react";
-import Link from "next/link";
-import { useLanguage } from "@/shared/i18n/LanguageContext";
-import { globalSearch, GlobalSearchResponse, SearchResult } from "@/shared/api/searchApi";
+import Image from 'next/image';
+import { useState, useEffect, useRef } from 'react';
+import Link from 'next/link';
+import { useLanguage } from '@/shared/i18n/LanguageContext';
+import { globalSearch, GlobalSearchResponse, SearchResult } from '@/shared/api/searchApi';
 
 const TYPE_ICONS: Record<string, string> = {
   course: 'bi-book',
@@ -16,14 +16,21 @@ const TYPE_ICONS: Record<string, string> = {
 function ResultCard({ item, typeLabel }: { item: SearchResult; typeLabel: string }) {
   return (
     <Link href={item.url} className="text-decoration-none">
-      <div className="card border-0 shadow-sm h-100 rounded-3 overflow-hidden"
+      <div
+        className="card border-0 shadow-sm h-100 rounded-3 overflow-hidden"
         style={{ transition: 'transform 0.2s', cursor: 'pointer' }}
-        onMouseEnter={e => (e.currentTarget.style.transform = 'translateY(-3px)')}
-        onMouseLeave={e => (e.currentTarget.style.transform = 'translateY(0)')}
+        onMouseEnter={(e) => (e.currentTarget.style.transform = 'translateY(-3px)')}
+        onMouseLeave={(e) => (e.currentTarget.style.transform = 'translateY(0)')}
       >
         {item.imageUrl && (
           <div style={{ height: '140px', overflow: 'hidden', position: 'relative' }}>
-            <Image src={item.imageUrl} fill sizes="(max-width: 768px) 100vw, 600px" style={{ objectFit: 'cover' }} alt={item.title} />
+            <Image
+              src={item.imageUrl}
+              fill
+              sizes="(max-width: 768px) 100vw, 600px"
+              style={{ objectFit: 'cover' }}
+              alt={item.title}
+            />
           </div>
         )}
         <div className="card-body p-3">
@@ -31,9 +38,20 @@ function ResultCard({ item, typeLabel }: { item: SearchResult; typeLabel: string
             <i className={`bi ${TYPE_ICONS[item.type]} me-1`}></i>
             {typeLabel}
           </span>
-          <h6 className="card-title fw-bold mb-1" style={{ fontSize: '0.9rem' }}>{item.title}</h6>
+          <h6 className="card-title fw-bold mb-1" style={{ fontSize: '0.9rem' }}>
+            {item.title}
+          </h6>
           {item.description && (
-            <p className="text-muted small mb-1" style={{ fontSize: '0.8rem', overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
+            <p
+              className="text-muted small mb-1"
+              style={{
+                fontSize: '0.8rem',
+                overflow: 'hidden',
+                display: '-webkit-box',
+                WebkitLineClamp: 2,
+                WebkitBoxOrient: 'vertical',
+              }}
+            >
               {item.description}
             </p>
           )}
@@ -108,30 +126,44 @@ export default function SearchClient({ initialQuery }: { initialQuery?: string }
           <div className="row justify-content-center">
             <div className="col-md-8 col-lg-6">
               <div className="input-group input-group-lg shadow-sm">
-                <span className="input-group-text border-end-0 rounded-start-pill ps-4" style={{ backgroundColor: 'var(--color-card-bg)', borderColor: 'var(--color-border)' }}>
+                <span
+                  className="input-group-text border-end-0 rounded-start-pill ps-4"
+                  style={{ backgroundColor: 'var(--color-card-bg)', borderColor: 'var(--color-border)' }}
+                >
                   <i className="bi bi-search text-muted"></i>
                 </span>
                 <input
                   ref={inputRef}
                   type="text"
                   className="form-control border-start-0 border-end-0 shadow-none"
-                  style={{ backgroundColor: 'var(--color-card-bg)', color: 'var(--color-text)', borderColor: 'var(--color-border)' }}
+                  style={{
+                    backgroundColor: 'var(--color-card-bg)',
+                    color: 'var(--color-text)',
+                    borderColor: 'var(--color-border)',
+                  }}
                   placeholder={t.search.placeholder}
                   value={query}
-                  onChange={e => setQuery(e.target.value)}
+                  onChange={(e) => setQuery(e.target.value)}
                 />
                 {query && (
                   <button
                     className="btn border-start-0 rounded-end-pill pe-4"
                     type="button"
                     onClick={() => setQuery('')}
-                    style={{ backgroundColor: 'var(--color-card-bg)', borderColor: 'var(--color-border)', color: 'var(--color-text-muted)' }}
+                    style={{
+                      backgroundColor: 'var(--color-card-bg)',
+                      borderColor: 'var(--color-border)',
+                      color: 'var(--color-text-muted)',
+                    }}
                   >
                     <i className="bi bi-x-lg"></i>
                   </button>
                 )}
                 {!query && (
-                  <span className="input-group-text border-start-0 rounded-end-pill pe-4" style={{ backgroundColor: 'var(--color-card-bg)', borderColor: 'var(--color-border)' }}></span>
+                  <span
+                    className="input-group-text border-start-0 rounded-end-pill pe-4"
+                    style={{ backgroundColor: 'var(--color-card-bg)', borderColor: 'var(--color-border)' }}
+                  ></span>
                 )}
               </div>
             </div>
@@ -154,7 +186,9 @@ export default function SearchClient({ initialQuery }: { initialQuery?: string }
           {!loading && emptySearch && (
             <div className="text-center py-5">
               <i className="bi bi-search display-1 text-muted"></i>
-              <p className="mt-3 text-muted fs-5">{t.search.noResults} «{query}»</p>
+              <p className="mt-3 text-muted fs-5">
+                {t.search.noResults} «{query}»
+              </p>
             </div>
           )}
 
@@ -179,7 +213,7 @@ export default function SearchClient({ initialQuery }: { initialQuery?: string }
                   <div key={key} className="mb-5">
                     <h5 className="font-playfair mb-3 border-bottom pb-2">{label}</h5>
                     <div className="row g-3">
-                      {items.map(item => (
+                      {items.map((item) => (
                         <div key={item.id} className="col-sm-6 col-md-4 col-lg-3">
                           <ResultCard item={item} typeLabel={typeLabels[item.type] || item.type} />
                         </div>

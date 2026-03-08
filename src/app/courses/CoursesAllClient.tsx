@@ -1,17 +1,17 @@
-"use client";
+'use client';
 
-import { useLanguage } from "@/shared/i18n/LanguageContext";
-import { useEffect, useState, useRef } from "react";
-import Link from "next/link";
-import { Course } from "@/entities/course/model/types";
-import { CourseCard } from "@/entities/course/ui/CourseCard";
-import { usePurchase } from "@/shared/hooks/usePurchase";
-import { getAllCourses } from "@/shared/api/courseApi";
-import { Pagination } from "@/shared/ui/Pagination";
-import { HeroSlider } from "@/shared/ui/HeroSlider/HeroSlider";
-import { PaginatedResponse } from "@/shared/api/blogApi";
-import { useScrollReveal } from "@/shared/hooks/useScrollReveal";
-import { SectionHeader } from "@/shared/ui/SectionHeader/SectionHeader";
+import { useLanguage } from '@/shared/i18n/LanguageContext';
+import { useEffect, useState, useRef } from 'react';
+import Link from 'next/link';
+import { Course } from '@/entities/course/model/types';
+import { CourseCard } from '@/entities/course/ui/CourseCard';
+import { usePurchase } from '@/shared/hooks/usePurchase';
+import { getAllCourses } from '@/shared/api/courseApi';
+import { Pagination } from '@/shared/ui/Pagination';
+import { HeroSlider } from '@/shared/ui/HeroSlider/HeroSlider';
+import { PaginatedResponse } from '@/shared/api/blogApi';
+import { useScrollReveal } from '@/shared/hooks/useScrollReveal';
+import { SectionHeader } from '@/shared/ui/SectionHeader/SectionHeader';
 
 const CATEGORIES = [
   { key: 'all', labelKey: 'all', icon: 'bi-grid' },
@@ -21,7 +21,7 @@ const CATEGORIES = [
   { key: 'back', labelKey: 'back', icon: 'bi-person-standing' },
 ] as const;
 
-type CategoryKey = typeof CATEGORIES[number]['key'];
+type CategoryKey = (typeof CATEGORIES)[number]['key'];
 
 const CATEGORY_LINKS: Record<string, string> = {
   beginners: '/courses-beginners',
@@ -104,14 +104,20 @@ export default function CoursesAllClient({ initialData }: { initialData: Paginat
         className="hero-section page-hero d-flex align-items-center text-center text-white position-relative"
         style={{ height: '60vh', minHeight: '500px', overflow: 'hidden' }}
       >
-        <HeroSlider pageKey="courses" images={[
-          "https://images.unsplash.com/photo-1599447421405-0753f5d1a5ca?q=80&w=2070&auto=format&fit=crop",
-          "https://images.unsplash.com/photo-1518611012118-696072aa579a?q=80&w=2000&auto=format&fit=crop",
-          "https://images.unsplash.com/photo-1575052814086-f385e2e2ad1b?q=80&w=2070&auto=format&fit=crop",
-          "https://images.unsplash.com/photo-1506126613408-eca07ce68773?q=80&w=2000&auto=format&fit=crop",
-        ]} />
+        <HeroSlider
+          pageKey="courses"
+          images={[
+            'https://images.unsplash.com/photo-1599447421405-0753f5d1a5ca?q=80&w=2070&auto=format&fit=crop',
+            'https://images.unsplash.com/photo-1518611012118-696072aa579a?q=80&w=2000&auto=format&fit=crop',
+            'https://images.unsplash.com/photo-1575052814086-f385e2e2ad1b?q=80&w=2070&auto=format&fit=crop',
+            'https://images.unsplash.com/photo-1506126613408-eca07ce68773?q=80&w=2000&auto=format&fit=crop',
+          ]}
+        />
         <div className="container position-relative z-2">
-          <span className="text-uppercase mb-3 d-block small fw-bold" style={{ letterSpacing: '2px', color: 'var(--color-secondary)' }}>
+          <span
+            className="text-uppercase mb-3 d-block small fw-bold"
+            style={{ letterSpacing: '2px', color: 'var(--color-secondary)' }}
+          >
             {t.programs?.labelCourse}
           </span>
           <h1 className="display-3 font-playfair mb-4" style={{ textShadow: '0 4px 15px rgba(0,0,0,0.2)' }}>
@@ -138,9 +144,19 @@ export default function CoursesAllClient({ initialData }: { initialData: Paginat
               <button
                 key={key}
                 className="btn rounded-pill px-4 py-2 d-flex align-items-center gap-2"
-                style={activeCategory === key
-                  ? { backgroundColor: 'var(--color-primary)', color: '#fff', border: '1px solid var(--color-primary)' }
-                  : { backgroundColor: 'transparent', color: 'var(--color-text)', border: '1px solid var(--color-border)' }}
+                style={
+                  activeCategory === key
+                    ? {
+                        backgroundColor: 'var(--color-primary)',
+                        color: '#fff',
+                        border: '1px solid var(--color-primary)',
+                      }
+                    : {
+                        backgroundColor: 'transparent',
+                        color: 'var(--color-text)',
+                        border: '1px solid var(--color-border)',
+                      }
+                }
                 onClick={() => handleCategoryChange(key)}
               >
                 <i className={`bi ${icon}`}></i>
@@ -199,27 +215,27 @@ export default function CoursesAllClient({ initialData }: { initialData: Paginat
               </div>
             )}
 
-            {error && (
-              <div className="alert alert-warning text-center">{error}</div>
-            )}
+            {error && <div className="alert alert-warning text-center">{error}</div>}
 
             {!loading && !error && products.length === 0 && (
               <p className="text-center text-muted">{t.programs?.noProducts || 'Нет результатов'}</p>
             )}
 
-            {!loading && !error && products.map((product, idx) => (
-              <div key={product.id} className={`col-md-6 col-lg-4 reveal-up reveal-delay-${idx % 3}`} ref={observe as any}>
-                <CourseCard course={product} onBuy={buyProduct} />
-              </div>
-            ))}
+            {!loading &&
+              !error &&
+              products.map((product, idx) => (
+                <div
+                  key={product.id}
+                  className={`col-md-6 col-lg-4 reveal-up reveal-delay-${idx % 3}`}
+                  ref={observe as any}
+                >
+                  <CourseCard course={product} onBuy={buyProduct} />
+                </div>
+              ))}
           </div>
 
           {!loading && !error && (
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={handlePageChange}
-            />
+            <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
           )}
         </div>
       </section>

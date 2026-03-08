@@ -10,7 +10,7 @@ export const authApi = {
     const res = await fetch('/api/auth/register', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username, password })
+      body: JSON.stringify({ username, password }),
     });
 
     if (!res.ok) {
@@ -28,5 +28,5 @@ export const authApi = {
     // чтобы переписали на использование signIn.
     console.error("ОШИБКА: Используйте signIn('credentials', ...) из next-auth/react для логина!");
     throw new Error("ОШИБКА: Используйте signIn('credentials', ...) из next-auth/react для логина!");
-  }
+  },
 };

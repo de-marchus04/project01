@@ -1,6 +1,6 @@
-import Image from "next/image";
-import { Article } from "../model/types";
-import { useLanguage } from "@/shared/i18n/LanguageContext";
+import Image from 'next/image';
+import { Article } from '../model/types';
+import { useLanguage } from '@/shared/i18n/LanguageContext';
 
 interface ArticleCardProps {
   article: Article;
@@ -15,7 +15,10 @@ export const ArticleCard = ({ article }: ArticleCardProps) => {
     <div className="card h-100 shadow-sm border-0 hover-scale-sm transition-all">
       <div className="position-relative w-100" style={{ height: '200px' }}>
         <Image
-          src={localized_article.imageUrl || 'https://images.unsplash.com/photo-1545205597-3d9d02c29597?q=80&w=2070&auto=format&fit=crop'}
+          src={
+            localized_article.imageUrl ||
+            'https://images.unsplash.com/photo-1545205597-3d9d02c29597?q=80&w=2070&auto=format&fit=crop'
+          }
           alt={tStr(localized_article.title)}
           fill
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -32,7 +35,12 @@ export const ArticleCard = ({ article }: ArticleCardProps) => {
           {tStr(localized_article.title)}
         </h5>
         <p className="card-text text-muted small flex-grow-1">{tStr(localized_article.subtitle)}</p>
-        <button className="btn btn-link text-decoration-none p-0 fw-bold text-start mt-3" style={{ color: 'var(--color-primary)' }}>{tStr("Читать далее →")}</button>
+        <button
+          className="btn btn-link text-decoration-none p-0 fw-bold text-start mt-3"
+          style={{ color: 'var(--color-primary)' }}
+        >
+          {tStr('Читать далее →')}
+        </button>
       </div>
       <div className="card-footer border-0 text-muted small" style={{ backgroundColor: 'var(--color-card-bg)' }}>
         {new Date(localized_article.createdAt).toLocaleDateString(dateLocale)}

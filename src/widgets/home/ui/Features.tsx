@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { useLanguage } from "@/shared/i18n/LanguageContext";
-import { useScrollReveal } from "@/shared/hooks/useScrollReveal";
+import { useLanguage } from '@/shared/i18n/LanguageContext';
+import { useScrollReveal } from '@/shared/hooks/useScrollReveal';
 
 export const Features = () => {
   const { t } = useLanguage();
@@ -25,7 +25,7 @@ export const Features = () => {
                   backgroundColor: 'var(--color-secondary)',
                   color: 'var(--color-primary)',
                   fontSize: '2rem',
-                  border: '2px solid var(--color-accent-subtle)'
+                  border: '2px solid var(--color-accent-subtle)',
                 }}
               >
                 <i className="bi bi-camera-video"></i>
@@ -44,7 +44,7 @@ export const Features = () => {
                   backgroundColor: 'var(--color-secondary)',
                   color: 'var(--color-primary)',
                   fontSize: '2rem',
-                  border: '2px solid var(--color-accent-subtle)'
+                  border: '2px solid var(--color-accent-subtle)',
                 }}
               >
                 <i className="bi bi-calendar-check"></i>
@@ -63,7 +63,7 @@ export const Features = () => {
                   backgroundColor: 'var(--color-secondary)',
                   color: 'var(--color-primary)',
                   fontSize: '2rem',
-                  border: '2px solid var(--color-accent-subtle)'
+                  border: '2px solid var(--color-accent-subtle)',
                 }}
               >
                 <i className="bi bi-heart-pulse"></i>
@@ -76,4 +76,4 @@ export const Features = () => {
       </div>
     </section>
   );
-}
+};

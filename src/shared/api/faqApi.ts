@@ -1,8 +1,8 @@
-"use server";
+'use server';
 
-import { prisma } from "@/shared/lib/prisma";
-import { auth } from "@/auth";
-import { z } from "zod";
+import { prisma } from '@/shared/lib/prisma';
+import { auth } from '@/auth';
+import { z } from 'zod';
 
 export interface FAQ {
   id: string;
@@ -13,11 +13,13 @@ export interface FAQ {
 
 async function requireAdmin(): Promise<void> {
   const session = await auth();
-  if ((session?.user)?.role !== 'ADMIN') throw new Error('Нет доступа');
+  if (session?.user?.role !== 'ADMIN') throw new Error('Нет доступа');
 }
 
 export async function getFAQs(): Promise<FAQ[]> {
-  if (process.env.NEXT_RUNTIME === 'edge') { throw new Error('EDGE RUNTIME DETECTED IN SERVER ACTION'); }
+  if (process.env.NEXT_RUNTIME === 'edge') {
+    throw new Error('EDGE RUNTIME DETECTED IN SERVER ACTION');
+  }
   const items = await prisma.fAQ.findMany({ orderBy: { createdAt: 'desc' } });
   return JSON.parse(JSON.stringify(items));
 }

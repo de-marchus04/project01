@@ -1,14 +1,14 @@
-"use client";
+'use client';
 
-import { useLanguage } from "@/shared/i18n/LanguageContext";
-import { useEffect, useState, useRef } from "react";
-import { CourseCard } from "@/entities/course/ui/CourseCard";
-import { usePurchase } from "@/shared/hooks/usePurchase";
-import { getAllConsultations } from "@/shared/api/consultationApi";
-import { HeroSlider } from "@/shared/ui/HeroSlider/HeroSlider";
-import { useScrollReveal } from "@/shared/hooks/useScrollReveal";
-import { SectionHeader } from "@/shared/ui/SectionHeader/SectionHeader";
-import { Consultation } from "@/entities/consultation/model/types";
+import { useLanguage } from '@/shared/i18n/LanguageContext';
+import { useEffect, useState, useRef } from 'react';
+import { CourseCard } from '@/entities/course/ui/CourseCard';
+import { usePurchase } from '@/shared/hooks/usePurchase';
+import { getAllConsultations } from '@/shared/api/consultationApi';
+import { HeroSlider } from '@/shared/ui/HeroSlider/HeroSlider';
+import { useScrollReveal } from '@/shared/hooks/useScrollReveal';
+import { SectionHeader } from '@/shared/ui/SectionHeader/SectionHeader';
+import { Consultation } from '@/entities/consultation/model/types';
 
 const CATEGORIES = [
   { key: 'all', label: null, icon: 'bi-grid' },
@@ -75,21 +75,28 @@ export default function ConsultationsAllClient({ initialData }: { initialData: C
         className="hero-section page-hero d-flex align-items-center text-center text-white position-relative"
         style={{ height: '60vh', minHeight: '500px', overflow: 'hidden' }}
       >
-        <HeroSlider pageKey="consultations" images={[
-          "https://images.unsplash.com/photo-1515020617130-eca80c7d0753?q=80&w=2070&auto=format&fit=crop",
-          "https://images.unsplash.com/photo-1599447421405-0753f5d1a5ca?q=80&w=2070&auto=format&fit=crop",
-          "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?q=80&w=2000&auto=format&fit=crop",
-          "https://images.unsplash.com/photo-1506126613408-eca07ce68773?q=80&w=2000&auto=format&fit=crop",
-        ]} />
+        <HeroSlider
+          pageKey="consultations"
+          images={[
+            'https://images.unsplash.com/photo-1515020617130-eca80c7d0753?q=80&w=2070&auto=format&fit=crop',
+            'https://images.unsplash.com/photo-1599447421405-0753f5d1a5ca?q=80&w=2070&auto=format&fit=crop',
+            'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?q=80&w=2000&auto=format&fit=crop',
+            'https://images.unsplash.com/photo-1506126613408-eca07ce68773?q=80&w=2000&auto=format&fit=crop',
+          ]}
+        />
         <div className="container position-relative z-2">
-          <span className="text-uppercase mb-3 d-block small fw-bold" style={{ letterSpacing: '2px', color: 'var(--color-secondary)' }}>
+          <span
+            className="text-uppercase mb-3 d-block small fw-bold"
+            style={{ letterSpacing: '2px', color: 'var(--color-secondary)' }}
+          >
             {t.programs?.labelConsult || 'Консультация'}
           </span>
           <h1 className="display-3 font-playfair mb-4" style={{ textShadow: '0 4px 15px rgba(0,0,0,0.2)' }}>
             {t.programs?.consultTitleNum || 'Личные консультации'}
           </h1>
           <p className="lead mb-5 col-lg-8 mx-auto fw-light" style={{ textShadow: '0 2px 10px rgba(0,0,0,0.2)' }}>
-            {t.programs?.consultDescNum || 'Получите индивидуальную поддержку от наших экспертов для достижения ваших целей.'}
+            {t.programs?.consultDescNum ||
+              'Получите индивидуальную поддержку от наших экспертов для достижения ваших целей.'}
           </p>
         </div>
       </section>
@@ -109,9 +116,19 @@ export default function ConsultationsAllClient({ initialData }: { initialData: C
               <button
                 key={key}
                 className="btn rounded-pill px-4 py-2 d-flex align-items-center gap-2"
-                style={activeCategory === key
-                  ? { backgroundColor: 'var(--color-primary)', color: '#fff', border: '1px solid var(--color-primary)' }
-                  : { backgroundColor: 'transparent', color: 'var(--color-text)', border: '1px solid var(--color-border)' }}
+                style={
+                  activeCategory === key
+                    ? {
+                        backgroundColor: 'var(--color-primary)',
+                        color: '#fff',
+                        border: '1px solid var(--color-primary)',
+                      }
+                    : {
+                        backgroundColor: 'transparent',
+                        color: 'var(--color-text)',
+                        border: '1px solid var(--color-border)',
+                      }
+                }
                 onClick={() => setActiveCategory(key)}
               >
                 <i className={`bi ${icon}`}></i>
@@ -142,17 +159,21 @@ export default function ConsultationsAllClient({ initialData }: { initialData: C
                 </div>
               </div>
             )}
-            {error && (
-              <div className="alert alert-warning text-center">{error}</div>
-            )}
+            {error && <div className="alert alert-warning text-center">{error}</div>}
             {!loading && !error && filtered.length === 0 && (
               <p className="text-center text-muted">{t.programs?.noProducts || 'Нет результатов'}</p>
             )}
-            {!loading && !error && filtered.map((product, idx) => (
-              <div key={product.id} className={`col-md-6 col-lg-4 reveal-up reveal-delay-${idx % 3}`} ref={observe as any}>
-                <CourseCard course={product as any} onBuy={buyProduct} type="consultation" />
-              </div>
-            ))}
+            {!loading &&
+              !error &&
+              filtered.map((product, idx) => (
+                <div
+                  key={product.id}
+                  className={`col-md-6 col-lg-4 reveal-up reveal-delay-${idx % 3}`}
+                  ref={observe as any}
+                >
+                  <CourseCard course={product as any} onBuy={buyProduct} type="consultation" />
+                </div>
+              ))}
           </div>
         </div>
       </section>

@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { useLanguage } from "@/shared/i18n/LanguageContext";
-import { useScrollReveal } from "@/shared/hooks/useScrollReveal";
-import type { Testimonial } from "@/shared/api/testimonialApi";
+import { useLanguage } from '@/shared/i18n/LanguageContext';
+import { useScrollReveal } from '@/shared/hooks/useScrollReveal';
+import type { Testimonial } from '@/shared/api/testimonialApi';
 
 interface TestimonialsProps {
   initialTestimonials: Testimonial[];
@@ -12,13 +12,14 @@ export const Testimonials = ({ initialTestimonials }: TestimonialsProps) => {
   const { t, tData } = useLanguage();
   const { observe } = useScrollReveal();
 
-  const testimonials = initialTestimonials.length > 0
-    ? initialTestimonials.map(item => tData ? tData(item) : item)
-    : [
-        { id: '1', name: t.home.review1Name, course: t.home.review1Course, text: t.home.review1Text, createdAt: '' },
-        { id: '2', name: t.home.review2Name, course: t.home.review2Course, text: t.home.review2Text, createdAt: '' },
-        { id: '3', name: t.home.review3Name, course: t.home.review3Course, text: t.home.review3Text, createdAt: '' }
-      ];
+  const testimonials =
+    initialTestimonials.length > 0
+      ? initialTestimonials.map((item) => (tData ? tData(item) : item))
+      : [
+          { id: '1', name: t.home.review1Name, course: t.home.review1Course, text: t.home.review1Text, createdAt: '' },
+          { id: '2', name: t.home.review2Name, course: t.home.review2Course, text: t.home.review2Text, createdAt: '' },
+          { id: '3', name: t.home.review3Name, course: t.home.review3Course, text: t.home.review3Text, createdAt: '' },
+        ];
 
   return (
     <section className="testimonials-section py-5">
@@ -52,7 +53,7 @@ export const Testimonials = ({ initialTestimonials }: TestimonialsProps) => {
                     opacity: 0.06,
                     pointerEvents: 'none',
                     userSelect: 'none',
-                    zIndex: 0
+                    zIndex: 0,
                   }}
                 >
                   &ldquo;
@@ -60,7 +61,9 @@ export const Testimonials = ({ initialTestimonials }: TestimonialsProps) => {
 
                 <div style={{ position: 'relative', zIndex: 1 }}>
                   <div className="d-flex mb-3" style={{ color: 'var(--color-accent)' }}>
-                    {[...Array(5)].map((_, i) => <i key={i} className="bi bi-star-fill"></i>)}
+                    {[...Array(5)].map((_, i) => (
+                      <i key={i} className="bi bi-star-fill"></i>
+                    ))}
                   </div>
                   <p className="font-montserrat fst-italic mb-4 flex-grow-1">{item.text}</p>
                   <div className="d-flex align-items-center mt-auto">
@@ -73,7 +76,7 @@ export const Testimonials = ({ initialTestimonials }: TestimonialsProps) => {
                         border: '2px solid var(--color-accent-subtle)',
                         color: 'var(--color-primary)',
                         fontSize: '1.1rem',
-                        flexShrink: 0
+                        flexShrink: 0,
                       }}
                     >
                       <span className="fw-bold font-playfair">{item.name.charAt(0).toUpperCase()}</span>
@@ -104,4 +107,4 @@ export const Testimonials = ({ initialTestimonials }: TestimonialsProps) => {
       </svg>
     </section>
   );
-}
+};

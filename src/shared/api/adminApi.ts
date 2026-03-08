@@ -1,11 +1,11 @@
-"use server";
+'use server';
 
-import { prisma } from "@/shared/lib/prisma";
-import { auth } from "@/auth";
+import { prisma } from '@/shared/lib/prisma';
+import { auth } from '@/auth';
 
 export async function bulkUpdateAuthor(authorName: string, authorPhotoUrl: string, oldAuthorName?: string) {
   const session = await auth();
-  if ((session?.user)?.role !== 'ADMIN') throw new Error('Нет доступа');
+  if (session?.user?.role !== 'ADMIN') throw new Error('Нет доступа');
 
   if (!oldAuthorName) return true;
 

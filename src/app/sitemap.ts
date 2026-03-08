@@ -36,10 +36,30 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ]);
 
     const dynamicRoutes: MetadataRoute.Sitemap = [
-      ...courses.map(c => ({ url: `${BASE_URL}/courses/${c.id}`, lastModified: c.updatedAt, changeFrequency: 'weekly' as const, priority: 0.7 })),
-      ...consultations.map(c => ({ url: `${BASE_URL}/consultations/${c.id}`, lastModified: c.updatedAt, changeFrequency: 'weekly' as const, priority: 0.7 })),
-      ...tours.map(t => ({ url: `${BASE_URL}/tours/${t.id}`, lastModified: t.updatedAt, changeFrequency: 'weekly' as const, priority: 0.7 })),
-      ...articles.map(a => ({ url: `${BASE_URL}/blog/${a.id}`, lastModified: a.updatedAt, changeFrequency: 'weekly' as const, priority: 0.6 })),
+      ...courses.map((c) => ({
+        url: `${BASE_URL}/courses/${c.id}`,
+        lastModified: c.updatedAt,
+        changeFrequency: 'weekly' as const,
+        priority: 0.7,
+      })),
+      ...consultations.map((c) => ({
+        url: `${BASE_URL}/consultations/${c.id}`,
+        lastModified: c.updatedAt,
+        changeFrequency: 'weekly' as const,
+        priority: 0.7,
+      })),
+      ...tours.map((t) => ({
+        url: `${BASE_URL}/tours/${t.id}`,
+        lastModified: t.updatedAt,
+        changeFrequency: 'weekly' as const,
+        priority: 0.7,
+      })),
+      ...articles.map((a) => ({
+        url: `${BASE_URL}/blog/${a.id}`,
+        lastModified: a.updatedAt,
+        changeFrequency: 'weekly' as const,
+        priority: 0.6,
+      })),
     ];
 
     return [...staticRoutes, ...dynamicRoutes];

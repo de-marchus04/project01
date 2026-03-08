@@ -1,31 +1,31 @@
-"use client";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { useLanguage } from "@/shared/i18n/LanguageContext";
-import { useTheme } from "@/shared/i18n/ThemeContext";
-import { getMyProfile } from "@/shared/api/authActions";
-import { Order } from "@/shared/api/userApi";
-import { useSession, signOut } from "next-auth/react";
+'use client';
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useLanguage } from '@/shared/i18n/LanguageContext';
+import { useTheme } from '@/shared/i18n/ThemeContext';
+import { getMyProfile } from '@/shared/api/authActions';
+import { Order } from '@/shared/api/userApi';
+import { useSession, signOut } from 'next-auth/react';
 
-import AdminSidebar from "./components/AdminSidebar";
-import CoursesTab from "./components/CoursesTab";
-import ConsultationsTab from "./components/ConsultationsTab";
-import ArticlesTab from "./components/ArticlesTab";
-import VideosTab from "./components/VideosTab";
-import PodcastsTab from "./components/PodcastsTab";
-import RecipesTab from "./components/RecipesTab";
-import ToursTab from "./components/ToursTab";
-import OrdersTab from "./components/OrdersTab";
-import SupportTab from "./components/SupportTab";
-import SubscribersTab from "./components/SubscribersTab";
-import PromoTab from "./components/PromoTab";
-import MediaTab from "./components/MediaTab";
-import FaqsTab from "./components/FaqsTab";
-import TestimonialsTab from "./components/TestimonialsTab";
-import TeamTab from "./components/TeamTab";
-import SiteSettingsTab from "./components/SiteSettingsTab";
-import ProfileTab from "./components/ProfileTab";
-import SlideshowTab from "./components/SlideshowTab";
+import AdminSidebar from './components/AdminSidebar';
+import CoursesTab from './components/CoursesTab';
+import ConsultationsTab from './components/ConsultationsTab';
+import ArticlesTab from './components/ArticlesTab';
+import VideosTab from './components/VideosTab';
+import PodcastsTab from './components/PodcastsTab';
+import RecipesTab from './components/RecipesTab';
+import ToursTab from './components/ToursTab';
+import OrdersTab from './components/OrdersTab';
+import SupportTab from './components/SupportTab';
+import SubscribersTab from './components/SubscribersTab';
+import PromoTab from './components/PromoTab';
+import MediaTab from './components/MediaTab';
+import FaqsTab from './components/FaqsTab';
+import TestimonialsTab from './components/TestimonialsTab';
+import TeamTab from './components/TeamTab';
+import SiteSettingsTab from './components/SiteSettingsTab';
+import ProfileTab from './components/ProfileTab';
+import SlideshowTab from './components/SlideshowTab';
 
 type AdminProfile = { name: string; email: string; phone: string; photoUrl: string };
 
@@ -35,7 +35,7 @@ export default function Admin() {
   const { data: session, status, update } = useSession();
   const router = useRouter();
 
-  const [activeTab, setActiveTab] = useState("coursesPane");
+  const [activeTab, setActiveTab] = useState('coursesPane');
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [orders, setOrders] = useState<Order[]>([]);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -43,7 +43,10 @@ export default function Admin() {
   const [isProfileEdited, setIsProfileEdited] = useState(false);
   const [isProfileSaved, setIsProfileSaved] = useState(false);
   const [adminProfile, setAdminProfile] = useState<AdminProfile>({
-    name: '', email: '', phone: '', photoUrl: '',
+    name: '',
+    email: '',
+    phone: '',
+    photoUrl: '',
   });
   const [stats, setStats] = useState({
     earnedTotal: 0,
@@ -57,7 +60,7 @@ export default function Admin() {
     let newReqs = 0;
     const serviceCounts: Record<string, number> = {};
 
-    orders.forEach(order => {
+    orders.forEach((order) => {
       if (order.status === 'COMPLETED') earned += order.price;
       if (order.status === 'PENDING') newReqs++;
       if (order.productName) {
@@ -68,7 +71,10 @@ export default function Admin() {
     let maxCount = 0;
     let popular = t.admin.noData;
     for (const [name, count] of Object.entries(serviceCounts)) {
-      if (count > maxCount) { maxCount = count; popular = name; }
+      if (count > maxCount) {
+        maxCount = count;
+        popular = name;
+      }
     }
 
     setStats({ earnedTotal: earned, newRequests: newReqs, popularService: popular });
@@ -77,12 +83,18 @@ export default function Admin() {
   // Auth guard + admin profile bootstrap
   useEffect(() => {
     if (status === 'loading') return;
-    if (status === 'unauthenticated') { router.push('/login'); return; }
-    const role = (session?.user)?.role;
-    const username = (session?.user)?.username;
-    if (role !== 'ADMIN') { router.push('/profile'); return; }
+    if (status === 'unauthenticated') {
+      router.push('/login');
+      return;
+    }
+    const role = session?.user?.role;
+    const username = session?.user?.username;
+    if (role !== 'ADMIN') {
+      router.push('/profile');
+      return;
+    }
     if (!username) return;
-    getMyProfile(username).then(profile => {
+    getMyProfile(username).then((profile) => {
       if (profile) {
         setAdminProfile({
           name: profile.name || profile.username,
@@ -94,7 +106,9 @@ export default function Admin() {
     });
   }, [status, session, router]);
 
-  const handleLogout = () => { signOut({ callbackUrl: '/' }); };
+  const handleLogout = () => {
+    signOut({ callbackUrl: '/' });
+  };
 
   const showToast = (msg: string, type: 'success' | 'error' = 'success') => {
     setToastMessage(msg);
@@ -115,7 +129,6 @@ export default function Admin() {
   return (
     <main style={{ backgroundColor: 'var(--color-bg)', minHeight: '100vh', paddingTop: '64px' }}>
       <div className="d-flex admin-layout" style={{ padding: '20px 16px 16px' }}>
-
         <AdminSidebar
           activeTab={activeTab}
           onTabChange={setActiveTab}
@@ -129,74 +142,39 @@ export default function Admin() {
 
         {/* MAIN CONTENT AREA */}
         <div className="flex-grow-1 p-4" style={{ minHeight: 'calc(100vh - 64px)', overflowY: 'auto' }}>
+          {activeTab === 'coursesPane' && <CoursesTab adminProfile={adminProfile} showToast={showToast} />}
 
-          {activeTab === 'coursesPane' && (
-            <CoursesTab adminProfile={adminProfile} showToast={showToast} />
-          )}
+          {activeTab === 'consultationsPane' && <ConsultationsTab adminProfile={adminProfile} showToast={showToast} />}
 
-          {activeTab === 'consultationsPane' && (
-            <ConsultationsTab adminProfile={adminProfile} showToast={showToast} />
-          )}
+          {activeTab === 'articlesPane' && <ArticlesTab adminProfile={adminProfile} showToast={showToast} />}
 
-          {activeTab === 'articlesPane' && (
-            <ArticlesTab adminProfile={adminProfile} showToast={showToast} />
-          )}
+          {activeTab === 'videosPane' && <VideosTab showToast={showToast} />}
 
-          {activeTab === 'videosPane' && (
-            <VideosTab showToast={showToast} />
-          )}
+          {activeTab === 'podcastsPane' && <PodcastsTab showToast={showToast} />}
 
-          {activeTab === 'podcastsPane' && (
-            <PodcastsTab showToast={showToast} />
-          )}
+          {activeTab === 'recipesPane' && <RecipesTab showToast={showToast} />}
 
-          {activeTab === 'recipesPane' && (
-            <RecipesTab showToast={showToast} />
-          )}
+          {activeTab === 'toursPane' && <ToursTab adminProfile={adminProfile} showToast={showToast} />}
 
-          {activeTab === 'toursPane' && (
-            <ToursTab adminProfile={adminProfile} showToast={showToast} />
-          )}
+          {activeTab === 'ordersPane' && <OrdersTab showToast={showToast} onOrdersLoaded={setOrders} />}
 
-          {activeTab === 'ordersPane' && (
-            <OrdersTab showToast={showToast} onOrdersLoaded={setOrders} />
-          )}
+          {activeTab === 'supportPane' && <SupportTab showToast={showToast} />}
 
-          {activeTab === 'supportPane' && (
-            <SupportTab showToast={showToast} />
-          )}
+          {activeTab === 'subscribersPane' && <SubscribersTab showToast={showToast} />}
 
-          {activeTab === 'subscribersPane' && (
-            <SubscribersTab showToast={showToast} />
-          )}
+          {activeTab === 'promoPane' && <PromoTab showToast={showToast} />}
 
-          {activeTab === 'promoPane' && (
-            <PromoTab showToast={showToast} />
-          )}
+          {activeTab === 'mediaPane' && <MediaTab showToast={showToast} />}
 
-          {activeTab === 'mediaPane' && (
-            <MediaTab showToast={showToast} />
-          )}
+          {activeTab === 'slideshowPane' && <SlideshowTab showToast={showToast} />}
 
-          {activeTab === 'slideshowPane' && (
-            <SlideshowTab showToast={showToast} />
-          )}
+          {activeTab === 'faqsPane' && <FaqsTab showToast={showToast} />}
 
-          {activeTab === 'faqsPane' && (
-            <FaqsTab showToast={showToast} />
-          )}
+          {activeTab === 'testimonialsPane' && <TestimonialsTab showToast={showToast} />}
 
-          {activeTab === 'testimonialsPane' && (
-            <TestimonialsTab showToast={showToast} />
-          )}
+          {activeTab === 'teamPane' && <TeamTab showToast={showToast} />}
 
-          {activeTab === 'teamPane' && (
-            <TeamTab showToast={showToast} />
-          )}
-
-          {activeTab === 'settingsPane' && (
-            <SiteSettingsTab showToast={showToast} />
-          )}
+          {activeTab === 'settingsPane' && <SiteSettingsTab showToast={showToast} />}
 
           {activeTab === 'profilePane' && (
             <ProfileTab
@@ -208,7 +186,6 @@ export default function Admin() {
               initialProfile={adminProfile}
             />
           )}
-
         </div>
       </div>
 
