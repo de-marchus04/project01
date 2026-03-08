@@ -49,7 +49,7 @@ describe("changePassword", () => {
     (mockPrisma.user.findUnique as jest.Mock).mockResolvedValue(null);
     const result = await changePassword("ghost", "old", "new");
     expect(result.success).toBe(false);
-    expect(result.error).toMatch("не найден");
+    expect(result.error).toBe("USER_NOT_FOUND");
   });
 
   it("returns error if old password doesn't match", async () => {
@@ -58,7 +58,7 @@ describe("changePassword", () => {
     (mockBcrypt.compare as jest.Mock).mockResolvedValue(false);
     const result = await changePassword("user", "wrong", "new");
     expect(result.success).toBe(false);
-    expect(result.error).toMatch("неверен");
+    expect(result.error).toBe("WRONG_PASSWORD");
   });
 
   it("returns success on valid password change", async () => {

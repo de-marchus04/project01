@@ -38,21 +38,21 @@ describe("validatePromoCode", () => {
   it("returns invalid for empty code", async () => {
     const result = await validatePromoCode("  ", 100);
     expect(result.valid).toBe(false);
-    expect(result.error).toMatch("Введите промокод");
+    expect(result.error).toBe("PROMO_EMPTY");
   });
 
   it("returns invalid when promo not found", async () => {
     (mockPrisma.promoCode.findUnique as jest.Mock).mockResolvedValue(null);
     const result = await validatePromoCode("UNKNOWN", 100);
     expect(result.valid).toBe(false);
-    expect(result.error).toMatch("не найден");
+    expect(result.error).toBe("PROMO_NOT_FOUND");
   });
 
   it("returns invalid when promo is inactive", async () => {
     (mockPrisma.promoCode.findUnique as jest.Mock).mockResolvedValue({ ...basePromo, isActive: false });
     const result = await validatePromoCode("YOGA10", 100);
     expect(result.valid).toBe(false);
-    expect(result.error).toMatch("неактивен");
+    expect(result.error).toBe("PROMO_INACTIVE");
   });
 
   it("returns invalid when promo is expired", async () => {
@@ -62,7 +62,7 @@ describe("validatePromoCode", () => {
     });
     const result = await validatePromoCode("YOGA10", 100);
     expect(result.valid).toBe(false);
-    expect(result.error).toMatch("истёк");
+    expect(result.error).toBe("PROMO_EXPIRED");
   });
 
   it("returns invalid when maxUses exhausted", async () => {
@@ -73,7 +73,7 @@ describe("validatePromoCode", () => {
     });
     const result = await validatePromoCode("YOGA10", 100);
     expect(result.valid).toBe(false);
-    expect(result.error).toMatch("исчерпан");
+    expect(result.error).toBe("PROMO_EXHAUSTED");
   });
 
   it("calculates PERCENT discount correctly", async () => {
@@ -122,11 +122,11 @@ describe("applyPromoCode", () => {
 
   it("throws when promo not found", async () => {
     (mockPrisma.promoCode.findUnique as jest.Mock).mockResolvedValue(null);
-    await expect(applyPromoCode("bad-id")).rejects.toThrow("не найден");
+    await expect(applyPromoCode("bad-id")).rejects.toThrow("PROMO_NOT_FOUND");
   });
 
   it("throws when promo is inactive", async () => {
     (mockPrisma.promoCode.findUnique as jest.Mock).mockResolvedValue({ ...basePromo, isActive: false });
-    await expect(applyPromoCode("promo-1")).rejects.toThrow("неактивен");
+    await expect(applyPromoCode("promo-1")).rejects.toThrow("PROMO_INACTIVE");
   });
 });

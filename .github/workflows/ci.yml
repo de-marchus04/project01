@@ -60,7 +60,7 @@ jobs:
       - name: Setup database schema
         env:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/YogaPlatformDb
-        run: npx prisma generate && npx prisma db push --force-reset --accept-data-loss
+        run: npx prisma generate && npx prisma migrate deploy
       - name: Build
         env:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/YogaPlatformDb

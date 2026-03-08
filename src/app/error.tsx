@@ -1,9 +1,15 @@
 "use client";
 
+import * as Sentry from "@sentry/nextjs";
+import { useEffect } from "react";
 import { useLanguage } from '@/shared/i18n/LanguageContext';
 
 export default function Error({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
   const { t } = useLanguage();
+
+  useEffect(() => {
+    Sentry.captureException(error);
+  }, [error]);
 
   return (
     <div className="min-vh-100 d-flex align-items-center justify-content-center" style={{ paddingTop: '80px' }}>

@@ -59,17 +59,29 @@ export default function RootLayout({
             __html: `(function(){try{var t=localStorage.getItem('yoga_theme')||((window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();`,
           }}
         />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var l=localStorage.getItem('yoga_lang');if(l&&['ru','en','uk'].indexOf(l)!==-1)document.documentElement.lang=l;}catch(e){}})();`,
+          }}
+        />
         <link rel="stylesheet" href="/css/style.css" />
       </head>
       <body className={`${montserrat.variable} ${playfair.variable}`} style={{ backgroundColor: '#f6f7f9' }}>
         <Providers>
           <LanguageProvider>
             <ThemeProvider>
+            <a
+              href="#main-content"
+              className="visually-hidden-focusable position-absolute top-0 start-0 p-3 bg-white text-dark z-3"
+            >
+              Skip to main content
+            </a>
             <div id="main-content">
               <Header />
               <LockoutTimer />
               <GlobalModal />
               <SupportWidget />
+              <div aria-live="polite" id="aria-live-region" className="visually-hidden"></div>
 
               {children}
 

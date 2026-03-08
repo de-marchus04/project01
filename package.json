@@ -6,6 +6,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest --passWithNoTests",
+    "test:e2e": "playwright test",
     "dev": "next dev",
     "build": "rm -rf node_modules/.cache && rm -rf .next && prisma generate && next build",
     "start": "next start",
@@ -27,13 +28,14 @@
   "license": "UNLICENSED",
   "dependencies": {
     "@prisma/client": "^5.22.0",
+    "@sentry/nextjs": "^10.42.0",
     "bcryptjs": "^3.0.3",
     "bootstrap": "^5.3.8",
     "bootstrap-icons": "^1.13.1",
     "cloudinary": "^2.9.0",
     "glob": "^13.0.6",
     "next": "^16.1.6",
-    "next-auth": "^5.0.0-beta.30",
+    "next-auth": "5.0.0-beta.30",
     "prisma": "^5.22.0",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
@@ -41,6 +43,7 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
+    "@playwright/test": "^1.58.2",
     "@types/bcryptjs": "^2.4.6",
     "@types/jest": "^30.0.0",
     "@types/node": "^25.3.0",
