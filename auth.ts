@@ -6,52 +6,67 @@ import bcrypt from 'bcryptjs';
 import { prisma } from '@/shared/lib/prisma';
 import { authConfig } from './auth.config';
 
+const providers: any[] = [];
+
+if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
+  providers.push(
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    }),
+  );
+}
+
+if (process.env.GITHUB_ID && process.env.GITHUB_SECRET) {
+  providers.push(
+    GitHubProvider({
+      clientId: process.env.GITHUB_ID,
+      clientSecret: process.env.GITHUB_SECRET,
+    }),
+  );
+}
+
+providers.push(
+  CredentialsProvider({
+    name: 'Credentials',
+    credentials: {
+      username: { label: 'Username', type: 'text' },
+      password: { label: 'Password', type: 'password' },
+    },
+    async authorize(credentials) {
+      if (!credentials?.username || !credentials?.password) return null;
+
+      try {
+        const user = await prisma.user.findUnique({
+          where: { username: credentials.username as string },
+        });
+
+        if (!user || !user.passwordHash) return null;
+
+        const passwordsMatch = await bcrypt.compare(credentials.password as string, user.passwordHash);
+
+        if (!passwordsMatch) return null;
+
+        return {
+          id: user.id,
+          name: user.name || user.username,
+          email: user.email,
+          role: user.role as string,
+          avatar: user.avatar,
+          username: user.username,
+        };
+      } catch (e) {
+        console.error('Auth error:', e);
+        return null;
+      }
+    },
+  }),
+);
+
 export const { handlers, signIn, signOut, auth } = NextAuth({
   ...authConfig,
-  providers: [
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-    }),
-    GitHubProvider({
-      clientId: process.env.GITHUB_ID!,
-      clientSecret: process.env.GITHUB_SECRET!,
-    }),
-    CredentialsProvider({
-      name: 'Credentials',
-      credentials: {
-        username: { label: 'Username', type: 'text' },
-        password: { label: 'Password', type: 'password' },
-      },
-      async authorize(credentials) {
-        if (!credentials?.username || !credentials?.password) return null;
-
-        try {
-          const user = await prisma.user.findUnique({
-            where: { username: credentials.username as string },
-          });
-
-          if (!user || !user.passwordHash) return null;
-
-          const passwordsMatch = await bcrypt.compare(credentials.password as string, user.passwordHash);
-
-          if (!passwordsMatch) return null;
-
-          return {
-            id: user.id,
-            name: user.name || user.username,
-            email: user.email,
-            role: user.role as string,
-            avatar: user.avatar,
-            username: user.username,
-          };
-        } catch (e) {
-          console.error('Auth error:', e);
-          return null;
-        }
-      },
-    }),
-  ],
+  debug: process.env.NODE_ENV !== 'production',
+  providers,
   callbacks: {
     ...authConfig.callbacks,
     async jwt({ token, user, account, profile, trigger }) {
@@ -78,7 +93,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                 },
               });
             } catch (createErr: any) {
-              // Handle race condition: another request created the same username concurrently
               if (createErr?.code === 'P2002') {
                 dbUser =
                   (await prisma.user.findUnique({ where: { email } })) ||
@@ -109,13 +123,12 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         });
         if (dbUser) {
           token.name = (dbUser.name || token.username) as string;
-          // Only store HTTP avatars in JWT cookie — base64 images overflow the 4KB cookie limit
           if (!dbUser.avatar || dbUser.avatar.startsWith('http')) {
             token.avatar = dbUser.avatar;
           }
         }
       }
-      // Hydrate old/incomplete tokens: if username is missing, fetch from DB by sub (user id)
+      // Hydrate old/incomplete tokens
       if (!token.username && token.sub) {
         const dbUser = await prisma.user.findUnique({
           where: { id: token.sub as string },
@@ -130,7 +143,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           token.role = dbUser.role;
         }
       }
-      // Always ensure name is at least the username
       if (!token.name && token.username) {
         token.name = token.username as string;
       }
