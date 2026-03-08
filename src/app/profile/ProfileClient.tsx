@@ -5,7 +5,7 @@ import { useEffect, useState, useMemo } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
-import { getOrders, markOrderAsNotified, Order } from "@/shared/api/userApi";
+import { getMyOrders, markMyOrderAsNotified, Order } from "@/shared/api/userApi";
 import { getUserMessages, SupportMessage } from "@/shared/api/supportApi";
 import { changePassword, getMyProfile, updateMyProfile } from "@/shared/api/authActions";
 import { checkSubscription, subscribeEmail, unsubscribeEmail } from "@/shared/api/subscriberApi";
@@ -86,22 +86,17 @@ export default function Profile() {
           setIsSubscribed(subscribed);
         }
 
-        const data = await getOrders();
-        const userOrders = data.filter(order =>
-          order.userId === username ||
-          order.customerName === username ||
-          (profile?.name && order.customerName === profile.name)
-        );
-        setOrders(userOrders);
+        const data = await getMyOrders();
+        setOrders(data);
 
-        userOrders.forEach(async order => {
+        data.forEach(async order => {
           if ((order.status === 'Принята' || order.status === 'Отклонена') && !order.notified) {
             if (order.status === 'Принята') {
-              await modalService.alert('', t.profile.alertAccepted.replace("{product}", `"${order.productName}"`));
+              showToast(t.profile.alertAccepted.replace("{product}", `"${order.productName}"`), 'success');
             } else {
-              await modalService.alert('', t.profile.alertRejected.replace("{product}", `"${order.productName}"`));
+              showToast(t.profile.alertRejected.replace("{product}", `"${order.productName}"`), 'error');
             }
-            markOrderAsNotified(order.id);
+            markMyOrderAsNotified(order.id).catch(console.error);
           }
         });
 

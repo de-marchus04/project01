@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
+import CommentSection from "@/shared/ui/CommentSection";
 import { Article } from "@/entities/blog/model/types";
 import { getArticleById } from "@/shared/api/blogApi";
 import Link from "next/link";
@@ -177,6 +178,11 @@ export default function ArticleDetail() {
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
+          <div className="row justify-content-center mt-5">
+            <div className="col-12 col-lg-8">
+              <CommentSection articleId={article.id} />
             </div>
           </div>
       </section>

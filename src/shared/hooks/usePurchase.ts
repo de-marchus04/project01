@@ -48,8 +48,18 @@ export const usePurchase = () => {
       userId = sessionUser?.username;
     }
 
+    // Ask for preferred date/time
+    let notes: string | undefined;
+    const preferredDate = await modalService.prompt(
+      tStr("Желаемая дата/время"),
+      tStr("Укажите предпочтительную дату и время занятия (необязательно)"),
+      tStr("Например: 15 января, 10:00"),
+      true
+    );
+    if (preferredDate?.trim()) notes = preferredDate.trim();
+
     try {
-      await addOrder(title, price, customerName, serviceId, userId, itemType || 'COURSE', promoCodeId);
+      await addOrder(title, price, customerName, serviceId, userId, itemType || 'COURSE', promoCodeId, notes);
       
       if (session) {
         const goToProfile = await modalService.confirm(

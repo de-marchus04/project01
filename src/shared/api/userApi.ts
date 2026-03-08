@@ -14,6 +14,7 @@ export interface Order {
   serviceId?: string;
   userId?: string;
   notified?: boolean;
+  notes?: string;
 }
 
 export async function getOrders(): Promise<Order[]> {
@@ -50,7 +51,8 @@ export async function addOrder(
   serviceId?: string,
   username?: string,
   itemType: 'COURSE' | 'CONSULTATION' | 'TOUR' = 'COURSE',
-  promoCodeId?: string
+  promoCodeId?: string,
+  notes?: string
 ): Promise<Order> {
   const session = await auth();
 
@@ -107,7 +109,8 @@ export async function addOrder(
       itemId: serviceId || 'unknown',
       itemType,
       amount: verifiedPrice,
-      status: 'PENDING'
+      status: 'PENDING',
+      ...(notes ? { notes } : {})
     }
   });
 
@@ -120,6 +123,40 @@ export async function addOrder(
     }
   }
 
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://yoga-platform-ruby.vercel.app';
+  const notesLine = notes ? `\n\nЖелаемая дата/время: ${notes}` : '';
+
+  // Email confirmation to customer
+  if (resolvedUserId) {
+    try {
+      const userRecord = await prisma.user.findUnique({ where: { id: resolvedUserId }, select: { email: true } });
+      if (userRecord?.email) {
+        await emailService.sendEmail(
+          userRecord.email,
+          `Ваша заявка «${productName}» принята — YOGA.LIFE`,
+          `Здравствуйте!\n\nСпасибо за запись!\n\nМы получили вашу заявку на «${productName}» на сумму ${verifiedPrice} ₴.${notesLine}\n\nМенеджер свяжется с вами в ближайшее время для подтверждения.\n\nОтследить статус заявки: ${siteUrl}/profile\n\nС уважением, команда YOGA.LIFE`
+        );
+      }
+    } catch (e) {
+      console.warn('[addOrder] Customer confirmation email failed:', e);
+    }
+  }
+
+  // Email notification to admin/manager
+  const adminEmail = process.env.ADMIN_NOTIFY_EMAIL;
+  if (adminEmail) {
+    try {
+      const buyer = resolvedUserId ? customerName : `${customerName} (гость)`;
+      await emailService.sendEmail(
+        adminEmail,
+        `Новая заявка: «${productName}» — YOGA.LIFE`,
+        `Новая заявка на платформе!\n\nПродукт: ${productName}\nКлиент: ${buyer}\nСумма: ${verifiedPrice} ₴${notesLine}\n\nУправление заявками: ${siteUrl}/admin`
+      );
+    } catch (e) {
+      console.warn('[addOrder] Admin notification email failed:', e);
+    }
+  }
+
   return JSON.parse(JSON.stringify({
     id: newItem.id,
     productName,
@@ -129,7 +166,8 @@ export async function addOrder(
     customerName,
     serviceId: newItem.itemId,
     userId: newItem.userId,
-    notified: newItem.notified
+    notified: newItem.notified,
+    notes: (newItem as any).notes
   }));
 }
 
@@ -234,5 +272,44 @@ export async function deleteOrder(id: string): Promise<boolean> {
 export async function markOrderAsNotified(id: string): Promise<void> {
   const session = await auth();
   if ((session?.user)?.role !== 'ADMIN') throw new Error('Нет доступа');
+  await prisma.order.update({ where: { id }, data: { notified: true } });
+}
+
+// For authenticated users: get their own orders
+export async function getMyOrders(): Promise<Order[]> {
+  if (process.env.NEXT_RUNTIME === 'edge') { throw new Error('EDGE RUNTIME DETECTED IN SERVER ACTION'); }
+  const session = await auth();
+  if (!session?.user) throw new Error('Не авторизован');
+  const username = (session.user as any).username;
+  const user = await prisma.user.findFirst({ where: { username } });
+  if (!user) return [];
+  const items = await prisma.order.findMany({
+    where: { userId: user.id },
+    orderBy: { createdAt: 'desc' }
+  });
+  return JSON.parse(JSON.stringify(items.map(i => ({
+    id: i.id,
+    productName: i.productName || `Товар (${i.itemType})`,
+    price: i.amount,
+    status: i.status === 'COMPLETED' ? 'Принята' : i.status === 'CANCELLED' ? 'Отклонена' : 'В обработке',
+    date: new Date(i.createdAt).toISOString().split('T')[0],
+    customerName: username,
+    serviceId: i.itemId,
+    userId: i.userId ?? undefined,
+    notified: i.notified,
+    notes: (i as any).notes ?? undefined
+  }))));
+}
+
+// For authenticated users: mark their own order as notified
+export async function markMyOrderAsNotified(id: string): Promise<void> {
+  const session = await auth();
+  if (!session?.user) throw new Error('Не авторизован');
+  const username = (session.user as any).username;
+  const user = await prisma.user.findFirst({ where: { username } });
+  if (!user) throw new Error('Пользователь не найден');
+  // Only allow marking orders that belong to this user
+  const order = await prisma.order.findFirst({ where: { id, userId: user.id } });
+  if (!order) throw new Error('Заявка не найдена');
   await prisma.order.update({ where: { id }, data: { notified: true } });
 }
