@@ -1,12 +1,10 @@
-import NextAuth from "next-auth"
-import CredentialsProvider from "next-auth/providers/credentials"
-import GoogleProvider from "next-auth/providers/google"
-import GitHubProvider from "next-auth/providers/github"
-import bcrypt from "bcryptjs"
-import { prisma } from "@/shared/lib/prisma"
-import { authConfig } from "./auth.config"
-import { rateLimit } from "@/shared/lib/rateLimit"
-import { headers } from "next/headers"
+import NextAuth from 'next-auth';
+import CredentialsProvider from 'next-auth/providers/credentials';
+import GoogleProvider from 'next-auth/providers/google';
+import GitHubProvider from 'next-auth/providers/github';
+import bcrypt from 'bcryptjs';
+import { prisma } from '@/shared/lib/prisma';
+import { authConfig } from './auth.config';
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   ...authConfig,
@@ -20,32 +18,24 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       clientSecret: process.env.GITHUB_SECRET!,
     }),
     CredentialsProvider({
-      name: "Credentials",
+      name: 'Credentials',
       credentials: {
-        username: { label: "Username", type: "text" },
-        password: { label: "Password", type: "password" }
+        username: { label: 'Username', type: 'text' },
+        password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials) {
-        if (!credentials?.username || !credentials?.password) return null
+        if (!credentials?.username || !credentials?.password) return null;
 
         try {
-          const h = await headers();
-          const ip = h.get('x-forwarded-for') || 'unknown';
-          const rl = await rateLimit(`login:${ip}`, { windowMs: 900_000, max: 10 });
-          if (!rl.success) throw new Error('Слишком много попыток входа. Попробуйте через 15 минут.');
-
           const user = await prisma.user.findUnique({
-            where: { username: credentials.username as string }
-          })
+            where: { username: credentials.username as string },
+          });
 
-          if (!user || !user.passwordHash) return null
+          if (!user || !user.passwordHash) return null;
 
-          const passwordsMatch = await bcrypt.compare(
-            credentials.password as string,
-            user.passwordHash
-          )
+          const passwordsMatch = await bcrypt.compare(credentials.password as string, user.passwordHash);
 
-          if (!passwordsMatch) return null
+          if (!passwordsMatch) return null;
 
           return {
             id: user.id,
@@ -54,13 +44,13 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             role: user.role as string,
             avatar: user.avatar,
             username: user.username,
-          }
+          };
         } catch (e) {
           console.error('Auth error:', e);
           return null;
         }
-      }
-    })
+      },
+    }),
   ],
   callbacks: {
     ...authConfig.callbacks,
@@ -77,10 +67,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             while (await prisma.user.findFirst({ where: { username } })) {
               username = `${base}${++i}`;
             }
-            const avatarUrl =
-              (profile as any).picture ||
-              (profile as any).avatar_url ||
-              null;
+            const avatarUrl = (profile as any).picture || (profile as any).avatar_url || null;
             try {
               dbUser = await prisma.user.create({
                 data: {
@@ -88,13 +75,14 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                   username,
                   name: (profile as any).name || username,
                   avatar: avatarUrl,
-                }
+                },
               });
             } catch (createErr: any) {
               // Handle race condition: another request created the same username concurrently
               if (createErr?.code === 'P2002') {
-                dbUser = await prisma.user.findUnique({ where: { email } }) ||
-                         await prisma.user.findFirst({ where: { username } });
+                dbUser =
+                  (await prisma.user.findUnique({ where: { email } })) ||
+                  (await prisma.user.findFirst({ where: { username } }));
               } else {
                 throw createErr;
               }
@@ -117,7 +105,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       if (trigger === 'update' && token.username) {
         const dbUser = await prisma.user.findUnique({
           where: { username: token.username as string },
-          select: { name: true, avatar: true }
+          select: { name: true, avatar: true },
         });
         if (dbUser) {
           token.name = (dbUser.name || token.username) as string;
@@ -131,7 +119,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       if (!token.username && token.sub) {
         const dbUser = await prisma.user.findUnique({
           where: { id: token.sub as string },
-          select: { username: true, name: true, avatar: true, role: true }
+          select: { username: true, name: true, avatar: true, role: true },
         });
         if (dbUser) {
           token.username = dbUser.username;
@@ -157,6 +145,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         session.user.name = token.name as string;
       }
       return session;
-    }
-  }
-})
+    },
+  },
+});
