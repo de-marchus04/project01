@@ -76,7 +76,7 @@ export const SupportWidget = () => {
   if (!userEmail && messages.length === 0) return null; // Don't show if not logged in and no messages
 
   return (
-    <div style={{ position: 'fixed', bottom: '30px', right: '30px', zIndex: 1050 }}>
+    <div style={{ position: 'fixed', bottom: '30px', right: '30px', zIndex: 1040 }}>
       {/* Chat Window */}
       {isOpen && (
         <div

@@ -702,6 +702,12 @@ h4.font-playfair        { font-size: 1.12rem; line-height: 1.35; }
 [data-theme="dark"] .card:hover {
     box-shadow: 0 16px 48px rgba(143, 175, 126, 0.18), 0 4px 16px rgba(143, 175, 126, 0.10) !important;
 }
+/* Disable hover lift on admin/profile sidebar cards (sticky) */
+.admin-layout .card.sticky-top:hover,
+.col-md-3 > .card.sticky-top:hover {
+    transform: none !important;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05) !important;
+}
 
 /* ================================================================
    ADMIN SIDEBAR
@@ -755,9 +761,29 @@ h4.font-playfair        { font-size: 1.12rem; line-height: 1.35; }
     .admin-layout {
         flex-direction: column !important;
         padding: 10px 8px !important;
+        gap: 12px !important;
+    }
+    .admin-layout > div:first-of-type {
+        width: 100% !important;
+        min-width: 100% !important;
+        opacity: 1 !important;
+    }
+    .admin-layout > div:first-of-type > .card.sticky-top {
+        position: relative !important;
+        top: 0 !important;
+        max-height: none !important;
+        overflow: visible !important;
     }
     .admin-sidebar-toggle {
         display: none !important;
+    }
+    .admin-layout > .flex-grow-1 {
+        padding: 0.5rem !important;
+    }
+}
+@media (max-width: 575px) {
+    .admin-layout > .flex-grow-1 {
+        padding: 0.25rem !important;
     }
 }
 

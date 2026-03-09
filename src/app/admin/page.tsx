@@ -127,8 +127,8 @@ export default function Admin() {
   };
 
   return (
-    <main style={{ backgroundColor: 'var(--color-bg)', minHeight: '100vh', paddingTop: '64px' }}>
-      <div className="d-flex admin-layout" style={{ padding: '20px 16px 16px' }}>
+    <main style={{ backgroundColor: 'var(--color-bg)', minHeight: '100vh', paddingTop: '70px' }}>
+      <div className="d-flex admin-layout" style={{ padding: '20px 16px 16px', gap: '16px' }}>
         <AdminSidebar
           activeTab={activeTab}
           onTabChange={setActiveTab}

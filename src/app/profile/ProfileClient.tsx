@@ -324,7 +324,12 @@ export default function Profile() {
           <div className="col-md-3">
             <div
               className="card border-0 shadow-sm rounded-4 p-4 sticky-top"
-              style={{ top: '90px', backgroundColor: 'var(--color-card-bg)' }}
+              style={{
+                top: '76px',
+                backgroundColor: 'var(--color-card-bg)',
+                maxHeight: 'calc(100vh - 86px)',
+                overflowY: 'auto',
+              }}
             >
               {/* Avatar */}
               <div className="text-center mb-4">

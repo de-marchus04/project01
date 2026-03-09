@@ -61,11 +61,11 @@ export default function AdminSidebar({
         title={sidebarOpen ? 'Скрыть меню' : 'Показать меню'}
         style={{
           position: 'fixed',
-          top: '94px',
+          top: '80px',
           left: sidebarOpen ? '276px' : '14px',
-          zIndex: 1040,
-          width: '42px',
-          height: '42px',
+          zIndex: 1031,
+          width: '38px',
+          height: '38px',
           borderRadius: '50%',
           border: '1px solid var(--color-border)',
           backgroundColor: 'var(--color-card-bg)',
@@ -92,10 +92,12 @@ export default function AdminSidebar({
         <div
           className="card border-0 shadow-sm rounded-4 sticky-top"
           style={{
-            top: '90px',
+            top: '76px',
             backgroundColor: 'var(--color-card-bg)',
             padding: '1.25rem 1rem',
             overflow: 'hidden',
+            maxHeight: 'calc(100vh - 86px)',
+            overflowY: 'auto',
           }}
         >
           {/* Logo */}

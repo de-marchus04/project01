@@ -62,7 +62,7 @@ export default function ArticleDetail() {
 
   if (error || !article) {
     return (
-      <main className="container py-5 text-center" style={{ minHeight: '60vh', paddingTop: '150px !important' }}>
+      <main className="container py-5 text-center" style={{ minHeight: '60vh', paddingTop: '100px' }}>
         <h2 className="font-playfair mb-4">{error || tStr('Статья не найдена')}</h2>
         <button onClick={() => router.back()} className="btn btn-outline-primary-custom rounded-pill px-4">
           {tStr('Вернуться назад')}

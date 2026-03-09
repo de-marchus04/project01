@@ -30,7 +30,7 @@ export default function AboutPage() {
   }, []);
 
   return (
-    <main className="min-vh-100 pt-5" style={{ backgroundColor: 'var(--color-bg)' }}>
+    <main className="min-vh-100" style={{ backgroundColor: 'var(--color-bg)', paddingTop: '80px' }}>
       {/* Hero Section */}
       <section className="py-5">
         <div className="container py-5">
