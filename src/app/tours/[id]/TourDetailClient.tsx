@@ -299,7 +299,9 @@ export default function TourDetail() {
       {/* HIGHLIGHTS STRIP */}
       <section
         style={{
-          background: 'linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-hover) 100%)',
+          backgroundColor: 'var(--color-surface)',
+          borderTop: '2px solid var(--color-primary)',
+          borderBottom: '2px solid var(--color-primary)',
           padding: '0',
         }}
       >
@@ -317,19 +319,22 @@ export default function TourDetail() {
             ].map((item, i) => (
               <div key={i} className="col-6 col-md-3">
                 <div
-                  className="text-white text-center py-4 px-3"
+                  className="text-center py-4 px-3"
                   style={{
-                    borderRight: i < 3 ? '1px solid rgba(255,255,255,0.15)' : 'none',
+                    borderRight: i < 3 ? '1px solid var(--color-border)' : 'none',
                   }}
                 >
-                  <i className={`bi ${item.icon} d-block mb-2`} style={{ fontSize: '1.6rem', opacity: 0.85 }}></i>
+                  <i
+                    className={`bi ${item.icon} d-block mb-2`}
+                    style={{ fontSize: '1.5rem', color: 'var(--color-primary)' }}
+                  ></i>
                   <small
                     className="d-block text-uppercase"
-                    style={{ letterSpacing: '1.5px', opacity: 0.7, fontSize: '0.7rem' }}
+                    style={{ letterSpacing: '1.5px', color: 'var(--color-text-muted)', fontSize: '0.7rem' }}
                   >
                     {item.label}
                   </small>
-                  <span className="fw-bold" style={{ fontSize: '1.05rem' }}>
+                  <span className="fw-bold" style={{ fontSize: '1.05rem', color: 'var(--color-text)' }}>
                     {item.value}
                   </span>
                 </div>
@@ -382,7 +387,8 @@ export default function TourDetail() {
                     width: '60px',
                     height: '60px',
                     borderRadius: '50%',
-                    background: 'linear-gradient(135deg, var(--color-primary), var(--color-primary-hover))',
+                    border: '2px solid var(--color-primary)',
+                    backgroundColor: 'var(--color-surface)',
                   }}
                 >
                   {loc_tour.authorPhoto ? (
@@ -394,7 +400,7 @@ export default function TourDetail() {
                       alt={loc_tour.author || tStr('Организатор')}
                     />
                   ) : (
-                    <i className="bi bi-person-fill text-white" style={{ fontSize: '1.5rem' }}></i>
+                    <i className="bi bi-person-fill" style={{ fontSize: '1.5rem', color: 'var(--color-primary)' }}></i>
                   )}
                 </div>
                 <div>
@@ -423,16 +429,19 @@ export default function TourDetail() {
             <div className="col-lg-5">
               <div className="sticky-top" style={{ top: '100px' }}>
                 <div
-                  className="card border-0 rounded-4 overflow-hidden"
-                  style={{ boxShadow: '0 10px 40px rgba(0,0,0,0.08)' }}
+                  className="card rounded-4 overflow-hidden"
+                  style={{ border: '2px solid var(--color-primary)', boxShadow: '0 4px 20px rgba(0,0,0,0.04)' }}
                 >
                   <div
-                    className="p-3 text-white text-center"
+                    className="p-3 text-center"
                     style={{
-                      background: 'linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-hover) 100%)',
+                      backgroundColor: 'var(--color-surface)',
+                      borderBottom: '1px solid var(--color-primary)',
                     }}
                   >
-                    <h5 className="font-playfair fw-bold mb-0">{tStr('Забронируйте место')}</h5>
+                    <h5 className="font-playfair fw-bold mb-0" style={{ color: 'var(--color-primary)' }}>
+                      {tStr('Забронируйте место')}
+                    </h5>
                   </div>
                   <div className="card-body p-4">
                     <div className="d-flex justify-content-between align-items-center mb-3 pb-3 border-bottom">
@@ -496,8 +505,8 @@ export default function TourDetail() {
                 <div
                   className="mt-4 p-4 rounded-4"
                   style={{
-                    backgroundColor: 'var(--color-bg)',
-                    border: '1px solid var(--color-border, rgba(0,0,0,0.08))',
+                    backgroundColor: 'var(--color-surface)',
+                    border: '2px solid var(--color-accent)',
                   }}
                 >
                   <h6
@@ -717,10 +726,11 @@ export default function TourDetail() {
                 width: '50px',
                 height: '50px',
                 borderRadius: '50%',
-                background: 'linear-gradient(135deg, var(--color-primary), var(--color-primary-hover))',
+                border: '2px solid var(--color-accent)',
+                backgroundColor: 'var(--color-surface)',
               }}
             >
-              <i className="bi bi-quote text-white" style={{ fontSize: '1.3rem' }}></i>
+              <i className="bi bi-quote" style={{ fontSize: '1.3rem', color: 'var(--color-accent)' }}></i>
             </div>
             <blockquote className="mb-4" style={{ borderLeft: 'none' }}>
               <p
