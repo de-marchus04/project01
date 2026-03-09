@@ -67,17 +67,31 @@ function TourDescriptionRenderer({ text }: { text: string }) {
       {blocks.map((block, i) => {
         if (block.type === 'paragraph') {
           const paras = block.content.split('\n').filter(Boolean);
+          const isFirstBlock = i === 0;
           return (
-            <div key={i} className="mb-4">
+            <div
+              key={i}
+              className="mb-4"
+              style={
+                isFirstBlock
+                  ? {
+                      borderLeft: '3px solid var(--color-accent)',
+                      paddingLeft: '20px',
+                      marginLeft: '4px',
+                    }
+                  : undefined
+              }
+            >
               {paras.map((p, j) => (
                 <p
                   key={j}
                   className="mb-2"
                   style={{
                     lineHeight: '1.9',
-                    fontSize: i === 0 && j === 0 ? '1.08rem' : '1rem',
-                    color: i === 0 && j === 0 ? 'var(--color-text)' : 'var(--color-text-muted, #6c757d)',
-                    fontStyle: i === 0 && j === 0 ? 'italic' : 'normal',
+                    fontSize: isFirstBlock ? '1.1rem' : '1rem',
+                    color: isFirstBlock ? 'var(--color-text)' : 'var(--color-text-muted, #6c757d)',
+                    fontStyle: isFirstBlock ? 'italic' : 'normal',
+                    fontWeight: isFirstBlock && j === 0 ? 500 : 400,
                   }}
                 >
                   {p}
@@ -88,27 +102,39 @@ function TourDescriptionRenderer({ text }: { text: string }) {
         }
         if (block.type === 'section') {
           return (
-            <div key={i} className="mb-4">
+            <div
+              key={i}
+              className="mb-4 p-4 rounded-3"
+              style={{ backgroundColor: 'var(--color-bg)', border: '1px solid var(--color-border, rgba(0,0,0,0.08))' }}
+            >
               <h5
                 className="font-playfair fw-bold mb-3 d-flex align-items-center gap-2"
                 style={{
                   color: 'var(--color-accent)',
-                  paddingBottom: '10px',
+                  paddingBottom: '12px',
                   borderBottom: '2px solid var(--color-accent-subtle)',
-                  fontSize: '1.25rem',
+                  fontSize: '1.2rem',
+                  margin: 0,
+                  marginBottom: '16px',
                 }}
               >
                 <i className={`bi ${sectionIcon(block.title)}`}></i>
                 {block.title}
               </h5>
-              <ul className="list-unstyled mb-0 ps-1">
+              <div className="row">
                 {block.items.map((item, j) => (
-                  <li key={j} className="mb-2 d-flex gap-2 align-items-start">
-                    <span style={{ color: 'var(--color-accent)', flexShrink: 0, marginTop: '2px' }}>✦</span>
-                    <span style={{ lineHeight: '1.7' }}>{item}</span>
-                  </li>
+                  <div key={j} className="col-md-6 mb-2">
+                    <div className="d-flex gap-2 align-items-start">
+                      <span
+                        style={{ color: 'var(--color-accent)', flexShrink: 0, marginTop: '3px', fontSize: '0.75rem' }}
+                      >
+                        ✦
+                      </span>
+                      <span style={{ lineHeight: '1.7', fontSize: '0.95rem' }}>{item}</span>
+                    </div>
+                  </div>
                 ))}
-              </ul>
+              </div>
             </div>
           );
         }
@@ -221,9 +247,15 @@ export default function TourDetail() {
               className="text-uppercase mb-3 d-block small fw-bold"
               style={{ letterSpacing: '2px', color: 'var(--color-secondary)' }}
             >
-              {tStr('Тур')}
+              {tStr('Ретрит')}
             </span>
-            <div className="d-flex flex-wrap gap-3 mb-3">
+            <h1
+              className="display-3 font-playfair mb-4"
+              style={{ textShadow: '0 4px 15px rgba(0,0,0,0.2)', maxWidth: '800px' }}
+            >
+              {loc_tour.title}
+            </h1>
+            <div className="d-flex flex-wrap gap-3 mb-0">
               <span
                 className="badge rounded-pill px-3 py-2"
                 style={{ backgroundColor: 'rgba(255,255,255,0.2)', backdropFilter: 'blur(5px)', fontSize: '0.9rem' }}
@@ -238,13 +270,14 @@ export default function TourDetail() {
                 <i className="bi bi-geo-alt me-2"></i>
                 {loc_tour.location}
               </span>
+              <span
+                className="badge rounded-pill px-3 py-2"
+                style={{ backgroundColor: 'rgba(255,255,255,0.2)', backdropFilter: 'blur(5px)', fontSize: '0.9rem' }}
+              >
+                <i className="bi bi-tag me-2"></i>
+                {formatTourPrice(loc_tour.price, loc_tour.currency)}
+              </span>
             </div>
-            <h1 className="display-3 font-playfair mb-4" style={{ textShadow: '0 4px 15px rgba(0,0,0,0.2)' }}>
-              {loc_tour.title}
-            </h1>
-            <p className="lead col-lg-8 fw-light mb-0" style={{ textShadow: '0 2px 10px rgba(0,0,0,0.2)' }}>
-              {loc_tour.description}
-            </p>
           </div>
         </div>
       </section>
