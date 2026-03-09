@@ -224,8 +224,8 @@ export default function TourDetail() {
       <section
         className="hero-section text-white position-relative"
         style={{
-          height: '60vh',
-          minHeight: '500px',
+          height: '70vh',
+          minHeight: '550px',
           paddingTop: '100px',
           paddingBottom: '40px',
           background: `linear-gradient(rgba(62, 66, 58, 0.6), rgba(62, 66, 58, 0.8)), url('${loc_tour.imageUrl || 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?q=80&w=800'}') no-repeat center center/cover`,
@@ -250,11 +250,25 @@ export default function TourDetail() {
               {tStr('Ретрит')}
             </span>
             <h1
-              className="display-3 font-playfair mb-4"
+              className="display-3 font-playfair mb-3"
               style={{ textShadow: '0 4px 15px rgba(0,0,0,0.2)', maxWidth: '800px' }}
             >
               {loc_tour.title}
             </h1>
+            {loc_tour.description && (
+              <p
+                className="mb-4"
+                style={{
+                  fontSize: '1.15rem',
+                  lineHeight: '1.8',
+                  maxWidth: '700px',
+                  opacity: 0.9,
+                  textShadow: '0 2px 8px rgba(0,0,0,0.3)',
+                }}
+              >
+                {loc_tour.description}
+              </p>
+            )}
             <div className="d-flex flex-wrap gap-3 mb-0">
               <span
                 className="badge rounded-pill px-3 py-2"
@@ -423,6 +437,61 @@ export default function TourDetail() {
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ФОТОГАЛЕРЕЯ */}
+      <section className="py-5" style={{ backgroundColor: 'var(--color-bg)' }}>
+        <div className="container py-3">
+          <h3 className="font-playfair fw-bold text-center mb-2">{tStr('Что вас ждёт')}</h3>
+          <p className="text-center text-muted mb-5">{tStr('Атмосфера и места проведения ретрита')}</p>
+          <div className="row g-3">
+            {[
+              {
+                url: 'https://images.unsplash.com/photo-1555990793-da11153b2473?q=80&w=800&auto=format&fit=crop',
+                caption: 'Которский залив',
+              },
+              {
+                url: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?q=80&w=800&auto=format&fit=crop',
+                caption: 'Утренняя практика йоги',
+              },
+              {
+                url: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=800&auto=format&fit=crop',
+                caption: 'Адриатическое побережье',
+              },
+              {
+                url: 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?q=80&w=800&auto=format&fit=crop',
+                caption: 'Природа Черногории',
+              },
+              {
+                url: 'https://images.unsplash.com/photo-1545205597-3d9d02c29597?q=80&w=800&auto=format&fit=crop',
+                caption: 'Медитация и гармония',
+              },
+            ].map((img, i) => (
+              <div key={i} className={i < 2 ? 'col-12 col-md-6' : 'col-6 col-md-4'}>
+                <div
+                  className="position-relative overflow-hidden rounded-4"
+                  style={{ height: i < 2 ? '300px' : '220px' }}
+                >
+                  <Image
+                    src={img.url}
+                    alt={img.caption}
+                    fill
+                    sizes={i < 2 ? '(max-width: 768px) 100vw, 50vw' : '(max-width: 768px) 50vw, 33vw'}
+                    style={{ objectFit: 'cover', transition: 'transform 0.4s ease' }}
+                    onMouseOver={(e) => (e.currentTarget.style.transform = 'scale(1.05)')}
+                    onMouseOut={(e) => (e.currentTarget.style.transform = 'scale(1)')}
+                  />
+                  <div
+                    className="position-absolute bottom-0 start-0 end-0 p-3"
+                    style={{ background: 'linear-gradient(transparent, rgba(0,0,0,0.6))' }}
+                  >
+                    <span className="text-white small fw-medium">{img.caption}</span>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
