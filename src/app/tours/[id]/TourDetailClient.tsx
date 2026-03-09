@@ -489,6 +489,78 @@ export default function TourDetail() {
                     </p>
                   </div>
                 </div>
+
+                {/* COMPACT FEATURES */}
+                <div
+                  className="mt-4 p-4 rounded-4"
+                  style={{
+                    backgroundColor: 'var(--color-bg)',
+                    border: '1px solid var(--color-border, rgba(0,0,0,0.08))',
+                  }}
+                >
+                  <h6
+                    className="fw-bold mb-3 d-flex align-items-center gap-2"
+                    style={{ fontSize: '0.85rem', color: 'var(--color-accent)' }}
+                  >
+                    <i className="bi bi-check2-all"></i>
+                    {tStr('Что включено')}
+                  </h6>
+                  <div className="row g-2">
+                    {(() => {
+                      const icons: Record<string, string> = {
+                        проживан: 'bi-house-heart',
+                        йог: 'bi-sunrise',
+                        консультац: 'bi-chat-heart',
+                        ягь: 'bi-fire',
+                        пранаям: 'bi-wind',
+                        медитац: 'bi-peace',
+                        монастыр: 'bi-building',
+                        острог: 'bi-building',
+                        будв: 'bi-map',
+                        прогулк: 'bi-signpost-split',
+                        трансфер: 'bi-car-front',
+                        аэропорт: 'bi-airplane',
+                        аренд: 'bi-car-front',
+                        транспорт: 'bi-car-front',
+                        групп: 'bi-people',
+                        питан: 'bi-cup-hot',
+                        практик: 'bi-journal-bookmark',
+                        лекц: 'bi-mortarboard',
+                      };
+                      const getIcon = (f: string) => {
+                        const l = f.toLowerCase();
+                        for (const [k, v] of Object.entries(icons)) {
+                          if (l.includes(k)) return v;
+                        }
+                        return 'bi-check2-circle';
+                      };
+                      const feats = loc_tour.features
+                        ? (Array.isArray(loc_tour.features)
+                            ? loc_tour.features
+                            : (loc_tour.features as unknown as string).split('\n')
+                          ).filter((f: string) => f.trim())
+                        : [];
+                      return feats.map((feat: string, i: number) => (
+                        <div key={i} className="col-6">
+                          <div className="d-flex align-items-center gap-2 py-1">
+                            <i
+                              className={`bi ${getIcon(feat)}`}
+                              style={{ fontSize: '0.8rem', color: 'var(--color-accent)', flexShrink: 0 }}
+                            ></i>
+                            <span style={{ fontSize: '0.78rem', lineHeight: 1.3 }}>{feat}</span>
+                          </div>
+                        </div>
+                      ));
+                    })()}
+                  </div>
+                  <div
+                    className="mt-3 pt-3 border-top d-flex align-items-center gap-2"
+                    style={{ fontSize: '0.78rem', color: 'var(--color-text-muted, #6c757d)' }}
+                  >
+                    <i className="bi bi-info-circle" style={{ color: 'var(--color-accent)' }}></i>
+                    {tStr('Предоплата 300 € для подтверждения')}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -628,128 +700,6 @@ export default function TourDetail() {
                   <span className="text-white small fw-medium">{tStr('Горные маршруты и виды')}</span>
                 </div>
               </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ЧТО ВКЛЮЧЕНО — развёрнутая секция */}
-      <section className="py-5" style={{ backgroundColor: 'var(--color-surface)' }}>
-        <div className="container py-4">
-          <div className="text-center mb-5">
-            <div className="d-flex align-items-center justify-content-center gap-3 mb-3">
-              <div style={{ width: '40px', height: '2px', backgroundColor: 'var(--color-accent)' }}></div>
-              <span
-                className="text-uppercase fw-bold small"
-                style={{ letterSpacing: '3px', color: 'var(--color-accent)' }}
-              >
-                {tStr('Детали')}
-              </span>
-              <div style={{ width: '40px', height: '2px', backgroundColor: 'var(--color-accent)' }}></div>
-            </div>
-            <h3 className="font-playfair fw-bold mb-2" style={{ fontSize: '2rem' }}>
-              {tStr('Что включено в стоимость')}
-            </h3>
-            <p className="text-muted mx-auto" style={{ maxWidth: '550px' }}>
-              {tStr('Мы позаботились обо всём, чтобы вы могли полностью погрузиться в практику и отдых')}
-            </p>
-          </div>
-
-          <div className="row g-4">
-            {(() => {
-              const featureIcons: Record<string, string> = {
-                проживан: 'bi-house-heart',
-                йог: 'bi-sunrise',
-                консультац: 'bi-chat-heart',
-                ягь: 'bi-fire',
-                пранаям: 'bi-wind',
-                медитац: 'bi-peace',
-                монастыр: 'bi-building',
-                острог: 'bi-building',
-                будв: 'bi-map',
-                прогулк: 'bi-signpost-split',
-                трансфер: 'bi-car-front',
-                аэропорт: 'bi-airplane',
-                аренд: 'bi-car-front',
-                транспорт: 'bi-car-front',
-                групп: 'bi-people',
-                питан: 'bi-cup-hot',
-                практик: 'bi-journal-bookmark',
-                лекц: 'bi-mortarboard',
-              };
-              const getIcon = (feat: string) => {
-                const lower = feat.toLowerCase();
-                for (const [key, icon] of Object.entries(featureIcons)) {
-                  if (lower.includes(key)) return icon;
-                }
-                return 'bi-check2-circle';
-              };
-              const features = loc_tour.features
-                ? (Array.isArray(loc_tour.features)
-                    ? loc_tour.features
-                    : (loc_tour.features as unknown as string).split('\n')
-                  ).filter((f: string) => f.trim())
-                : [];
-              return features.map((feat: string, i: number) => {
-                const isExcluded =
-                  feat.toLowerCase().includes('оплачивается отдельно') || feat.toLowerCase().includes('не включено');
-                return (
-                  <div key={i} className="col-6 col-md-4 col-lg-3">
-                    <div
-                      className="text-center p-4 rounded-4 h-100 d-flex flex-column align-items-center"
-                      style={{
-                        backgroundColor: isExcluded ? 'transparent' : 'var(--color-bg)',
-                        border: `1px solid ${isExcluded ? 'var(--color-border, rgba(0,0,0,0.08))' : 'transparent'}`,
-                        transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-                      }}
-                      onMouseOver={(e) => {
-                        e.currentTarget.style.transform = 'translateY(-4px)';
-                        e.currentTarget.style.boxShadow = '0 8px 25px rgba(0,0,0,0.06)';
-                      }}
-                      onMouseOut={(e) => {
-                        e.currentTarget.style.transform = 'translateY(0)';
-                        e.currentTarget.style.boxShadow = 'none';
-                      }}
-                    >
-                      <div
-                        className="d-flex align-items-center justify-content-center mb-3"
-                        style={{
-                          width: '50px',
-                          height: '50px',
-                          borderRadius: '50%',
-                          backgroundColor: isExcluded
-                            ? 'rgba(220,53,69,0.1)'
-                            : 'rgba(var(--color-accent-rgb, 124,167,80), 0.12)',
-                        }}
-                      >
-                        <i
-                          className={`bi ${isExcluded ? 'bi-x-lg' : getIcon(feat)}`}
-                          style={{ fontSize: '1.2rem', color: isExcluded ? '#dc3545' : 'var(--color-accent)' }}
-                        ></i>
-                      </div>
-                      <span className={`small ${isExcluded ? 'text-muted' : ''}`} style={{ lineHeight: 1.5 }}>
-                        {feat}
-                      </span>
-                    </div>
-                  </div>
-                );
-              });
-            })()}
-          </div>
-
-          {/* Предоплата */}
-          <div className="text-center mt-5">
-            <div
-              className="d-inline-flex align-items-center gap-3 px-4 py-3 rounded-pill"
-              style={{
-                backgroundColor: 'var(--color-bg)',
-                border: '1px solid var(--color-border, rgba(0,0,0,0.08))',
-              }}
-            >
-              <i className="bi bi-info-circle" style={{ color: 'var(--color-accent)', fontSize: '1.1rem' }}></i>
-              <span style={{ fontSize: '0.9rem' }}>
-                {tStr('Для подтверждения участия необходима предоплата 300 €')}
-              </span>
             </div>
           </div>
         </div>
