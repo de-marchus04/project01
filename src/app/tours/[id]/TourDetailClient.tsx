@@ -299,7 +299,7 @@ export default function TourDetail() {
       {/* HIGHLIGHTS STRIP */}
       <section
         style={{
-          background: 'linear-gradient(135deg, var(--color-accent) 0%, #5a6b3c 100%)',
+          background: 'linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-hover) 100%)',
           padding: '0',
         }}
       >
@@ -382,7 +382,7 @@ export default function TourDetail() {
                     width: '60px',
                     height: '60px',
                     borderRadius: '50%',
-                    background: 'linear-gradient(135deg, var(--color-accent), #5a6b3c)',
+                    background: 'linear-gradient(135deg, var(--color-primary), var(--color-primary-hover))',
                   }}
                 >
                   {loc_tour.authorPhoto ? (
@@ -428,7 +428,9 @@ export default function TourDetail() {
                 >
                   <div
                     className="p-3 text-white text-center"
-                    style={{ background: 'linear-gradient(135deg, var(--color-accent) 0%, #5a6b3c 100%)' }}
+                    style={{
+                      background: 'linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-hover) 100%)',
+                    }}
                   >
                     <h5 className="font-playfair fw-bold mb-0">{tStr('Забронируйте место')}</h5>
                   </div>
@@ -701,6 +703,40 @@ export default function TourDetail() {
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ОПИСАНИЕ ПОСЛЕ ГАЛЕРЕИ */}
+      <section className="py-5" style={{ backgroundColor: 'var(--color-surface)' }}>
+        <div className="container" style={{ maxWidth: '820px' }}>
+          <div className="text-center">
+            <div
+              className="d-inline-flex align-items-center justify-content-center mb-4"
+              style={{
+                width: '50px',
+                height: '50px',
+                borderRadius: '50%',
+                background: 'linear-gradient(135deg, var(--color-primary), var(--color-primary-hover))',
+              }}
+            >
+              <i className="bi bi-quote text-white" style={{ fontSize: '1.3rem' }}></i>
+            </div>
+            <blockquote className="mb-4" style={{ borderLeft: 'none' }}>
+              <p
+                className="font-playfair fst-italic mb-4"
+                style={{ fontSize: '1.25rem', lineHeight: 1.9, color: 'var(--color-text)' }}
+              >
+                {tStr(
+                  'Приглашаем вас разделить особое время рядом с Александром Саишварарамой — практикующим йогом, психоаналитиком, истинным гуру, философом и уникальным Человеком.',
+                )}
+              </p>
+              <p style={{ fontSize: '1.05rem', lineHeight: 1.8, color: 'var(--color-text-muted, #6c757d)' }}>
+                {tStr(
+                  'Ретрит рассчитан на группу до 10 человек — для сохранения индивидуального подхода и создания атмосферы подлинной трансформации.',
+                )}
+              </p>
+            </blockquote>
           </div>
         </div>
       </section>
