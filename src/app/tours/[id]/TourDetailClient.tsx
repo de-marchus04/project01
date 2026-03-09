@@ -339,7 +339,7 @@ export default function TourDetail() {
         </div>
       </section>
 
-      {/* ABOUT + ORGANIZER */}
+      {/* ABOUT + BOOKING SIDEBAR */}
       <section className="py-5" style={{ backgroundColor: 'var(--color-surface)' }}>
         <div className="container py-4">
           <div className="row g-5 align-items-start">
@@ -419,22 +419,75 @@ export default function TourDetail() {
               </div>
             </div>
 
-            {/* IMMERSIVE SIDE IMAGE */}
+            {/* BOOKING SIDEBAR */}
             <div className="col-lg-5">
-              <div className="position-relative rounded-4 overflow-hidden" style={{ height: '450px' }}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?q=80&w=800&auto=format&fit=crop"
-                  alt={tStr('Утренняя практика')}
-                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                />
+              <div className="sticky-top" style={{ top: '100px' }}>
                 <div
-                  className="position-absolute bottom-0 start-0 end-0 p-4"
-                  style={{ background: 'linear-gradient(transparent, rgba(0,0,0,0.7))' }}
+                  className="card border-0 rounded-4 overflow-hidden"
+                  style={{ boxShadow: '0 10px 40px rgba(0,0,0,0.08)' }}
                 >
-                  <p className="text-white mb-0 font-playfair fst-italic" style={{ fontSize: '1.1rem' }}>
-                    &ldquo;{tStr('Место, где время замедляется, а вы — находите себя')}&rdquo;
-                  </p>
+                  <div
+                    className="p-3 text-white text-center"
+                    style={{ background: 'linear-gradient(135deg, var(--color-accent) 0%, #5a6b3c 100%)' }}
+                  >
+                    <h5 className="font-playfair fw-bold mb-0">{tStr('Забронируйте место')}</h5>
+                  </div>
+                  <div className="card-body p-4">
+                    <div className="d-flex justify-content-between align-items-center mb-3 pb-3 border-bottom">
+                      <span className="text-muted">{tStr('Стоимость')}</span>
+                      {promoPrice !== null ? (
+                        <div className="text-end">
+                          <span className="text-muted text-decoration-line-through me-2" style={{ fontSize: '0.9rem' }}>
+                            {formatTourPrice(loc_tour.price, loc_tour.currency)}
+                          </span>
+                          <span className="fs-3 fw-bold text-primary-custom">
+                            {formatTourPrice(promoPrice, loc_tour.currency)}
+                          </span>
+                        </div>
+                      ) : (
+                        <span className="fs-3 fw-bold text-primary-custom">
+                          {formatTourPrice(loc_tour.price, loc_tour.currency)}
+                        </span>
+                      )}
+                    </div>
+                    <div className="mb-3 small text-muted">
+                      <div className="d-flex align-items-center gap-2 mb-2">
+                        <i className="bi bi-calendar-event" style={{ color: 'var(--color-accent)' }}></i>
+                        {loc_tour.date}
+                      </div>
+                      <div className="d-flex align-items-center gap-2 mb-2">
+                        <i className="bi bi-geo-alt" style={{ color: 'var(--color-accent)' }}></i>
+                        {loc_tour.location}
+                      </div>
+                      <div className="d-flex align-items-center gap-2">
+                        <i className="bi bi-people" style={{ color: 'var(--color-accent)' }}></i>
+                        {tStr('Группа до 10 человек')}
+                      </div>
+                    </div>
+                    <PromoCodeInput
+                      originalPrice={loc_tour.price}
+                      onApply={(finalPrice, codeId) => {
+                        setPromoPrice(finalPrice);
+                        setPromoCodeId(codeId);
+                      }}
+                      onClear={() => {
+                        setPromoPrice(null);
+                        setPromoCodeId(null);
+                      }}
+                    />
+                    <BuyButton
+                      title={loc_tour.title}
+                      price={promoPrice ?? loc_tour.price}
+                      serviceId={loc_tour.id}
+                      itemType="TOUR"
+                      promoCodeId={promoCodeId ?? undefined}
+                      label={tStr('Забронировать место')}
+                      className="btn btn-primary-custom w-100 rounded-pill py-3 fw-bold fs-5 mt-3"
+                    />
+                    <p className="text-center text-muted small mt-2 mb-0">
+                      {tStr('Количество мест строго ограничено')}
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -580,105 +633,123 @@ export default function TourDetail() {
         </div>
       </section>
 
-      {/* BOOKING SECTION */}
+      {/* ЧТО ВКЛЮЧЕНО — развёрнутая секция */}
       <section className="py-5" style={{ backgroundColor: 'var(--color-surface)' }}>
         <div className="container py-4">
-          <div className="row justify-content-center">
-            <div className="col-lg-8">
-              <div
-                className="card border-0 rounded-4 overflow-hidden"
-                style={{ boxShadow: '0 10px 40px rgba(0,0,0,0.08)' }}
+          <div className="text-center mb-5">
+            <div className="d-flex align-items-center justify-content-center gap-3 mb-3">
+              <div style={{ width: '40px', height: '2px', backgroundColor: 'var(--color-accent)' }}></div>
+              <span
+                className="text-uppercase fw-bold small"
+                style={{ letterSpacing: '3px', color: 'var(--color-accent)' }}
               >
-                <div
-                  className="p-4 text-white text-center"
-                  style={{ background: 'linear-gradient(135deg, var(--color-accent) 0%, #5a6b3c 100%)' }}
-                >
-                  <h3 className="font-playfair fw-bold mb-1">{tStr('Забронируйте своё место')}</h3>
-                  <p className="mb-0 small" style={{ opacity: 0.85 }}>
-                    {tStr('Количество мест строго ограничено')}
-                  </p>
-                </div>
-                <div className="card-body p-5">
-                  <div className="d-flex justify-content-between align-items-center mb-4 pb-4 border-bottom">
-                    <span className="text-muted fs-5">{tStr('Стоимость участия')}</span>
-                    {promoPrice !== null ? (
-                      <div className="text-end">
-                        <span className="text-muted text-decoration-line-through fs-5 me-2">
-                          {formatTourPrice(loc_tour.price, loc_tour.currency)}
-                        </span>
-                        <span className="fs-2 fw-bold text-primary-custom">
-                          {formatTourPrice(promoPrice, loc_tour.currency)}
-                        </span>
+                {tStr('Детали')}
+              </span>
+              <div style={{ width: '40px', height: '2px', backgroundColor: 'var(--color-accent)' }}></div>
+            </div>
+            <h3 className="font-playfair fw-bold mb-2" style={{ fontSize: '2rem' }}>
+              {tStr('Что включено в стоимость')}
+            </h3>
+            <p className="text-muted mx-auto" style={{ maxWidth: '550px' }}>
+              {tStr('Мы позаботились обо всём, чтобы вы могли полностью погрузиться в практику и отдых')}
+            </p>
+          </div>
+
+          <div className="row g-4">
+            {(() => {
+              const featureIcons: Record<string, string> = {
+                проживан: 'bi-house-heart',
+                йог: 'bi-sunrise',
+                консультац: 'bi-chat-heart',
+                ягь: 'bi-fire',
+                пранаям: 'bi-wind',
+                медитац: 'bi-peace',
+                монастыр: 'bi-building',
+                острог: 'bi-building',
+                будв: 'bi-map',
+                прогулк: 'bi-signpost-split',
+                трансфер: 'bi-car-front',
+                аэропорт: 'bi-airplane',
+                аренд: 'bi-car-front',
+                транспорт: 'bi-car-front',
+                групп: 'bi-people',
+                питан: 'bi-cup-hot',
+                практик: 'bi-journal-bookmark',
+                лекц: 'bi-mortarboard',
+              };
+              const getIcon = (feat: string) => {
+                const lower = feat.toLowerCase();
+                for (const [key, icon] of Object.entries(featureIcons)) {
+                  if (lower.includes(key)) return icon;
+                }
+                return 'bi-check2-circle';
+              };
+              const features = loc_tour.features
+                ? (Array.isArray(loc_tour.features)
+                    ? loc_tour.features
+                    : (loc_tour.features as unknown as string).split('\n')
+                  ).filter((f: string) => f.trim())
+                : [];
+              return features.map((feat: string, i: number) => {
+                const isExcluded =
+                  feat.toLowerCase().includes('оплачивается отдельно') || feat.toLowerCase().includes('не включено');
+                return (
+                  <div key={i} className="col-6 col-md-4 col-lg-3">
+                    <div
+                      className="text-center p-4 rounded-4 h-100 d-flex flex-column align-items-center"
+                      style={{
+                        backgroundColor: isExcluded ? 'transparent' : 'var(--color-bg)',
+                        border: `1px solid ${isExcluded ? 'var(--color-border, rgba(0,0,0,0.08))' : 'transparent'}`,
+                        transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+                      }}
+                      onMouseOver={(e) => {
+                        e.currentTarget.style.transform = 'translateY(-4px)';
+                        e.currentTarget.style.boxShadow = '0 8px 25px rgba(0,0,0,0.06)';
+                      }}
+                      onMouseOut={(e) => {
+                        e.currentTarget.style.transform = 'translateY(0)';
+                        e.currentTarget.style.boxShadow = 'none';
+                      }}
+                    >
+                      <div
+                        className="d-flex align-items-center justify-content-center mb-3"
+                        style={{
+                          width: '50px',
+                          height: '50px',
+                          borderRadius: '50%',
+                          backgroundColor: isExcluded
+                            ? 'rgba(220,53,69,0.1)'
+                            : 'rgba(var(--color-accent-rgb, 124,167,80), 0.12)',
+                        }}
+                      >
+                        <i
+                          className={`bi ${isExcluded ? 'bi-x-lg' : getIcon(feat)}`}
+                          style={{ fontSize: '1.2rem', color: isExcluded ? '#dc3545' : 'var(--color-accent)' }}
+                        ></i>
                       </div>
-                    ) : (
-                      <span className="fs-2 fw-bold text-primary-custom">
-                        {formatTourPrice(loc_tour.price, loc_tour.currency)}
+                      <span className={`small ${isExcluded ? 'text-muted' : ''}`} style={{ lineHeight: 1.5 }}>
+                        {feat}
                       </span>
-                    )}
+                    </div>
                   </div>
-                  <div className="row mb-4">
-                    {loc_tour.features ? (
-                      (Array.isArray(loc_tour.features)
-                        ? loc_tour.features
-                        : (loc_tour.features as unknown as string).split('\n')
-                      )
-                        .filter((f: string) => f.trim())
-                        .map((feat: string, i: number) => {
-                          const isExcluded =
-                            feat.toLowerCase().includes('оплачивается отдельно') ||
-                            feat.toLowerCase().includes('не включено');
-                          return (
-                            <div key={i} className="col-md-6 mb-3">
-                              <div className="d-flex align-items-start gap-2">
-                                <i
-                                  className={`bi bi-${isExcluded ? 'x-circle text-danger' : 'check-circle-fill text-success'} mt-1 flex-shrink-0`}
-                                ></i>
-                                <span className={isExcluded ? 'text-muted' : ''} style={{ fontSize: '0.95rem' }}>
-                                  {feat}
-                                </span>
-                              </div>
-                            </div>
-                          );
-                        })
-                    ) : (
-                      <>
-                        <div className="col-md-6 mb-3">
-                          <div className="d-flex align-items-start gap-2">
-                            <i className="bi bi-check-circle-fill text-success mt-1"></i>
-                            {tStr('Проживание включено')}
-                          </div>
-                        </div>
-                        <div className="col-md-6 mb-3">
-                          <div className="d-flex align-items-start gap-2">
-                            <i className="bi bi-check-circle-fill text-success mt-1"></i>
-                            {tStr('Все практики и лекции')}
-                          </div>
-                        </div>
-                      </>
-                    )}
-                  </div>
-                  <PromoCodeInput
-                    originalPrice={loc_tour.price}
-                    onApply={(finalPrice, codeId) => {
-                      setPromoPrice(finalPrice);
-                      setPromoCodeId(codeId);
-                    }}
-                    onClear={() => {
-                      setPromoPrice(null);
-                      setPromoCodeId(null);
-                    }}
-                  />
-                  <BuyButton
-                    title={loc_tour.title}
-                    price={promoPrice ?? loc_tour.price}
-                    serviceId={loc_tour.id}
-                    itemType="TOUR"
-                    promoCodeId={promoCodeId ?? undefined}
-                    label={tStr('Забронировать место')}
-                    className="btn btn-primary-custom w-100 rounded-pill py-3 fw-bold fs-5 mt-3"
-                  />
-                </div>
-              </div>
+                );
+              });
+            })()}
+          </div>
+
+          {/* Предоплата */}
+          <div className="text-center mt-5">
+            <div
+              className="d-inline-flex align-items-center gap-3 px-4 py-3 rounded-pill"
+              style={{
+                backgroundColor: 'var(--color-bg)',
+                border: '1px solid var(--color-border, rgba(0,0,0,0.08))',
+              }}
+            >
+              <i className="bi bi-info-circle" style={{ color: 'var(--color-accent)', fontSize: '1.1rem' }}></i>
+              <span style={{ fontSize: '0.9rem' }}>
+                {tStr('Для подтверждения участия необходима предоплата 300 €')}
+              </span>
             </div>
           </div>
         </div>
