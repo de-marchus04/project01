@@ -474,12 +474,17 @@ export default function TourDetail() {
                   className="position-relative overflow-hidden rounded-4"
                   style={{ height: i < 2 ? '300px' : '220px' }}
                 >
-                  <Image
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
                     src={img.url}
                     alt={img.caption}
-                    fill
-                    sizes={i < 2 ? '(max-width: 768px) 100vw, 50vw' : '(max-width: 768px) 50vw, 33vw'}
-                    style={{ objectFit: 'cover', transition: 'transform 0.4s ease' }}
+                    loading="lazy"
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover',
+                      transition: 'transform 0.4s ease',
+                    }}
                     onMouseOver={(e) => (e.currentTarget.style.transform = 'scale(1.05)')}
                     onMouseOut={(e) => (e.currentTarget.style.transform = 'scale(1)')}
                   />
