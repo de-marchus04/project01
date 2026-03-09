@@ -8,9 +8,115 @@ import type { Tour } from '@/entities/tour/model/types';
 import Link from 'next/link';
 import { BuyButton } from '@/shared/ui/BuyButton/BuyButton';
 import { useLanguage } from '@/shared/i18n/LanguageContext';
-import { formatPrice } from '@/shared/lib/formatPrice';
 import ReviewSection from '@/shared/ui/ReviewSection/ReviewSection';
 import PromoCodeInput from '@/shared/ui/PromoCodeInput/PromoCodeInput';
+
+function formatTourPrice(price: number, currency?: string | null): string {
+  const cur = currency || 'UAH';
+  const symbols: Record<string, string> = { UAH: '₴', USD: '$', EUR: '€', RUB: '₽' };
+  const sym = symbols[cur] || cur;
+  return cur === 'USD' || cur === 'EUR' ? `${sym}${price}` : `${price} ${sym}`;
+}
+
+function TourDescriptionRenderer({ text }: { text: string }) {
+  type Block = { type: 'paragraph'; content: string } | { type: 'section'; title: string; items: string[] };
+
+  const blocks: Block[] = [];
+  const lines = text.split('\n');
+  let currentSection: { type: 'section'; title: string; items: string[] } | null = null;
+  let paragraphLines: string[] = [];
+
+  const flush = () => {
+    if (paragraphLines.length > 0) {
+      blocks.push({ type: 'paragraph', content: paragraphLines.join('\n') });
+      paragraphLines = [];
+    }
+    if (currentSection) {
+      blocks.push(currentSection);
+      currentSection = null;
+    }
+  };
+
+  for (const line of lines) {
+    const trimmed = line.trim();
+    if (!trimmed) {
+      flush();
+      continue;
+    }
+    if (trimmed.endsWith(':') && !trimmed.startsWith('—')) {
+      if (paragraphLines.length) flush();
+      else if (currentSection) flush();
+      currentSection = { type: 'section', title: trimmed.slice(0, -1), items: [] };
+    } else if (trimmed.startsWith('—') && currentSection) {
+      currentSection.items.push(trimmed.replace(/^—\s*/, ''));
+    } else if (!currentSection) {
+      paragraphLines.push(trimmed);
+    }
+  }
+  flush();
+
+  const sectionIcon = (title: string) => {
+    const t = title.toLowerCase();
+    if (t.includes('программ')) return 'bi-calendar2-week';
+    if (t.includes('стоимость') || t.includes('включен')) return 'bi-gift';
+    return 'bi-stars';
+  };
+
+  return (
+    <div>
+      {blocks.map((block, i) => {
+        if (block.type === 'paragraph') {
+          const paras = block.content.split('\n').filter(Boolean);
+          return (
+            <div key={i} className="mb-4">
+              {paras.map((p, j) => (
+                <p
+                  key={j}
+                  className="mb-2"
+                  style={{
+                    lineHeight: '1.9',
+                    fontSize: i === 0 && j === 0 ? '1.08rem' : '1rem',
+                    color: i === 0 && j === 0 ? 'var(--color-text)' : 'var(--color-text-muted, #6c757d)',
+                    fontStyle: i === 0 && j === 0 ? 'italic' : 'normal',
+                  }}
+                >
+                  {p}
+                </p>
+              ))}
+            </div>
+          );
+        }
+        if (block.type === 'section') {
+          return (
+            <div key={i} className="mb-4">
+              <h5
+                className="font-playfair fw-bold mb-3 d-flex align-items-center gap-2"
+                style={{
+                  color: 'var(--color-accent)',
+                  paddingBottom: '10px',
+                  borderBottom: '2px solid var(--color-accent-subtle)',
+                  fontSize: '1.25rem',
+                }}
+              >
+                <i className={`bi ${sectionIcon(block.title)}`}></i>
+                {block.title}
+              </h5>
+              <ul className="list-unstyled mb-0 ps-1">
+                {block.items.map((item, j) => (
+                  <li key={j} className="mb-2 d-flex gap-2 align-items-start">
+                    <span style={{ color: 'var(--color-accent)', flexShrink: 0, marginTop: '2px' }}>✦</span>
+                    <span style={{ lineHeight: '1.7' }}>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          );
+        }
+        return null;
+      })}
+    </div>
+  );
+}
 
 export default function TourDetail() {
   const params = useParams();
@@ -18,7 +124,7 @@ export default function TourDetail() {
   const [loading, setLoading] = useState(true);
   const [promoPrice, setPromoPrice] = useState<number | null>(null);
   const [promoCodeId, setPromoCodeId] = useState<string | null>(null);
-  const { lang, tData, tStr } = useLanguage();
+  const { tData, tStr } = useLanguage();
 
   useEffect(() => {
     async function loadTour() {
@@ -149,11 +255,13 @@ export default function TourDetail() {
           <div className="row g-5">
             <div className="col-lg-7">
               <h3 className="font-playfair fw-bold mb-4">{tStr('О программе')}</h3>
-              <div className="text-muted mb-4" style={{ lineHeight: '1.8', whiteSpace: 'pre-wrap' }}>
-                {loc_tour.fullDescription || (
+              <div className="mb-4">
+                {loc_tour.fullDescription ? (
+                  <TourDescriptionRenderer text={loc_tour.fullDescription} />
+                ) : (
                   <>
                     <p>{loc_tour.description}</p>
-                    <p>
+                    <p className="text-muted">
                       {tStr(
                         'Вас ждут ежедневные практики йоги и медитации, здоровое питание, экскурсии по самым красивым местам и глубокая трансформация в кругу единомышленников.',
                       )}
@@ -201,12 +309,16 @@ export default function TourDetail() {
                     {promoPrice !== null ? (
                       <div className="text-end">
                         <span className="text-muted text-decoration-line-through fs-5 me-2">
-                          {formatPrice(loc_tour.price, lang)}
+                          {formatTourPrice(loc_tour.price, loc_tour.currency)}
                         </span>
-                        <span className="fs-3 fw-bold text-primary-custom">{formatPrice(promoPrice, lang)}</span>
+                        <span className="fs-3 fw-bold text-primary-custom">
+                          {formatTourPrice(promoPrice, loc_tour.currency)}
+                        </span>
                       </div>
                     ) : (
-                      <span className="fs-3 fw-bold text-primary-custom">{formatPrice(loc_tour.price, lang)}</span>
+                      <span className="fs-3 fw-bold text-primary-custom">
+                        {formatTourPrice(loc_tour.price, loc_tour.currency)}
+                      </span>
                     )}
                   </div>
                   <ul className="list-unstyled mb-5">
