@@ -58,7 +58,7 @@ export const Header = () => {
     const mainContent = document.getElementById('main-content');
     if (mainContent) {
       if (isMenuOpen) {
-        const pushWidth = window.innerWidth <= 575 ? window.innerWidth : 320;
+        const pushWidth = window.innerWidth <= 575 ? window.innerWidth : 300;
         mainContent.style.transform = `translateX(${pushWidth}px)`;
         document.body.style.overflow = 'hidden';
       } else {
@@ -94,12 +94,12 @@ export const Header = () => {
             position: 'fixed',
             top: 0,
             left: 0,
-            width: '340px',
+            width: '320px',
             height: '100vh',
             backgroundColor: 'var(--color-bg)',
             borderRight: '1px solid var(--color-secondary)',
             zIndex: 0,
-            padding: '1.75rem 1.75rem 1.5rem',
+            padding: '1rem 1.25rem 1rem',
             display: 'flex',
             flexDirection: 'column',
             overflowY: 'auto',
@@ -108,11 +108,11 @@ export const Header = () => {
           }}
         >
           {/* Logo */}
-          <div className="mb-4 mt-2 text-center pb-3" style={{ borderBottom: '1px solid var(--color-secondary)' }}>
+          <div className="mb-2 mt-1 text-center pb-2" style={{ borderBottom: '1px solid var(--color-secondary)' }}>
             <Link
               href="/"
               className="text-decoration-none font-playfair fw-bold"
-              style={{ letterSpacing: '2px', color: 'var(--color-primary)', fontSize: '1.6rem' }}
+              style={{ letterSpacing: '2px', color: 'var(--color-primary)', fontSize: '1.4rem' }}
               onClick={() => setIsMenuOpen(false)}
             >
               YOGA.LIFE
@@ -126,26 +126,26 @@ export const Header = () => {
                   {item.children ? (
                     <>
                       <div
-                        className="fw-bold text-uppercase mt-4 mb-2"
+                        className="fw-bold text-uppercase mt-3 mb-1"
                         style={{
                           letterSpacing: '1.5px',
                           color: 'var(--color-primary)',
-                          fontSize: '0.82rem',
+                          fontSize: '0.75rem',
                         }}
                       >
                         {item.label}
                       </div>
                       <ul
                         className="nav flex-column ms-2 border-start ps-3"
-                        style={{ borderColor: 'var(--color-secondary)', gap: '2px' }}
+                        style={{ borderColor: 'var(--color-secondary)', gap: '0' }}
                       >
                         {item.children.map((child, childIndex) => (
                           <li key={childIndex}>
                             <Link
                               href={child.href || '#'}
-                              className="text-decoration-none d-block py-2"
+                              className="text-decoration-none d-block py-1"
                               style={{
-                                fontSize: '1rem',
+                                fontSize: '0.92rem',
                                 lineHeight: '1.4',
                                 color: pathname === child.href ? 'var(--color-primary)' : 'var(--color-text)',
                                 transition: 'color 0.2s',
@@ -176,9 +176,9 @@ export const Header = () => {
                   ) : (
                     <Link
                       href={item.href || '#'}
-                      className="text-decoration-none fw-semibold d-block py-2 mt-2"
+                      className="text-decoration-none fw-semibold d-block py-1 mt-2"
                       style={{
-                        fontSize: '1.15rem',
+                        fontSize: '1.05rem',
                         color: pathname === item.href ? 'var(--color-primary)' : 'var(--color-text)',
                         transition: 'color 0.2s',
                       }}
@@ -193,17 +193,23 @@ export const Header = () => {
           </ul>
 
           {/* Profile / Auth block */}
-          <div className="mt-4 pt-3 border-top" style={{ borderColor: 'var(--color-border)' }}>
+          <div className="mt-3 pt-2 border-top" style={{ borderColor: 'var(--color-border)' }}>
             {isAuth ? (
-              <div style={{ borderRadius: '16px', backgroundColor: 'rgba(140,154,129,0.08)', padding: '14px 16px' }}>
-                <div className="d-flex align-items-center gap-3 mb-3">
+              <div style={{ borderRadius: '16px', backgroundColor: 'rgba(140,154,129,0.08)', padding: '12px 14px' }}>
+                <div className="d-flex align-items-center gap-3 mb-2">
                   {userPhoto && (userPhoto.startsWith('http') || userPhoto.startsWith('data:image')) ? (
                     <Image
-                      width={48}
-                      height={48}
-                      src={userPhoto || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=48'}
+                      width={40}
+                      height={40}
+                      src={userPhoto || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=40'}
                       alt={username}
-                      style={{ objectFit: 'cover', borderRadius: '50%', border: '2px solid var(--color-primary)' }}
+                      style={{
+                        objectFit: 'cover',
+                        borderRadius: '50%',
+                        border: '2px solid var(--color-primary)',
+                        width: '40px',
+                        height: '40px',
+                      }}
                       onError={(e) => {
                         e.currentTarget.style.display = 'none';
                       }}
@@ -212,14 +218,14 @@ export const Header = () => {
                     <div
                       className="rounded-circle d-flex align-items-center justify-content-center"
                       style={{
-                        width: '48px',
-                        height: '48px',
+                        width: '40px',
+                        height: '40px',
                         flexShrink: 0,
                         backgroundColor: 'var(--color-secondary)',
                         border: '2px solid var(--color-primary)',
                       }}
                     >
-                      <i className="bi bi-person" style={{ color: 'var(--color-primary)', fontSize: '1.4rem' }}></i>
+                      <i className="bi bi-person" style={{ color: 'var(--color-primary)', fontSize: '1.2rem' }}></i>
                     </div>
                   )}
                   <div style={{ minWidth: 0 }}>

@@ -4,12 +4,35 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useLanguage } from '@/shared/i18n/LanguageContext';
 import { useScrollReveal } from '@/shared/hooks/useScrollReveal';
+import { useEffect, useState } from 'react';
+import { getHomeContent } from '@/shared/api/homeContentApi';
 
 const WARM_OVERLAY = 'linear-gradient(to top, rgba(35,25,18,0.88) 0%, rgba(35,25,18,0) 70%)';
+
+const DEFAULT_IMAGES = [
+  '/img/course-placeholder.svg',
+  '/img/course-placeholder.svg',
+  '/img/course-placeholder.svg',
+  '/img/course-placeholder.svg',
+];
 
 export const PopularCourses = () => {
   const { t } = useLanguage();
   const { observe } = useScrollReveal();
+  const [images, setImages] = useState(DEFAULT_IMAGES);
+
+  useEffect(() => {
+    getHomeContent()
+      .then((data) => {
+        setImages([
+          data.course_card_1_image || DEFAULT_IMAGES[0],
+          data.course_card_2_image || DEFAULT_IMAGES[1],
+          data.course_card_3_image || DEFAULT_IMAGES[2],
+          data.course_card_4_image || DEFAULT_IMAGES[3],
+        ]);
+      })
+      .catch(() => {});
+  }, []);
 
   return (
     <section id="courses" className="py-5" style={{ backgroundColor: 'var(--color-bg)' }}>
@@ -42,7 +65,7 @@ export const PopularCourses = () => {
                 style={{ minHeight: '400px', borderRadius: '20px' }}
               >
                 <Image
-                  src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?q=80&w=800&auto=format&fit=crop"
+                  src={images[0]}
                   alt={t.nav.coursesBeginners}
                   fill
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
@@ -71,7 +94,7 @@ export const PopularCourses = () => {
                 style={{ minHeight: '400px', borderRadius: '20px' }}
               >
                 <Image
-                  src="https://images.unsplash.com/photo-1508672019048-805c876b67e2?q=80&w=800&auto=format&fit=crop"
+                  src={images[1]}
                   alt={t.nav.coursesMeditation}
                   fill
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
@@ -100,7 +123,7 @@ export const PopularCourses = () => {
                 style={{ minHeight: '400px', borderRadius: '20px' }}
               >
                 <Image
-                  src="https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?q=80&w=800&auto=format&fit=crop"
+                  src={images[2]}
                   alt={t.nav.coursesBack}
                   fill
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
@@ -129,7 +152,7 @@ export const PopularCourses = () => {
                 style={{ minHeight: '400px', borderRadius: '20px' }}
               >
                 <Image
-                  src="https://images.unsplash.com/photo-1518609878373-06d740f60d8b?q=80&w=800&auto=format&fit=crop"
+                  src={images[3]}
                   alt={t.nav.coursesWomen}
                   fill
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"

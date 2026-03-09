@@ -348,3 +348,13 @@ model PageSlide {
 
   @@index([pageKey, active])
 }
+
+// -----------------------------------------------------------------------------
+// Контент главной страницы (управляется в админ-панели)
+// -----------------------------------------------------------------------------
+model HomeContent {
+  id        String   @id @default(cuid())
+  key       String   @unique // "course_1_image", "platform_2_image", etc.
+  value     String   @db.Text
+  updatedAt DateTime @updatedAt
+}

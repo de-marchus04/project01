@@ -39,19 +39,10 @@ export default function BlogPodcasts() {
         style={{
           height: '50vh',
           minHeight: '400px',
-          background:
-            "linear-gradient(rgba(62, 66, 58, 0.6), rgba(62, 66, 58, 0.7)), url('https://images.unsplash.com/photo-1478737270239-2f02b77fc618?q=80&w=2070&auto=format&fit=crop') center/cover",
+          background: 'linear-gradient(135deg, #5C6E4F 0%, #3E423A 100%)',
         }}
       >
-        <HeroSlider
-          pageKey="blog-podcasts"
-          images={[
-            'https://images.unsplash.com/photo-1506126613408-eca07ce68773?q=80&w=2000&auto=format&fit=crop',
-            'https://images.unsplash.com/photo-1599447421405-0753f5d1a5ca?q=80&w=2070&auto=format&fit=crop',
-            'https://images.unsplash.com/photo-1575052814086-f385e2e2ad1b?q=80&w=2070&auto=format&fit=crop',
-            'https://images.unsplash.com/photo-1518611012118-696072aa579a?q=80&w=2000&auto=format&fit=crop',
-          ]}
-        />
+        <HeroSlider pageKey="blog-podcasts" />
         <div className="container position-relative z-2">
           <h1 className="display-3 font-playfair mb-4" style={{ textShadow: '0 4px 15px rgba(0,0,0,0.2)' }}>
             {tStr('Подкасты')}

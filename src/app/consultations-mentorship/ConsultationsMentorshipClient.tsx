@@ -42,17 +42,14 @@ export default function ConsultationsMentorshipClient({ initialData }: { initial
       {/* HERO SECTION */}
       <section
         className="hero-section page-hero d-flex align-items-center text-center text-white position-relative"
-        style={{ height: '60vh', minHeight: '500px', overflow: 'hidden' }}
+        style={{
+          height: '60vh',
+          minHeight: '500px',
+          overflow: 'hidden',
+          background: 'linear-gradient(135deg, #5C6E4F 0%, #3E423A 100%)',
+        }}
       >
-        <HeroSlider
-          pageKey="consultations-mentorship"
-          images={[
-            'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=2071&auto=format&fit=crop',
-            'https://images.unsplash.com/photo-1599447421405-0753f5d1a5ca?q=80&w=2070&auto=format&fit=crop',
-            'https://images.unsplash.com/photo-1506126613408-eca07ce68773?q=80&w=2000&auto=format&fit=crop',
-            'https://images.unsplash.com/photo-1575052814086-f385e2e2ad1b?q=80&w=2070&auto=format&fit=crop',
-          ]}
-        />
+        <HeroSlider pageKey="consultations-mentorship" />
         <div className="container position-relative z-2">
           <span className="text-uppercase ls-2 mb-3 d-block small fw-bold" style={{ color: 'var(--color-secondary)' }}>
             {t.programs.consultMentor}

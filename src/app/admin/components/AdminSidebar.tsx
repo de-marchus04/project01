@@ -45,6 +45,7 @@ export default function AdminSidebar({
     ['promoPane', t.admin.tabPromo, 'bi-tag'],
     ['mediaPane', t.admin.tabMedia, 'bi-images'],
     ['slideshowPane', t.admin.tabSlideshow, 'bi-play-btn'],
+    ['homepagePane', t.admin.tabHomepage || 'Главная', 'bi-house-door'],
     ['faqsPane', t.admin.tabFaq, 'bi-question-circle'],
     ['testimonialsPane', t.admin.tabTestimonials, 'bi-star'],
     ['teamPane', t.admin.tabTeam, 'bi-people'],

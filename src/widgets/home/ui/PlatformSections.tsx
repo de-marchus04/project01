@@ -4,38 +4,23 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useLanguage } from '@/shared/i18n/LanguageContext';
 import { useScrollReveal } from '@/shared/hooks/useScrollReveal';
+import { useEffect, useState } from 'react';
+import { getHomeContent } from '@/shared/api/homeContentApi';
 
 const WARM_OVERLAY = 'linear-gradient(to top, rgba(35,25,18,0.95) 0%, rgba(50,38,28,0.5) 55%, rgba(35,25,18,0) 100%)';
 
-const CARDS = [
-  {
-    href: '/courses',
-    img: 'https://images.unsplash.com/photo-1593811167562-9cef47bfc4d7?q=80&w=800&auto=format&fit=crop',
-    badgeKey: 'practice',
-    titleKey: 'courses',
-    descKey: 'coursesDesc',
-  },
-  {
-    href: '/consultations',
-    img: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?q=80&w=800&auto=format&fit=crop',
-    badgeKey: 'experts',
-    titleKey: 'consultations',
-    descKey: 'consultDesc',
-  },
-  {
-    href: '/tours',
-    img: 'https://images.unsplash.com/photo-1552196563-55cd4e45efb3?q=80&w=800&auto=format&fit=crop',
-    badgeKey: 'retreats',
-    titleKey: 'tours',
-    descKey: 'travelDesc',
-  },
-  {
-    href: '/blog',
-    img: 'https://images.unsplash.com/photo-1545205597-3d9d02c29597?q=80&w=800&auto=format&fit=crop',
-    badgeKey: 'usefulness',
-    titleKey: 'blog',
-    descKey: 'blogDesc',
-  },
+const DEFAULT_IMAGES = [
+  '/img/course-placeholder.svg',
+  '/img/course-placeholder.svg',
+  '/img/course-placeholder.svg',
+  '/img/course-placeholder.svg',
+];
+
+const CARD_DEFS = [
+  { href: '/courses', badgeKey: 'practice', titleKey: 'courses', descKey: 'coursesDesc' },
+  { href: '/consultations', badgeKey: 'experts', titleKey: 'consultations', descKey: 'consultDesc' },
+  { href: '/tours', badgeKey: 'retreats', titleKey: 'tours', descKey: 'travelDesc' },
+  { href: '/blog', badgeKey: 'usefulness', titleKey: 'blog', descKey: 'blogDesc' },
 ] as const;
 
 const cardStyle: React.CSSProperties = {
@@ -66,6 +51,20 @@ const overlayStyle: React.CSSProperties = {
 export const PlatformSections = () => {
   const { t } = useLanguage();
   const { observe } = useScrollReveal();
+  const [images, setImages] = useState(DEFAULT_IMAGES);
+
+  useEffect(() => {
+    getHomeContent()
+      .then((data) => {
+        setImages([
+          data.platform_card_1_image || DEFAULT_IMAGES[0],
+          data.platform_card_2_image || DEFAULT_IMAGES[1],
+          data.platform_card_3_image || DEFAULT_IMAGES[2],
+          data.platform_card_4_image || DEFAULT_IMAGES[3],
+        ]);
+      })
+      .catch(() => {});
+  }, []);
 
   const getTitle = (key: string) => {
     const map: Record<string, string> = {
@@ -106,7 +105,7 @@ export const PlatformSections = () => {
           </p>
         </div>
         <div className="row g-4 justify-content-center">
-          {CARDS.map((card, idx) => (
+          {CARD_DEFS.map((card, idx) => (
             <div
               key={card.href}
               className={`col-md-6 col-lg-3 reveal-up${idx > 0 ? ` reveal-delay-${idx}` : ''}`}
@@ -115,7 +114,7 @@ export const PlatformSections = () => {
               <Link href={card.href} className="text-decoration-none">
                 <div className="group-hover text-white" style={cardStyle}>
                   <Image
-                    src={card.img}
+                    src={images[idx]}
                     alt={getTitle(card.titleKey)}
                     fill
                     sizes="(max-width: 768px) 100vw, (max-width: 992px) 50vw, 25vw"
