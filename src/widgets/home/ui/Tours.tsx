@@ -6,10 +6,14 @@ import { useLanguage } from '@/shared/i18n/LanguageContext';
 import { useScrollReveal } from '@/shared/hooks/useScrollReveal';
 import type { Tour } from '@/entities/tour/model/types';
 
-const FALLBACK_IMAGES = [
-  'https://images.unsplash.com/photo-1537996194471-e657df975ab4?q=80&w=800',
-  'https://images.unsplash.com/photo-1501504905252-473c47e087f8?q=80&w=800',
-];
+const FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=800';
+
+function formatTourPrice(tour: Tour): string {
+  const currency = tour.currency || 'UAH';
+  const symbols: Record<string, string> = { UAH: '₴', USD: '$', EUR: '€', RUB: '₽' };
+  const sym = symbols[currency] || currency;
+  return currency === 'USD' || currency === 'EUR' ? `${sym}${tour.price}` : `${tour.price} ${sym}`;
+}
 
 interface ToursProps {
   initialTours: Tour[];
@@ -21,35 +25,11 @@ export const Tours = ({ initialTours }: ToursProps) => {
 
   const displayTours = initialTours.slice(0, 2).map((tour, i) => ({
     ...(tData ? tData(tour) : tour),
-    imageUrl: tour.imageUrl || FALLBACK_IMAGES[i] || FALLBACK_IMAGES[0],
+    imageUrl: tour.imageUrl || FALLBACK_IMAGE,
     href: '/tours',
   }));
 
-  const cards =
-    displayTours.length > 0
-      ? displayTours
-      : [
-          {
-            id: 'fallback-1',
-            title: t.home.tour1Title,
-            description: t.home.tour1Desc,
-            date: t.home.tour1Days,
-            location: t.home.tour1Loc,
-            imageUrl: FALLBACK_IMAGES[0],
-            href: '/tours',
-            price: 0,
-          },
-          {
-            id: 'fallback-2',
-            title: t.home.tour2Title,
-            description: t.home.tour2Desc,
-            date: t.home.tour2Days,
-            location: t.home.tour2Loc,
-            imageUrl: FALLBACK_IMAGES[1],
-            href: '/tours',
-            price: 0,
-          },
-        ];
+  if (displayTours.length === 0) return null;
 
   return (
     <section id="tours" className="py-5" style={{ backgroundColor: 'var(--color-surface)' }}>
@@ -62,7 +42,7 @@ export const Tours = ({ initialTours }: ToursProps) => {
           </p>
         </div>
         <div className="row g-4">
-          {cards.map((card, index) => (
+          {displayTours.map((card, index) => (
             <div
               key={card.id}
               className={`col-lg-6 reveal-up${index > 0 ? ' reveal-delay-1' : ''}`}
@@ -72,7 +52,7 @@ export const Tours = ({ initialTours }: ToursProps) => {
                 <div className="row g-0 h-100">
                   <div className="col-md-5 position-relative" style={{ minHeight: '250px' }}>
                     <Image
-                      src={card.imageUrl}
+                      src={card.imageUrl as string}
                       fill
                       sizes="(max-width: 768px) 100vw, 300px"
                       style={{ objectFit: 'cover', borderLeft: '4px solid var(--color-accent)' }}
@@ -91,6 +71,7 @@ export const Tours = ({ initialTours }: ToursProps) => {
                             fontWeight: 500,
                           }}
                         >
+                          <i className="bi bi-calendar3 me-1"></i>
                           {card.date}
                         </span>
                         <small className="text-muted">
@@ -98,7 +79,15 @@ export const Tours = ({ initialTours }: ToursProps) => {
                           {card.location}
                         </small>
                       </div>
-                      <h4 className="card-title font-playfair fw-bold mb-3">{card.title}</h4>
+                      <div className="d-flex align-items-start justify-content-between mb-2 gap-2">
+                        <h4 className="card-title font-playfair fw-bold mb-0">{card.title}</h4>
+                        <span
+                          className="fw-bold text-nowrap"
+                          style={{ color: 'var(--color-primary)', fontSize: '0.95rem' }}
+                        >
+                          {formatTourPrice(card as Tour)}
+                        </span>
+                      </div>
                       <p className="card-text text-muted mb-4" style={{ fontSize: '0.95rem' }}>
                         {card.description}
                       </p>

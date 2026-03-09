@@ -3,18 +3,33 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { getTours } from '@/shared/api/tourApi';
-import type { Tour } from '@/entities/tour/model/types';
+import type { Tour, TourStatus } from '@/entities/tour/model/types';
+import { getTourStatus } from '@/entities/tour/model/types';
 import { HeroSlider } from '@/shared/ui/HeroSlider/HeroSlider';
 import { useLanguage } from '@/shared/i18n/LanguageContext';
-import { formatPrice } from '@/shared/lib/formatPrice';
 import { useScrollReveal } from '@/shared/hooks/useScrollReveal';
 import { SectionHeader } from '@/shared/ui/SectionHeader/SectionHeader';
 
+const STATUS_TABS: { key: TourStatus; label: string; icon: string }[] = [
+  { key: 'all', label: 'Все ретриты', icon: 'bi-grid' },
+  { key: 'upcoming', label: 'Предстоящие', icon: 'bi-calendar-event' },
+  { key: 'current', label: 'Актуальные', icon: 'bi-lightning-charge' },
+  { key: 'past', label: 'Прошедшие', icon: 'bi-clock-history' },
+];
+
+function formatTourPrice(tour: Tour): string {
+  const currency = tour.currency || 'UAH';
+  const symbols: Record<string, string> = { UAH: '₴', USD: '$', EUR: '€', RUB: '₽' };
+  const sym = symbols[currency] || currency;
+  return currency === 'USD' || currency === 'EUR' ? `${sym}${tour.price}` : `${tour.price} ${sym}`;
+}
+
 export default function ToursPageClient({ initialData }: { initialData: any }) {
-  const { t, tData, tStr, lang } = useLanguage();
+  const { t, tData, tStr } = useLanguage();
   const { observe } = useScrollReveal();
   const [tours, setTours] = useState<Tour[]>([]);
   const [loading, setLoading] = useState(!initialData);
+  const [activeStatus, setActiveStatus] = useState<TourStatus>('all');
 
   useEffect(() => {
     async function loadTours() {
@@ -29,6 +44,15 @@ export default function ToursPageClient({ initialData }: { initialData: any }) {
     }
     loadTours();
   }, []);
+
+  const filtered = tours.filter((tour) => {
+    if (activeStatus === 'all') return true;
+    const status = getTourStatus(tour);
+    if (activeStatus === 'upcoming') return status === 'upcoming';
+    if (activeStatus === 'current') return status === 'current';
+    if (activeStatus === 'past') return status === 'past' || status === 'unknown';
+    return true;
+  });
 
   return (
     <main>
@@ -67,6 +91,29 @@ export default function ToursPageClient({ initialData }: { initialData: any }) {
             observe={observe}
           />
 
+          {/* Status Tabs */}
+          <div className="d-flex flex-wrap gap-2 justify-content-center mb-5 reveal-up" ref={observe as any}>
+            {STATUS_TABS.map((tab) => {
+              const isActive = activeStatus === tab.key;
+              return (
+                <button
+                  key={tab.key}
+                  onClick={() => setActiveStatus(tab.key)}
+                  className="btn rounded-pill px-4 py-2 fw-medium"
+                  style={{
+                    backgroundColor: isActive ? 'var(--color-accent)' : 'transparent',
+                    color: isActive ? '#fff' : 'var(--color-text)',
+                    border: `2px solid ${isActive ? 'var(--color-accent)' : 'var(--color-border, #dee2e6)'}`,
+                    transition: 'all 0.2s',
+                  }}
+                >
+                  <i className={`bi ${tab.icon} me-2`}></i>
+                  {tab.label}
+                </button>
+              );
+            })}
+          </div>
+
           <div className="row g-4">
             {loading && (
               <div className="col-12 text-center">
@@ -74,9 +121,23 @@ export default function ToursPageClient({ initialData }: { initialData: any }) {
               </div>
             )}
 
+            {!loading && filtered.length === 0 && (
+              <div className="col-12 text-center py-5 text-muted">
+                <i className="bi bi-calendar-x display-4 d-block mb-3"></i>
+                <p>В этой категории пока нет ретритов</p>
+              </div>
+            )}
+
             {!loading &&
-              tours.map((tour, index) => {
+              filtered.map((tour, index) => {
                 const loc_tour = tData ? tData(tour) : tour;
+                const status = getTourStatus(loc_tour);
+                const statusBadge =
+                  status === 'current'
+                    ? { label: 'Идёт сейчас', color: '#28a745' }
+                    : status === 'upcoming'
+                      ? { label: 'Предстоящий', color: 'var(--color-accent)' }
+                      : null;
                 return (
                   <div
                     key={loc_tour.id}
@@ -88,7 +149,15 @@ export default function ToursPageClient({ initialData }: { initialData: any }) {
                       style={{ borderRadius: '16px', boxShadow: '0 4px 20px rgba(0,0,0,0.08)' }}
                     >
                       <div className="row g-0 h-100">
-                        <div className="col-md-5">
+                        <div className="col-md-5 position-relative">
+                          {statusBadge && (
+                            <span
+                              className="position-absolute top-0 start-0 m-2 badge rounded-pill"
+                              style={{ backgroundColor: statusBadge.color, zIndex: 2, fontSize: '0.75rem' }}
+                            >
+                              {statusBadge.label}
+                            </span>
+                          )}
                           <img
                             src={
                               loc_tour.imageUrl ||
@@ -119,6 +188,7 @@ export default function ToursPageClient({ initialData }: { initialData: any }) {
                                   fontWeight: 500,
                                 }}
                               >
+                                <i className="bi bi-calendar3 me-1"></i>
                                 {loc_tour.date}
                               </span>
                               <small className="text-muted">
@@ -129,7 +199,7 @@ export default function ToursPageClient({ initialData }: { initialData: any }) {
                             <div className="d-flex align-items-start justify-content-between mb-2 gap-2">
                               <h4 className="card-title font-playfair fw-bold mb-0">{loc_tour.title}</h4>
                               <span className="fw-bold text-nowrap" style={{ color: 'var(--color-primary)' }}>
-                                {formatPrice(loc_tour.price, lang)}
+                                {formatTourPrice(loc_tour)}
                               </span>
                             </div>
                             <p className="card-text text-muted mb-4" style={{ fontSize: '0.95rem' }}>
