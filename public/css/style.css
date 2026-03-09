@@ -19,6 +19,8 @@
     --color-error-subtle: #F5E8E8;
     --color-warning: #B07D2E;
     --color-warning-subtle: #F5EDD8;
+    --color-primary-border: rgba(92, 110, 79, 0.3);
+    --color-accent-border: rgba(196, 113, 74, 0.35);
 }
 
 /* Smooth theme transition — only on colour-related properties, no !important so component-specific transitions can override */
@@ -166,6 +168,8 @@ footer input::placeholder {
     --color-error-subtle: #2E1818;
     --color-warning: #D4A044;
     --color-warning-subtle: #2E2010;
+    --color-primary-border: rgba(143, 175, 126, 0.35);
+    --color-accent-border: rgba(212, 132, 90, 0.4);
 }
 
 [data-theme="dark"] body,

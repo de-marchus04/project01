@@ -300,8 +300,8 @@ export default function TourDetail() {
       <section
         style={{
           backgroundColor: 'var(--color-surface)',
-          borderTop: '2px solid var(--color-primary)',
-          borderBottom: '2px solid var(--color-primary)',
+          borderTop: '1px solid var(--color-primary-border)',
+          borderBottom: '1px solid var(--color-primary-border)',
           padding: '0',
         }}
       >
@@ -387,7 +387,7 @@ export default function TourDetail() {
                     width: '60px',
                     height: '60px',
                     borderRadius: '50%',
-                    border: '2px solid var(--color-primary)',
+                    border: '1px solid var(--color-primary-border)',
                     backgroundColor: 'var(--color-surface)',
                   }}
                 >
@@ -430,17 +430,17 @@ export default function TourDetail() {
               <div className="sticky-top" style={{ top: '100px' }}>
                 <div
                   className="card rounded-4 overflow-hidden"
-                  style={{ border: '2px solid var(--color-primary)', boxShadow: '0 4px 20px rgba(0,0,0,0.04)' }}
+                  style={{ border: '1px solid var(--color-primary-border)', boxShadow: '0 4px 20px rgba(0,0,0,0.04)' }}
                 >
                   <div
                     className="p-3 text-center"
                     style={{
                       backgroundColor: 'var(--color-surface)',
-                      borderBottom: '1px solid var(--color-primary)',
+                      borderBottom: '1px solid var(--color-primary-border)',
                     }}
                   >
                     <h5 className="font-playfair fw-bold mb-0" style={{ color: 'var(--color-primary)' }}>
-                      {tStr('Забронируйте место')}
+                      {tStr('Забронировать место')}
                     </h5>
                   </div>
                   <div className="card-body p-4">
@@ -506,7 +506,7 @@ export default function TourDetail() {
                   className="mt-4 p-4 rounded-4"
                   style={{
                     backgroundColor: 'var(--color-surface)',
-                    border: '2px solid var(--color-accent)',
+                    border: '1px solid var(--color-accent-border)',
                   }}
                 >
                   <h6
@@ -712,41 +712,6 @@ export default function TourDetail() {
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ОПИСАНИЕ ПОСЛЕ ГАЛЕРЕИ */}
-      <section className="py-5" style={{ backgroundColor: 'var(--color-surface)' }}>
-        <div className="container" style={{ maxWidth: '820px' }}>
-          <div className="text-center">
-            <div
-              className="d-inline-flex align-items-center justify-content-center mb-4"
-              style={{
-                width: '50px',
-                height: '50px',
-                borderRadius: '50%',
-                border: '2px solid var(--color-accent)',
-                backgroundColor: 'var(--color-surface)',
-              }}
-            >
-              <i className="bi bi-quote" style={{ fontSize: '1.3rem', color: 'var(--color-accent)' }}></i>
-            </div>
-            <blockquote className="mb-4" style={{ borderLeft: 'none' }}>
-              <p
-                className="font-playfair fst-italic mb-4"
-                style={{ fontSize: '1.25rem', lineHeight: 1.9, color: 'var(--color-text)' }}
-              >
-                {tStr(
-                  'Приглашаем вас разделить особое время рядом с Александром Саишварарамой — практикующим йогом, психоаналитиком, истинным гуру, философом и уникальным Человеком.',
-                )}
-              </p>
-              <p style={{ fontSize: '1.05rem', lineHeight: 1.8, color: 'var(--color-text-muted, #6c757d)' }}>
-                {tStr(
-                  'Ретрит рассчитан на группу до 10 человек — для сохранения индивидуального подхода и создания атмосферы подлинной трансформации.',
-                )}
-              </p>
-            </blockquote>
           </div>
         </div>
       </section>
