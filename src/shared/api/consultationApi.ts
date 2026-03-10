@@ -60,6 +60,7 @@ const addConsultationSchema = z.object({
   fullDescription: z.string().max(50000).optional(),
   features: z.array(z.string()).optional(),
   category: z.string().max(100).optional(),
+  translations: z.any().optional(),
 });
 
 const addConsultationCategorySchema = z.string().min(1).max(100);
@@ -74,6 +75,7 @@ const updateConsultationSchema = z.object({
   fullDescription: z.string().max(50000).optional(),
   features: z.array(z.string()).optional(),
   category: z.string().max(100).optional(),
+  translations: z.any().optional(),
 });
 
 export async function addConsultation(

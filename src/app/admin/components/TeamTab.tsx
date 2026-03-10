@@ -6,6 +6,7 @@ import { getTeamMembers, addTeamMember, updateTeamMember, deleteTeamMember } fro
 import type { TeamMember } from '@/shared/api/teamApi';
 import { modalService } from '@/shared/ui/Modal/modalService';
 import { handleMainImageUpload } from './imageUploadUtils';
+import { translateObjectFields } from './translateUtils';
 
 type Props = { showToast: (msg: string, type?: 'success' | 'error') => void };
 
@@ -58,12 +59,12 @@ export default function TeamTab({ showToast }: Props) {
     const formData = new FormData(e.target as HTMLFormElement);
     const data = Object.fromEntries(formData.entries()) as any;
     try {
-      const teamData = {
+      const teamData = await translateObjectFields({
         name: data.title,
         role: data.description,
         imageUrl: data.imageUrl,
         sortOrder: Number(data.sortOrder) || 0,
-      };
+      });
       if (editingItem) await updateTeamMember(editingItem.id, teamData);
       else await addTeamMember(teamData);
       await loadTeam();

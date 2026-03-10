@@ -128,6 +128,7 @@ const addCourseSchema = z.object({
   authorPhoto: z.string().url().optional().nullable().or(z.literal('')),
   fullDescription: z.string().max(50000).optional(),
   features: z.array(z.string()).optional(),
+  translations: z.any().optional(),
 });
 
 const addCourseCategorySchema = z.string().min(1).max(100);
@@ -142,6 +143,7 @@ const updateCourseSchema = z.object({
   fullDescription: z.string().max(50000).optional(),
   features: z.array(z.string()).optional(),
   category: z.string().min(1).max(100).optional(),
+  translations: z.any().optional(),
 });
 
 export async function addCourse(courseData: Omit<Course, 'id'>, category: string): Promise<Course> {

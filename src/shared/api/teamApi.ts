@@ -24,6 +24,7 @@ const addTeamMemberSchema = z.object({
   role: z.string().min(1).max(100),
   imageUrl: z.string().url().optional().nullable().or(z.literal('')),
   sortOrder: z.number().int().min(0).optional(),
+  translations: z.any().optional(),
 });
 
 const updateTeamMemberSchema = z.object({
@@ -31,6 +32,7 @@ const updateTeamMemberSchema = z.object({
   role: z.string().min(1).max(100).optional(),
   imageUrl: z.string().url().optional().nullable().or(z.literal('')),
   sortOrder: z.number().int().min(0).optional(),
+  translations: z.any().optional(),
 });
 
 export async function addTeamMember(data: {

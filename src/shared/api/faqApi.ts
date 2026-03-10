@@ -27,11 +27,13 @@ export async function getFAQs(): Promise<FAQ[]> {
 const addFAQSchema = z.object({
   question: z.string().min(1).max(500),
   answer: z.string().min(1).max(5000),
+  translations: z.any().optional(),
 });
 
 const updateFAQSchema = z.object({
   question: z.string().min(1).max(500).optional(),
   answer: z.string().min(1).max(5000).optional(),
+  translations: z.any().optional(),
 });
 
 export async function addFAQ(faq: Omit<FAQ, 'id'>): Promise<FAQ> {

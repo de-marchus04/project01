@@ -47,6 +47,7 @@ const addTourSchema = z.object({
   authorPhoto: z.string().url().optional().nullable().or(z.literal('')),
   fullDescription: z.string().max(50000).optional(),
   features: z.array(z.string()).optional(),
+  translations: z.any().optional(),
 });
 
 const updateTourSchema = z.object({
@@ -64,6 +65,7 @@ const updateTourSchema = z.object({
   fullDescription: z.string().max(50000).optional(),
   features: z.array(z.string()).optional(),
   isActive: z.boolean().optional(),
+  translations: z.any().optional(),
 });
 
 export async function addTour(tourData: Omit<Tour, 'id'>): Promise<Tour> {

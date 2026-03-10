@@ -49,6 +49,7 @@ model Course {
   imageUrl        String?
   author          String?
   authorPhoto     String?
+  translations    Json?
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
@@ -66,6 +67,7 @@ model Consultation {
   imageUrl        String?
   author          String?
   authorPhoto     String?
+  translations    Json?
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
@@ -88,6 +90,7 @@ model Tour {
   author          String?
   authorPhoto     String?
   isActive        Boolean   @default(true)
+  translations    Json?
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
 }
@@ -96,16 +99,17 @@ model Tour {
 // Контентая часть (Блог, Медиа, FAQ, Отзывы)
 // -----------------------------------------------------------------------------
 model Article {
-  id          String   @id @default(cuid())
-  title       String
-  subtitle    String?
-  content     String   @db.Text
-  imageUrl    String?
-  author      String?
-  authorPhoto String?
-  tag         String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id           String   @id @default(cuid())
+  title        String
+  subtitle     String?
+  content      String   @db.Text
+  imageUrl     String?
+  author       String?
+  authorPhoto  String?
+  tag          String?
+  translations Json?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }
 
 model Video {
@@ -115,19 +119,21 @@ model Video {
   videoUrl     String
   thumbnailUrl String?
   tag          String?
+  translations Json?
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 }
 
 model Podcast {
-  id          String   @id @default(cuid())
-  title       String
-  description String?  @db.Text
-  audioUrl    String
-  duration    String?
-  tag         String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id           String   @id @default(cuid())
+  title        String
+  description  String?  @db.Text
+  audioUrl     String
+  duration     String?
+  tag          String?
+  translations Json?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }
 
 model Recipe {
@@ -138,24 +144,27 @@ model Recipe {
   imageUrl        String?
   time            String?
   tag             String?
+  translations    Json?
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 }
 
 model FAQ {
-  id        String   @id @default(cuid())
-  question  String
-  answer    String   @db.Text
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id           String   @id @default(cuid())
+  question     String
+  answer       String   @db.Text
+  translations Json?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }
 
 model Testimonial {
-  id        String   @id @default(cuid())
-  name      String
-  course    String
-  text      String   @db.Text
-  createdAt DateTime @default(now())
+  id           String   @id @default(cuid())
+  name         String
+  course       String
+  text         String   @db.Text
+  translations Json?
+  createdAt    DateTime @default(now())
 }
 
 // -----------------------------------------------------------------------------

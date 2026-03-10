@@ -29,12 +29,14 @@ const addTestimonialSchema = z.object({
   name: z.string().min(1).max(100),
   course: z.string().min(1).max(200),
   text: z.string().min(1).max(2000),
+  translations: z.any().optional(),
 });
 
 const updateTestimonialSchema = z.object({
   name: z.string().min(1).max(100).optional(),
   course: z.string().min(1).max(200).optional(),
   text: z.string().min(1).max(2000).optional(),
+  translations: z.any().optional(),
 });
 
 export async function addTestimonial(testimonial: Omit<Testimonial, 'id' | 'createdAt'>): Promise<Testimonial> {

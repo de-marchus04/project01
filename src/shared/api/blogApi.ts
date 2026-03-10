@@ -86,6 +86,7 @@ const addArticleSchema = z.object({
   author: z.string().max(200).optional(),
   authorPhoto: z.string().url().optional().nullable().or(z.literal('')),
   tag: z.string().max(100).optional(),
+  translations: z.any().optional(),
 });
 
 const updateArticleSchema = z.object({
@@ -97,6 +98,7 @@ const updateArticleSchema = z.object({
   authorPhoto: z.string().url().optional().nullable().or(z.literal('')),
   tag: z.string().max(100).optional(),
   createdAt: z.string().optional(),
+  translations: z.any().optional(),
 });
 
 export async function addArticle(article: Omit<Article, 'id' | 'createdAt'>): Promise<Article> {
@@ -141,6 +143,7 @@ const addVideoSchema = z.object({
   videoUrl: z.string().url().optional().nullable().or(z.literal('')),
   thumbnailUrl: z.string().url().optional().nullable().or(z.literal('')),
   tag: z.string().max(100).optional(),
+  translations: z.any().optional(),
 });
 
 const updateVideoSchema = z.object({
@@ -149,6 +152,7 @@ const updateVideoSchema = z.object({
   videoUrl: z.string().url().optional().nullable().or(z.literal('')),
   thumbnailUrl: z.string().url().optional().nullable().or(z.literal('')),
   tag: z.string().max(100).optional(),
+  translations: z.any().optional(),
 });
 
 export async function addVideo(video: Omit<Video, 'id'>): Promise<Video> {
@@ -193,6 +197,7 @@ const addPodcastSchema = z.object({
   audioUrl: z.string().url().optional().nullable().or(z.literal('')),
   duration: z.string().min(1).max(50),
   tag: z.string().max(100).optional(),
+  translations: z.any().optional(),
 });
 
 const updatePodcastSchema = z.object({
@@ -201,6 +206,7 @@ const updatePodcastSchema = z.object({
   audioUrl: z.string().url().optional().nullable().or(z.literal('')),
   duration: z.string().max(50).optional(),
   tag: z.string().max(100).optional(),
+  translations: z.any().optional(),
 });
 
 export async function addPodcast(podcast: Omit<Podcast, 'id'>): Promise<Podcast> {
@@ -246,6 +252,7 @@ const addRecipeSchema = z.object({
   imageUrl: z.string().url().optional().nullable().or(z.literal('')),
   time: z.string().min(1).max(100),
   tag: z.string().max(100).optional(),
+  translations: z.any().optional(),
 });
 
 const updateRecipeSchema = z.object({
@@ -255,6 +262,7 @@ const updateRecipeSchema = z.object({
   imageUrl: z.string().url().optional().nullable().or(z.literal('')),
   time: z.string().max(100).optional(),
   tag: z.string().max(100).optional(),
+  translations: z.any().optional(),
 });
 
 export async function addRecipe(recipe: Omit<Recipe, 'id'>): Promise<Recipe> {
