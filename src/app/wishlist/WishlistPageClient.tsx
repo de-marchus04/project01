@@ -169,11 +169,7 @@ export default function WishlistPageClient() {
                       >
                         {item.title}
                       </h5>
-                      {item.price !== undefined && (
-                        <p className="fw-bold mb-3" style={{ color: 'var(--color-primary)', fontSize: '1.1rem' }}>
-                          {item.price.toLocaleString('ru-RU')} ₴
-                        </p>
-                      )}
+
                       <div className="d-flex gap-2 mt-auto">
                         {item.url && (
                           <Link

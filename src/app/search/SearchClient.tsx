@@ -55,11 +55,6 @@ function ResultCard({ item, typeLabel }: { item: SearchResult; typeLabel: string
               {item.description}
             </p>
           )}
-          {item.price !== undefined && (
-            <p className="fw-bold mb-0" style={{ color: 'var(--color-primary)', fontSize: '0.9rem' }}>
-              {item.price.toLocaleString('ru-RU')} ₴
-            </p>
-          )}
         </div>
       </div>
     </Link>

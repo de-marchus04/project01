@@ -56,10 +56,7 @@ export const CourseCard = ({ course, onBuy, type }: CourseCardProps) => {
           </h5>
         </Link>
         <p className="card-text text-muted small flex-grow-1">{localized_course.description}</p>
-        <div className="d-flex justify-content-between align-items-center mt-4 pt-3 border-top">
-          <span className="fs-4 fw-bold" style={{ color: 'var(--color-text)' }}>
-            {formatPrice(localized_course.price, lang)}
-          </span>
+        <div className="d-flex justify-content-end align-items-center mt-4 pt-3 border-top">
           <button
             className="btn btn-primary-custom rounded-pill text-white fw-bold px-4 shadow-sm"
             onClick={() => onBuy(localized_course.title, localized_course.price)}

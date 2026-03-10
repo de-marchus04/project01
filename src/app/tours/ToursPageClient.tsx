@@ -196,11 +196,8 @@ export default function ToursPageClient({ initialData }: { initialData: any }) {
                                 {loc_tour.location}
                               </small>
                             </div>
-                            <div className="d-flex align-items-start justify-content-between mb-2 gap-2">
+                            <div className="mb-2">
                               <h4 className="card-title font-playfair fw-bold mb-0">{loc_tour.title}</h4>
-                              <span className="fw-bold text-nowrap" style={{ color: 'var(--color-primary)' }}>
-                                {formatTourPrice(loc_tour)}
-                              </span>
                             </div>
                             <p className="card-text text-muted mb-4" style={{ fontSize: '0.95rem' }}>
                               {loc_tour.description}

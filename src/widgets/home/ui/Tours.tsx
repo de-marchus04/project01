@@ -79,14 +79,8 @@ export const Tours = ({ initialTours }: ToursProps) => {
                           {card.location}
                         </small>
                       </div>
-                      <div className="d-flex align-items-start justify-content-between mb-2 gap-2">
+                      <div className="mb-2">
                         <h4 className="card-title font-playfair fw-bold mb-0">{card.title}</h4>
-                        <span
-                          className="fw-bold text-nowrap"
-                          style={{ color: 'var(--color-primary)', fontSize: '0.95rem' }}
-                        >
-                          {formatTourPrice(card as Tour)}
-                        </span>
                       </div>
                       <p className="card-text text-muted mb-4" style={{ fontSize: '0.95rem' }}>
                         {card.description}

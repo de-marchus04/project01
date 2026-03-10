@@ -806,11 +806,7 @@ export default function Profile() {
                                     <h6 className="fw-bold mb-1" style={{ color: 'var(--color-text)' }}>
                                       {item.title}
                                     </h6>
-                                    {item.price !== undefined && (
-                                      <p className="fw-bold mb-2" style={{ color: 'var(--color-primary)' }}>
-                                        {item.price.toLocaleString('ru-RU')} ₴
-                                      </p>
-                                    )}
+
                                     <div className="d-flex gap-2">
                                       {item.url && (
                                         <Link
