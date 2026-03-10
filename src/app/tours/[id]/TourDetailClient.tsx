@@ -290,10 +290,10 @@ export default function TourDetail() {
         <div className="container">
           <div className="row g-0">
             {[
-              { icon: 'bi-geo-alt-fill', label: tStr('Место'), value: loc_tour.location || 'Черногория' },
-              { icon: 'bi-calendar2-check', label: tStr('Даты'), value: loc_tour.date || '' },
-              { icon: 'bi-people-fill', label: tStr('Группа'), value: tStr('до 10 человек') },
-              { icon: 'bi-clock-fill', label: tStr('Продолжительность'), value: tStr('10 дней') },
+              { icon: 'bi-journal-richtext', label: tStr('Формат'), value: tStr('Интенсивный ретрит') },
+              { icon: 'bi-mortarboard', label: tStr('Уровень'), value: tStr('Для всех уровней') },
+              { icon: 'bi-house-heart', label: tStr('Размещение'), value: tStr('Апартаменты') },
+              { icon: 'bi-translate', label: tStr('Язык'), value: tStr('Русский') },
             ].map((item, i) => (
               <div key={i} className="col-6 col-md-3">
                 <div
@@ -430,23 +430,9 @@ export default function TourDetail() {
                     <h5 className="font-playfair fw-bold mb-2" style={{ color: 'var(--color-text)' }}>
                       {tStr('Заинтересованы?')}
                     </h5>
-                    <p className="text-muted small mb-3" style={{ lineHeight: 1.6 }}>
-                      {tStr('Свяжитесь с нами, чтобы узнать подробности, задать вопросы или записаться на ретрит')}
+                    <p className="text-muted small mb-4" style={{ lineHeight: 1.7 }}>
+                      {tStr('Остались вопросы или готовы присоединиться? Напишите нам — мы поможем со всеми деталями.')}
                     </p>
-                    <div className="mb-3 small text-muted text-start">
-                      <div className="d-flex align-items-center gap-2 mb-2">
-                        <i className="bi bi-calendar-event" style={{ color: 'var(--color-accent)' }}></i>
-                        {loc_tour.date}
-                      </div>
-                      <div className="d-flex align-items-center gap-2 mb-2">
-                        <i className="bi bi-geo-alt" style={{ color: 'var(--color-accent)' }}></i>
-                        {loc_tour.location}
-                      </div>
-                      <div className="d-flex align-items-center gap-2">
-                        <i className="bi bi-people" style={{ color: 'var(--color-accent)' }}></i>
-                        {tStr('Группа до 10 человек')}
-                      </div>
-                    </div>
                     <Link href="/contact" className="btn btn-primary-custom w-100 rounded-pill py-3 fw-bold fs-5">
                       <i className="bi bi-arrow-right me-2"></i>
                       {tStr('Записаться')}
@@ -457,7 +443,7 @@ export default function TourDetail() {
                   </div>
                 </div>
 
-                {/* COMPACT FEATURES */}
+                {/* WHY THIS RETREAT */}
                 <div
                   className="mt-4 p-4 rounded-4"
                   style={{
@@ -469,56 +455,28 @@ export default function TourDetail() {
                     className="fw-bold mb-3 d-flex align-items-center gap-2"
                     style={{ fontSize: '0.85rem', color: 'var(--color-accent)' }}
                   >
-                    <i className="bi bi-check2-all"></i>
-                    {tStr('Что включено')}
+                    <i className="bi bi-stars"></i>
+                    {tStr('Почему этот ретрит')}
                   </h6>
-                  <div className="row g-2">
-                    {(() => {
-                      const icons: Record<string, string> = {
-                        проживан: 'bi-house-heart',
-                        йог: 'bi-sunrise',
-                        консультац: 'bi-chat-heart',
-                        ягь: 'bi-fire',
-                        пранаям: 'bi-wind',
-                        медитац: 'bi-peace',
-                        монастыр: 'bi-building',
-                        острог: 'bi-building',
-                        будв: 'bi-map',
-                        прогулк: 'bi-signpost-split',
-                        трансфер: 'bi-car-front',
-                        аэропорт: 'bi-airplane',
-                        аренд: 'bi-car-front',
-                        транспорт: 'bi-car-front',
-                        групп: 'bi-people',
-                        питан: 'bi-cup-hot',
-                        практик: 'bi-journal-bookmark',
-                        лекц: 'bi-mortarboard',
-                      };
-                      const getIcon = (f: string) => {
-                        const l = f.toLowerCase();
-                        for (const [k, v] of Object.entries(icons)) {
-                          if (l.includes(k)) return v;
-                        }
-                        return 'bi-check2-circle';
-                      };
-                      const feats = loc_tour.features
-                        ? (Array.isArray(loc_tour.features)
-                            ? loc_tour.features
-                            : (loc_tour.features as unknown as string).split('\n')
-                          ).filter((f: string) => f.trim())
-                        : [];
-                      return feats.map((feat: string, i: number) => (
-                        <div key={i} className="col-6">
-                          <div className="d-flex align-items-center gap-2 py-1">
-                            <i
-                              className={`bi ${getIcon(feat)}`}
-                              style={{ fontSize: '0.8rem', color: 'var(--color-accent)', flexShrink: 0 }}
-                            ></i>
-                            <span style={{ fontSize: '0.78rem', lineHeight: 1.3 }}>{feat}</span>
-                          </div>
-                        </div>
-                      ));
-                    })()}
+                  <div className="d-flex flex-column gap-3">
+                    {[
+                      { icon: 'bi-shield-check', text: tStr('Личное сопровождение опытного наставника') },
+                      {
+                        icon: 'bi-heart-pulse',
+                        text: tStr('Глубокая внутренняя трансформация, а не поверхностный отдых'),
+                      },
+                      { icon: 'bi-geo', text: tStr('Места силы Балкан с многовековой историей') },
+                      { icon: 'bi-people', text: tStr('Камерная группа единомышленников') },
+                      { icon: 'bi-compass', text: tStr('Сочетание практики и путешествия') },
+                    ].map((item, i) => (
+                      <div key={i} className="d-flex align-items-start gap-2">
+                        <i
+                          className={`bi ${item.icon}`}
+                          style={{ fontSize: '0.85rem', color: 'var(--color-accent)', flexShrink: 0, marginTop: '2px' }}
+                        ></i>
+                        <span style={{ fontSize: '0.82rem', lineHeight: 1.5 }}>{item.text}</span>
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>
