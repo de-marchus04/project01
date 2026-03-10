@@ -296,12 +296,7 @@ export default function TourDetail() {
               { icon: 'bi-translate', label: tStr('Язык'), value: tStr('Русский') },
             ].map((item, i) => (
               <div key={i} className="col-6 col-md-3">
-                <div
-                  className="text-center py-4 px-3"
-                  style={{
-                    borderRight: i < 3 ? '1px solid var(--color-border)' : 'none',
-                  }}
-                >
+                <div className={`text-center py-4 px-3 highlight-cell highlight-cell-${i}`}>
                   <i
                     className={`bi ${item.icon} d-block mb-2`}
                     style={{ fontSize: '1.5rem', color: 'var(--color-primary)' }}
