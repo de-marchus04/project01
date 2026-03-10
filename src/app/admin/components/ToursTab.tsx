@@ -66,11 +66,17 @@ export default function ToursTab({ adminProfile, showToast }: Props) {
       const authorName =
         data.authorName?.trim() || (adminProfile.name ? `${adminProfile.name} (Админ сайта)` : 'Админ сайта');
       const authorPhoto = data.authorPhotoUrl?.trim() || adminProfile.photoUrl || '';
+      const featuresArray = data.features
+        ? String(data.features)
+            .split('\n')
+            .map((s: string) => s.trim())
+            .filter(Boolean)
+        : [];
       const tourData = await translateObjectFields({
         title: data.title,
         description: data.description,
         fullDescription: data.fullDescription,
-        features: data.features,
+        features: featuresArray,
         price: Number(data.price),
         imageUrl: data.imageUrl,
         date: data.date,
@@ -142,7 +148,9 @@ export default function ToursTab({ adminProfile, showToast }: Props) {
                   name="features"
                   className="form-control"
                   rows={4}
-                  defaultValue={editingItem?.features || ''}
+                  defaultValue={
+                    Array.isArray(editingItem?.features) ? editingItem.features.join('\n') : editingItem?.features || ''
+                  }
                   placeholder={t.admin.formFeaturesPlaceholder}
                 ></textarea>
               </div>
