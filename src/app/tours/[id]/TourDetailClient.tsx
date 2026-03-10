@@ -6,17 +6,8 @@ import { useParams } from 'next/navigation';
 import { getTourById } from '@/shared/api/tourApi';
 import type { Tour } from '@/entities/tour/model/types';
 import Link from 'next/link';
-import { BuyButton } from '@/shared/ui/BuyButton/BuyButton';
 import { useLanguage } from '@/shared/i18n/LanguageContext';
 import ReviewSection from '@/shared/ui/ReviewSection/ReviewSection';
-import PromoCodeInput from '@/shared/ui/PromoCodeInput/PromoCodeInput';
-
-function formatTourPrice(price: number, currency?: string | null): string {
-  const cur = currency || 'UAH';
-  const symbols: Record<string, string> = { UAH: '₴', USD: '$', EUR: '€', RUB: '₽' };
-  const sym = symbols[cur] || cur;
-  return cur === 'USD' || cur === 'EUR' ? `${sym}${price}` : `${price} ${sym}`;
-}
 
 function TourDescriptionRenderer({ text }: { text: string }) {
   type Block = { type: 'paragraph'; content: string } | { type: 'section'; title: string; items: string[] };
@@ -148,8 +139,6 @@ export default function TourDetail() {
   const params = useParams();
   const [tour, setTour] = useState<Tour | null>(null);
   const [loading, setLoading] = useState(true);
-  const [promoPrice, setPromoPrice] = useState<number | null>(null);
-  const [promoCodeId, setPromoCodeId] = useState<string | null>(null);
   const { tData, tStr } = useLanguage();
 
   useEffect(() => {
@@ -284,13 +273,6 @@ export default function TourDetail() {
                 <i className="bi bi-geo-alt me-2"></i>
                 {loc_tour.location}
               </span>
-              <span
-                className="badge rounded-pill px-3 py-2"
-                style={{ backgroundColor: 'rgba(255,255,255,0.2)', backdropFilter: 'blur(5px)', fontSize: '0.9rem' }}
-              >
-                <i className="bi bi-tag me-2"></i>
-                {formatTourPrice(loc_tour.price, loc_tour.currency)}
-              </span>
             </div>
           </div>
         </div>
@@ -311,11 +293,7 @@ export default function TourDetail() {
               { icon: 'bi-geo-alt-fill', label: tStr('Место'), value: loc_tour.location || 'Черногория' },
               { icon: 'bi-calendar2-check', label: tStr('Даты'), value: loc_tour.date || '' },
               { icon: 'bi-people-fill', label: tStr('Группа'), value: tStr('до 10 человек') },
-              {
-                icon: 'bi-currency-euro',
-                label: tStr('Стоимость'),
-                value: formatTourPrice(loc_tour.price, loc_tour.currency),
-              },
+              { icon: 'bi-clock-fill', label: tStr('Продолжительность'), value: tStr('10 дней') },
             ].map((item, i) => (
               <div key={i} className="col-6 col-md-3">
                 <div
@@ -425,43 +403,37 @@ export default function TourDetail() {
               </div>
             </div>
 
-            {/* BOOKING SIDEBAR */}
+            {/* SIDEBAR */}
             <div className="col-lg-5">
               <div className="sticky-top" style={{ top: '100px' }}>
+                {/* CTA CARD */}
                 <div
                   className="card rounded-4 overflow-hidden"
                   style={{ border: '1px solid var(--color-primary-border)', boxShadow: '0 4px 20px rgba(0,0,0,0.04)' }}
                 >
-                  <div
-                    className="p-3 text-center"
-                    style={{
-                      backgroundColor: 'var(--color-surface)',
-                      borderBottom: '1px solid var(--color-primary-border)',
-                    }}
-                  >
-                    <h5 className="font-playfair fw-bold mb-0" style={{ color: 'var(--color-primary)' }}>
-                      {tStr('Забронировать место')}
-                    </h5>
-                  </div>
-                  <div className="card-body p-4">
-                    <div className="d-flex justify-content-between align-items-center mb-3 pb-3 border-bottom">
-                      <span className="text-muted">{tStr('Стоимость')}</span>
-                      {promoPrice !== null ? (
-                        <div className="text-end">
-                          <span className="text-muted text-decoration-line-through me-2" style={{ fontSize: '0.9rem' }}>
-                            {formatTourPrice(loc_tour.price, loc_tour.currency)}
-                          </span>
-                          <span className="fs-3 fw-bold text-primary-custom">
-                            {formatTourPrice(promoPrice, loc_tour.currency)}
-                          </span>
-                        </div>
-                      ) : (
-                        <span className="fs-3 fw-bold text-primary-custom">
-                          {formatTourPrice(loc_tour.price, loc_tour.currency)}
-                        </span>
-                      )}
+                  <div className="card-body p-4 text-center">
+                    <div
+                      className="d-inline-flex align-items-center justify-content-center mb-3"
+                      style={{
+                        width: '56px',
+                        height: '56px',
+                        borderRadius: '50%',
+                        border: '1px solid var(--color-primary-border)',
+                        backgroundColor: 'var(--color-bg)',
+                      }}
+                    >
+                      <i
+                        className="bi bi-envelope-heart"
+                        style={{ fontSize: '1.4rem', color: 'var(--color-primary)' }}
+                      ></i>
                     </div>
-                    <div className="mb-3 small text-muted">
+                    <h5 className="font-playfair fw-bold mb-2" style={{ color: 'var(--color-text)' }}>
+                      {tStr('Заинтересованы?')}
+                    </h5>
+                    <p className="text-muted small mb-3" style={{ lineHeight: 1.6 }}>
+                      {tStr('Свяжитесь с нами, чтобы узнать подробности, задать вопросы или записаться на ретрит')}
+                    </p>
+                    <div className="mb-3 small text-muted text-start">
                       <div className="d-flex align-items-center gap-2 mb-2">
                         <i className="bi bi-calendar-event" style={{ color: 'var(--color-accent)' }}></i>
                         {loc_tour.date}
@@ -475,26 +447,10 @@ export default function TourDetail() {
                         {tStr('Группа до 10 человек')}
                       </div>
                     </div>
-                    <PromoCodeInput
-                      originalPrice={loc_tour.price}
-                      onApply={(finalPrice, codeId) => {
-                        setPromoPrice(finalPrice);
-                        setPromoCodeId(codeId);
-                      }}
-                      onClear={() => {
-                        setPromoPrice(null);
-                        setPromoCodeId(null);
-                      }}
-                    />
-                    <BuyButton
-                      title={loc_tour.title}
-                      price={promoPrice ?? loc_tour.price}
-                      serviceId={loc_tour.id}
-                      itemType="TOUR"
-                      promoCodeId={promoCodeId ?? undefined}
-                      label={tStr('Забронировать место')}
-                      className="btn btn-primary-custom w-100 rounded-pill py-3 fw-bold fs-5 mt-3"
-                    />
+                    <Link href="/contact" className="btn btn-primary-custom w-100 rounded-pill py-3 fw-bold fs-5">
+                      <i className="bi bi-arrow-right me-2"></i>
+                      {tStr('Записаться')}
+                    </Link>
                     <p className="text-center text-muted small mt-2 mb-0">
                       {tStr('Количество мест строго ограничено')}
                     </p>
@@ -563,13 +519,6 @@ export default function TourDetail() {
                         </div>
                       ));
                     })()}
-                  </div>
-                  <div
-                    className="mt-3 pt-3 border-top d-flex align-items-center gap-2"
-                    style={{ fontSize: '0.78rem', color: 'var(--color-text-muted, #6c757d)' }}
-                  >
-                    <i className="bi bi-info-circle" style={{ color: 'var(--color-accent)' }}></i>
-                    {tStr('Предоплата 300 € для подтверждения')}
                   </div>
                 </div>
               </div>
