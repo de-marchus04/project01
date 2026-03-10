@@ -517,8 +517,8 @@ export default function TourDetail() {
                   </h6>
                   <div className="d-flex flex-column gap-2">
                     {[
-                      { label: tStr('Даты'), value: loc_tour.date || '9–19 мая 2025' },
-                      { label: tStr('Место'), value: loc_tour.location || 'Бар, Черногория' },
+                      { label: tStr('Даты'), value: loc_tour.date || tStr('9–19 мая 2025') },
+                      { label: tStr('Место'), value: loc_tour.location || tStr('Бар, Черногория') },
                       { label: tStr('Длительность'), value: tStr('10 дней') },
                       { label: tStr('Группа'), value: tStr('до 10 человек') },
                     ].map((item, i) => (
