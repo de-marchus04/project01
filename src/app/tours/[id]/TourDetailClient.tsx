@@ -48,8 +48,8 @@ function TourDescriptionRenderer({ text }: { text: string }) {
 
   const sectionIcon = (title: string) => {
     const t = title.toLowerCase();
-    if (t.includes('программ')) return 'bi-calendar2-week';
-    if (t.includes('стоимость') || t.includes('включен')) return 'bi-gift';
+    if (t.includes('программ') || t.includes('включен')) return 'bi-gift';
+    if (t.includes('типичный') || t.includes('день') || t.includes('расписан')) return 'bi-clock-history';
     return 'bi-stars';
   };
 
@@ -112,7 +112,7 @@ function TourDescriptionRenderer({ text }: { text: string }) {
                 <i className={`bi ${sectionIcon(block.title)}`}></i>
                 {block.title}
               </h5>
-              <div className="row">
+              <div className="row tour-desc-grid">
                 {block.items.map((item, j) => (
                   <div key={j} className="col-md-6 mb-2">
                     <div className="d-flex gap-2 align-items-start">
@@ -352,7 +352,7 @@ export default function TourDetail() {
 
               {/* ORGANIZER CARD */}
               <div
-                className="p-4 rounded-4 d-flex align-items-center gap-4"
+                className="p-4 rounded-4 d-flex align-items-center gap-4 organizer-card"
                 style={{
                   background: 'linear-gradient(135deg, var(--color-bg) 0%, var(--color-surface) 100%)',
                   border: '1px solid var(--color-border, rgba(0,0,0,0.08))',
@@ -479,6 +479,56 @@ export default function TourDetail() {
                     ))}
                   </div>
                 </div>
+
+                {/* SIDEBAR PHOTO */}
+                <div className="mt-4 position-relative overflow-hidden rounded-4" style={{ height: '220px' }}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src="https://images.unsplash.com/photo-1555990793-da11153b2473?q=80&w=600&auto=format&fit=crop"
+                    alt={tStr('Черногория')}
+                    loading="lazy"
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  />
+                  <div
+                    className="position-absolute bottom-0 start-0 end-0 p-3"
+                    style={{ background: 'linear-gradient(transparent, rgba(0,0,0,0.55))' }}
+                  >
+                    <span className="text-white small fw-medium">
+                      <i className="bi bi-geo-alt me-1"></i>
+                      {tStr('Бар, Черногория')}
+                    </span>
+                  </div>
+                </div>
+
+                {/* IMPORTANT DETAILS */}
+                <div
+                  className="mt-4 p-4 rounded-4"
+                  style={{
+                    backgroundColor: 'var(--color-bg)',
+                    border: '1px solid var(--color-border, rgba(0,0,0,0.08))',
+                  }}
+                >
+                  <h6
+                    className="fw-bold mb-3 d-flex align-items-center gap-2"
+                    style={{ fontSize: '0.85rem', color: 'var(--color-primary)' }}
+                  >
+                    <i className="bi bi-info-circle"></i>
+                    {tStr('Важные детали')}
+                  </h6>
+                  <div className="d-flex flex-column gap-2">
+                    {[
+                      { label: tStr('Даты'), value: loc_tour.date || '9–19 мая 2025' },
+                      { label: tStr('Место'), value: loc_tour.location || 'Бар, Черногория' },
+                      { label: tStr('Длительность'), value: tStr('10 дней') },
+                      { label: tStr('Группа'), value: tStr('до 10 человек') },
+                    ].map((item, i) => (
+                      <div key={i} className="d-flex justify-content-between" style={{ fontSize: '0.82rem' }}>
+                        <span style={{ color: 'var(--color-text-muted)' }}>{item.label}</span>
+                        <span className="fw-bold">{item.value}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -499,7 +549,7 @@ export default function TourDetail() {
               </span>
               <div style={{ width: '40px', height: '2px', backgroundColor: 'var(--color-accent)' }}></div>
             </div>
-            <h3 className="font-playfair fw-bold mb-2" style={{ fontSize: '2rem' }}>
+            <h3 className="font-playfair fw-bold mb-2 gallery-title" style={{ fontSize: '2rem' }}>
               {tStr('Что вас ждёт')}
             </h3>
             <p className="text-muted" style={{ maxWidth: '500px', margin: '0 auto' }}>
@@ -507,7 +557,7 @@ export default function TourDetail() {
             </p>
           </div>
 
-          <div className="row g-3">
+          <div className="row g-3 gallery-mosaic">
             {/* Большое фото слева */}
             <div className="col-md-7">
               <div className="position-relative overflow-hidden rounded-4 h-100" style={{ minHeight: '420px' }}>
@@ -580,7 +630,7 @@ export default function TourDetail() {
           </div>
 
           {/* Нижний ряд — 2 широких фото */}
-          <div className="row g-3 mt-0">
+          <div className="row g-3 mt-0 gallery-mosaic">
             <div className="col-md-5">
               <div className="position-relative overflow-hidden rounded-4" style={{ height: '240px' }}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
